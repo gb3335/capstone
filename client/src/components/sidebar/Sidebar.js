@@ -1,13 +1,24 @@
 import React, { Component } from 'react';
-import avatar from '../../image/avatar.jpg'
-import bsuback from '../../image/bsuback.JPG'
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import Proptypes from 'prop-types'
+import avatar from '../../image/avatar.jpg';
+import bsuback from '../../image/bsuback.JPG';
+import {changePageTitle} from '../../actions/sidebarActions';
 import './Sidebar.css'
 
-class Sidebar extends Component {
-    state = {
-        classname: "fa fa-caret-down rotate"
-    }
 
+class Sidebar extends Component {
+
+    constructor() {
+        super()
+        this.state = {
+           pageTitle: "",
+           classname: "fa fa-caret-down rotate"
+        }
+
+        this.updateClass = this.updateClass.bind(this);
+    }
 
     updateClass = () =>{
         const temp = this.state.classname;
@@ -20,6 +31,10 @@ class Sidebar extends Component {
         this.setState({classname})
      }
 
+     changeTitle = (title) => {
+        this.props.changePageTitle(title);
+     }
+
     render() { 
         return (
             <div>
@@ -27,7 +42,7 @@ class Sidebar extends Component {
                     <div className="sidebar_transparent">
                     <nav className="sidebar_navigation">
                         <div className="sidebar_logo">
-                            <a href="/">BulSU</a>
+                            <a href="/">BSU</a>
                         </div>
                         <div className="sidebar_user">
                             <div className="sidebar_user_image">
@@ -40,8 +55,8 @@ class Sidebar extends Component {
                         
                         <div className="sidebar_navigation_items">
                             <ul>
-                                <li><a href="/" className="parentA"><i className="fa fa-home pr-3"></i>
-                                        <p>Home</p></a>
+                                <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-home pr-3"></i>
+                                        <p>Home</p></Link>
                                 </li>
                                 <li className="multimenus">
                                     <a onClick={this.updateClass} className="collapsed parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
@@ -51,17 +66,17 @@ class Sidebar extends Component {
                                     </a>
                                     <div id="checkPlagiarism" className="collapse" aria-expanded="false">
                                         <ul className="submenus nav">
-                                            <li><a href="/">Online Check</a></li>
-                                            <li><a href="/">Local Check</a></li>
-                                            <li><a href="/">Side by side</a></li>
+                                            <li><Link to="/onlinecheck" onClick={() => this.changeTitle("Check Plagiarism Online")} >Online Check</Link></li>
+                                            <li><Link to="/localcheck" onClick={() => this.changeTitle("Check Plagiarism Locally")}>Local Check</Link></li>
+                                            <li><Link to="/sidebyside" onClick={() => this.changeTitle("Check Plagiarism Side by Side")}>Side by side</Link></li>
                                         </ul>
                                     </div>
                                 </li>
                                 <li>
-                                    <a href="/" className="parentA">
+                                    <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
                                         <i className="fa fa-book pr-3"></i>
                                         <p>Documents</p>
-                                    </a>
+                                    </Link>
                                 </li>
                                 
                             </ul>
@@ -115,5 +130,9 @@ class Sidebar extends Component {
         );
     }
 }
+
+Sidebar.proptypes = {
+    changePageTitle: Proptypes.func.isRequired
+}
  
-export default Sidebar;
+export default connect(null,{changePageTitle})(Sidebar);
