@@ -13,8 +13,6 @@ const validateLoginInput = require('../../validation/login');
 
 // Load User Model
 const User = require('../../models/User')
-// Load Invitation Model
-const Invitation = require('../../models/Invitations')
 
 // Load Transport Email
 const Transporter = require('../../mailer/transporter');
@@ -176,7 +174,7 @@ router.post('/login', (req, res) => {
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.json({
         id: req.user._id,
-        name: req.user.name,
+        name: req.user.name.firstName,
         userName:req.user.userName,
         email: req.user.email,
         userType: req.user.userType

@@ -10,9 +10,13 @@ import './App.css';
 
 import Sidebar from './components/sidebar/Sidebar';
 import Navbar from './components/navbar/Navbar';
+import Footer from './components/footer/Footer';
+import Landing from './components/landing/Landing';
 
 import Dashboard from './components/dashboard/Dashboard';
 import OnlineCheck from './components/plagiarism/OnlineCheck';
+import Login from './components/auth/login/Login';
+
 
 class App extends Component {
   render() {
@@ -23,8 +27,13 @@ class App extends Component {
             <Sidebar />
             <div className="navmain">
               <Navbar />
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/onlinecheck" component={OnlineCheck} />
+              <div className="main">
+              <Route exact path="/" component={Landing} />
+                <Route exact path="/dashboard" component={Dashboard} />
+                <Route exact path="/onlinecheck" component={OnlineCheck} />
+                <Route exact path="/login" component={Login} />
+              </div>
+              <Footer />
             </div>
           </div>
         </Router>

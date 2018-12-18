@@ -1,0 +1,12 @@
+.footer{
+    bottom:0;
+    position: relative;
+    margin: 0;
+    height: 5vh;
+}
+
+.footer p{
+    float:right;
+    font-size: 1em;
+    margin: 10px;
+}

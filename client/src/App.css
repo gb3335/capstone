@@ -1,3 +1,9 @@
+.app{
+    height: 100%;
+    top:0;
+    left: 0;
+}
+
 .navmain{
     position: relative;
     float: right;
@@ -6,4 +12,10 @@
     height: 100%;
     max-height: 100%;
     width: calc(100% - 273px);
+}
+
+.main{
+    height: calc(100vh - 11vh);
+    width: 100%;
+    background: rgb(209, 209, 209);
 }

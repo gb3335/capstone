@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import {Link} from 'react-router-dom';
 
 import './Navbar.css'
  
@@ -12,6 +12,9 @@ class Navbar extends Component {
                 <div className="head-title">
                     <h3>{pageTitle}</h3>
                 </div>
+                <div className="navbar_items">
+                    <Link to="/login"><i className="fa fa-key"></i> Login</Link>
+                </div>  
             </nav>
         );
     }

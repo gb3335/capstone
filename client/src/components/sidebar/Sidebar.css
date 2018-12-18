@@ -79,16 +79,16 @@
 }
 
 .sidebar_navigation_items li{
-    margin-top: 10px; 
+    
     width: 100%;
     display: table;
-    cursor: pointer;
     padding:0;
     
 }
 
 .submenus a{
     height: 45px;
+    margin-top:6px;
     padding-top: 7px;
     padding-left: 3em;
     font-size: 1.1em;

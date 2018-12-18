@@ -42,21 +42,21 @@ class Sidebar extends Component {
                     <div className="sidebar_transparent">
                     <nav className="sidebar_navigation">
                         <div className="sidebar_logo">
-                            <a href="/">BSU</a>
+                            <Link to="/" onClick={() => this.changeTitle("Welcome to our Website")}>BSU</Link>
                         </div>
                         <div className="sidebar_user">
                             <div className="sidebar_user_image">
                                 <img src={avatar} alt="Your Avatar"/>
                             </div>
                             <div className="sidebar_user_name">
-                                <a href="/">Krishield Kyle</a>
+                                <Link to="/account">Krishield Kyle</Link>
                             </div>
                         </div>
                         
                         <div className="sidebar_navigation_items">
                             <ul>
-                                <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-home pr-3"></i>
-                                        <p>Home</p></Link>
+                                <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line pr-3"></i>
+                                        <p>Dashboard</p></Link>
                                 </li>
                                 <li className="multimenus">
                                     <a onClick={this.updateClass} className="collapsed parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">

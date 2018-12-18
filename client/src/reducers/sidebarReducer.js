@@ -1,7 +1,7 @@
 import { GET_PAGE_TITLE } from '../actions/types'
 
 const initialState = {
-    pageTitle: "Dashboard"
+    pageTitle: "Welcome to our Website"
 }
 
 

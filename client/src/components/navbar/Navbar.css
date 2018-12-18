@@ -1,3 +1,15 @@
 .navbar-size{
     top:0px;
 }
+
+.navbar_items{
+    text-decoration: none;
+    height: 100%;
+
+}
+
+.navbar_items a{
+    text-decoration: none;
+    font-size: 1em;
+    color:black;
+}
