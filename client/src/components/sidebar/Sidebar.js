@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Proptypes from 'prop-types'
-import bsuback from '../../image/bsuback.JPG';
+import bsuback from '../../images/bsuback.JPG';
 import {changePageTitle} from '../../actions/sidebarActions';
 import './Sidebar.css'
 const images = require.context('../../images', true);

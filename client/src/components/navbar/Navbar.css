@@ -14,7 +14,54 @@
     height: 100%;
 }
 
-.navbar_items a{
+.navbar_items .account_button{
+    height: 58px;
+    display: table;
+    font-size: 1em;
+    text-decoration: none;
+    color: black;
+    padding: 10px 10px;
+    border-radius: 5px;
+    margin-right: 50px;
+    transition:0.5s;
+
+}
+
+.navbar_items .account_button .user_img{
+    width: 40px;
+    border-radius: 50px;
+    border: 1px solid black;
+}
+
+.navbar_items .account_button p{
+    display: inline;
+    margin-left: 10px;
+}
+
+.navbar_items a:hover{
+    background: rgba(94, 94, 95, 0.432);
+}
+
+.navbar_items .account_submenus{
+    list-style-type: none;
+    background: rgb(255, 255, 255);
+    border: 2px solid rgb(197, 193, 193);
+    border-radius: 4px;
+    z-index: 2000;
+    display: table;
+    width: 80%;
+    padding: 0;
+    margin: 5px 0;
+    
+}
+.navbar_items .collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+}
+
+
+/* .navbar_items a{
     text-decoration: none;
     font-size: 1em;
     color:black;
@@ -52,5 +99,5 @@
 
 .navbar_items div:hover{
     background: rgba(94, 94, 95, 0.432);
-}
+} */
 

@@ -20,12 +20,17 @@ class Navbar extends Component {
                 <div className="navbar_items">
                     <ul className="nav">
                         <li>
-                           <div> 
+                           <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded="false"> 
                                <img className="user_img" src={img_src} alt=""></img>
                                 <p>Krishield Kyle</p>
-                           </div>
+                           </a>
                            <div id="userMenu"className="collapse" aria-expanded="false">
-
+                                <ul className="account_submenus">
+                                    <li><a href="#">Account Setting</a></li>
+                                    <li>qwer</li>
+                                    <li>qwer</li>
+                                    <li>qwer</li>
+                                </ul>
                            </div>
                         </li>
                         <li></li>
