@@ -5,11 +5,11 @@
     padding: 0;
     height: 100%;
     width: 270px;
-    
+    z-index: 1000;
 }
 
 .sidebar_transparent{
-    background: rgba(255, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.705);
     padding:8px;
     top: 0;
     left: 0;
@@ -208,12 +208,15 @@
 .parentA:hover,
 .parentA:active{
     background-color: rgb(253, 253, 253, 0.4);
+    transition:0.5s;
 }
 
 .multimenus:hover .parentA{
     background-color: rgb(253, 253, 253, 0.4);
+    transition:0.5s;
 }
 
 .submenus a:hover{
     background-color: rgb(253, 253, 253, 0.3);
+    transition:0.5s;
 }

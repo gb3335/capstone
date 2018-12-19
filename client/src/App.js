@@ -28,7 +28,7 @@ class App extends Component {
             <div className="navmain">
               <Navbar />
               <div className="main">
-              <Route exact path="/" component={Landing} />
+                <Route exact path="/" component={Landing} />
                 <Route exact path="/dashboard" component={Dashboard} />
                 <Route exact path="/onlinecheck" component={OnlineCheck} />
                 <Route exact path="/login" component={Login} />

@@ -1,15 +1,56 @@
 .navbar-size{
     top:0px;
+    height: 59px;
+    padding: 0;
+    margin: 0;
+}
+
+.head-title{
+    margin-left: 10px;
 }
 
 .navbar_items{
     text-decoration: none;
     height: 100%;
-
 }
 
 .navbar_items a{
     text-decoration: none;
     font-size: 1em;
     color:black;
+    height: 59px;
+    display: table;
+    padding: 15px 15px;
+    border-radius: 5px;
+    margin-right: 5px;
+    transition:0.5s;
 }
+
+.navbar_items div{
+    height: 58px;
+    padding: 10px 15px;
+    margin: 0px 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.navbar_items div p{
+    display: inline;
+    margin-left: 10px;
+    
+}
+
+.navbar_items .user_img{
+    width: 40px;
+    border-radius: 50px;
+    border: 1px solid black;
+}
+
+.navbar_items a:hover{
+    background: rgba(94, 94, 95, 0.432);
+}
+
+.navbar_items div:hover{
+    background: rgba(94, 94, 95, 0.432);
+}
+

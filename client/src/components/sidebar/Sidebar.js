@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Proptypes from 'prop-types'
-import avatar from '../../image/avatar.jpg';
 import bsuback from '../../image/bsuback.JPG';
 import {changePageTitle} from '../../actions/sidebarActions';
 import './Sidebar.css'
-
+const images = require.context('../../images', true);
 
 class Sidebar extends Component {
 
@@ -14,21 +13,21 @@ class Sidebar extends Component {
         super()
         this.state = {
            pageTitle: "",
-           classname: "fa fa-caret-down rotate"
+           rotate: "fa fa-caret-down rotate"
         }
 
         this.updateClass = this.updateClass.bind(this);
     }
 
     updateClass = () =>{
-        const temp = this.state.classname;
-        let classname;
+        const temp = this.state.rotate;
+        let rotate;
         if(temp.length>23){
-            classname="fa fa-caret-down rotate"
+            rotate="fa fa-caret-down rotate"
         }else{
-            classname="fa fa-caret-down rotate down"
+            rotate="fa fa-caret-down rotate down"
         }
-        this.setState({classname})
+        this.setState({rotate})
      }
 
      changeTitle = (title) => {
@@ -36,6 +35,7 @@ class Sidebar extends Component {
      }
 
     render() { 
+        let img_src = images(`./avatar.jpg`)
         return (
             <div>
                 <div className="sidebar" style={ { backgroundImage: `url(${bsuback})` } }>
@@ -46,7 +46,7 @@ class Sidebar extends Component {
                         </div>
                         <div className="sidebar_user">
                             <div className="sidebar_user_image">
-                                <img src={avatar} alt="Your Avatar"/>
+                                <img src={img_src} alt="Your Avatar"/>
                             </div>
                             <div className="sidebar_user_name">
                                 <Link to="/account">Krishield Kyle</Link>
@@ -62,7 +62,7 @@ class Sidebar extends Component {
                                     <a onClick={this.updateClass} className="collapsed parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
                                         <i className="fa fa-search pr-3"></i>
                                         <p className="pr-2">Check Plagiarism</p>
-                                        <b id="rotate" className={this.state.classname}></b>
+                                        <b id="rotate" className={this.state.rotate}></b>
                                     </a>
                                     <div id="checkPlagiarism" className="collapse" aria-expanded="false">
                                         <ul className="submenus nav">
@@ -93,7 +93,7 @@ class Sidebar extends Component {
                         </div>
                         <div className="sidebar_user_mini">
                             <div className="sidebar_user_image_mini">
-                                <img src={avatar} alt="Your Avatar"/>
+                                <img src={img_src} alt="Your Avatar"/>
                             </div>
                         </div>
                         
