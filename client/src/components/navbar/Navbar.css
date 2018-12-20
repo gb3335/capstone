@@ -1,18 +1,61 @@
 .navbar-size{
-    top:0px;
+
+    top:0;
+    left: 0;
     height: 59px;
-    padding: 0;
+    padding: 0 1rem;
     margin: 0;
+    display: flex;
+    align-items: center;
+
+}
+
+.navbar-size a{
+    font-weight: 350;
 }
 
 .head-title{
-    margin-left: 10px;
+    margin-left: 1.5rem;
+    
+}
+
+.head-title a{
+    text-decoration: none;
+    font-size: 2rem;
+    color: black;
+}
+
+.spacer{
+    flex:1; 
 }
 
 .navbar_items{
     text-decoration: none;
     height: 100%;
 }
+
+.navbar_items .mainUL{
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+}
+
+.navbar_items .mainUL .mainLI{
+    padding: 0px 0.2rem;
+}
+
+.navbar_items .normalA{
+    text-decoration: none;
+    font-size: 1em;
+    color:black;
+    height: 59px;
+    display: table;
+    padding: 15px 15px;
+    border-radius: 5px;
+    transition:0.5s;
+}
+
 
 .navbar_items .account_button{
     height: 58px;
@@ -22,7 +65,6 @@
     color: black;
     padding: 10px 10px;
     border-radius: 5px;
-    margin-right: 50px;
     transition:0.5s;
 
 }
