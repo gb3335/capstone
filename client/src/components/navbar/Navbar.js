@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom';
 
 
 import './Navbar.css'
+import ToggleButton from '../sidebar/ToggleButton'
+
 
 const images = require.context('../../images', true);
 
@@ -14,26 +16,32 @@ class Navbar extends Component {
         const {pageTitle} = this.props.pageTitle;
         return (
             <nav className="navbar navbar-size">
-                <div className="head-title">
-                    <h3>{pageTitle}</h3>
+                <div><ToggleButton/></div>
+                <div className="head-title d-none d-lg-block">
+                    <Link to="/">{pageTitle}</Link>
                 </div>
-                <div className="navbar_items">
-                    <ul className="nav">
-                        <li>
-                           <div> 
+                <div className="spacer"/>
+                <div className="navbar_items" id="pangcol" aria-expanded="true">
+                    <ul className="mainUL">
+                        <li className="mainLI">
+                           <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded="false"> 
                                <img className="user_img" src={img_src} alt=""></img>
                                 <p>Krishield Kyle</p>
-                           </div>
+                           </a>
                            <div id="userMenu"className="collapse" aria-expanded="false">
-
+                                <ul className="account_submenus">
+                                    <li><a href="#">Account Setting</a></li>
+                                    <li>qwer</li>
+                                    <li>qwer</li>
+                                    <li>qwer</li>
+                                </ul>
                            </div>
                         </li>
-                        <li></li>
+                        <li className="mainLI"><a href="#" className="normalA">qweqwe</a></li>
                         {/* <li>    
                             <Link to="/login"><i className="fa fa-key"></i> Login</Link>
                         </li> */}
                     </ul>
-                    
                     
                 </div>  
             </nav>
