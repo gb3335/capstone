@@ -38,6 +38,14 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
+    college:{
+        type: Schema.Types.ObjectId,
+        ref: 'colleges'
+    },
+    isBlock:{
+        type: Number,
+        default: 0
+    },
     isLock:{
         type: Number,
         default: 0

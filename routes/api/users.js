@@ -8,7 +8,7 @@ const generator = require('generate-password');
 
 //Load input Validation
 const validateRegisterInput = require('../../validation/register');
-const validateEmailRegisterInput = require('../../validation/emailregister');
+const validateProfileInput = require('../../validation/profile');
 const validateLoginInput = require('../../validation/login');
 
 // Load User Model
@@ -31,9 +31,83 @@ generatePassword =()=>{
     });
 }
 
+// @routes  POST api/users/update/profile
+// @desc    Edit User profile
+// @access  private
+router.post('/update/profile', passport.authenticate('jwt', {session: false}), (req,res)=>{
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    //Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const password = req.body.password;
+
+    const profileData={
+        name:{
+            firstName: req.body.firstname,
+            middleName: req.body.middlename,
+            lastName: req.body.lastname
+        },
+        email:req.body.email,
+        userName:req.body.username,
+        contact: req.body.contact
+    };
+    
+    
+    if(profileData.userName.length > 0){
+        User.findOne({userName:profileData.userName})
+        .then(user =>{
+            if(user){
+                if(user.email != req.user.email){
+                    errors.username = 'Username Already Exists!';
+                    return res.status(400).json(errors);
+                }
+            }
+            
+            User.findById(req.user._id)
+                .then(user =>{
+                    bcrypt.compare(password, user.password)
+                        .then(isMatch =>{
+                            if(isMatch){
+                                User.findByIdAndUpdate(req.user._id, {$set:profileData}, {new: true})
+                                    .then(user => res.json(user))
+                            }else{
+                                errors.password = 'Password do not match!';
+                                return res.status(400).json(errors);
+                            }
+                        })
+                    
+                })
+            
+        })
+        .catch(err => console.log(err))
+    }else{
+        User.findById(req.user._id)
+                .then(user =>{
+                    bcrypt.compare(password, user.password)
+                        .then(isMatch =>{
+                            if(isMatch){
+                                User.findByIdAndUpdate(req.user._id, {$set:profileData}, {new: true})
+                                    .then(user => res.json(user))
+                            }else{
+                                errors.password = 'Password do not match!';
+                                return res.status(400).json(errors);
+                            }
+                        })
+                    
+                })
+    }
+
+
+    
+
+})
+
 // @routes  POST api/users/register
-// @desc    Register a User
-// @access  public
+// @desc    Register/Edit a User
+// @access  private
 router.post('/register', passport.authenticate('jwt', { session: false }), (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
 
@@ -60,7 +134,8 @@ router.post('/register', passport.authenticate('jwt', { session: false }), (req,
                 password,
                 avatar: "../../images/user.png",
                 contact: req.body.contact,
-                userType: req.body.usertype
+                userType: req.body.usertype,
+                invitedBy: `${req.user.name.firstName} ${req.user.name.lastName}`
             });
 
             const mailOptions ={
@@ -94,7 +169,7 @@ router.post('/register', passport.authenticate('jwt', { session: false }), (req,
             })
         }
     })
-    });
+});
 
 
 // @routes  POST api/users/login
