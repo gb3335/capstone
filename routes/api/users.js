@@ -10,6 +10,7 @@ const generator = require('generate-password');
 const validateRegisterInput = require('../../validation/register');
 const validateProfileInput = require('../../validation/profile');
 const validateLoginInput = require('../../validation/login');
+const validatePasswordInput = require('../../validation/password');
 
 // Load User Model
 const User = require('../../models/User')
@@ -30,6 +31,52 @@ generatePassword =()=>{
         numbers: true
     });
 }
+
+// @routes  POST api/users/update/password
+// @desc    Edit User password
+// @access  private
+router.post('/update/password', passport.authenticate('jwt', {session : false}), (req, res) => {
+
+    const { errors, isValid } = validatePasswordInput(req.body);
+
+    //Check Validation
+    if (!isValid) {
+        return res.status(400).json(errors);
+    }
+
+    const profileData = {
+        password: req.body.newpassword
+    }
+
+    User.findById(req.user._id)
+        .then(user =>{
+            bcrypt.compare(req.body.password, user.password)
+                .then(isMatch => {
+                    if(isMatch){
+                        bcrypt.compare(req.body.newpassword, user.password)
+                            .then(isMatch => {
+                                if(isMatch){
+                                    errors.newpassword = "Please enter a new password!"
+                                    return res.status(400).json(errors);
+                                }else{
+                                    bcrypt.genSalt(10, (err, salt) => {
+                                        bcrypt.hash(profileData.password, salt, (err, hash) => {
+                                            if (err) throw err;
+                                            profileData.password = hash;
+                                            User.findByIdAndUpdate(req.user._id, {$set:profileData}, {new: true})
+                                                .then(user => res.json(user))
+                                                .catch(err => console.log(err))
+                                        })
+                                    })  
+                                }
+                            })
+                    }else{
+                        errors.password = "Old Password do not match!"
+                        return res.status(400).json(errors);
+                    }
+                })
+        })
+})
 
 // @routes  POST api/users/update/profile
 // @desc    Edit User profile
@@ -99,10 +146,6 @@ router.post('/update/profile', passport.authenticate('jwt', {session: false}), (
                     
                 })
     }
-
-
-    
-
 })
 
 // @routes  POST api/users/register
@@ -255,8 +298,6 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
         userType: req.user.userType
     });
 });
-
-
 
 
 module.exports = router
