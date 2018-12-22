@@ -4,7 +4,7 @@
     left: 0;
     padding: 0;
     height: 100%;
-    width: 270px;
+    width: 240px;
     z-index: 1000;
     transition: 0.5s;
 }
@@ -298,16 +298,16 @@
 /* Hovers */
 .parentA:hover,
 .parentA:active{
-    background-color: rgb(253, 253, 253, 0.4);
-    transition:0.5s;
+    background-color: rgb(253, 253, 253, 0.3);
+    
 }
 
 .multimenus:hover .parentA{
-    background-color: rgb(253, 253, 253, 0.4);
-    transition:0.5s;
+    background-color: rgb(253, 253, 253, 0.3);
+    
 }
 
 .submenus a:hover{
-    background-color: rgb(253, 253, 253, 0.3);
-    transition:0.5s;
+    background-color: rgb(253, 253, 253, 0.2);
+    
 }
