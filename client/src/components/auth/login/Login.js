@@ -17,7 +17,22 @@ class Login extends Component {
         }
 
         this.onChange = this.onChange.bind(this);
-        // this.onSubmit = this.onSubmit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+    }
+
+    componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.isAuthenticated) {
+            this.props.history.push('/dashboard')
+        }
+        if (nextProps.errors) {
+            this.setState({ errors: nextProps.errors });
+        }
     }
 
     onChange(e) {
@@ -37,34 +52,31 @@ class Login extends Component {
     render() { 
         const { errors } = this.state;
         return (
+            
             <div className="container-fluid p-2">
                 <div className="login-box">
                 <h4>Login</h4>
                     <div className="row">
                         <div className="col">
                             <form onSubmit={this.onSubmit}>
-                                <div className="form-group">
-                                    <TextFieldGroup
-                                        placeholder="Email or Username"
-                                        name="username"
-                                        type="text"
-                                        value={this.state.username}
-                                        onChange={this.onChange}
-                                        error={errors.username}
-                                    />
-                                    {/* <input className="form-control" placeholder="Email or Username" type="text"/> */}
-                                </div>
-                                <div className="form-group">
-                                    <TextFieldGroup
-                                        placeholder="Password"
-                                        name="password"
-                                        type="password"
-                                        value={this.state.password}
-                                        onChange={this.onChange}
-                                        error={errors.password}
-                                    />
-                                    {/* <input className="form-control" placeholder="Password" type="password"/> */}
-                                </div>
+                                <TextFieldGroup
+                                    placeholder="Email or Username"
+                                    name="username"
+                                    type="text"
+                                    value={this.state.username}
+                                    onChange={this.onChange}
+                                    error={errors.username}
+                                />
+                                {/* <input className="form-control" placeholder="Email or Username" type="text"/> */}
+                                <TextFieldGroup
+                                    placeholder="Password"
+                                    name="password"
+                                    type="password"
+                                    value={this.state.password}
+                                    onChange={this.onChange}
+                                    error={errors.password}
+                                />
+                                {/* <input className="form-control" placeholder="Password" type="password"/> */}
                                 <div className="optiondiv">
                                     <div className="checkbox icheck">
                                         <label>
