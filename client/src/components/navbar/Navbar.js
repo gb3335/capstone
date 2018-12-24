@@ -14,6 +14,35 @@ class Navbar extends Component {
     render() { 
         let img_src = images(`./avatar.jpg`)
         const {pageTitle} = this.props.pageTitle;
+
+        const guestLinks = (
+            <ul className="mainUL">
+                <li className="mainLI">    
+                    <Link to="/login" className="normalA"><i className="fa fa-key"></i> Login</Link>
+                </li>
+            </ul>
+        );
+        
+        const authLinks = (
+            <ul className="mainUL">
+                <li className="mainLI">
+                    <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded="false"> 
+                        <img className="user_img" src={img_src} alt=""></img>
+                        <p>Krishield Kyle</p>
+                    </a>
+                    <div id="userMenu"className="collapse" aria-expanded="false">
+                        <ul className="account_submenus">
+                            <li><a href="#">Account Setting</a></li>
+                            <li>qwer</li>
+                            <li>qwer</li>
+                            <li>qwer</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        );
+
+
         return (
             <nav className="navbar navbar-size">
                 <div><ToggleButton/></div>
@@ -22,27 +51,7 @@ class Navbar extends Component {
                 </div>
                 <div className="spacer"/>
                 <div className="navbar_items" id="pangcol" aria-expanded="true">
-                    <ul className="mainUL">
-                        <li className="mainLI">
-                           <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded="false"> 
-                               <img className="user_img" src={img_src} alt=""></img>
-                                <p>Krishield Kyle</p>
-                           </a>
-                           <div id="userMenu"className="collapse" aria-expanded="false">
-                                <ul className="account_submenus">
-                                    <li><a href="#">Account Setting</a></li>
-                                    <li>qwer</li>
-                                    <li>qwer</li>
-                                    <li>qwer</li>
-                                </ul>
-                           </div>
-                        </li>
-                        <li className="mainLI"><a href="#" className="normalA">qweqwe</a></li>
-                        {/* <li>    
-                            <Link to="/login"><i className="fa fa-key"></i> Login</Link>
-                        </li> */}
-                    </ul>
-                    
+                    {guestLinks}
                 </div>  
             </nav>
         );

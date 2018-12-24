@@ -1,0 +1,21 @@
+.login-box{
+    background: white;
+    width: 350px;
+    height: 400px;
+    padding: 20px 30px;
+    margin: 15vh auto 100px auto;
+    
+}
+
+.optiondiv{
+    display: flex;
+    flex-direction: row;
+}
+
+.spacer{
+    flex:1;
+}
+.forgotdiv{
+    display: flex;
+    flex-direction: column;
+}
