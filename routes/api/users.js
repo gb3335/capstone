@@ -32,10 +32,26 @@ generatePassword =()=>{
     });
 }
 
-// @routes  POST api/users/update/password
+// @routes  POST api/users/profile/update-picture
+// @desc    Change Profile Picture
+// @access  private
+router.post('/profile/update-picture', passport.authenticate('jwt', {session : false}), (req, res) => {
+    
+    const newAvatarPath = req.body.avatar;
+    const profileData = {
+        avatar: newAvatarPath
+    }
+
+    User.findByIdAndUpdate(req.user._id, {$set:profileData}, {new:true})
+        .then(user => res.json(user))
+        .catch(err => console.log(err))
+
+});
+
+// @routes  POST api/users/profile/update-password
 // @desc    Edit User password
 // @access  private
-router.post('/update/password', passport.authenticate('jwt', {session : false}), (req, res) => {
+router.post('/profile/update-password', passport.authenticate('jwt', {session : false}), (req, res) => {
 
     const { errors, isValid } = validatePasswordInput(req.body);
 
@@ -78,10 +94,10 @@ router.post('/update/password', passport.authenticate('jwt', {session : false}),
         })
 })
 
-// @routes  POST api/users/update/profile
+// @routes  POST api/users/profile/update
 // @desc    Edit User profile
 // @access  private
-router.post('/update/profile', passport.authenticate('jwt', {session: false}), (req,res)=>{
+router.post('/profile/update', passport.authenticate('jwt', {session: false}), (req,res)=>{
     const { errors, isValid } = validateProfileInput(req.body);
 
     //Check Validation
@@ -246,7 +262,7 @@ router.post('/login', (req, res) => {
                                 if (isMatch) {
                                     //User Match!
 
-                                    const payload = { id: user._id, userName: user.userName, email:user.email, contact: user.contact, firstName: user.name.firstName, middleName: user.name.middleName, lastName: user.name.lastName,avatar: user.avatar, userType: user.userType, isLock: user.isLock } //Create JWT Payload
+                                    const payload = { id: user._id, userName: user.userName, email:user.email, contact: user.contact, firstName: user.name.firstName, middleName: user.name.middleName, lastName: user.name.lastName,avatar: user.avatar, userType: user.userType, isLock: user.isLock, isBlock: user.isBlock, invitedBy: user.invitedBy, college: user.college, date: user.date } //Create JWT Payload
                                     //Sign the Token
                                     jwt.sign(payload, keys.secretOrKey, (err, token) => {
                                         res.json({
@@ -268,7 +284,7 @@ router.post('/login', (req, res) => {
                     if (isMatch) {
                         //User Match!
 
-                        const payload = { id: user._id, userName: user.userName, email:user.email, contact: user.contact, firstName: user.name.firstName, middleName: user.name.middleName, lastName: user.name.lastName,avatar: user.avatar, userType: user.userType, isLock: user.isLock } //Create JWT Payload
+                        const payload = { id: user._id, userName: user.userName, email:user.email, contact: user.contact, firstName: user.name.firstName, middleName: user.name.middleName, lastName: user.name.lastName,avatar: user.avatar, userType: user.userType, isLock: user.isLock, isBlock: user.isBlock, invitedBy: user.invitedBy, college: user.college, date: user.date } //Create JWT Payload
 
                         //Sign the Token
                         jwt.sign(payload, keys.secretOrKey, (err, token) => {
@@ -290,12 +306,21 @@ router.post('/login', (req, res) => {
 // @desc    Return Current User
 // @access  private
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.json({
-        id: req.user._id,
-        name: req.user.name.firstName,
-        userName:req.user.userName,
-        email: req.user.email,
-        userType: req.user.userType
+    res.json({ 
+        id: req.user._id, 
+        userName: req.user.userName, 
+        email:req.user.email, 
+        contact: req.user.contact, 
+        firstName: req.user.name.firstName, 
+        middleName: req.user.name.middleName, 
+        lastName: req.user.name.lastName,
+        avatar: req.user.avatar, 
+        userType: req.user.userType, 
+        isLock: req.user.isLock, 
+        isBlock: req.user.isBlock, 
+        invitedBy: req.user.invitedBy, 
+        college: req.user.college,
+        date: req.user.date
     });
 });
 
