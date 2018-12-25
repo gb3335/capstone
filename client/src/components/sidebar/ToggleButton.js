@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-
+import { Link } from 'react-router-dom';
 import './ToggleButton.css'
  
 class ToggleButton extends Component {
     render() { 
         return (
             
-            <a href="#"className="toggle_button">
+            <Link to="#" className="toggle_button">
                 <i className="fa fa-grip-vertical"></i>
-            </a>
+            </Link>
             
         );
     }

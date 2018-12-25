@@ -206,9 +206,9 @@ class Sidebar extends Component {
                                     </a>
                                 </li>
                                 <li className="multimenus_mini">
-                                    <a className="collapsed parentA" href="#">
+                                    <Link className="collapsed parentA" to="#">
                                         <i className="fa fa-search pr-3"></i>
-                                    </a>
+                                    </Link>
                                     
                                         <ul className="submenus_mini nav">
                                             <li><a href="/">Online Check</a></li>
