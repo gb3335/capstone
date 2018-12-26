@@ -18,8 +18,7 @@ export default function (state = initialState, action) {
             }
         case CLEAR_CURRENT_PROFILE:
             return {
-                ...state,
-                profile: null
+                ...state
             }
         default:
             return state;
