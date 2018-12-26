@@ -24,6 +24,6 @@
 
 @media (max-width: 962px){
     .navmain{
-        width: calc(100% - 80px);
+        width: calc(100% - 50px);
     }
 }
