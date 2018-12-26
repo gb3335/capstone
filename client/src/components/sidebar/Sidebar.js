@@ -69,12 +69,12 @@ class Sidebar extends Component {
                 
                 <div className="sidebar_navigation_items">
                     <ul>
-                        <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line pr-3"></i>
+                        <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line"></i>
                                 <p>Dashboard</p></Link>
                         </li>
                         <li className="multimenus forlarge">
                             <a onClick={this.updateClass} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
-                                <i className="fa fa-search pr-3"></i>
+                                <i className="fa fa-search"></i>
                                 <p className="pr-2">Check Plagiarism</p>
                                 <b id="rotate" className={this.state.rotate}></b>
                             </a>
@@ -90,7 +90,7 @@ class Sidebar extends Component {
                         </li>
                         <li className="multimenus formini">
                             <a onClick={this.updateClass} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded={this.state.aria}>
-                                <i className="fa fa-search pr-3"></i>
+                                <i className="fa fa-search"></i>
                                 <p className="pr-2">Check Plagiarism</p>
                                 <b id="rotate" className={this.state.rotate}></b>
                             </a>
@@ -106,7 +106,7 @@ class Sidebar extends Component {
                         </li>
                         <li>
                             <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
-                                <i className="fa fa-book pr-3"></i>
+                                <i className="fa fa-book"></i>
                                 <p>Documents</p>
                             </Link>
                         </li>
@@ -132,12 +132,12 @@ class Sidebar extends Component {
                 
                 <div className="sidebar_navigation_items">
                     <ul>
-                        <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line pr-3"></i>
+                        <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line"></i>
                                 <p>Dashboard</p></Link>
                         </li>
                         <li className="multimenus forlarge">
                             <a onClick={this.updateClass} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
-                                <i className="fa fa-search pr-3"></i>
+                                <i className="fa fa-search"></i>
                                 <p className="pr-2">Check Plagiarism</p>
                                 <b id="rotate" className={this.state.rotate}></b>
                             </a>
@@ -153,7 +153,7 @@ class Sidebar extends Component {
                         </li>
                         <li className="multimenus formini">
                             <a onClick={this.updateClass} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded={this.state.aria}>
-                                <i className="fa fa-search pr-3"></i>
+                                <i className="fa fa-search"></i>
                                 <p className="pr-2">Check Plagiarism</p>
                                 <b id="rotate" className={this.state.rotate}></b>
                             </a>
@@ -169,7 +169,7 @@ class Sidebar extends Component {
                         </li>
                         <li>
                             <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
-                                <i className="fa fa-book pr-3"></i>
+                                <i className="fa fa-book"></i>
                                 <p>Documents</p>
                             </Link>
                         </li>

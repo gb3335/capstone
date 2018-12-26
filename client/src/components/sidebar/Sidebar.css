@@ -75,6 +75,10 @@
     
 }
 
+.sidebar_navigation_items i {
+    padding-right: 14px;
+}
+
 .sidebar_navigation_items ul {
     list-style-type: none;
     display: table;
@@ -115,11 +119,24 @@
 
 @media (max-width: 962px){
     .sidebar{
-        width: 80px;
-    }
-    .sidebar_user_image img{
-        
         width: 50px;
+    }
+
+    .sidebar_transparent{
+        padding:5px;
+        
+    }
+
+    .sidebar_user_image img{
+        padding: 0;
+        margin:0;
+        width: 35px;
+    }
+    .sidebar_logo a{
+        font-size: 1.2rem;
+    }
+    .sidebar_user{
+        padding: 10px 2px;
     }
     .sidebar_user_name a{
         display: none;
@@ -129,6 +146,7 @@
     }
     .sidebar_navigation_items li{
         padding: 0;
+        margin: 0;
         text-align: center;
     }
     .multimenus{
@@ -144,9 +162,9 @@
         background: rgb(255, 255, 255);
         border-bottom-right-radius: 10px;
         border-top-right-radius: 10px;
-        width: 200px;
-        top:0;
-        left:75px;
+        width: 170px;
+        top:-5px;
+        left:53px;
         padding: 5px 0px;
         box-shadow: 1px 0px 4px #aaaaaa;
     }
@@ -162,13 +180,23 @@
     }
 
     #checkPlagiarism a{
-        padding: 9px 0px;
+        padding: 4px 0px;
         margin: 2px 5px;
         background: rgba(0, 0, 0, 0.514);
     }
 
+    .sidebar_navigation_items a{
+        padding-top:2px;
+        padding-left:10px;
+        padding-right:0px;
+        margin: 5px 0px;
+        height: 35px;
+    }
+
     .sidebar_navigation_items i{
-        font-size: 1.5em;
+        font-size: 1em;
+       padding: 0;
+       margin-right: 10px;
     }
     .rotate{
         display: none;
