@@ -3,8 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import {setCurrentUser} from './actions/authActions';
-
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 import store from './store';
 
 import './App.css';
@@ -29,13 +28,37 @@ if(localStorage.jwtToken) {
 }
 
 class App extends Component {
+
+  constructor(){
+    super()
+    this.state = {
+      sideclass: "navmain"
+    }
+  }
+
+  componentWillUpdate(nextProps, nextState){
+    console.log("prevState")
+  }
+
+  componentWillReceiveProps(){
+    const curstate = store.getState();
+    const {hide} = curstate.sidebar;
+    if(hide){
+      const sideclass = "sidebarhidden"
+      this.setState({sideclass})
+    }else{
+      const sideclass = "navmain"
+      this.setState({sideclass})
+    }
+  }
+
   render() {
     return (
       <Provider store={store}>
         <Router>
           <div className="App">
             <Sidebar />
-            <div className="navmain">
+            <div className={this.state.sideclass}>
               <Navbar />
               <div className="main">
                 <Route exact path="/" component={Landing} />
