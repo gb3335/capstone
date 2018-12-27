@@ -10,7 +10,7 @@
 }
 
 .hide{
-    display: none;
+    left:-240px;
 }
 
 .sidebar_transparent{
