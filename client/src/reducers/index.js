@@ -4,7 +4,7 @@ import authReducer from './authReducer';
 import errorReducer from './errorReducer';
 
 export default combineReducers({
-    pageTitle: sidebarReducer,
+    sidebar: sidebarReducer,
     errors: errorReducer,
     auth: authReducer
 });

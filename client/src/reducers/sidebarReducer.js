@@ -1,7 +1,8 @@
-import { GET_PAGE_TITLE } from '../actions/types'
+import { GET_PAGE_TITLE,HIDE_SIDEBAR } from '../actions/types'
 
 const initialState = {
-    pageTitle: "Welcome to our Website"
+    pageTitle: "Welcome to our Website",
+    hide: false
 }
 
 
@@ -11,6 +12,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 pageTitle: action.payload
+            }
+        case HIDE_SIDEBAR:
+            return {
+                ...state,
+                hide: !action.payload
             }
         default:
             return state;

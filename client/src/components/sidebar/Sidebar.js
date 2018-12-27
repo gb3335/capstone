@@ -12,8 +12,10 @@ class Sidebar extends Component {
         super()
         this.state = {
            pageTitle: "",
+           hide: false,
+           sideclass: "sidebar ",
            aria: "false",
-           forcol: "collapse",
+           forcol: "collapse minimenu",
            rotate: "fa fa-caret-down rotate"
         }
 
@@ -37,16 +39,26 @@ class Sidebar extends Component {
 
      onMouseEnter = () => {
         let aria = "true"
-        let forcol = "collapse show"
+        let forcol = "collapse minimenu show"
 
         this.setState({aria, forcol})
      }
 
     onMouseLeave = () => {
         let aria = "false"
-        let forcol = "collapse"
+        let forcol = "collapse minimenu"
 
         this.setState({aria, forcol})
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.sidebar.hide){
+            const sideclass = "sidebar hide"
+            this.setState({sideclass})
+        }else{
+            const sideclass = "sidebar"
+            this.setState({sideclass})
+        }
     }
 
     render() {
@@ -63,7 +75,7 @@ class Sidebar extends Component {
                         <img src="/images/avatarGuest.png" alt="Your Avatar"/>
                     </div>
                     <div className="sidebar_user_name">
-                        <Link to="/account">Guest</Link>
+                        <Link to="/login">Guest</Link>
                     </div>
                 </div>
                 
@@ -71,6 +83,21 @@ class Sidebar extends Component {
                     <ul>
                         <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line"></i>
                                 <p>Dashboard</p></Link>
+                        </li>
+                        <li><Link to="/colleges" onClick={() => this.changeTitle("Colleges")} className="parentA"><i className="fa fa-graduation-cap"></i>
+                                <p>Colleges</p></Link>
+                        </li>
+                        <li>
+                            <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
+                                <i className="fa fa-book"></i>
+                                <p>Documents</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/journals" onClick={() => this.changeTitle("Journals")} className="parentA">
+                                <i className="fa fa-journal-whills"></i>
+                                <p>Journals</p>
+                            </Link>
                         </li>
                         <li className="multimenus forlarge">
                             <a onClick={this.updateClass} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
@@ -104,12 +131,7 @@ class Sidebar extends Component {
                                 </ul>
                             </div>
                         </li>
-                        <li>
-                            <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
-                                <i className="fa fa-book"></i>
-                                <p>Documents</p>
-                            </Link>
-                        </li>
+                        
                         
                     </ul>
                 </div>
@@ -132,8 +154,23 @@ class Sidebar extends Component {
                 
                 <div className="sidebar_navigation_items">
                     <ul>
-                        <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line"></i>
+                    <li><Link to="/dashboard" onClick={() => this.changeTitle("Dashboard")} className="parentA"><i className="fa fa-chart-line"></i>
                                 <p>Dashboard</p></Link>
+                        </li>
+                        <li><Link to="/colleges" onClick={() => this.changeTitle("Colleges")} className="parentA"><i className="fa fa-graduation-cap"></i>
+                                <p>Colleges</p></Link>
+                        </li>
+                        <li>
+                            <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
+                                <i className="fa fa-book"></i>
+                                <p>Documents</p>
+                            </Link>
+                        </li>
+                        <li>
+                            <Link to="/journals" onClick={() => this.changeTitle("Journals")} className="parentA">
+                                <i className="fa fa-journal-whills"></i>
+                                <p>Journals</p>
+                            </Link>
                         </li>
                         <li className="multimenus forlarge">
                             <a onClick={this.updateClass} className="parentA" id="plagiarism" data-toggle="collapse" href="#checkPlagiarism" aria-expanded="false">
@@ -167,13 +204,6 @@ class Sidebar extends Component {
                                 </ul>
                             </div>
                         </li>
-                        <li>
-                            <Link to="/documents" onClick={() => this.changeTitle("Documents")} className="parentA">
-                                <i className="fa fa-book"></i>
-                                <p>Documents</p>
-                            </Link>
-                        </li>
-                        
                     </ul>
                 </div>
             </nav>
@@ -181,7 +211,7 @@ class Sidebar extends Component {
 
         return (
             <div>
-                <div className="sidebar" style={ { backgroundImage: `url(${bsuback})` } }>
+                <div className={this.state.sideclass} style={ { backgroundImage: `url(${bsuback})` } }>
                     <div className="sidebar_transparent">
                         {isAuthenticated ? authLinks : guestLinks}
                     </div>
@@ -238,6 +268,7 @@ Sidebar.proptypes = {
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    sidebar: state.sidebar
 });
 export default connect(mapStateToProps,{changePageTitle})(Sidebar);

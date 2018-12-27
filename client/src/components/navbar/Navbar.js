@@ -4,21 +4,28 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../../actions/authActions';
 import { clearCurrentProfile } from '../../actions/authActions';
+import {hideSideBar} from '../../actions/sidebarActions'
+
 
 import './Navbar.css'
-import ToggleButton from '../sidebar/ToggleButton'
 
 class Navbar extends Component {
+
     onLogoutClick(e) {
         e.preventDefault();
         this.props.clearCurrentProfile();
         this.props.logoutUser();
     }
 
+    onClickHideSidebar = () =>{
+        const {hide} = this.props.sidebar
+        this.props.hideSideBar(hide)
+    }
+
     render() { 
         const {isAuthenticated, user} = this.props.auth
        
-        const {pageTitle} = this.props.pageTitle;
+        const {pageTitle} = this.props.sidebar;
 
         const guestLinks = (
             <ul className="mainUL">
@@ -50,8 +57,12 @@ class Navbar extends Component {
 
         return (
             <nav className="navbar navbar-size">
-                <div><ToggleButton/></div>
-                <div className="head-title d-none d-lg-block">
+                <div>
+                    <Link to="#" onClick={this.onClickHideSidebar} className="toggle_button">
+                        <i className="fa fa-grip-vertical"></i>
+                    </Link>
+                </div>
+                <div className="head-title">
                     <Link to="/">{pageTitle}</Link>
                 </div>
                 <div className="spacer"/>
@@ -66,15 +77,16 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
     logoutUser: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    hideSideBar: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
-    pageTitle: state.pageTitle,
+    sidebar: state.sidebar,
     auth: state.auth
 });
 
 
-export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile, hideSideBar })(
     Navbar
 );

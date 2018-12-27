@@ -102,6 +102,32 @@
     display: none;
 }
 
+.toggle_button{
+    
+    text-decoration: none;
+    color: black;
+    padding: 0;
+    margin: 0;
+    transition: 0.5s;
+}
+
+.toggle_button i{
+    color: rgb(163, 163, 163);
+    font-size: 1.5rem;
+    transition: 0.5s;
+}
+
+.toggle_button:focus{
+    outline: none;
+    transition: 0.5s;
+}
+
+.toggle_button i:hover{
+    color: rgb(112, 106, 106);
+}
+
+
+
 
 /* .navbar_items a{
     text-decoration: none;
