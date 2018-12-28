@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ReactHtmlParser from 'react-html-parser';
+import {removeStopwords} from 'stopword';
 import './OnlineCheck.css'
 
 import {checkPlagiarismOnline} from '../../actions/plagiarismAction'
@@ -25,20 +26,28 @@ class OnlineCheck extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-
+        let old = this.state.q.toString().split(' ');
+        old = removeStopwords(old)
+        const q = old.join(' ');
         const input = {
-            q:this.state.q
+            q
         }
+        // console.log(input)
         this.props.checkPlagiarismOnline(input);
     }
 
     componentWillReceiveProps(nextProps){
         let output="";
-        const items = nextProps.plagiarism.output.data.items;
-        items.forEach(function(item, index){
-            output+=`<p>Link ${index+1}: <a href="${item.link}">${item.link}</a></p>`
-            output+=`<p>${item.htmlSnippet}</p>`
-        })
+        if(nextProps.plagiarism.output.data.items){
+            const items = nextProps.plagiarism.output.data.items;
+            items.forEach(function(item, index){
+                output+=`<p>Link ${index+1}: <a target="_blank" href="${item.link}">${item.link}</a></p>`
+                output+=`<p>${item.htmlSnippet}</p>`
+            })
+        }else{
+            output="Nothing to show!"   
+        }
+        
         this.setState({output})
         
     }
