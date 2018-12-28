@@ -1,0 +1,40 @@
+.app{
+    height: 100%;
+    top:0;
+    left: 0;
+}
+
+.navmain{
+    position: relative;
+    float: right;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: 100%;
+    width: calc(100% - 240px);
+    transition: 0.5s;
+}
+
+.sidebarhidden{
+    position: relative;
+    float: right;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+    transition: 0.5s;
+}
+
+.main{
+    height:100%;
+    width: 100%;
+   
+    background: rgb(248, 244, 244);
+}
+
+@media (max-width: 962px){
+    .navmain{
+        width: calc(100% - 50px);
+    }
+}
