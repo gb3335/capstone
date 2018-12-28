@@ -28,22 +28,6 @@ class App extends Component {
     }
   }
 
-  componentWillUpdate(nextProps, nextState){
-    console.log("prevState")
-  }
-
-  componentWillReceiveProps(){
-    const curstate = store.getState();
-    const {hide} = curstate.sidebar;
-    if(hide){
-      const sideclass = "sidebarhidden"
-      this.setState({sideclass})
-    }else{
-      const sideclass = "navmain"
-      this.setState({sideclass})
-    }
-  }
-
   render() {
     return (
       <Provider store={store}>
