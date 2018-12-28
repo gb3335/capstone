@@ -71,16 +71,6 @@ class Sidebar extends Component {
         }
     }
 
-    componentDidMount(){
-        if(this.props.sidebar.hide){
-            const sideclass = "sidebar hide"
-            this.setState({sideclass})
-        }else{
-            const sideclass = "sidebar"
-            this.setState({sideclass})
-        }
-    }
-
     render() {
 
         const {isAuthenticated, user} = this.props.auth
