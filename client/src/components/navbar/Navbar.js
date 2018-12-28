@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { logoutUser } from '../../actions/authActions';
 import { clearCurrentProfile } from '../../actions/authActions';
+import {changePageTitle} from '../../actions/sidebarActions';
 import {hideSideBar} from '../../actions/sidebarActions'
 
 
@@ -22,6 +23,10 @@ class Navbar extends Component {
         this.props.hideSideBar(hide)
     }
 
+    changeTitle = (title) => {
+        this.props.changePageTitle(title);
+     }
+
     render() { 
         const {isAuthenticated, user} = this.props.auth
        
@@ -30,7 +35,7 @@ class Navbar extends Component {
         const guestLinks = (
             <ul className="mainUL">
                 <li className="mainLI">    
-                    <Link to="/login" className="normalA"><i className="fa fa-key"></i> Login</Link>
+                    <Link to="/login" onClick={() => this.changeTitle("Login")} className="normalA"><i className="fa fa-key"></i> Login</Link>
                 </li>
             </ul>
         );
@@ -78,7 +83,8 @@ class Navbar extends Component {
 Navbar.propTypes = {
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
-    hideSideBar: PropTypes.func.isRequired
+    hideSideBar: PropTypes.func.isRequired,
+    changePageTitle: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -87,6 +93,6 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps, { logoutUser, clearCurrentProfile, hideSideBar })(
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile,changePageTitle, hideSideBar })(
     Navbar
 );
