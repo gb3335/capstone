@@ -60,6 +60,16 @@ class Sidebar extends Component {
             this.setState({sideclass})
         }
     }
+    
+    componentDidMount(){
+        if(this.props.sidebar.hide){
+            const sideclass = "sidebar hide"
+            this.setState({sideclass})
+        }else{
+            const sideclass = "sidebar"
+            this.setState({sideclass})
+        }
+    }
 
     render() {
 

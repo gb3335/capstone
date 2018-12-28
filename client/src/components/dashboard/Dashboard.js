@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
-
+import {connect} from 'react-redux'
+import PropTypes from 'prop-types';
+import {changePageTitle} from '../../actions/sidebarActions';
 import './Dashboard.css'
  
-class Main extends Component {
+class Dashboard extends Component {
+
+    componentDidMount(){
+        this.props.changePageTitle("Dashboard")
+    }
+
     render() { 
         return (
             <div className="container-fluid p-2">
@@ -11,5 +18,9 @@ class Main extends Component {
         );
     }
 }
+
+Dashboard.propTypes = {
+    changePageTitle: PropTypes.func.isRequired
+}
  
-export default Main;
+export default connect(null, {changePageTitle})(Dashboard);

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Route} from 'react-router-dom';
+import { BrowserRouter as Router,Route} from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Navbar from '../navbar/Navbar';
@@ -9,7 +9,7 @@ import Landing from '../landing/Landing';
 import Dashboard from '../dashboard/Dashboard';
 import OnlineCheck from '../plagiarism/OnlineCheck';
 import Login from '../auth/login/Login';
-
+import Sidebar from '../sidebar/Sidebar'
 import './Main.css'
  
 class Main extends Component {
@@ -32,10 +32,23 @@ class Main extends Component {
         }
     }
 
+    componentDidMount(){
+        if(this.props.sidebar.hide){
+            const sideclass = "sidebarhidden"
+            this.setState({sideclass})
+        }else{
+            const sideclass = "navmain"
+            this.setState({sideclass})
+        }
+    }
+
 
     render() { 
         return (
-            <div className={this.state.sideclass}>
+            <Router>
+            <div className="App">
+                <Sidebar />
+                <div className={this.state.sideclass}>
                 <Navbar />
                 <div className="main">
                     <Route exact path="/" component={Landing} />
@@ -44,7 +57,9 @@ class Main extends Component {
                     <Route exact path="/login" component={Login} />
                 </div>
                 <Footer />
+                </div>
             </div>
+            </Router>
         );
     }
 }
