@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Proptypes from 'prop-types'
-import bsuback from '../../images/bsuback.JPG';
 import {changePageTitle} from '../../actions/sidebarActions';
 import './Sidebar.css'
 
@@ -224,48 +223,6 @@ class Sidebar extends Component {
                 <div className={this.state.sideclass} style={ { backgroundImage: `url(/images/bsuback.JPG)` } }>
                     <div className="sidebar_transparent">
                         {isAuthenticated ? authLinks : guestLinks}
-                    </div>
-                </div>
-                {/* MINI */}
-                <div className="sidebar_mini" style={ { backgroundImage: `url(${bsuback})` } }>
-                    <div className="sidebar_transparent_mini">
-                    <nav className="sidebar_navigation">
-                        <div className="sidebar_logo_mini">
-                            <a href="/">BSU</a>
-                        </div>
-                        <div className="sidebar_user_mini">
-                            <div className="sidebar_user_image_mini">
-                                <img src="/images/default.jpg" alt="Your Avatar"/>
-                            </div>
-                        </div>
-                        
-                        <div className="sidebar_navigation_items_mini">
-                            <ul>
-                                <li><a href="/" className="parentA">
-                                        <i className="fa fa-home pr-3"></i>
-                                    </a>
-                                </li>
-                                <li className="multimenus_mini">
-                                    <Link className="collapsed parentA" to="#">
-                                        <i className="fa fa-search pr-3"></i>
-                                    </Link>
-                                    
-                                        <ul className="submenus_mini nav">
-                                            <li><a href="/">Online Check</a></li>
-                                            <li><a href="/">Local Check</a></li>
-                                            <li><a href="/">Side by side</a></li>
-                                        </ul>
-
-                                </li>
-                                <li>
-                                    <a href="/" className="parentA">
-                                        <i className="fa fa-book pr-3"></i>
-                                    </a>
-                                </li>
-                                
-                            </ul>
-                        </div>
-                    </nav>
                     </div>
                 </div>
             </div>
