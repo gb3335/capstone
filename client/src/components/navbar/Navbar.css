@@ -12,6 +12,7 @@
 
 .navbar-size a{
     font-weight: 350;
+    outline:none;
 }
 
 .head-title{
@@ -124,6 +125,66 @@
 
 .toggle_button i:hover{
     color: rgb(112, 106, 106);
+}
+
+@media (max-width: 962px){
+
+    .navbar-size{
+        height: 39px;
+        padding: 0 0.5rem;
+    
+    }
+
+    .head-title{
+        margin-left: 1rem;
+    }
+    
+    .head-title a{
+        text-decoration: none;
+        font-size: 1rem;
+        color: black;
+    }
+
+    .navbar_items .mainUL .mainLI{
+        padding: 0px 0.1rem;
+    }
+
+    .navbar_items .normalA{
+        text-decoration: none;
+        font-size: 0.8em;
+        color:black;
+        height: 39px;
+        display: table;
+        padding: 10px 10px;
+        border-radius: 3px;
+        transition:0.5s;
+    }
+    
+    
+    .navbar_items .account_button{
+        position: relative;
+        height: 39px;
+        display: table;
+        font-size: 0.8em;
+        text-decoration: none;
+        color: black;
+        padding: 8px 10px;
+        border-radius: 3px;
+        transition:0.5s;
+    
+    }
+    
+    .navbar_items .account_button .user_img{
+        width: 20px;
+        border-radius: 50px;
+        border: 1px solid black;
+    }
+    
+    .navbar_items .account_button p{
+        display: inline;
+        margin-left: 5px;
+    }
+    
 }
 
 

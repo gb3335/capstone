@@ -4,18 +4,32 @@
     height: 400px;
     padding: 20px 30px;
     margin: 15vh auto 100px auto;
-    
+    border-radius: 5px;
+    box-shadow: 1px 1px 10px #aaa;
 }
 
-.optiondiv{
-    display: flex;
-    flex-direction: row;
+.login-box-imgdiv{
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.login-box-imgdiv img{
+    width: 120px;
 }
 
 .spacer{
     flex:1;
 }
-.forgotdiv{
+
+.optiondiv{
     display: flex;
     flex-direction: column;
+    margin-top: 30px;
+}
+
+.optiondiv button{
+    background: rgba(233, 68, 68, 0.781);
+    color: white;
+    font-weight: bold;
 }

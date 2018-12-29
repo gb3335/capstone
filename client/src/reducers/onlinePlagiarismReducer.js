@@ -1,7 +1,8 @@
-import { PLAGIARISM_ONLINE} from '../actions/types'
+import { PLAGIARISM_ONLINE, PLAGIARISM_ONLINE_INPUT} from '../actions/types'
 
 
 const initialState = {
+    original: "",
     output: {},
     loading: false
 }
@@ -13,6 +14,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 output: action.payload
+            }
+        case PLAGIARISM_ONLINE_INPUT:
+            return {
+                ...state,
+                original: action.payload
             }
         default:
             return state;

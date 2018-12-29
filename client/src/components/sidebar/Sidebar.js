@@ -221,7 +221,7 @@ class Sidebar extends Component {
 
         return (
             <div>
-                <div className={this.state.sideclass} style={ { backgroundImage: `url(${bsuback})` } }>
+                <div className={this.state.sideclass} style={ { backgroundImage: `url(/images/bsuback.JPG)` } }>
                     <div className="sidebar_transparent">
                         {isAuthenticated ? authLinks : guestLinks}
                     </div>

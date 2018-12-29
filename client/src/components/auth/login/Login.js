@@ -55,10 +55,13 @@ class Login extends Component {
             
             <div className="container-fluid p-2">
                 <div className="login-box">
-                <h4>Login</h4>
+                <div className="login-box-imgdiv">
+                    <img src="/images/bulsu_logo.png" alt="BSU LOGO"/>
+                </div>
                     <div className="row">
                         <div className="col">
                             <form onSubmit={this.onSubmit}>
+                            
                                 <TextFieldGroup
                                     placeholder="Email or Username"
                                     name="username"
@@ -76,23 +79,20 @@ class Login extends Component {
                                     onChange={this.onChange}
                                     error={errors.password}
                                 />
-                                {/* <input className="form-control" placeholder="Password" type="password"/> */}
                                 <div className="optiondiv">
-                                    <div className="checkbox icheck">
+                                {/* <input className="form-control" placeholder="Password" type="password"/> */}
+                                
+                                    {/* <div className="checkbox icheck">
                                         <label>
                                             <input type="checkbox" /> Remember Me
                                         </label>
-                                    </div>
-                                    <div className="spacer"/>
-                                    <div className="col-xs-4">
-                                        <button type="submit" className="btn btn-primary btn-block btn-flat">Sign In</button>
-                                    </div>
+                                    </div>*/}
+                                    
+                                    <button type="submit" className="btn form-control">Sign In</button>
+                                    <div className="spacer"/> 
+                                    <Link to="/login">Forgot Password?</Link>
                                 </div>
                             </form>
-                            <div className="forgotdiv">
-                            <div className="spacer"/>
-                                <Link to="/login">Forgot Password?</Link>
-                            </div>
                             
                         </div>
                     </div>

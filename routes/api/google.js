@@ -31,13 +31,17 @@ router.post('/', (req, res) => {
     request.get(`https://www.googleapis.com/customsearch/v1?q=${q}&cx=${cx}&num=10&key=${ApiKey}`,(error, response, body) => {
         if(!error && response.statusCode==200){
             res.json({
-                success: true,
-                data: JSON.parse(body)
+                onlinePlagiarism: {
+                    success: true,
+                    data: JSON.parse(body)
+                }
             })
         }else{
-            return res.status(400).json({
-                success: false,
-                error : "Something went wrong :( , please contact the developer!"
+            res.status(400).json({
+                onlinePlagiarism: {
+                    success: false,
+                    error : "Something went wrong :( , please contact the developer!"
+                }
             });
         }
         
