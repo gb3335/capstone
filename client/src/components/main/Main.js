@@ -12,6 +12,9 @@ import OnlineCheck from "../plagiarism/OnlineCheck";
 import Login from "../auth/login/Login";
 import Sidebar from "../sidebar/Sidebar";
 import Colleges from "../colleges/Colleges";
+import NotFound from "../not-found/NotFound";
+import College from "../college/College";
+
 import "./Main.css";
 
 class Main extends Component {
@@ -56,6 +59,8 @@ class Main extends Component {
               <Route exact path="/onlinecheck" component={OnlineCheck} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/colleges" component={Colleges} />
+              <Route exact path="/colleges/:initials" component={College} />
+              <Route exact path="/not-found" component={NotFound} />
             </div>
             <Footer />
           </div>

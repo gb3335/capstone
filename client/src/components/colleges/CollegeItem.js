@@ -28,7 +28,10 @@ class CollegeItem extends Component {
           <div className="col-lg-6 col-md-4 col-8">
             <h3>{college.name.fullName}</h3>
             <p>{colStatus} </p>
-            <Link to={`/colleges/${college._id}`} className="btn btn-info">
+            <Link
+              to={`/colleges/${college.name.initials}`}
+              className="btn btn-info"
+            >
               View Details
             </Link>
           </div>

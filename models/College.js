@@ -13,6 +13,10 @@ const CollegeSchema = new Schema({
       require: true
     }
   },
+  librarian: {
+    type: String,
+    required: true
+  },
   colId: {
     type: Schema.Types.ObjectId,
     ref: "colleges"

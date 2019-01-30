@@ -28,12 +28,32 @@ router.get("/all", (req, res) => {
     );
 });
 
+// @route   GET api/colleges/initials/:initials
+// @desc    Get college by initials
+// @access  Public
+
+router.get("/:initials", (req, res) => {
+  const errors = {};
+
+  College.findOne({ "name.initials": req.params.initials })
+    .populate("college", ["name.fullName", "logo"])
+    .then(college => {
+      if (!college) {
+        errors.nocollege = "There is no profile for this user";
+        res.status(404).json(errors);
+      }
+
+      res.json(college);
+    })
+    .catch(err => res.status(404).json(err));
+});
+
 // @route   POST api/colleges
 // @desc    Create / Update college
 // @access  Private
 router.post(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  // passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCollegeInput(req.body);
 
@@ -55,6 +75,7 @@ router.post(
         fullName: req.body.fullName,
         initials: req.body.initials
       },
+      librarian: req.body.librarian,
       logo: req.body.logo,
       courseTotal,
       researchTotal,
