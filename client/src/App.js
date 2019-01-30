@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import jwt_decode from 'jwt-decode';
-import setAuthToken from './utils/setAuthToken';
-import {setCurrentUser} from './actions/authActions';
-import { Provider} from 'react-redux';
-import store from './store';
+import React, { Component } from "react";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utils/setAuthToken";
+import { setCurrentUser } from "./actions/authActions";
+import { Provider } from "react-redux";
+import store from "./store";
 
-import './App.css';
+import "./App.css";
 
-import Main from './components/main/Main';
+import Main from "./components/main/Main";
 
 //Check for Token
-if(localStorage.jwtToken) {
+if (localStorage.jwtToken) {
   // Set auth token header auth
   setAuthToken(localStorage.jwtToken);
   // Decode token and get user info and exp
@@ -20,12 +20,11 @@ if(localStorage.jwtToken) {
 }
 
 class App extends Component {
-
-  constructor(){
-    super()
+  constructor() {
+    super();
     this.state = {
       sideclass: "navmain"
-    }
+    };
   }
 
   render() {
