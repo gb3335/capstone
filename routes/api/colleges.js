@@ -10,6 +10,7 @@ const College = require("../../models/College");
 
 //Validator
 const validateCollegeInput = require("../../validation/college");
+const validateCourseInput = require("../../validation/course");
 
 // @route   GET api/colleges/test
 // @desc    Tests get route
@@ -118,6 +119,59 @@ router.post(
         );
       }
     });
+  }
+);
+
+// @route   POST api/colleges/course
+// @desc    Add course to college
+// @access  Private
+router.post(
+  "/course",
+  //passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateCourseInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    College.findOne({ _id: req.body.colId }).then(college => {
+      const newCourse = {
+        name: req.body.name,
+        initials: req.body.initials
+      };
+
+      // Add to exp array
+      college.course.unshift(newCourse);
+
+      college.save().then(college => res.json(college));
+    });
+  }
+);
+
+// @route   DELETE api/colleges/course/:course_id
+// @desc    Delete course from college
+// @access  Private
+router.delete(
+  "/course/:college_id/:course_id",
+  //passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    College.findOne({ _id: req.params.college_id })
+      .then(college => {
+        // Get remove index
+        const removeIndex = college.course
+          .map(item => item.id)
+          .indexOf(req.params.course_id);
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+
+        // Save
+        college.save().then(college => res.json(college));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 

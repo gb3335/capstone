@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import Navbar from "../navbar/Navbar";
 import Footer from "../footer/Footer";
@@ -14,6 +13,9 @@ import Sidebar from "../sidebar/Sidebar";
 import Colleges from "../colleges/Colleges";
 import NotFound from "../not-found/NotFound";
 import College from "../college/College";
+import AddCourse from "../add-credentials/AddCourse";
+
+import PrivateRoute from "../common/PrivateRoute";
 
 import "./Main.css";
 
@@ -61,6 +63,9 @@ class Main extends Component {
               <Route exact path="/colleges" component={Colleges} />
               <Route exact path="/colleges/:initials" component={College} />
               <Route exact path="/not-found" component={NotFound} />
+              <Switch>
+                <PrivateRoute exact path="/add-course" component={AddCourse} />
+              </Switch>
             </div>
             <Footer />
           </div>

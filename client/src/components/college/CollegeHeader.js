@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import isEmpty from "../../validation/is-empty";
 
 class CollegeHeader extends Component {
   render() {
@@ -47,9 +46,6 @@ class CollegeHeader extends Component {
               </h1>
               <p className="lead text-center" style={{ color: fontColor }}>
                 <span>{college.name.fullName}</span>
-              </p>
-              <p style={{ color: fontColor }}>
-                Librarian: <span>{college.librarian}</span>
               </p>
             </div>
           </div>

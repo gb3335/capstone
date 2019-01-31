@@ -17,13 +17,6 @@ const CollegeSchema = new Schema({
     type: String,
     required: true
   },
-  colId: {
-    type: Schema.Types.ObjectId,
-    ref: "colleges"
-  },
-  courseTotal: {
-    type: String
-  },
   logo: {
     type: String,
     required: true
@@ -50,7 +43,19 @@ const CollegeSchema = new Schema({
     updateInfo: {
       type: String
     }
-  }
+  },
+  course: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      initials: {
+        type: String,
+        required: true
+      }
+    }
+  ]
 });
 
 module.exports = College = mongoose.model("colleges", CollegeSchema);

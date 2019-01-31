@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import { getCollegeByInitials } from "../../actions/collegeActions";
+
 import CollegeHeader from "./CollegeHeader";
+import CollegeDetails from "./CollegeDetails";
+import CollegeCourses from "./CollegeCourses";
+import CollegeActions from "./CollegeActions";
 
 class College extends Component {
   componentDidMount() {
@@ -37,6 +41,9 @@ class College extends Component {
             <div className="col-md-6" />
           </div>
           <CollegeHeader college={college} />
+          <CollegeActions />
+          <CollegeDetails college={college} />
+          <CollegeCourses college={college} />
         </div>
       );
     }
