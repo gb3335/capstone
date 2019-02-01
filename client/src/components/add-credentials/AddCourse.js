@@ -42,13 +42,13 @@ class AddCourse extends Component {
 
   render() {
     const { errors } = this.state;
-
+    const path = "/colleges/" + this.props.college.college.name.initials;
     return (
       <div className="add-course">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <Link to="/colleges" className="btn btn-light">
+              <Link to={path} className="btn btn-light">
                 <i className="fas fa-angle-left" /> Go Back
               </Link>
               <h1 className="display-4 text-center">

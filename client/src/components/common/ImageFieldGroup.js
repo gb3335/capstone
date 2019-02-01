@@ -2,7 +2,7 @@ import React from "react";
 import classnames from "classnames";
 import PropTypes from "prop-types";
 
-const TextFieldGroup = ({
+const ImageFieldGroup = ({
   name,
   placeholder,
   value,
@@ -16,9 +16,9 @@ const TextFieldGroup = ({
   return (
     <div className="form-group">
       <input
+        style={{ border: 0 }}
         type={type}
         className={classnames("form-control", { "is-invalid": error })}
-        placeholder={placeholder}
         name={name}
         value={value}
         onChange={onChange}
@@ -30,7 +30,7 @@ const TextFieldGroup = ({
   );
 };
 
-TextFieldGroup.propTypes = {
+ImageFieldGroup.propTypes = {
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,
@@ -41,8 +41,8 @@ TextFieldGroup.propTypes = {
   disabled: PropTypes.string
 };
 
-TextFieldGroup.defaultProps = {
-  type: "text"
+ImageFieldGroup.defaultProps = {
+  type: "file"
 };
 
-export default TextFieldGroup;
+export default ImageFieldGroup;

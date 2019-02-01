@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
-import CollegeItem from "./CollegeItem";
+
 import { getColleges } from "../../actions/collegeActions";
+
+import CollegeItem from "./CollegeItem";
+import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
   componentDidMount() {
@@ -35,6 +38,7 @@ class Colleges extends Component {
               <p className="lead text-center">
                 See all colleges and their informations
               </p>
+              <CollegesActions />
               {collegeItems}
             </div>
           </div>

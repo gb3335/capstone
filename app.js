@@ -18,16 +18,13 @@ const db = require("./config/keys").mongoURI;
 
 //connect to mongoDB
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log("MongoDB Connected"))
   .catch(err => console.log(err));
 
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "3mb" }));
 
 //Passport Middleware
 app.use(passport.initialize());

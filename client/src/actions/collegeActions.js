@@ -4,7 +4,8 @@ import {
   GET_COLLEGES,
   GET_COLLEGE,
   COLLEGE_LOADING,
-  GET_ERRORS
+  GET_ERRORS,
+  CLEAR_ERRORS
 } from "./types";
 
 // Get all colleges
@@ -45,8 +46,25 @@ export const getCollegeByInitials = initials => dispatch => {
     );
 };
 
+// Create / Add College
+export const createCollege = (collegeData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post("/api/colleges", collegeData)
+    .then(res => {
+      history.push("/colleges");
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Add Course
 export const addCourse = (courseData, history) => dispatch => {
+  dispatch(clearErrors());
   axios
     .post("/api/colleges/course", courseData)
     .then(res =>
@@ -85,5 +103,12 @@ export const deleteCourse = (college, id) => dispatch => {
 export const setCollegeLoading = () => {
   return {
     type: COLLEGE_LOADING
+  };
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
   };
 };

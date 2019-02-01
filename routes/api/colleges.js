@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const randomColor = require("randomcolor");
 const isEmpty = require("../../validation/is-empty");
+const base64Img = require("base64-img");
 
 // College model
 const College = require("../../models/College");
@@ -54,7 +55,7 @@ router.get("/:initials", (req, res) => {
 // @access  Private
 router.post(
   "/",
-  // passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCollegeInput(req.body);
 
@@ -77,12 +78,23 @@ router.post(
         initials: req.body.initials
       },
       librarian: req.body.librarian,
-      logo: req.body.logo,
+      logo: req.body.logo + "." + req.body.ext,
       courseTotal,
       researchTotal,
       journalTotal,
       color
     };
+
+    base64Img.img(
+      req.body.file,
+      "client/public/images/collegeLogos/",
+      req.body.logo,
+      function(err, filepath) {
+        if (err) {
+          console.log(err);
+        }
+      }
+    );
 
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {
@@ -127,7 +139,7 @@ router.post(
 // @access  Private
 router.post(
   "/course",
-  //passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCourseInput(req.body);
 
@@ -156,7 +168,7 @@ router.post(
 // @access  Private
 router.delete(
   "/course/:college_id/:course_id",
-  //passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     College.findOne({ _id: req.params.college_id })
       .then(college => {
@@ -180,11 +192,13 @@ router.delete(
 // @access  Private
 router.delete(
   "/",
-  passport.authenticate("jwt", { session: false }),
+  //passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOneAndRemove({ fullName: req.body.name }).then(() => {
-      res.json({ success: true });
-    });
+    College.findOneAndDelete({ _id: req.body.id })
+      .then(() => {
+        res.json({ success: true });
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 

@@ -70,13 +70,15 @@ class Dashboard extends Component {
       );
     }
 
-    return <div className="container-fluid p-2">
-		<h1 className="display-4 text-center">Dashboard</h1>
-	    <p className="lead text-center">
-			See all colleges researches and journals in graphs
-	    </p>
-		{dashboardItems}
-	</div>;
+    return (
+      <div className="container-fluid p-2">
+        <h1 className="display-4 text-center">Dashboard</h1>
+        <p className="lead text-center">
+          See all colleges researches and journals in graphs
+        </p>
+        {dashboardItems}
+      </div>
+    );
   }
 }
 

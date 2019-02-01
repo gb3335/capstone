@@ -28,7 +28,7 @@ class CollegeHeader extends Component {
             style={{ backgroundColor: college.color }}
           >
             <div className="row">
-              <div className="col-4 col-md-3 m-auto">
+              <div className="col-4 col-md-3 m-auto d-md-block">
                 <img
                   className="rounded-circle"
                   src={path + college.logo}

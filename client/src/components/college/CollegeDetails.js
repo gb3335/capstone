@@ -18,7 +18,7 @@ class CollegeDetails extends Component {
                 </p>
                 <p className="lead">
                   <i className="fas fa-university" />{" "}
-                  <span>Total Courses: {college.courseTotal}</span>
+                  <span>Total Courses: {college.course.length}</span>
                 </p>
               </div>
               <div className="col-md-6">
