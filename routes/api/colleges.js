@@ -107,12 +107,31 @@ router.post(
 
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {
-        // Update
-        College.findOneAndUpdate(
-          { _id: req.body.id },
-          { $set: newCollege },
-          { new: true }
-        ).then(college => res.json(college));
+        // find if initials is unique
+        College.findOne({ "name.fullName": req.body.fullName }).then(
+          college => {
+            if (req.body.id == college._id) {
+              College.findOne({ "name.initials": req.body.initials }).then(
+                college => {
+                  if (req.body.id == college._id) {
+                    // Update
+                    College.findOneAndUpdate(
+                      { _id: req.body.id },
+                      { $set: newCollege },
+                      { new: true }
+                    ).then(college => res.json(college));
+                  } else {
+                    errors.initials = "College Initials already exists";
+                    res.status(400).json(errors);
+                  }
+                }
+              );
+            } else {
+              errors.fullName = "College Name already exists";
+              res.status(400).json(errors);
+            }
+          }
+        );
       } else {
         // Check if college name exists
         College.findOne({ "name.fullName": req.body.fullName }).then(

@@ -116,22 +116,27 @@ class CreateCollege extends Component {
                   error={errors.librarian}
                   info="Who's the librarian for this college"
                 />
-                <ImageFieldGroup
-                  placeholder="* Logo"
-                  name="logo"
-                  value={this.state.logo}
-                  onChange={this.onFileSelected}
-                  error={errors.logo}
-                  info="College Logo"
-                />
-                <div className="form-group">
-                  <SketchPicker
-                    color={this.state.background}
-                    onChangeComplete={this.handleChangeComplete}
-                  />
-                  <small className="form-text text-muted">Color</small>
+                <div className="row">
+                  <div className="col-md-6">
+                    <div className="form-group">
+                      <SketchPicker
+                        color={this.state.background}
+                        onChangeComplete={this.handleChangeComplete}
+                      />
+                      <small className="form-text text-muted">Color</small>
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <ImageFieldGroup
+                      placeholder="* Logo"
+                      name="logo"
+                      value={this.state.logo}
+                      onChange={this.onFileSelected}
+                      error={errors.logo}
+                      info="Choose a college logo"
+                    />
+                  </div>
                 </div>
-
                 <input
                   type="submit"
                   value="Submit"

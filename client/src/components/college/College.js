@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+
 import { getCollegeByInitials } from "../../actions/collegeActions";
 
 import CollegeHeader from "./CollegeHeader";

@@ -55,13 +55,13 @@ class CreateCollege extends Component {
 
   render() {
     const { errors } = this.state;
-
+    const path = "/colleges/" + this.props.college.college.name.initials;
     return (
       <div className="create-college">
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <Link to="/colleges" className="btn btn-light mb-3 float-left">
+              <Link to={path} className="btn btn-light mb-3 float-left">
                 <i className="fas fa-angle-left" /> Back to Colleges
               </Link>
               <br />
