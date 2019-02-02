@@ -129,7 +129,7 @@ class Sidebar extends Component {
                 onClick={() => this.changeTitle("Journals")}
                 className="parentA"
               >
-                <i className="fa fa-book-whills" />
+                <i className="fa fa-journal-whills" />
                 <p>Journals</p>
               </Link>
             </li>
