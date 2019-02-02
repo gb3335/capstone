@@ -15,6 +15,7 @@ import NotFound from "../not-found/NotFound";
 import College from "../college/College";
 import AddCourse from "../add-credentials/AddCourse";
 import CreateCollege from "../create-college/CreateCollege";
+import EditCollege from "../edit-college/EditCollege";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -72,6 +73,13 @@ class Main extends Component {
                   exact
                   path="/add-college"
                   component={CreateCollege}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-college"
+                  component={EditCollege}
                 />
               </Switch>
             </div>

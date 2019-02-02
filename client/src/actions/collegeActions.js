@@ -46,13 +46,13 @@ export const getCollegeByInitials = initials => dispatch => {
     );
 };
 
-// Create / Add College
+// Create / Update College
 export const createCollege = (collegeData, history) => dispatch => {
   dispatch(clearErrors());
   axios
     .post("/api/colleges", collegeData)
     .then(res => {
-      history.push("/colleges");
+      history.push(`/colleges/${collegeData.initials}`);
     })
     .catch(err =>
       dispatch({
