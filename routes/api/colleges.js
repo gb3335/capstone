@@ -66,11 +66,18 @@ router.post(
     }
 
     let { color, courseTotal, researchTotal, journalTotal } = req.body;
+    let logoName;
 
     color = !isEmpty(color) ? color : randomColor();
     courseTotal = !isEmpty(courseTotal) ? courseTotal : "0";
     researchTotal = !isEmpty(researchTotal) ? researchTotal : "0";
     journalTotal = !isEmpty(journalTotal) ? journalTotal : "0";
+
+    if (req.body.ext === "") {
+      logoName = req.body.logo;
+    } else {
+      logoName = req.body.logo + "." + req.body.ext;
+    }
 
     const newCollege = {
       name: {
@@ -78,23 +85,25 @@ router.post(
         initials: req.body.initials
       },
       librarian: req.body.librarian,
-      logo: req.body.logo + "." + req.body.ext,
+      logo: logoName,
       courseTotal,
       researchTotal,
       journalTotal,
       color
     };
 
-    base64Img.img(
-      req.body.file,
-      "client/public/images/collegeLogos/",
-      req.body.logo,
-      function(err, filepath) {
-        if (err) {
-          console.log(err);
+    if (req.body.file !== "") {
+      base64Img.img(
+        req.body.file,
+        "client/public/images/collegeLogos/",
+        req.body.logo,
+        function(err, filepath) {
+          if (err) {
+            console.log(err);
+          }
         }
-      }
-    );
+      );
+    }
 
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {

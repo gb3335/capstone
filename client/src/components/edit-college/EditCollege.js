@@ -7,18 +7,17 @@ import { SketchPicker } from "react-color";
 import { createCollege } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
-import ImageFieldGroup from "../common/ImageFieldGroup";
 
 class CreateCollege extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fullName: "",
-      initials: "",
-      logo: "",
-      librarian: "",
+      fullName: this.props.college.college.name.fullName,
+      initials: this.props.college.college.name.initials,
+      logo: this.props.college.college.logo,
+      librarian: this.props.college.college.librarian,
       selectedFile: "",
-      background: "#000000",
+      background: this.props.college.college.color,
       errors: {}
     };
   }
@@ -31,21 +30,16 @@ class CreateCollege extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    const logo = this.state.logo;
-    const logoname = logo.replace(/^.*\\/, "");
 
     const collegeData = {
       fullName: this.state.fullName,
       initials: this.state.initials,
-      logo:
-        logoname
-          .split(".")
-          .slice(0, -1)
-          .join(".") + Date.now(),
-      ext: logoname.split(".").pop(),
+      logo: this.state.logo,
+      ext: "",
       librarian: this.state.librarian,
       file: this.state.selectedFile,
-      color: this.state.background
+      color: this.state.background,
+      id: this.props.college.college._id
     };
 
     this.props.createCollege(collegeData, this.props.history);
@@ -53,19 +47,6 @@ class CreateCollege extends Component {
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-  };
-
-  onFileSelected = e => {
-    this.setState({ [e.target.name]: e.target.value });
-
-    let files = e.target.files;
-    let reader = new FileReader();
-    reader.readAsDataURL(files[0]);
-    reader.onload = e => {
-      this.setState({
-        selectedFile: e.target.result
-      });
-    };
   };
 
   handleChangeComplete = color => {
@@ -86,10 +67,7 @@ class CreateCollege extends Component {
               <br />
               <br />
               <br />
-              <h1 className="display-4 text-center">Create College</h1>
-              <p className="lead text-center">
-                Let's get some information for your college
-              </p>
+              <h1 className="display-4 text-center">Edit College</h1>
               <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
@@ -116,21 +94,12 @@ class CreateCollege extends Component {
                   error={errors.librarian}
                   info="Who's the librarian for this college"
                 />
-                <ImageFieldGroup
-                  placeholder="* Logo"
-                  name="logo"
-                  value={this.state.logo}
-                  onChange={this.onFileSelected}
-                  error={errors.logo}
-                  info="College Logo"
+
+                <SketchPicker
+                  color={this.state.background}
+                  onChangeComplete={this.handleChangeComplete}
                 />
-                <div className="form-group">
-                  <SketchPicker
-                    color={this.state.background}
-                    onChangeComplete={this.handleChangeComplete}
-                  />
-                  <small className="form-text text-muted">Color</small>
-                </div>
+                <small className="form-text text-muted">Color</small>
 
                 <input
                   type="submit"

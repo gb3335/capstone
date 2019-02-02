@@ -12,6 +12,7 @@
     "jwt-decode": "^2.2.0",
     "react": "^16.6.3",
     "react-chartjs-2": "^2.7.4",
+    "react-color": "^2.17.0",
     "react-dom": "^16.6.3",
     "react-html-parser": "^2.0.2",
     "react-redux": "^6.0.0",
