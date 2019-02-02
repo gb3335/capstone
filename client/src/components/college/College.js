@@ -11,7 +11,7 @@ import CollegeCourses from "./CollegeCourses";
 import CollegeActions from "./CollegeActions";
 
 class College extends Component {
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.match.params.initials) {
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }

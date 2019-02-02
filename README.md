@@ -1,20 +1,16 @@
 ## Quick Start
 
-```bash
-# Install dependencies for server
-npm install
+# Go to root folder then type:
 
-# Install dependencies for client
-npm run client-install
+### `npm install` //this will install dependecies for server(REQUIRED)
 
-# Run the client & server with concurrently
-npm run dev
+# Go to client folder
 
-# Run the Express server only
-npm run server
+### `cd client`
 
-# Run the React client only
-npm run client
+# Then type:
+
+### `npm install` //this will install dependecies for client(REQUIRED)
+
 
 # Server runs on http://localhost:5000 and client on http://localhost:3000
-```

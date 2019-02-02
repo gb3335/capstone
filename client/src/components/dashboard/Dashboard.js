@@ -16,7 +16,7 @@ class Dashboard extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getColleges();
     this.props.changePageTitle("Dashboard");
   }
