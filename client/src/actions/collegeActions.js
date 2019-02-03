@@ -62,6 +62,23 @@ export const createCollege = (collegeData, history) => dispatch => {
     );
 };
 
+// Change College Logo
+export const changeCollegeLogo = (collegeData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post("/api/colleges/changeLogo", collegeData)
+    .then(res => {
+      history.push(`/colleges`);
+      history.push(`/colleges/${collegeData.initials}`);
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Add Course
 export const addCourse = (courseData, history) => dispatch => {
   dispatch(clearErrors());

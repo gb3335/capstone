@@ -133,7 +133,7 @@ class CreateCollege extends Component {
                       value={this.state.logo}
                       onChange={this.onFileSelected}
                       error={errors.logo}
-                      info="Choose a college logo"
+                      info="College Logo"
                     />
                   </div>
                 </div>
@@ -150,17 +150,14 @@ class CreateCollege extends Component {
     );
   }
 }
-
 CreateCollege.propTypes = {
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
-
 const mapStateToProps = state => ({
   college: state.college,
   errors: state.errors
 });
-
 export default connect(
   mapStateToProps,
   { createCollege }

@@ -17,7 +17,7 @@ module.exports = function validateCollegeInput(data) {
     errors.initials = "College Initials is required";
   }
 
-  if (Validator.isEmpty(data.logo)) {
+  if (Validator.isNumeric(data.logo)) {
     errors.logo = "College logo is required";
   }
 

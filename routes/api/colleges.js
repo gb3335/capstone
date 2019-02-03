@@ -5,6 +5,7 @@ const passport = require("passport");
 const randomColor = require("randomcolor");
 const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
+const fs = require("fs");
 
 // College model
 const College = require("../../models/College");
@@ -49,6 +50,46 @@ router.get("/:initials", (req, res) => {
     })
     .catch(err => res.status(404).json(err));
 });
+
+// @route   POST api/colleges/changeLogo
+// @desc    Change College logo
+// @access  Private
+router.post(
+  "/changeLogo",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const date = Date.now();
+    const logoName = req.body.initials + date + "." + req.body.ext;
+
+    const newCollege = {
+      logo: logoName
+    };
+
+    //delete old logo from client folder
+    fs.unlinkSync(`client/public/images/collegeLogos/${req.body.oldLogo}`);
+
+    // move image to cilent folder
+    base64Img.img(
+      req.body.file,
+      "client/public/images/collegeLogos/",
+      req.body.initials + date,
+      function(err, filepath) {
+        if (err) {
+          console.log(err);
+        }
+      }
+    );
+
+    College.findOne({ _id: req.body.id }).then(college => {
+      // Update
+      College.findOneAndUpdate(
+        { _id: req.body.id },
+        { $set: newCollege },
+        { new: true }
+      ).then(college => res.json(college));
+    });
+  }
+);
 
 // @route   POST api/colleges
 // @desc    Create / Update college
