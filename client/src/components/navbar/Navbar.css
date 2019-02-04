@@ -1,194 +1,180 @@
-.navbar-size{
-
-    top:0;
-    left: 0;
-    height: 59px;
-    padding: 0 1rem;
-    margin: 0;
-    display: flex;
-    align-items: center;
-
+.navbar-size {
+  top: 0;
+  left: 0;
+  height: 59px;
+  padding: 0 1rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  z-index: 1000;
 }
 
-.navbar-size a{
-    font-weight: 350;
-    outline:none;
+.navbar-size a {
+  font-weight: 350;
+  outline: none;
 }
 
-.head-title{
-    margin-left: 1.5rem;
-    
+.head-title {
+  margin-left: 1.5rem;
 }
 
-.head-title a{
-    text-decoration: none;
-    font-size: 2rem;
-    color: black;
+.head-title a {
+  text-decoration: none;
+  font-size: 2rem;
+  color: black;
 }
 
-.spacer{
-    flex:1; 
+.spacer {
+  flex: 1;
 }
 
-.navbar_items{
-    text-decoration: none;
-    height: 100%;
+.navbar_items {
+  text-decoration: none;
+  height: 100%;
 }
 
-.navbar_items .mainUL{
-    list-style: none;
-    display: flex;
-    padding: 0;
-    margin: 0;
+.navbar_items .mainUL {
+  list-style: none;
+  display: flex;
+  padding: 0;
+  margin: 0;
 }
 
-.navbar_items .mainUL .mainLI{
-    padding: 0px 0.2rem;
+.navbar_items .mainUL .mainLI {
+  padding: 0px 0.2rem;
 }
 
-.navbar_items .normalA{
-    text-decoration: none;
-    font-size: 1em;
-    color:black;
-    height: 59px;
-    display: table;
-    padding: 15px 15px;
-    border-radius: 5px;
-    transition:0.5s;
+.navbar_items .normalA {
+  text-decoration: none;
+  font-size: 1em;
+  color: black;
+  height: 59px;
+  display: table;
+  padding: 15px 15px;
+  border-radius: 5px;
+  transition: 0.5s;
 }
 
-
-.navbar_items .account_button{
-    height: 58px;
-    display: table;
-    font-size: 1em;
-    text-decoration: none;
-    color: black;
-    padding: 10px 10px;
-    border-radius: 5px;
-    transition:0.5s;
-
+.navbar_items .account_button {
+  height: 58px;
+  display: table;
+  font-size: 1em;
+  text-decoration: none;
+  color: black;
+  padding: 10px 10px;
+  border-radius: 5px;
+  transition: 0.5s;
 }
 
-.navbar_items .account_button .user_img{
-    width: 40px;
-    border-radius: 50px;
-    border: 1px solid black;
+.navbar_items .account_button .user_img {
+  width: 40px;
+  border-radius: 50px;
+  border: 1px solid black;
 }
 
-.navbar_items .account_button p{
-    display: inline;
-    margin-left: 10px;
+.navbar_items .account_button p {
+  display: inline;
+  margin-left: 10px;
 }
 
-.navbar_items a:hover{
-    background: rgba(94, 94, 95, 0.432);
+.navbar_items a:hover {
+  background: rgba(94, 94, 95, 0.432);
 }
 
-.navbar_items .account_submenus{
-    list-style-type: none;
-    background: rgb(255, 255, 255);
-    border: 2px solid rgb(197, 193, 193);
-    border-radius: 4px;
-    z-index: 2000;
-    display: table;
-    width: 80%;
-    padding: 0;
-    margin: 5px 0;
-    
+.navbar_items .account_submenus {
+  list-style-type: none;
+  background: rgb(255, 255, 255);
+  border: 2px solid rgb(197, 193, 193);
+  border-radius: 4px;
+  z-index: 2000;
+  display: table;
+  width: 80%;
+  padding: 0;
+  margin: 5px 0;
 }
 .navbar_items .collapsing {
-    -webkit-transition: none;
-    transition: none;
-    display: none;
+  -webkit-transition: none;
+  transition: none;
+  display: none;
 }
 
-.toggle_button{
-    
+.toggle_button {
+  text-decoration: none;
+  color: black;
+  padding: 0;
+  margin: 0;
+  transition: 0.5s;
+}
+
+.toggle_button i {
+  color: rgb(163, 163, 163);
+  font-size: 1.5rem;
+  transition: 0.5s;
+}
+
+.toggle_button:focus {
+  outline: none;
+  transition: 0.5s;
+}
+
+.toggle_button i:hover {
+  color: rgb(112, 106, 106);
+}
+
+@media (max-width: 962px) {
+  .navbar-size {
+    height: 39px;
+    padding: 0 0.5rem;
+  }
+
+  .head-title {
+    margin-left: 1rem;
+  }
+
+  .head-title a {
+    text-decoration: none;
+    font-size: 1rem;
+    color: black;
+  }
+
+  .navbar_items .mainUL .mainLI {
+    padding: 0px 0.1rem;
+  }
+
+  .navbar_items .normalA {
+    text-decoration: none;
+    font-size: 0.8em;
+    color: black;
+    height: 39px;
+    display: table;
+    padding: 10px 10px;
+    border-radius: 3px;
+    transition: 0.5s;
+  }
+
+  .navbar_items .account_button {
+    position: relative;
+    height: 39px;
+    display: table;
+    font-size: 0.8em;
     text-decoration: none;
     color: black;
-    padding: 0;
-    margin: 0;
+    padding: 8px 10px;
+    border-radius: 3px;
     transition: 0.5s;
+  }
+
+  .navbar_items .account_button .user_img {
+    width: 20px;
+    border-radius: 50px;
+    border: 1px solid black;
+  }
+
+  .navbar_items .account_button p {
+    display: inline;
+    margin-left: 5px;
+  }
 }
-
-.toggle_button i{
-    color: rgb(163, 163, 163);
-    font-size: 1.5rem;
-    transition: 0.5s;
-}
-
-.toggle_button:focus{
-    outline: none;
-    transition: 0.5s;
-}
-
-.toggle_button i:hover{
-    color: rgb(112, 106, 106);
-}
-
-@media (max-width: 962px){
-
-    .navbar-size{
-        height: 39px;
-        padding: 0 0.5rem;
-    
-    }
-
-    .head-title{
-        margin-left: 1rem;
-    }
-    
-    .head-title a{
-        text-decoration: none;
-        font-size: 1rem;
-        color: black;
-    }
-
-    .navbar_items .mainUL .mainLI{
-        padding: 0px 0.1rem;
-    }
-
-    .navbar_items .normalA{
-        text-decoration: none;
-        font-size: 0.8em;
-        color:black;
-        height: 39px;
-        display: table;
-        padding: 10px 10px;
-        border-radius: 3px;
-        transition:0.5s;
-    }
-    
-    
-    .navbar_items .account_button{
-        position: relative;
-        height: 39px;
-        display: table;
-        font-size: 0.8em;
-        text-decoration: none;
-        color: black;
-        padding: 8px 10px;
-        border-radius: 3px;
-        transition:0.5s;
-    
-    }
-    
-    .navbar_items .account_button .user_img{
-        width: 20px;
-        border-radius: 50px;
-        border: 1px solid black;
-    }
-    
-    .navbar_items .account_button p{
-        display: inline;
-        margin-left: 5px;
-    }
-    
-}
-
-
-
 
 /* .navbar_items a{
     text-decoration: none;
@@ -229,4 +215,3 @@
 .navbar_items div:hover{
     background: rgba(94, 94, 95, 0.432);
 } */
-
