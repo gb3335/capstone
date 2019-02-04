@@ -115,12 +115,12 @@ class Sidebar extends Component {
             </li>
             <li>
               <Link
-                to="/documents"
-                onClick={() => this.changeTitle("Documents")}
+                to="/researches"
+                onClick={() => this.changeTitle("Researches")}
                 className="parentA"
               >
                 <i className="fa fa-book" />
-                <p>Documents</p>
+                <p>Researches</p>
               </Link>
             </li>
             <li>
@@ -293,12 +293,12 @@ class Sidebar extends Component {
             </li>
             <li>
               <Link
-                to="/documents"
-                onClick={() => this.changeTitle("Documents")}
+                to="/researches"
+                onClick={() => this.changeTitle("Researches")}
                 className="parentA"
               >
                 <i className="fa fa-book" />
-                <p>Documents</p>
+                <p>Researches</p>
               </Link>
             </li>
             <li>

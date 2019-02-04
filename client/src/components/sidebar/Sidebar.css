@@ -54,7 +54,7 @@
 
 .sidebar_user_image img {
   border-radius: 50%;
-  width: 100px;
+  width: 9vw;
   margin-top: 2px;
   transition: 1s;
 }
@@ -67,7 +67,7 @@
 .sidebar a {
   text-decoration: none;
   outline: none;
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-weight: 500;
   color: rgb(255, 255, 255);
   display: block;

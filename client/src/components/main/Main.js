@@ -10,12 +10,17 @@ import Dashboard from "../dashboard/Dashboard";
 import OnlineCheck from "../plagiarism/OnlineCheck";
 import Login from "../auth/login/Login";
 import Sidebar from "../sidebar/Sidebar";
-import Colleges from "../colleges/Colleges";
 import NotFound from "../not-found/NotFound";
+
+// Colleges Import
+import Colleges from "../colleges/Colleges";
 import College from "../college/College";
 import AddCourse from "../add-credentials/AddCourse";
 import CreateCollege from "../create-college/CreateCollege";
 import EditCollege from "../edit-college/EditCollege";
+
+// Researches Import
+import Researches from "../researches/Researches";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -64,6 +69,7 @@ class Main extends Component {
               <Route exact path="/login" component={Login} />
               <Route exact path="/colleges" component={Colleges} />
               <Route exact path="/colleges/:initials" component={College} />
+              <Route exact path="/researches" component={Researches} />
               <Route exact path="/not-found" component={NotFound} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
