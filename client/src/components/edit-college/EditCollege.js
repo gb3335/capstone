@@ -18,6 +18,8 @@ class CreateCollege extends Component {
       librarian: this.props.college.college.librarian,
       selectedFile: "",
       background: this.props.college.college.color,
+      researchTotal: this.props.college.college.researchTotal,
+      journalTotal: this.props.college.college.journalTotal,
       errors: {}
     };
   }
@@ -39,6 +41,8 @@ class CreateCollege extends Component {
       librarian: this.state.librarian,
       file: this.state.selectedFile,
       color: this.state.background,
+      researchTotal: this.state.researchTotal,
+      journalTotal: this.state.journalTotal,
       id: this.props.college.college._id
     };
 
