@@ -4,8 +4,8 @@
     justify-content: center;
     margin: 0;
     padding: 0;
+    bottom: 0;
     height: 60px;
-    z-index: -300;
     background-color: rgb(255, 255, 255);
     border-top: 1px solid rgba(0, 0, 0, 0.116);
 }

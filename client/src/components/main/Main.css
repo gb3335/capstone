@@ -7,8 +7,6 @@
 .navmain {
   position: relative;
   float: right;
-  display: flex;
-  flex-direction: column;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -19,8 +17,6 @@
 .sidebarhidden {
   position: relative;
   float: right;
-  display: flex;
-  flex-direction: column;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -31,13 +27,7 @@
 
 .main {
   height: 100%;
-  
-
   background: rgb(248, 244, 244);
-}
-
-.spacer{
-  flex-grow:1;
 }
 
 @media (max-width: 962px) {
