@@ -28,7 +28,7 @@ class Navbar extends Component {
   render() {
     const { isAuthenticated, user } = this.props.auth;
 
-    const { pageTitle } = this.props.sidebar;
+    // const { pageTitle } = this.props.sidebar;
 
     const guestLinks = (
       <ul className="mainUL">
@@ -87,7 +87,7 @@ class Navbar extends Component {
           </Link>
         </div>
         <div className="head-title">
-          <span>{pageTitle}</span>
+          {/* <span>{pageTitle}</span> */}
           {/* <Link to="/">{pageTitle}</Link> */}
         </div>
         <div className="spacer" />
