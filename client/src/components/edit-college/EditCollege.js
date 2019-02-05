@@ -34,6 +34,8 @@ class CreateCollege extends Component {
     e.preventDefault();
 
     const collegeData = {
+      oldName: this.props.college.college.name.fullName,
+      oldInitials: this.props.college.college.name.initials,
       fullName: this.state.fullName,
       initials: this.state.initials,
       logo: this.state.logo,

@@ -39,10 +39,12 @@ class CollegeActions extends Component {
   };
 
   onDeleteCollege = () => {
-    this.props.deleteCollege(
-      this.props.college.college._id,
-      this.props.history
-    );
+    const data = {
+      id: this.props.college.college._id,
+      logo: this.props.college.college.logo
+    };
+
+    this.props.deleteCollege(data, this.props.history);
   };
 
   render() {

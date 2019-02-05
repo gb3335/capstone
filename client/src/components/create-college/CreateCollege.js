@@ -151,6 +151,7 @@ class CreateCollege extends Component {
   }
 }
 CreateCollege.propTypes = {
+  createCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };

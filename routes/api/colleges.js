@@ -151,9 +151,47 @@ router.post(
 
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {
-        // UPDATE
+        // Check if college name exists
+        College.findOne({ "name.fullName": req.body.fullName }).then(
+          college => {
+            let fullname;
+            try {
+              fullname = college.name.fullName;
+            } catch (error) {
+              fullname = "";
+            }
+
+            if (college && fullname != req.body.oldName) {
+              errors.fullName = "College Name already exists";
+              res.status(400).json(errors);
+            } else {
+              // Check if college name exists
+              College.findOne({
+                "name.initials": newCollege.name.initials
+              }).then(college => {
+                let initials;
+                try {
+                  initials = college.name.initials;
+                } catch (error) {
+                  initials = "";
+                }
+
+                if (college && initials != req.body.oldInitials) {
+                  errors.initials = "College Initials already exists";
+                  res.status(400).json(errors);
+                } else {
+                  // update college
+                  College.findOneAndUpdate(
+                    { _id: req.body.id },
+                    { $set: newCollege },
+                    { new: true }
+                  ).then(college => res.json(college));
+                }
+              });
+            }
+          }
+        );
       } else {
-        // CREATE
         // Check if college name exists
         College.findOne({ "name.fullName": req.body.fullName }).then(
           college => {
@@ -243,11 +281,20 @@ router.delete(
   "/:id",
   //passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOneAndDelete({ _id: req.params.id })
-      .then(() => {
-        res.json({ success: true });
-      })
-      .catch(err => res.status(404).json(err));
+    console.log(req.body.logo);
+
+    // College.findOneAndDelete({ _id: req.params.id })
+    //   .then(() => {
+    //     res.json({ success: true });
+
+    //     //delete old logo from client folder
+    //     try {
+    //       fs.unlinkSync(`client/public/images/collegeLogos/${req.body.logo}`);
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   })
+    //   .catch(err => res.status(404).json(err));
   }
 );
 

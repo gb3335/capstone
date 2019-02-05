@@ -118,18 +118,16 @@ export const deleteCourse = (college, id) => dispatch => {
 };
 
 // Delete College
-export const deleteCollege = (id, history) => dispatch => {
+export const deleteCollege = (data, history) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setCollegeLoading());
     axios
-      .delete(`/api/colleges/${id}`)
-      .then(
-        res =>
-          dispatch({
-            type: GET_COLLEGE,
-            payload: res.data
-          }),
-        history.push(`/colleges`)
+      .delete(`/api/colleges/${data.id}`)
+      .then(history.push(`/colleges`), res =>
+        dispatch({
+          type: GET_COLLEGE,
+          payload: res.data
+        })
       )
       .catch(err =>
         dispatch({
