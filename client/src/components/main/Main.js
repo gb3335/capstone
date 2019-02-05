@@ -91,6 +91,7 @@ class Main extends Component {
                 />
               </Switch>
             </div>
+            <div className="spacer"/>
             <Footer />
           </div>
         </div>
