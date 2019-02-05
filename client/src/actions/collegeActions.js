@@ -5,7 +5,8 @@ import {
   GET_COLLEGE,
   COLLEGE_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  GET_RESEARCH
 } from "./types";
 
 // Get all colleges
@@ -110,6 +111,29 @@ export const deleteCourse = (college, id) => dispatch => {
       .catch(err =>
         dispatch({
           type: GET_COLLEGE,
+          payload: err.response.data
+        })
+      );
+  }
+};
+
+// Delete College
+export const deleteCollege = (id, history) => dispatch => {
+  if (window.confirm("Are you sure? This can NOT be undone.")) {
+    dispatch(setCollegeLoading());
+    axios
+      .delete(`/api/colleges/${id}`)
+      .then(
+        res =>
+          dispatch({
+            type: GET_COLLEGE,
+            payload: res.data
+          }),
+        history.push(`/colleges`)
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_ERRORS,
           payload: err.response.data
         })
       );

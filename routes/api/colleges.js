@@ -65,7 +65,11 @@ router.post(
     };
 
     //delete old logo from client folder
-    fs.unlinkSync(`client/public/images/collegeLogos/${req.body.oldLogo}`);
+    try {
+      fs.unlinkSync(`client/public/images/collegeLogos/${req.body.oldLogo}`);
+    } catch (error) {
+      console.log(error);
+    }
 
     // move image to cilent folder
     base64Img.img(
@@ -147,32 +151,9 @@ router.post(
 
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {
-        // find if initials is unique
-        College.findOne({ "name.fullName": req.body.fullName }).then(
-          college => {
-            if (req.body.id == college._id) {
-              College.findOne({ "name.initials": req.body.initials }).then(
-                college => {
-                  if (req.body.id == college._id) {
-                    // Update
-                    College.findOneAndUpdate(
-                      { _id: req.body.id },
-                      { $set: newCollege },
-                      { new: true }
-                    ).then(college => res.json(college));
-                  } else {
-                    errors.initials = "College Initials already exists";
-                    res.status(400).json(errors);
-                  }
-                }
-              );
-            } else {
-              errors.fullName = "College Name already exists";
-              res.status(400).json(errors);
-            }
-          }
-        );
+        // UPDATE
       } else {
+        // CREATE
         // Check if college name exists
         College.findOne({ "name.fullName": req.body.fullName }).then(
           college => {
@@ -259,10 +240,10 @@ router.delete(
 // @desc    Delete college
 // @access  Private
 router.delete(
-  "/",
+  "/:id",
   //passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOneAndDelete({ _id: req.body.id })
+    College.findOneAndDelete({ _id: req.params.id })
       .then(() => {
         res.json({ success: true });
       })

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { ImagePicker } from "react-file-picker";
 
-import { changeCollegeLogo } from "../../actions/collegeActions";
+import { changeCollegeLogo, deleteCollege } from "../../actions/collegeActions";
 
 class CollegeActions extends Component {
   constructor(props) {
@@ -38,6 +38,13 @@ class CollegeActions extends Component {
     this.props.changeCollegeLogo(collegeData, this.props.history);
   };
 
+  onDeleteCollege = () => {
+    this.props.deleteCollege(
+      this.props.college.college._id,
+      this.props.history
+    );
+  };
+
   render() {
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
@@ -68,12 +75,19 @@ class CollegeActions extends Component {
           <i className="fas fa-plus text-info mr-1" />
           Add Course
         </Link>
+
+        <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
+          <i className="fas fa-trash text-light mr-1" />
+          Delete College
+        </Link>
       </div>
     );
   }
 }
 
 CollegeActions.propTypes = {
+  changeCollegeLogo: PropTypes.func.isRequired,
+  deleteCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -84,5 +98,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeCollegeLogo }
+  { changeCollegeLogo, deleteCollege }
 )(withRouter(CollegeActions));
