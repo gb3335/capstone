@@ -27,6 +27,25 @@ export const getResearches = () => dispatch => {
     );
 };
 
+// Get research by id
+export const getResearchById = id => dispatch => {
+  dispatch(setResearchLoading());
+  axios
+    .get(`/api/researches/${id}`)
+    .then(res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: null
+      })
+    );
+};
+
 // set loading state
 export const setResearchLoading = () => {
   return {

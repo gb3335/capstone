@@ -31,10 +31,9 @@ router.get("/all", (req, res) => {
     );
 });
 
-// @route   GET api/colleges/initials/:initials
+// @route   GET api/colleges/:initials
 // @desc    Get college by initials
 // @access  Public
-
 router.get("/:initials", (req, res) => {
   const errors = {};
 

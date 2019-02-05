@@ -1,8 +1,7 @@
 import {
   GET_RESEARCH,
   GET_RESEARCHES,
-  RESEARCH_LOADING,
-  GET_COLLEGES
+  RESEARCH_LOADING
 } from "../actions/types";
 
 const initialState = {

@@ -60,7 +60,7 @@ class Researches extends Component {
             <div className="col-md-12">
               <h1 className="display-4 text-center">Researches</h1>
               <p className="lead text-center">
-                See all research and their informations
+                See all research and it's informations
               </p>
               {/* <CollegesActions /> */}
               {researchItems}

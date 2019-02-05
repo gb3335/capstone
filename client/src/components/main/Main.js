@@ -21,6 +21,7 @@ import EditCollege from "../edit-college/EditCollege";
 
 // Researches Import
 import Researches from "../researches/Researches";
+import Research from "../research/Research";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -70,6 +71,7 @@ class Main extends Component {
               <Route exact path="/colleges" component={Colleges} />
               <Route exact path="/colleges/:initials" component={College} />
               <Route exact path="/researches" component={Researches} />
+              <Route exact path="/researches/:id" component={Research} />
               <Route exact path="/not-found" component={NotFound} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />

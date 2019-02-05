@@ -28,6 +28,24 @@ router.get("/", (req, res) => {
     );
 });
 
+// @route   GET api/researches/:id
+// @desc    Get research by id
+// @access  Public
+router.get("/:id", (req, res) => {
+  const errors = {};
+  Research.findOne({ _id: req.params.id })
+    .populate("research", ["title", "_id"])
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
+      }
+
+      res.json(research);
+    })
+    .catch(err => res.status(404).json(err));
+});
+
 // @route   POST api/researches
 // @desc    Create / Update research
 // @access  Private

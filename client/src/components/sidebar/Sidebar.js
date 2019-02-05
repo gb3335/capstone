@@ -45,7 +45,6 @@ class Sidebar extends Component {
   onMouseLeave = () => {
     let aria = "false";
     let forcol = "collapse minimenu";
-
     this.setState({ aria, forcol });
   };
 
