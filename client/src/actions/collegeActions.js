@@ -122,7 +122,7 @@ export const deleteCollege = (data, history) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setCollegeLoading());
     axios
-      .delete(`/api/colleges/${data.id}`)
+      .post(`/api/colleges/${data.id}`, data)
       .then(history.push(`/colleges`), res =>
         dispatch({
           type: GET_COLLEGE,

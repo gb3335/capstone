@@ -38,7 +38,9 @@ class CollegeActions extends Component {
     this.props.changeCollegeLogo(collegeData, this.props.history);
   };
 
-  onDeleteCollege = () => {
+  onDeleteCollege = e => {
+    e.preventDefault();
+
     const data = {
       id: this.props.college.college._id,
       logo: this.props.college.college.logo

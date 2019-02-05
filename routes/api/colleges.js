@@ -277,24 +277,22 @@ router.delete(
 // @route   DELETE api/colleges
 // @desc    Delete college
 // @access  Private
-router.delete(
+router.post(
   "/:id",
   //passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log(req.body.logo);
+    College.findOneAndDelete({ _id: req.params.id })
+      .then(() => {
+        res.json({ success: true });
 
-    // College.findOneAndDelete({ _id: req.params.id })
-    //   .then(() => {
-    //     res.json({ success: true });
-
-    //     //delete old logo from client folder
-    //     try {
-    //       fs.unlinkSync(`client/public/images/collegeLogos/${req.body.logo}`);
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   })
-    //   .catch(err => res.status(404).json(err));
+        //delete old logo from client folder
+        try {
+          fs.unlinkSync(`client/public/images/collegeLogos/${req.body.logo}`);
+        } catch (error) {
+          console.log(error);
+        }
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 
