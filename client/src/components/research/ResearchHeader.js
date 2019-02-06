@@ -5,11 +5,20 @@ class ResearchHeader extends Component {
     const { research } = this.props;
 
     return (
-      <div className="row">
-        <div className="col-md-12">
-          <h3>{research.title}</h3>
-          <hr />
-          <p style={{ textIndent: "1em" }}>{research.abstract}</p>
+      <div className="card">
+        <div className="card-body">
+          <h5 className="card-title display-4">{research.title}</h5>
+          <span>
+            <b>College:</b> {research.college}
+          </span>
+          <br />
+          <span>
+            <b>Course:</b> {research.course}
+          </span>
+          <br />
+          <span>
+            <b>Pages:</b> {research.pages}
+          </span>
         </div>
       </div>
     );

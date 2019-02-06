@@ -4,6 +4,7 @@ import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { createResearch } from "../../actions/researchActions";
+import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
@@ -21,6 +22,10 @@ class AddResearch extends Component {
       pages: "",
       errors: {}
     };
+  }
+
+  componentDidMount() {
+    this.props.getColleges();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -183,6 +188,7 @@ class AddResearch extends Component {
   }
 }
 AddResearch.propTypes = {
+  getColleges: PropTypes.func.isRequired,
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
@@ -193,5 +199,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { createResearch }
+  { createResearch, getColleges }
 )(withRouter(AddResearch));

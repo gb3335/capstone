@@ -23,7 +23,10 @@ class Researches extends Component {
     } else {
       if (researches.length > 0) {
         const researchData = researches.map(research => ({
-          title: research.title,
+          title:
+            research.title.length > 30
+              ? research.title.substring(0, 27) + "..."
+              : research.title,
           college: research.college,
           course: research.course,
           view: (

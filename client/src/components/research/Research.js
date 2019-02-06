@@ -7,6 +7,10 @@ import Spinner from "../common/Spinner";
 import { getResearchById } from "../../actions/researchActions";
 
 import ResearchHeader from "./ResearchHeader";
+import ResearchAbstract from "./ResearchAbstract";
+import ResearchAuthors from "./ResearchAuthors";
+import ResearchImages from "./ResearchImages";
+import ResearchActions from "./ResearchActions";
 
 class Research extends Component {
   componentWillMount() {
@@ -39,16 +43,20 @@ class Research extends Component {
             <div className="col-md-6" />
           </div>
           <ResearchHeader research={research} />
-          {/* <CollegeActions />
-          <CollegeDetails college={college} />
-          <CollegeCourses college={college} /> */}
+          <br />
+          <ResearchActions />
+          <ResearchAbstract research={research} />
+          <br />
+          <ResearchAuthors research={research} />
+          <br />
+          <ResearchImages research={research} />
         </div>
       );
     }
 
     return (
       <div className="research">
-        <div className="container">
+        <div className="container" style={{ padding: "1em" }}>
           <div className="row">
             <div className="col-md-12">{researchContent}</div>
           </div>
