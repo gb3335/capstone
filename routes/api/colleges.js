@@ -136,19 +136,6 @@ router.post(
       color
     };
 
-    if (req.body.file !== "") {
-      base64Img.img(
-        req.body.file,
-        "client/public/images/collegeLogos/",
-        req.body.logo,
-        function(err, filepath) {
-          if (err) {
-            console.log(err);
-          }
-        }
-      );
-    }
-
     College.findOne({ _id: req.body.id }).then(college => {
       if (college) {
         // Check if college name exists
@@ -207,6 +194,19 @@ router.post(
                   errors.initials = "College Initials already exists";
                   res.status(400).json(errors);
                 } else {
+                  if (req.body.file !== "") {
+                    base64Img.img(
+                      req.body.file,
+                      "client/public/images/collegeLogos/",
+                      req.body.logo,
+                      function(err, filepath) {
+                        if (err) {
+                          console.log(err);
+                        }
+                      }
+                    );
+                  }
+
                   // Save College
                   new College(newCollege)
                     .save()

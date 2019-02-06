@@ -21,7 +21,7 @@ module.exports = function validateResearchInput(data) {
     errors.type = "Research type is required";
   }
 
-  if (Validator.isNumeric(data.college)) {
+  if (Validator.isEmpty(data.college)) {
     errors.college = "Research college is required";
   }
 

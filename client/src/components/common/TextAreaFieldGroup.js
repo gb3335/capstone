@@ -1,42 +1,42 @@
-import React from 'react';
-import classnames from 'classnames';
-import PropTypes from 'prop-types';
+import React from "react";
+import classnames from "classnames";
+import PropTypes from "prop-types";
 
 const TextAreaFieldGroup = ({
-    name,
-    placeholder,
-    value,
-    error,
-    info,
-    onChange,
-    extraClass,
-    rows,
+  name,
+  placeholder,
+  value,
+  error,
+  info,
+  onChange,
+  extraClass,
+  rows
 }) => {
-    return (
-        <div className="form-group">
-            <textarea
-                className={classnames(`form-control ${extraClass}`, {
-                    'is-invalid': error
-                })}
-                placeholder={placeholder}
-                name={name}
-                value={value}
-                rows={rows}
-                onChange={onChange}
-            />
-            {info && <small className="form-text text-muted">{info}</small>}
-            {error && <div className="invalid-feedback">{error}</div>}
-        </div>
-    );
+  return (
+    <div className="form-group">
+      <textarea
+        className={classnames(`form-control ${extraClass}`, {
+          "is-invalid": error
+        })}
+        placeholder={placeholder}
+        name={name}
+        value={value}
+        rows={rows}
+        onChange={onChange}
+      />
+      {info && <small className="form-text text-muted">{info}</small>}
+      {error && <div className="invalid-feedback">{error}</div>}
+    </div>
+  );
 };
 
 TextAreaFieldGroup.propTypes = {
-    name: PropTypes.string.isRequired,
-    placeholder: PropTypes.string,
-    value: PropTypes.string,
-    info: PropTypes.string,
-    error: PropTypes.string,
-    onChange: PropTypes.func.isRequired
+  name: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  value: PropTypes.string,
+  info: PropTypes.string,
+  error: PropTypes.string,
+  onChange: PropTypes.func.isRequired
 };
 
 export default TextAreaFieldGroup;

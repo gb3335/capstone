@@ -7,7 +7,7 @@ import MaterialTable from "material-table";
 
 import { getResearches } from "../../actions/researchActions";
 
-//import CollegesActions from "./CollegesAction";
+import ResearchesActions from "./ResearchesActions";
 
 class Researches extends Component {
   componentDidMount() {
@@ -62,7 +62,7 @@ class Researches extends Component {
               <p className="lead text-center">
                 See all research and it's informations
               </p>
-              {/* <CollegesActions /> */}
+              <ResearchesActions />
               {researchItems}
             </div>
           </div>

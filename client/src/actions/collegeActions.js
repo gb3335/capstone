@@ -5,8 +5,7 @@ import {
   GET_COLLEGE,
   COLLEGE_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS,
-  GET_RESEARCH
+  CLEAR_ERRORS
 } from "./types";
 
 // Get all colleges

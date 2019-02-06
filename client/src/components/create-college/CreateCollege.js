@@ -73,7 +73,7 @@ class CreateCollege extends Component {
   };
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
 
     return (
       <div className="create-college">

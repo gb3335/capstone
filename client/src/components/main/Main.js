@@ -22,6 +22,7 @@ import EditCollege from "../edit-college/EditCollege";
 // Researches Import
 import Researches from "../researches/Researches";
 import Research from "../research/Research";
+import AddResearch from "../add-research/AddResearch";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -88,6 +89,13 @@ class Main extends Component {
                   exact
                   path="/edit-college"
                   component={EditCollege}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/add-research"
+                  component={AddResearch}
                 />
               </Switch>
             </div>
