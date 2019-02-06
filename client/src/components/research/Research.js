@@ -11,6 +11,8 @@ import ResearchAbstract from "./ResearchAbstract";
 import ResearchAuthors from "./ResearchAuthors";
 import ResearchImages from "./ResearchImages";
 import ResearchActions from "./ResearchActions";
+import ResearchAuthorActions from "./ResearchAuthorActions";
+import ResearchImageActions from "./ResearchImageActions";
 
 class Research extends Component {
   componentWillMount() {
@@ -47,8 +49,10 @@ class Research extends Component {
           <ResearchActions />
           <ResearchAbstract research={research} />
           <br />
+          <ResearchAuthorActions />
           <ResearchAuthors research={research} />
           <br />
+          <ResearchImageActions />
           <ResearchImages research={research} />
         </div>
       );
