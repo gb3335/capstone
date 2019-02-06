@@ -62,6 +62,41 @@ export const createResearch = (researchData, history) => dispatch => {
     );
 };
 
+// Add Author
+export const addAuthor = (authorData, history) => dispatch => {
+  dispatch(clearErrors());
+  axios
+    .post("/api/researches/author", authorData)
+    .then(res => history.push(`/researches/${authorData.researchId}`))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Delete Author
+export const deleteAuthor = (research, id) => dispatch => {
+  if (window.confirm("Are you sure? This can NOT be undone.")) {
+    dispatch(setResearchLoading());
+    axios
+      .delete(`/api/researches/author/${research}/${id}`)
+      .then(res =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: res.data
+        })
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: err.response.data
+        })
+      );
+  }
+};
+
 // set loading state
 export const setResearchLoading = () => {
   return {

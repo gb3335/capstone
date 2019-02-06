@@ -10,6 +10,7 @@ const Research = require("../../models/Research");
 
 //Validator
 const validateResearchInput = require("../../validation/research");
+const validateAuthorInput = require("../../validation/author");
 
 // @route   GET api/researches/test
 // @desc    Tests get route
@@ -72,6 +73,59 @@ router.post(
 
     // Save Research
     new Research(newResearch).save().then(research => res.json(research));
+  }
+);
+
+// @route   POST api/researches/author
+// @desc    Add author to research
+// @access  Private
+router.post(
+  "/author",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateAuthorInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    Research.findOne({ _id: req.body.researchId }).then(research => {
+      const newAuthor = {
+        name: req.body.name,
+        role: req.body.role
+      };
+
+      // Add to exp array
+      research.author.unshift(newAuthor);
+
+      research.save().then(research => res.json(research));
+    });
+  }
+);
+
+// @route   DELETE api/researches/author/:research_id/:author_id
+// @desc    Delete author from research
+// @access  Private
+router.delete(
+  "/author/:research_id/:author_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Research.findOne({ _id: req.params.research_id })
+      .then(research => {
+        // Get remove index
+        const removeIndex = research.author
+          .map(item => item.id)
+          .indexOf(req.params.author_id);
+
+        // Splice out of array
+        research.author.splice(removeIndex, 1);
+
+        // Save
+        research.save().then(research => res.json(research));
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 

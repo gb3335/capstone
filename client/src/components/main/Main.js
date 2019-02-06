@@ -23,6 +23,7 @@ import EditCollege from "../edit-college/EditCollege";
 import Researches from "../researches/Researches";
 import Research from "../research/Research";
 import AddResearch from "../add-research/AddResearch";
+import AddAuthor from "../add-credentials/AddAuthor";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -76,6 +77,9 @@ class Main extends Component {
               <Route exact path="/not-found" component={NotFound} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
+              </Switch>
+              <Switch>
+                <PrivateRoute exact path="/add-author" component={AddAuthor} />
               </Switch>
               <Switch>
                 <PrivateRoute

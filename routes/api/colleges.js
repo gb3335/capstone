@@ -250,7 +250,7 @@ router.post(
   }
 );
 
-// @route   DELETE api/colleges/course/:course_id
+// @route   DELETE api/colleges/course/:college_id/:course_id
 // @desc    Delete course from college
 // @access  Private
 router.delete(
