@@ -28,6 +28,7 @@
 .main {
   height: 100%;
   background: rgb(248, 244, 244);
+  margin: 20px 0 20px 0;
 }
 
 @media (max-width: 962px) {
