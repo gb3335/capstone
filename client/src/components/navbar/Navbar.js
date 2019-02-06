@@ -10,6 +10,28 @@ import { hideSideBar } from "../../actions/sidebarActions";
 import "./Navbar.css";
 
 class Navbar extends Component {
+
+  constructor(){
+    super();
+    this.state = {
+      aria: "false",
+      forcol: "collapse minimenu"
+    }
+  }
+
+  onMouseEnter = () => {
+    let aria = "true";
+    let forcol = "collapse minimenu show";
+
+    this.setState({ aria, forcol });
+  };
+
+  onMouseLeave = () => {
+    let aria = "false";
+    let forcol = "collapse minimenu";
+    this.setState({ aria, forcol });
+  };
+
   onLogoutClick(e) {
     e.preventDefault();
     this.props.clearCurrentProfile();
@@ -47,17 +69,11 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="mainUL">
         <li className="mainLI">
-          <a
-            className="collapsed account_button"
-            id="account"
-            data-toggle="collapse"
-            href="#userMenu"
-            aria-expanded="false"
-          >
+          <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded={this.state.aria} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
             <img className="user_img" src={user.avatar} alt="" />
             <p>{user.firstName}</p>
           </a>
-          <div id="userMenu" className="collapse" aria-expanded="false">
+          <div id="userMenu" onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={this.state.forcol} aria-expanded="false">
             <ul className="account_submenus">
               <li>
                 <Link to="#">Account Setting</Link>
