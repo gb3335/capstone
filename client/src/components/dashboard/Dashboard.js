@@ -71,7 +71,7 @@ class Dashboard extends Component {
     }
 
     return (
-      <div className="container-fluid p-2">
+      <div className="container-fluid">
         <h1 className="display-4 text-center">Dashboard</h1>
         <p className="lead text-center">
           See all colleges researches and journals in graphs
