@@ -71,8 +71,19 @@ router.post(
       pages: req.body.pages
     };
 
-    // Save Research
-    new Research(newResearch).save().then(research => res.json(research));
+    Research.findOne({ _id: req.body.id }).then(research => {
+      if (research) {
+        // update college
+        Research.findOneAndUpdate(
+          { _id: req.body.id },
+          { $set: newResearch },
+          { new: true }
+        ).then(research => res.json(research));
+      } else {
+        // Save Research
+        new Research(newResearch).save().then(research => res.json(research));
+      }
+    });
   }
 );
 
@@ -124,6 +135,21 @@ router.delete(
 
         // Save
         research.save().then(research => res.json(research));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
+// @route   DELETE api/researches/:id
+// @desc    Delete research
+// @access  Private
+router.delete(
+  "/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Research.findOneAndDelete({ _id: req.params.id })
+      .then(() => {
+        res.json({ success: true });
       })
       .catch(err => res.status(404).json(err));
   }

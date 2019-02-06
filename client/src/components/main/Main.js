@@ -16,7 +16,7 @@ import NotFound from "../not-found/NotFound";
 import Colleges from "../colleges/Colleges";
 import College from "../college/College";
 import AddCourse from "../add-credentials/AddCourse";
-import CreateCollege from "../create-college/CreateCollege";
+import AddCollege from "../add-college/AddCollege";
 import EditCollege from "../edit-college/EditCollege";
 
 // Researches Import
@@ -24,6 +24,7 @@ import Researches from "../researches/Researches";
 import Research from "../research/Research";
 import AddResearch from "../add-research/AddResearch";
 import AddAuthor from "../add-credentials/AddAuthor";
+import EditResearch from "../edit-research/EditResearch";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -85,7 +86,7 @@ class Main extends Component {
                 <PrivateRoute
                   exact
                   path="/add-college"
-                  component={CreateCollege}
+                  component={AddCollege}
                 />
               </Switch>
               <Switch>
@@ -100,6 +101,13 @@ class Main extends Component {
                   exact
                   path="/add-research"
                   component={AddResearch}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-research"
+                  component={EditResearch}
                 />
               </Switch>
             </div>

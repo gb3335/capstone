@@ -274,12 +274,12 @@ router.delete(
   }
 );
 
-// @route   DELETE api/colleges
+// @route   DELETE api/colleges/:id
 // @desc    Delete college
 // @access  Private
 router.post(
   "/:id",
-  //passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     College.findOneAndDelete({ _id: req.params.id })
       .then(() => {

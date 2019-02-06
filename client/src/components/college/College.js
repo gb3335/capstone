@@ -10,6 +10,7 @@ import CollegeHeader from "./CollegeHeader";
 import CollegeDetails from "./CollegeDetails";
 import CollegeCourses from "./CollegeCourses";
 import CollegeActions from "./CollegeActions";
+import CollegeCourseActions from "./CollegeCourseActions";
 
 class College extends Component {
   componentWillMount() {
@@ -44,6 +45,7 @@ class College extends Component {
           <CollegeHeader college={college} />
           <CollegeActions />
           <CollegeDetails college={college} />
+          <CollegeCourseActions />
           <CollegeCourses college={college} />
         </div>
       );

@@ -86,7 +86,7 @@ class CreateCollege extends Component {
               <br />
               <br />
               <br />
-              <h1 className="display-4 text-center">Create College</h1>
+              <h1 className="display-4 text-center">Add College</h1>
               <p className="lead text-center">
                 Let's get some information for your college
               </p>

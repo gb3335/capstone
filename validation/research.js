@@ -33,6 +33,10 @@ module.exports = function validateResearchInput(data) {
     errors.abstract = "Research abstract is required";
   }
 
+  if (!Validator.isLength(data.abstract, { min: 100 })) {
+    errors.abstract = "Abstract must be at least 100 characters";
+  }
+
   if (Validator.isEmpty(data.pages)) {
     errors.pages = "Research pages is required";
   }

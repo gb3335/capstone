@@ -75,11 +75,6 @@ class CollegeActions extends Component {
           </ImagePicker>
         </li>
 
-        <Link to="/add-course" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" />
-          Add Course
-        </Link>
-
         <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
           <i className="fas fa-trash text-light mr-1" />
           Delete College

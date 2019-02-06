@@ -52,7 +52,11 @@ export const createResearch = (researchData, history) => dispatch => {
   axios
     .post("/api/researches", researchData)
     .then(res => {
-      history.push(`/researches/`);
+      if (researchData.id) {
+        history.push(`/researches/${researchData.id}`);
+      } else {
+        history.push(`/researches`);
+      }
     })
     .catch(err =>
       dispatch({
@@ -91,6 +95,27 @@ export const deleteAuthor = (research, id) => dispatch => {
       .catch(err =>
         dispatch({
           type: GET_RESEARCH,
+          payload: err.response.data
+        })
+      );
+  }
+};
+
+// Delete Research
+export const deleteResearch = (data, history) => dispatch => {
+  if (window.confirm("Are you sure? This can NOT be undone.")) {
+    dispatch(setResearchLoading());
+    axios
+      .delete(`/api/researches/${data.id}`)
+      .then(history.push(`/`), history.push(`/researches`), res =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: res.data
+        })
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_ERRORS,
           payload: err.response.data
         })
       );

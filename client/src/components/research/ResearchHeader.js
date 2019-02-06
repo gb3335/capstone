@@ -3,6 +3,12 @@ import React, { Component } from "react";
 class ResearchHeader extends Component {
   render() {
     const { research } = this.props;
+    let type;
+    if (research.type === "thesis") {
+      type = <span className="badge badge-success">Thesis</span>;
+    } else {
+      type = <span className="badge badge-info">Undergrad Research</span>;
+    }
 
     return (
       <div className="card">
@@ -19,6 +25,8 @@ class ResearchHeader extends Component {
           <span>
             <b>Pages:</b> {research.pages}
           </span>
+          <br />
+          {type}
         </div>
       </div>
     );
