@@ -103,6 +103,7 @@ class EditResearch extends Component {
                       name="type"
                       id="inlineRadio1"
                       value="thesis"
+                      checked={this.state.type === "thesis"}
                       onChange={this.onChange}
                     />
                     <label className="form-check-label" htmlFor="inlineRadio1">
@@ -116,6 +117,7 @@ class EditResearch extends Component {
                       name="type"
                       id="inlineRadio2"
                       value="undergrad"
+                      checked={this.state.type === "undergrad"}
                       onChange={this.onChange}
                     />
                     <label className="form-check-label" htmlFor="inlineRadio2">

@@ -2,8 +2,6 @@ import React, { Component } from "react";
 
 class ResearchImages extends Component {
   render() {
-    const { research } = this.props;
-
     return (
       <div className="card">
         <div className="card-body">

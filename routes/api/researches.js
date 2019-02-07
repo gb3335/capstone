@@ -140,6 +140,18 @@ router.delete(
   }
 );
 
+// @route   POST api/researches/images
+// @desc    Add images to research
+// @access  Private
+router.post(
+  "/images",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    console.log("backend: ", req.body.id);
+    res.json({ success: "true" });
+  }
+);
+
 // @route   DELETE api/researches/:id
 // @desc    Delete research
 // @access  Private

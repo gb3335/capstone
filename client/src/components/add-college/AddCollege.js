@@ -58,14 +58,18 @@ class CreateCollege extends Component {
   onFileSelected = e => {
     this.setState({ [e.target.name]: e.target.value });
 
-    let files = e.target.files;
-    let reader = new FileReader();
-    reader.readAsDataURL(files[0]);
-    reader.onload = e => {
-      this.setState({
-        selectedFile: e.target.result
-      });
-    };
+    try {
+      let files = e.target.files;
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = e => {
+        this.setState({
+          selectedFile: e.target.result
+        });
+      };
+    } catch (error) {
+      console.log("Not Blob");
+    }
   };
 
   handleChangeComplete = color => {
@@ -127,13 +131,22 @@ class CreateCollege extends Component {
                     </div>
                   </div>
                   <div className="col-md-6">
+                    <label
+                      to="#"
+                      htmlFor="collegeLogo"
+                      className="btn btn-light"
+                    >
+                      <i className="fas fa-plus text-info mr-1" />
+                      Add Image
+                    </label>
                     <ImageFieldGroup
                       placeholder="* Logo"
                       name="logo"
                       value={this.state.logo}
                       onChange={this.onFileSelected}
                       error={errors.logo}
-                      info="College Logo"
+                      info={this.state.logo.replace(/^.*\\/, "")}
+                      id="collegeLogo"
                     />
                   </div>
                 </div>

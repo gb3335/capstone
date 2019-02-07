@@ -11,19 +11,30 @@ const ImageFieldGroup = ({
   info,
   type,
   onChange,
-  disabled
+  disabled,
+  style,
+  multiple,
+  id
 }) => {
   return (
     <div className="form-group">
       <input
-        style={{ border: 0 }}
+        id={id}
+        style={{
+          border: 0,
+          opacity: 0,
+          position: "absolute",
+          pointerEvents: "none",
+          width: "1px",
+          height: "1px"
+        }}
         type={type}
         className={classnames("form-control", { "is-invalid": error })}
         name={name}
         value={value}
         onChange={onChange}
         disabled={disabled}
-        id="selectImage"
+        multiple={multiple}
         accept="image/*"
       />
       {info && <small className="form-text text-muted">{info}</small>}
@@ -33,6 +44,7 @@ const ImageFieldGroup = ({
 };
 
 ImageFieldGroup.propTypes = {
+  id: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.string.isRequired,

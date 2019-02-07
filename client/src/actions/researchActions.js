@@ -69,6 +69,7 @@ export const createResearch = (researchData, history) => dispatch => {
 // Add Author
 export const addAuthor = (authorData, history) => dispatch => {
   dispatch(clearErrors());
+  dispatch(setResearchLoading());
   axios
     .post("/api/researches/author", authorData)
     .then(res => history.push(`/researches/${authorData.researchId}`))
@@ -99,6 +100,26 @@ export const deleteAuthor = (research, id) => dispatch => {
         })
       );
   }
+};
+
+// Add Images
+export const addImages = (data, history) => dispatch => {
+  dispatch(clearErrors());
+  dispatch(setResearchLoading());
+  axios
+    .post("/api/researches/images", data)
+    .then(history.push(`/researches/${data.id}`), res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 // Delete Research
