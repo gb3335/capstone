@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
-const randomColor = require("randomcolor");
 const isEmpty = require("../../validation/is-empty");
+const base64Img = require("base64-img");
+const fs = require("fs");
+const uuid = require("uuid");
 
 // Research model
 const Research = require("../../models/Research");
@@ -147,8 +149,45 @@ router.post(
   "/images",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    console.log("backend: ", req.body.id);
-    res.json({ success: "true" });
+    let imageArray = [];
+    for (i = 0; i < req.body.images.length; i++) {
+      const rand = uuid();
+      let ext = req.body.images[i].split(";")[0].split("/")[1];
+
+      if (ext == "jpeg") {
+        ext = "jpg";
+      }
+
+      base64Img.img(
+        req.body.images[i],
+        "client/public/images/researchImages/",
+        req.body.id + "-" + rand,
+        function(err, filepath) {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      console.log(ext);
+
+      imageArray.push(req.body.id + "-" + rand + "." + ext);
+    }
+
+    Research.findOne({ _id: req.body.id }).then(research => {
+      for (i = 0; i < req.body.images.length; i++) {
+        const newImage = {
+          name: imageArray[i]
+        };
+
+        // Add to exp array
+        research.images.unshift(newImage);
+      }
+
+      research
+        .save()
+        .then(research => res.json(research))
+        .catch(err => console.log(err));
+    });
   }
 );
 

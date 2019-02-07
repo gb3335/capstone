@@ -108,11 +108,21 @@ export const addImages = (data, history) => dispatch => {
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/images", data)
-    .then(history.push(`/researches/${data.id}`), res =>
-      dispatch({
-        type: GET_RESEARCH,
-        payload: res.data
-      })
+    .then(
+      history.push("/researches"),
+      history.push(`/researches/${data.id}`),
+      window.location.reload(),
+      res =>
+        dispatch(
+          {
+            type: GET_RESEARCHES,
+            payload: res.data
+          },
+          {
+            type: GET_RESEARCH,
+            payload: res.data
+          }
+        )
     )
     .catch(err =>
       dispatch({

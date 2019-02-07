@@ -68,7 +68,7 @@ class CreateCollege extends Component {
           <div className="row">
             <div className="col-md-8 m-auto">
               <Link to={path} className="btn btn-light mb-3 float-left">
-                <i className="fas fa-angle-left" /> Back to Colleges
+                <i className="fas fa-angle-left" /> Back to College
               </Link>
               <br />
               <br />

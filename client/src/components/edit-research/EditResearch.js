@@ -59,6 +59,7 @@ class EditResearch extends Component {
 
   render() {
     const { college, errors } = this.props;
+    const path = "/researches/" + this.props.research.research._id;
     let collegeOptions = [{ label: "* Select College", value: "" }];
     let courseOptions = [{ label: "* Select Course", value: "" }];
 
@@ -83,8 +84,8 @@ class EditResearch extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <Link to="/researches" className="btn btn-light mb-3 float-left">
-                <i className="fas fa-angle-left" /> Back to Researches
+              <Link to={path} className="btn btn-light mb-3 float-left">
+                <i className="fas fa-angle-left" /> Back to Research
               </Link>
               <br />
               <br />
