@@ -31,7 +31,7 @@ int numofpatterns = 0;
 
 
 
-int calculateResult(int numOfHits, int patternLen, int textLen){
+double calculateResult(int numOfHits, int patternLen, int textLen){
     double patdiv = (double)numOfHits/(double)patternLen;
     double txtdiv = (double)numOfHits/(double)textLen;
     double patshared = patdiv*100;
@@ -205,6 +205,8 @@ void searchWords(/*string arr[], int k, string text*/ const FunctionCallbackInfo
 	int currentState = 0;
     int numofhitss =0;
 	int numoftexts= text.size();
+	int myarraycounter=0;
+	Local<Array> myarray = Array::New(isolate);
 	// Traverse the text through the nuilt machine to find
 	// all occurrences of words in arr[]
 	for (int i = 0; i < text.size(); ++i)
@@ -223,17 +225,22 @@ void searchWords(/*string arr[], int k, string text*/ const FunctionCallbackInfo
 			if (out[currentState] & (1 << j))
 			{
 				numofhitss+=arr[j].size();
+				int start = i - arr[j].size() + 1;
+				string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
+
+				string value = arr[j];
+				myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
 				// cout << "Word " << arr[j] << " appears from "
 				// 	<< i - arr[j].size() + 1 << " to " << i << endl;
+				myarraycounter++;
 
 			}
 		}
 	}
 
 
-	int total = calculateResult(numofhitss, numofpatterns, numoftexts);
+	double total = calculateResult(numofhitss, numofpatterns, numoftexts);
 
-	string myarr[2] = {"test", "mytest"};
 
 	/////
 	v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
@@ -248,7 +255,7 @@ void searchWords(/*string arr[], int k, string text*/ const FunctionCallbackInfo
 	v8::Local<v8::Value> numofhitsvalue = Nan::New(numofhitss);
 	v8::Local<v8::Value> numofpatternvalue = Nan::New(numofpatterns);
 	v8::Local<v8::Value> numoftextnvalue = Nan::New(numoftexts);
-	v8::Local<v8::Value> arrayvalue = Nan::New(myarr);
+	v8::Local<v8::Array> arrayvalue = myarray;
 
 	Nan::Set(jsonObject, totalprop, totalvalue);
 	Nan::Set(jsonObject, numofhitsprop, numofhitsvalue);
