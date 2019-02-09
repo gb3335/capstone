@@ -16,7 +16,7 @@ class CollegeItem extends Component {
     return (
       <div className="card card-body bg-light mb-3">
         <div className="row">
-          <div className="col-md-2 d-none d-md-block">
+          <div className="col-2">
             <img
               src={path + college.logo}
               alt="Logo"

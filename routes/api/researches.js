@@ -198,6 +198,17 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    Research.findOne({ _id: req.params.id }).then(research => {
+      research.images.map(image => {
+        //delete old logo from client folder
+        try {
+          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+    });
+
     Research.findOneAndDelete({ _id: req.params.id })
       .then(() => {
         res.json({ success: true });

@@ -12,7 +12,6 @@ class Images extends Component {
 
   render() {
     const path = "/images/researchImages/";
-    const { research } = this.props.research;
     let imageData = [];
 
     this.props.images.map(image =>

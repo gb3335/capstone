@@ -15,7 +15,7 @@ import ResearchAuthorActions from "./ResearchAuthorActions";
 import ResearchImageActions from "./ResearchImageActions";
 
 class Research extends Component {
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.match.params.id) {
       this.props.getResearchById(this.props.match.params.id);
     }

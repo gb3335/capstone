@@ -61,7 +61,10 @@ router.post(
     const logoName = req.body.initials + date + "." + req.body.ext;
 
     const newCollege = {
-      logo: logoName
+      logo: logoName,
+      lastUpdate: {
+        date: Date.now()
+      }
     };
 
     //delete old logo from client folder
