@@ -3,9 +3,10 @@
         {
             "target_name": "plagiarism",
             "include_dirs" : [
-            "<!(node -e \"require('nan')\")"
+                "src",
+                "<!(node -e \"require('nan')\")"
             ],
-            "sources":["plagiarismAlgo.cc"]
+            "sources":["src/plagiarismAlgorithm.cc"]
         }
     ],
     
