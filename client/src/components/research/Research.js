@@ -13,9 +13,17 @@ import ResearchImages from "./ResearchImages";
 import ResearchActions from "./ResearchActions";
 import ResearchAuthorActions from "./ResearchAuthorActions";
 import ResearchImageActions from "./ResearchImageActions";
+import ResearchDocument from "./ResearchDocument";
+import ResearchDocumentActions from "./ResearchDocumentActions";
 
 class Research extends Component {
   componentWillMount() {
+    if (this.props.match.params.id) {
+      this.props.getResearchById(this.props.match.params.id);
+    }
+  }
+
+  componentDidMount() {
     if (this.props.match.params.id) {
       this.props.getResearchById(this.props.match.params.id);
     }
@@ -54,6 +62,9 @@ class Research extends Component {
           <br />
           <ResearchImageActions />
           <ResearchImages research={research} />
+          <br />
+          <ResearchDocumentActions />
+          <ResearchDocument research={research} />
         </div>
       );
     }

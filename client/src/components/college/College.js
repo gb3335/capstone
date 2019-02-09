@@ -18,6 +18,11 @@ class College extends Component {
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
   }
+  componentDidMount() {
+    if (this.props.match.params.initials) {
+      this.props.getCollegeByInitials(this.props.match.params.initials);
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.college.college === null && this.props.college.loading) {

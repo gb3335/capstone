@@ -14,6 +14,10 @@ class Researches extends Component {
     this.props.getResearches();
   }
 
+  componentDidMount() {
+    this.props.getResearches();
+  }
+
   render() {
     const { researches, loading } = this.props.research;
     let researchItems;

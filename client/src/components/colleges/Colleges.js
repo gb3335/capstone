@@ -12,6 +12,9 @@ class Colleges extends Component {
   componentWillMount() {
     this.props.getColleges();
   }
+  componentDidMount() {
+    this.props.getColleges();
+  }
 
   render() {
     const { colleges, loading } = this.props.college;
