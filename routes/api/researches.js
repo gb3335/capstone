@@ -9,6 +9,7 @@ const uuid = require("uuid");
 
 // Research model
 const Research = require("../../models/Research");
+const College = require("../../models/College");
 
 //Validator
 const validateResearchInput = require("../../validation/research");
@@ -84,6 +85,28 @@ router.post(
       } else {
         // Save Research
         new Research(newResearch).save().then(research => res.json(research));
+        try {
+          // increase college research total
+          College.findOne({ "name.fullName": req.body.college }).then(
+            college => {
+              if (college) {
+                const total = ++college.researchTotal;
+
+                const newCollege = {
+                  researchTotal: total
+                };
+
+                College.findOneAndUpdate(
+                  { "name.fullName": req.body.college },
+                  { $set: newCollege },
+                  { new: true }
+                ).then(college => res.json(college));
+              }
+            }
+          );
+        } catch (error) {
+          console.log(error);
+        }
       }
     });
   }
@@ -207,6 +230,27 @@ router.delete(
           console.log(error);
         }
       });
+      try {
+        // decrease college research total
+        College.findOne({ "name.fullName": research.college }).then(college => {
+          if (college) {
+            const total = --college.researchTotal;
+
+            const newCollege = {
+              researchTotal: total
+            };
+
+            // update research count on college
+            College.findOneAndUpdate(
+              { "name.fullName": research.college },
+              { $set: newCollege },
+              { new: true }
+            ).then(college => res.json(college));
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     Research.findOneAndDelete({ _id: req.params.id })
