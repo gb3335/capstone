@@ -9,7 +9,7 @@ import CollegeItem from "./CollegeItem";
 import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
-  componentDidMount() {
+  componentWillMount() {
     this.props.getColleges();
   }
 
