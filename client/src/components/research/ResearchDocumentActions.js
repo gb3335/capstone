@@ -31,7 +31,7 @@ class ResearchImageActions extends Component {
         });
 
         const docuData = {
-          researchId: this.props.research.research._id,
+          researchId: this.props.research._id,
           file: this.state.file
         };
 
@@ -66,10 +66,10 @@ class ResearchImageActions extends Component {
     } else {
       docuItem = (
         <div className="btn-group mb-3 btn-group-sm" role="group">
-        <label to="#" htmlFor="docUpload" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" />
-          Add Document
-        </label>
+          <label to="#" htmlFor="docUpload" className="btn btn-light">
+            <i className="fas fa-plus text-info mr-1" />
+            Add Document
+          </label>
         </div>
       );
     }
