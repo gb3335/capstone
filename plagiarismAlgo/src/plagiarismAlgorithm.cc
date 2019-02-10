@@ -146,10 +146,12 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
                 if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
                 {
                     numofhitss+=arr[j].size();
-                    int start = i -arr[j].size()+2;
+                    int Icopy=i;
+                    Icopy += (arr[j].size()-i)-1;
+                    int start = Icopy -arr[j].size()+1;
                     ostringstream oss;
  
-                    oss <<"{ \"Word\": \""<<arr[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
+                    oss <<"{ \"Word\": \""<<arr[j]<<"\",\"Start\": "<<start<<",\"End\": "<<Icopy<<" }";
                     string word = oss.str ();
                     
                     //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
