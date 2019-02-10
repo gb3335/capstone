@@ -9,7 +9,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // Routes
-const google = require("./routes/api/google");
+const plagiarism = require("./routes/api/plagiarism");
 const users = require("./routes/api/users");
 const colleges = require("./routes/api/colleges");
 const researches = require("./routes/api/researches");
@@ -34,7 +34,7 @@ app.use(passport.initialize());
 require("./config/passport.js")(passport);
 
 //Use Routes
-app.use("/api/google", google);
+app.use("/api/plagiarism", plagiarism);
 app.use("/api/users", users);
 app.use("/api/colleges", colleges);
 app.use("/api/researches", researches);
