@@ -25,7 +25,7 @@ mongoose
 
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json({ limit: "10mb" }));
+app.use(bodyParser.json({ limit: "25mb" }));
 
 //Passport Middleware
 app.use(passport.initialize());
