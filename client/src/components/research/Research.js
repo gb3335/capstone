@@ -63,7 +63,7 @@ class Research extends Component {
           <ResearchImageActions />
           <ResearchImages research={research} />
           <br />
-          <ResearchDocumentActions />
+          <ResearchDocumentActions research={research} />
           <ResearchDocument research={research} />
         </div>
       );

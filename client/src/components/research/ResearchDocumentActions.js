@@ -2,16 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
-import { withRouter } from "react-router-dom";
-//import { addImages } from "../../actions/researchActions";
+import { withRouter, Link } from "react-router-dom";
+import { addDocument } from "../../actions/researchActions";
 
 class ResearchImageActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      filename: "",
       file: "",
-      ext: "",
       errors: {}
     };
   }
@@ -32,7 +30,12 @@ class ResearchImageActions extends Component {
           file: e.target.result
         });
 
-        console.log("File: " + this.state.filename + " " + this.state.file);
+        const docuData = {
+          researchId: this.props.research.research._id,
+          file: this.state.file
+        };
+
+        this.props.addDocument(docuData, this.props.history);
       };
     } catch (error) {
       console.log("Not Blob");
@@ -40,12 +43,40 @@ class ResearchImageActions extends Component {
   };
 
   render() {
-    return (
-      <div className="btn-group mb-3 btn-group-sm" role="group">
+    const { research } = this.props;
+    let docuItem;
+
+    if (research.document) {
+      docuItem = (
+        <div className="btn-group mb-3 btn-group-sm" role="group">
+          <label to="#" htmlFor="docUpload" className="btn btn-light">
+            <i className="fas fa-plus text-info mr-1" />
+            Update Document
+          </label>
+          <label
+            to="#"
+            //onClick={this.onDeleteResearch}
+            className="btn btn-danger"
+          >
+            <i className="fas fa-trash text-light mr-1" />
+            Remove Document
+          </label>
+        </div>
+      );
+    } else {
+      docuItem = (
+        <div className="btn-group mb-3 btn-group-sm" role="group">
         <label to="#" htmlFor="docUpload" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" />
           Add Document
         </label>
+        </div>
+      );
+    }
+
+    return (
+      <div className="document">
+        {docuItem}
 
         <FileFieldGroup
           placeholder="* Document"
@@ -60,17 +91,15 @@ class ResearchImageActions extends Component {
 }
 
 ResearchImageActions.propTypes = {
-  research: PropTypes.object.isRequired,
-  //addImages: PropTypes.func.isRequired,
+  addDocument: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research,
   errors: state.errors
 });
 
 export default connect(
   mapStateToProps,
-  {}
+  { addDocument }
 )(withRouter(ResearchImageActions));

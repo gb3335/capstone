@@ -24,7 +24,7 @@ class AddResearch extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getColleges();
   }
 

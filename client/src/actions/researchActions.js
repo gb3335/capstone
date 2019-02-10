@@ -10,6 +10,7 @@ import {
 
 // Get all researches
 export const getResearches = () => dispatch => {
+  dispatch(clearErrors());
   dispatch(setResearchLoading());
   axios
     .get("/api/researches")
@@ -29,6 +30,7 @@ export const getResearches = () => dispatch => {
 
 // Get research by id
 export const getResearchById = id => dispatch => {
+  dispatch(clearErrors());
   dispatch(setResearchLoading());
   axios
     .get(`/api/researches/${id}`)
@@ -48,7 +50,6 @@ export const getResearchById = id => dispatch => {
 
 // Create / Update Research
 export const createResearch = (researchData, history) => dispatch => {
-  dispatch(clearErrors());
   axios
     .post("/api/researches", researchData)
     .then(res => {
@@ -68,7 +69,6 @@ export const createResearch = (researchData, history) => dispatch => {
 
 // Add Author
 export const addAuthor = (authorData, history) => dispatch => {
-  dispatch(clearErrors());
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/author", authorData)
@@ -104,7 +104,6 @@ export const deleteAuthor = (research, id) => dispatch => {
 
 // Add Images
 export const addImages = (data, history) => dispatch => {
-  dispatch(clearErrors());
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/images", data)
@@ -123,6 +122,23 @@ export const addImages = (data, history) => dispatch => {
             payload: res.data
           }
         )
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
+// Add Document
+export const addDocument = (docuData, history) => dispatch => {
+  dispatch(setResearchLoading());
+  axios
+    .post("/api/researches/document", docuData)
+    .then(
+      history.push("/researches/"),
+      history.push(`/researches/${docuData.researchId}`)
     )
     .catch(err =>
       dispatch({

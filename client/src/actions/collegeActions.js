@@ -10,6 +10,7 @@ import {
 
 // Get all colleges
 export const getColleges = () => dispatch => {
+  dispatch(clearErrors());
   dispatch(setCollegeLoading());
   axios
     .get("/api/colleges/all")
@@ -29,6 +30,7 @@ export const getColleges = () => dispatch => {
 
 // Get college by initials
 export const getCollegeByInitials = initials => dispatch => {
+  dispatch(clearErrors());
   dispatch(setCollegeLoading());
   axios
     .get(`/api/colleges/${initials}`)
@@ -48,7 +50,6 @@ export const getCollegeByInitials = initials => dispatch => {
 
 // Create / Update College
 export const createCollege = (collegeData, history) => dispatch => {
-  dispatch(clearErrors());
   axios
     .post("/api/colleges", collegeData)
     .then(res => {
@@ -64,7 +65,6 @@ export const createCollege = (collegeData, history) => dispatch => {
 
 // Change College Logo
 export const changeCollegeLogo = (collegeData, history) => dispatch => {
-  dispatch(clearErrors());
   axios
     .post("/api/colleges/changeLogo", collegeData)
     .then(res => {
@@ -81,7 +81,6 @@ export const changeCollegeLogo = (collegeData, history) => dispatch => {
 
 // Add Course
 export const addCourse = (courseData, history) => dispatch => {
-  dispatch(clearErrors());
   axios
     .post("/api/colleges/course", courseData)
     .then(res =>

@@ -214,6 +214,41 @@ router.post(
   }
 );
 
+// @route   POST api/researches/document
+// @desc    Add document to research
+// @access  Private
+router.post(
+  "/document",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const rand = uuid();
+    let base64String = req.body.file;
+    let base64Doc = base64String.split(";base64,").pop();
+    const filename = req.body.researchId + "-" + rand + ".docx";
+
+    fs.writeFile(
+      `client/public/documents/researchDocuments/${req.body.researchId +
+        "-" +
+        rand}.docx`,
+      base64Doc,
+      { encoding: "base64" },
+      function(err) {
+        console.log("file created");
+      }
+    );
+
+    const newDocument = {
+      document: filename
+    };
+
+    Research.findOneAndUpdate(
+      { _id: req.body.researchId },
+      { $set: newDocument },
+      { new: true }
+    ).then(research => res.json(research));
+  }
+);
+
 // @route   DELETE api/researches/:id
 // @desc    Delete research
 // @access  Private

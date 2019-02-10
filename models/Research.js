@@ -36,14 +36,8 @@ const ResearchSchema = new Schema({
     }
   ],
   document: {
-    name: {
-      type: String,
-      default: ""
-    },
-    ext: {
-      type: String,
-      default: ""
-    }
+    type: String,
+    required: false
   },
   author: [
     {
