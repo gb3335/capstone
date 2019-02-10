@@ -123,6 +123,8 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
         arr.push_back(number);
     }
 
+    numofhitss=0, numofpatterns=0, numoftexts=0;
+
     Nan::Utf8String param1(args[1]->ToString());
     // convert it to string
     string text = string(*param1);
@@ -146,12 +148,11 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
                 if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
                 {
                     numofhitss+=arr[j].size();
-                    int Icopy=i;
-                    Icopy += (arr[j].size()-i)-1;
-                    int start = Icopy -arr[j].size()+1;
+                    int start = i -arr[j].size()+1;
+                   
                     ostringstream oss;
  
-                    oss <<"{ \"Word\": \""<<arr[j]<<"\",\"Start\": "<<start<<",\"End\": "<<Icopy<<" }";
+                    oss <<"{ \"Word\": \""<<arr[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
                     string word = oss.str ();
                     
                     //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
