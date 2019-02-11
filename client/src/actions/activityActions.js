@@ -1,9 +1,10 @@
 import axios from "axios";
 
-import { GET_ACTIVITIES } from "./types";
+import { GET_ACTIVITIES, ACTIVITY_LOADING } from "./types";
 
 // Get all colleges
 export const getActivities = () => dispatch => {
+  dispatch(setActivityLoading());
   axios
     .get("/api/activities/all")
     .then(res =>
@@ -18,4 +19,11 @@ export const getActivities = () => dispatch => {
         payload: null
       })
     );
+};
+
+// set loading state
+export const setActivityLoading = () => {
+  return {
+    type: ACTIVITY_LOADING
+  };
 };

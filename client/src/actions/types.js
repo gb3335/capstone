@@ -19,3 +19,4 @@ export const RESEARCH_LOADING = "RESEARCH_LOADING";
 
 // Activities
 export const GET_ACTIVITIES = "GET_ACTIVITIES";
+export const ACTIVITY_LOADING = "ACTIVITY_LOADING";

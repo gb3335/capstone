@@ -17,7 +17,9 @@ class Dashboard extends Component {
     super();
     this.state = {
       hide: false,
-      sideclass: "navmain"
+      sideclass: "navmain",
+      college: {},
+      activity: {}
     };
   }
 
@@ -30,18 +32,40 @@ class Dashboard extends Component {
   render() {
     const { colleges, loading } = this.props.college;
     const { activities } = this.props.activity;
+    const actLoading = this.props.activity.loading;
     let researchData;
     let journalData;
     let dashboardItems;
+    let activityItems;
 
     let recentActivities = [];
 
-    activities.map(activity =>
-      recentActivities.push({
-        title: activity.title,
-        date: activity.date.substring(0, 10)
-      })
-    );
+  
+    if(activities === null || actLoading || activities === undefined){
+      activityItems = (
+        <div className="row">
+          <div className="col-md-12 mt-5 mb-5">
+            <Spinner />
+          </div>
+        </div>
+      )
+    }else{
+        activities.map(activity =>
+          recentActivities.push({
+            title: activity.title,
+            date: activity.date.substring(0, 10)
+          })
+        );
+
+        activityItems = (
+          <BootstrapTable data={recentActivities} pagination>
+            <TableHeaderColumn dataField="title" isKey>
+              Activity
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="date">Time</TableHeaderColumn>
+          </BootstrapTable>
+        )
+    }
 
     if (colleges === null || loading) {
       dashboardItems = (
@@ -76,23 +100,29 @@ class Dashboard extends Component {
 
       dashboardItems = (
         <div className="row">
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title" style={{ textAlign: "center" }}>
-                  Total Researches
-                </h5>
-                <DoughnutChart data={researchData} />
+          <div className="col-md-8">
+            <div className="row">
+              <div className="col-md-12">
+                <div className="card">
+                  <div className="card-body">
+                    <h5 className="card-title" style={{ textAlign: "center" }}>
+                      Total Researches
+                    </h5>
+                    <DoughnutChart data={researchData} />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title" style={{ textAlign: "center" }}>
-                  Total Researches
-                </h5>
-                <DoughnutChart data={journalData} />
+            <div className="row mt-4">
+              <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title" style={{ textAlign: "center" }}>
+                        Total Researches
+                      </h5>
+                      <DoughnutChart data={journalData} />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -102,12 +132,7 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Recent Activities
                 </h5>
-                <BootstrapTable data={recentActivities} pagination>
-                  <TableHeaderColumn dataField="title" isKey>
-                    Activity
-                  </TableHeaderColumn>
-                  <TableHeaderColumn dataField="date">Time</TableHeaderColumn>
-                </BootstrapTable>
+                {activityItems}
               </div>
             </div>
           </div>
