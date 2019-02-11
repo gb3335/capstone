@@ -46,11 +46,13 @@ class AddResearch extends Component {
       pages: this.state.pages
     };
 
+    this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.createResearch(researchData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
   };
 
   render() {
@@ -175,6 +177,7 @@ class AddResearch extends Component {
                   info="Number of pages in your research"
                 />
                 <input
+                  ref="resBtn"
                   type="submit"
                   value="Submit"
                   className="btn btn-info btn-block mt-4"

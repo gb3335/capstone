@@ -31,11 +31,13 @@ class AddAuthor extends Component {
       researchId: this.props.research.research._id
     };
 
+    this.refs.authorBtn.setAttribute("disabled", "disabled");
     this.props.addAuthor(authorData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.authorBtn.removeAttribute("disabled");
   };
 
   render() {
@@ -71,6 +73,7 @@ class AddAuthor extends Component {
                 />
 
                 <input
+                  ref="authorBtn"
                   type="submit"
                   value="Submit"
                   className="btn btn-info btn-block mt-4"

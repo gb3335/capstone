@@ -33,11 +33,13 @@ class AddCourse extends Component {
       college: this.props.college
     };
 
+    this.refs.courseBtn.setAttribute("disabled", "disabled");
     this.props.addCourse(courseData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.courseBtn.removeAttribute("disabled");
   };
 
   render() {
@@ -73,6 +75,7 @@ class AddCourse extends Component {
                 />
 
                 <input
+                  ref="courseBtn"
                   type="submit"
                   value="Submit"
                   className="btn btn-info btn-block mt-4"

@@ -48,11 +48,13 @@ class CreateCollege extends Component {
       color: this.state.background
     };
 
+    this.refs.colBtn.setAttribute("disabled", "disabled");
     this.props.createCollege(collegeData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.colBtn.removeAttribute("disabled");
   };
 
   onFileSelected = e => {
@@ -151,6 +153,7 @@ class CreateCollege extends Component {
                   </div>
                 </div>
                 <input
+                  ref="colBtn"
                   type="submit"
                   value="Submit"
                   className="btn btn-info btn-block mt-4"
