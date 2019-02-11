@@ -8,7 +8,7 @@ import axios from "axios";
 // Check Plagiarism Online
 export const checkPlagiarismOnline = input => dispatch => {
   axios
-    .post("/api/plagiarism/google", input)
+    .post("/api/plagiarism/online", input)
     .then(res => {
       dispatch(outputOnlinePlagiarism(res.data));
       dispatch(getOnlinePlagiarismInput(input.original));
