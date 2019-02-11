@@ -59,6 +59,7 @@ class CreateCollege extends Component {
 
   onFileSelected = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.colBtn.removeAttribute("disabled");
 
     try {
       let files = e.target.files;

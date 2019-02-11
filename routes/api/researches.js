@@ -84,7 +84,7 @@ router.post(
         ).then(research => res.json(research));
       } else {
         // Save Research
-        new Research(newResearch).save().then(research => res.json(research));
+        new Research(newResearch).save();
         try {
           // increase college research total
           College.findOne({ "name.fullName": req.body.college }).then(
@@ -100,7 +100,7 @@ router.post(
                   { "name.fullName": req.body.college },
                   { $set: newCollege },
                   { new: true }
-                );
+                ).then(college => res.json(college));
               }
             }
           );
@@ -286,38 +286,37 @@ router.delete(
   (req, res) => {
     Research.findOne({ _id: req.params.id }).then(research => {
       try {
-        research.images.map(image => {
-          //delete research images from client folder
-          try {
-            fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
-          } catch (error) {
-            console.log(error);
-          }
-        });
-      } catch (error) {
-        console.log(error);
-      }
-      try {
         // decrease college research total
         College.findOne({ "name.fullName": research.college }).then(college => {
           if (college) {
             const total = --college.researchTotal;
+            console.log(total);
 
             const newCollege = {
               researchTotal: total
             };
 
-            // update research count on college
+            //update research count on college
             College.findOneAndUpdate(
               { "name.fullName": research.college },
               { $set: newCollege },
               { new: true }
-            );
+            ).then(college => res.json(college));
           }
         });
       } catch (error) {
         console.log(error);
       }
+
+      research.images.map(image => {
+        //delete research images from client folder
+        try {
+          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
+        } catch (error) {
+          console.log(error);
+        }
+      });
+
       // delete research document from client folder
       try {
         fs.unlinkSync(
@@ -329,9 +328,7 @@ router.delete(
     });
 
     Research.findOneAndDelete({ _id: req.params.id })
-      .then(() => {
-        res.json({ success: true });
-      })
+      .then(console.log("Delete Successful"))
       .catch(err => res.status(404).json(err));
   }
 );
