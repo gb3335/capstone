@@ -121,7 +121,7 @@ export const deleteCollege = (data, history) => dispatch => {
     dispatch(setCollegeLoading());
     axios
       .post(`/api/colleges/${data.id}`, data)
-      .then(history.push("/"), history.push(`/colleges`), res =>
+      .then(history.push(`/colleges`), res =>
         dispatch({
           type: GET_COLLEGE,
           payload: res.data

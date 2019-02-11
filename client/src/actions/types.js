@@ -16,3 +16,6 @@ export const COLLEGE_LOADING = "COLLEGE_LOADING";
 export const GET_RESEARCHES = "GET_RESEARCHES";
 export const GET_RESEARCH = "GET_RESEARCH";
 export const RESEARCH_LOADING = "RESEARCH_LOADING";
+
+// Activities
+export const GET_ACTIVITIES = "GET_ACTIVITIES";

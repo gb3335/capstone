@@ -48,11 +48,13 @@ class CreateCollege extends Component {
       id: this.props.college.college._id
     };
 
+    this.refs.colBtn.setAttribute("disabled", "disabled");
     this.props.createCollege(collegeData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.colBtn.removeAttribute("disabled");
   };
 
   handleChangeComplete = color => {
@@ -108,6 +110,7 @@ class CreateCollege extends Component {
                 <small className="form-text text-muted">Color</small>
 
                 <input
+                  ref="colBtn"
                   type="submit"
                   value="Submit"
                   className="btn btn-info btn-block mt-4"

@@ -175,7 +175,7 @@ export const deleteResearch = (data, history) => dispatch => {
     dispatch(setResearchLoading());
     axios
       .delete(`/api/researches/${data.id}`)
-      .then(history.push(`/`), history.push(`/researches`), res =>
+      .then(history.push(`/researches`), res =>
         dispatch({
           type: GET_RESEARCH,
           payload: res.data

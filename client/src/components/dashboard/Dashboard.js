@@ -10,6 +10,7 @@ import DoughnutChart from "../common/DoughnutChart";
 
 import { getColleges } from "../../actions/collegeActions";
 import { changePageTitle } from "../../actions/sidebarActions";
+import { getActivities } from "../../actions/activityActions";
 
 class Dashboard extends Component {
   constructor() {
@@ -22,172 +23,25 @@ class Dashboard extends Component {
 
   componentWillMount() {
     this.props.getColleges();
+    this.props.getActivities();
     this.props.changePageTitle("Dashboard");
   }
 
   render() {
     const { colleges, loading } = this.props.college;
+    const { activities } = this.props.activity;
     let researchData;
     let journalData;
     let dashboardItems;
-    const products = [
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      },
-      {
-        title: "College Added",
-        date: "Aug. 23, 1998"
-      },
-      {
-        title: "Research Added",
-        date: "Feb. 12, 1392"
-      },
-      {
-        title: "College Edited",
-        date: "Dec. 34, 1829"
-      }
-    ];
+
+    let recentActivities = [];
+
+    activities.map(activity =>
+      recentActivities.push({
+        title: activity.title,
+        date: activity.date.substring(0, 10)
+      })
+    );
 
     if (colleges === null || loading) {
       dashboardItems = (
@@ -248,7 +102,7 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Recent Activities
                 </h5>
-                <BootstrapTable data={products} pagination>
+                <BootstrapTable data={recentActivities} pagination>
                   <TableHeaderColumn dataField="title" isKey>
                     Activity
                   </TableHeaderColumn>
@@ -276,14 +130,16 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   changePageTitle: PropTypes.func.isRequired,
   getColleges: PropTypes.func.isRequired,
+  getActivities: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  activity: state.activity
 });
 
 export default connect(
   mapStateToProps,
-  { changePageTitle, getColleges }
+  { changePageTitle, getColleges, getActivities }
 )(Dashboard);

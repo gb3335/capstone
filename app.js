@@ -13,6 +13,7 @@ const plagiarism = require("./routes/api/plagiarism");
 const users = require("./routes/api/users");
 const colleges = require("./routes/api/colleges");
 const researches = require("./routes/api/researches");
+const activities = require("./routes/api/activities");
 
 //DB Config
 const db = require("./config/keys").mongoURI;
@@ -38,6 +39,7 @@ app.use("/api/plagiarism", plagiarism);
 app.use("/api/users", users);
 app.use("/api/colleges", colleges);
 app.use("/api/researches", researches);
+app.use("/api/activities", activities);
 
 // Server static assests if in production
 if (process.env.NODE_ENV === "production") {

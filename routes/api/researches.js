@@ -10,6 +10,7 @@ const uuid = require("uuid");
 // Research model
 const Research = require("../../models/Research");
 const College = require("../../models/College");
+const Activity = require("../../models/Activity");
 
 //Validator
 const validateResearchInput = require("../../validation/research");
@@ -76,6 +77,12 @@ router.post(
 
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
+        // add activity
+        const newActivity = {
+          title: "Research " + req.body.title + " updated"
+        };
+        new Activity(newActivity).save();
+
         // update college
         Research.findOneAndUpdate(
           { _id: req.body.id },
@@ -90,6 +97,12 @@ router.post(
           College.findOne({ "name.fullName": req.body.college }).then(
             college => {
               if (college) {
+                // add activity
+                const newActivity = {
+                  title: "Research " + req.body.title + " added"
+                };
+                new Activity(newActivity).save();
+
                 const total = ++college.researchTotal;
 
                 const newCollege = {
@@ -133,6 +146,16 @@ router.post(
         role: req.body.role
       };
 
+      // add activity
+      const newActivity = {
+        title:
+          req.body.name +
+          " as " +
+          req.body.role +
+          " added as a Author to a research"
+      };
+      new Activity(newActivity).save();
+
       // Add to exp array
       research.author.unshift(newAuthor);
 
@@ -150,6 +173,12 @@ router.delete(
   (req, res) => {
     Research.findOne({ _id: req.params.research_id })
       .then(research => {
+        // add activity
+        const newActivity = {
+          title: "Research Updated, An Author has been removed"
+        };
+        new Activity(newActivity).save();
+
         // Get remove index
         const removeIndex = research.author
           .map(item => item.id)
@@ -206,6 +235,12 @@ router.post(
         research.images.unshift(newImage);
       }
 
+      // add activity
+      const newActivity = {
+        title: "Image added to a research"
+      };
+      new Activity(newActivity).save();
+
       research
         .save()
         .then(research => res.json(research))
@@ -241,6 +276,12 @@ router.post(
       document: filename
     };
 
+    // add activity
+    const newActivity = {
+      title: "Document added to a research"
+    };
+    new Activity(newActivity).save();
+
     Research.findOneAndUpdate(
       { _id: req.body.researchId },
       { $set: newDocument },
@@ -269,6 +310,12 @@ router.delete(
       document: ""
     };
 
+    // add activity
+    const newActivity = {
+      title: "Document Deleted from a research"
+    };
+    new Activity(newActivity).save();
+
     Research.findOneAndUpdate(
       { _id: req.params.research_id },
       { $set: newDocument },
@@ -285,8 +332,27 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Research.findOne({ _id: req.params.id }).then(research => {
+      research.images.map(image => {
+        //delete research images from client folder
+        try {
+          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
+        } catch (error) {
+          //console.log(error);
+        }
+      });
+
+      // delete research document from client folder
       try {
-        // decrease college research total
+        fs.unlinkSync(
+          `client/public/documents/researchDocuments/${research.document}`
+        );
+      } catch (error) {
+        //console.log(error);
+      }
+    });
+
+    Research.findOne({ _id: req.params.id }).then(research => {
+      try {
         College.findOne({ "name.fullName": research.college }).then(college => {
           if (college) {
             const total = --college.researchTotal;
@@ -304,32 +370,21 @@ router.delete(
             ).then(college => res.json(college));
           }
         });
-      } catch (error) {
-        console.log(error);
-      }
 
-      research.images.map(image => {
-        //delete research images from client folder
-        try {
-          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
-        } catch (error) {
-          console.log(error);
-        }
-      });
+        // add activity
+        const newActivity = {
+          title: "A research has been deleted"
+        };
+        new Activity(newActivity).save();
 
-      // delete research document from client folder
-      try {
-        fs.unlinkSync(
-          `client/public/documents/researchDocuments/${research.document}`
-        );
+        // delete research
+        Research.findOneAndDelete({ _id: req.params.id })
+          .then(console.log("Delete Successful"))
+          .catch(err => res.status(404).json(err));
       } catch (error) {
         console.log(error);
       }
     });
-
-    Research.findOneAndDelete({ _id: req.params.id })
-      .then(console.log("Delete Successful"))
-      .catch(err => res.status(404).json(err));
   }
 );
 

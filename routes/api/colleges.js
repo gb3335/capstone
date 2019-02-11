@@ -9,6 +9,7 @@ const fs = require("fs");
 
 // College model
 const College = require("../../models/College");
+const Activity = require("../../models/Activity");
 
 //Validator
 const validateCollegeInput = require("../../validation/college");
@@ -17,7 +18,7 @@ const validateCourseInput = require("../../validation/course");
 // @route   GET api/colleges/test
 // @desc    Tests get route
 // @access  Public
-router.get("/test", (req, res) => res.json({ msg: "Colleges Works" }));
+//router.get("/test", (req, res) => res.json({ msg: "Colleges Works" }));
 
 // @route   GET api/colleges
 // @desc    Get colleges
@@ -85,6 +86,12 @@ router.post(
         }
       }
     );
+
+    // add activity
+    const newActivity = {
+      title: "College " + req.body.initials + " updated"
+    };
+    new Activity(newActivity).save();
 
     College.findOne({ _id: req.body.id }).then(college => {
       // Update
@@ -170,6 +177,12 @@ router.post(
                   errors.initials = "College Initials already exists";
                   res.status(400).json(errors);
                 } else {
+                  // add activity
+                  const newActivity = {
+                    title: "College " + req.body.initials + " updated"
+                  };
+                  new Activity(newActivity).save();
+
                   // update college
                   College.findOneAndUpdate(
                     { _id: req.body.id },
@@ -210,6 +223,12 @@ router.post(
                     );
                   }
 
+                  // add activity
+                  const newActivity = {
+                    title: "College " + req.body.initials + " created"
+                  };
+                  new Activity(newActivity).save();
+
                   // Save College
                   new College(newCollege)
                     .save()
@@ -245,6 +264,12 @@ router.post(
         initials: req.body.initials
       };
 
+      // add activity
+      const newActivity = {
+        title: "Course " + req.body.initials + " added"
+      };
+      new Activity(newActivity).save();
+
       // Add to exp array
       college.course.unshift(newCourse);
 
@@ -266,6 +291,12 @@ router.delete(
         const removeIndex = college.course
           .map(item => item.id)
           .indexOf(req.params.course_id);
+
+        // add activity
+        const newActivity = {
+          title: "Course deleted"
+        };
+        new Activity(newActivity).save();
 
         // Splice out of array
         college.course.splice(removeIndex, 1);
@@ -294,6 +325,12 @@ router.post(
         } catch (error) {
           console.log(error);
         }
+
+        // add activity
+        const newActivity = {
+          title: "College deleted"
+        };
+        new Activity(newActivity).save();
       })
       .catch(err => res.status(404).json(err));
   }
