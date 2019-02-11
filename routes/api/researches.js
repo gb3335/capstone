@@ -100,7 +100,7 @@ router.post(
                   { "name.fullName": req.body.college },
                   { $set: newCollege },
                   { new: true }
-                ).then(college => res.json(college));
+                );
               }
             }
           );
@@ -285,14 +285,18 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Research.findOne({ _id: req.params.id }).then(research => {
-      research.images.map(image => {
-        //delete research images from client folder
-        try {
-          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
-        } catch (error) {
-          console.log(error);
-        }
-      });
+      try {
+        research.images.map(image => {
+          //delete research images from client folder
+          try {
+            fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
+          } catch (error) {
+            console.log(error);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
       try {
         // decrease college research total
         College.findOne({ "name.fullName": research.college }).then(college => {
@@ -308,9 +312,17 @@ router.delete(
               { "name.fullName": research.college },
               { $set: newCollege },
               { new: true }
-            ).then(college => res.json(college));
+            );
           }
         });
+      } catch (error) {
+        console.log(error);
+      }
+      // delete research document from client folder
+      try {
+        fs.unlinkSync(
+          `client/public/documents/researchDocuments/${research.document}`
+        );
       } catch (error) {
         console.log(error);
       }
