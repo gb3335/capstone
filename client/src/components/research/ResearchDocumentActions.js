@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
-import { withRouter, Link } from "react-router-dom";
-import { addDocument } from "../../actions/researchActions";
+import { withRouter } from "react-router-dom";
+import { addDocument, deleteDocument } from "../../actions/researchActions";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -42,6 +42,13 @@ class ResearchImageActions extends Component {
     }
   };
 
+  onDeleteDocument = e => {
+    const researchId = this.props.research._id;
+    const filename = this.props.research.document;
+
+    this.props.deleteDocument(researchId, filename);
+  };
+
   render() {
     const { research } = this.props;
     let docuItem;
@@ -55,7 +62,7 @@ class ResearchImageActions extends Component {
           </label>
           <label
             to="#"
-            //onClick={this.onDeleteResearch}
+            onClick={this.onDeleteDocument}
             className="btn btn-danger"
           >
             <i className="fas fa-trash text-light mr-1" />
@@ -92,6 +99,7 @@ class ResearchImageActions extends Component {
 
 ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
+  deleteDocument: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired
 };
 
@@ -101,5 +109,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addDocument }
+  { addDocument, deleteDocument }
 )(withRouter(ResearchImageActions));

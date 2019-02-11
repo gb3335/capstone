@@ -148,6 +148,27 @@ export const addDocument = (docuData, history) => dispatch => {
     );
 };
 
+// Delete Document
+export const deleteDocument = (researchId, filename) => dispatch => {
+  if (window.confirm("Are you sure? This can NOT be undone.")) {
+    dispatch(setResearchLoading());
+    axios
+      .delete(`/api/researches/document/${researchId}/${filename}`)
+      .then(res =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: res.data
+        })
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: err.response.data
+        })
+      );
+  }
+};
+
 // Delete Research
 export const deleteResearch = (data, history) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {

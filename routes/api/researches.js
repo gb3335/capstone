@@ -249,6 +249,34 @@ router.post(
   }
 );
 
+// @route   DELETE api/researches/document/:research_id/:filename
+// @desc    Delete document from research
+// @access  Private
+router.delete(
+  "/document/:research_id/:filename",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    // delete research document from client folder
+    try {
+      fs.unlinkSync(
+        `client/public/documents/researchDocuments/${req.params.filename}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
+    const newDocument = {
+      document: ""
+    };
+
+    Research.findOneAndUpdate(
+      { _id: req.params.research_id },
+      { $set: newDocument },
+      { new: true }
+    ).then(research => res.json(research));
+  }
+);
+
 // @route   DELETE api/researches/:id
 // @desc    Delete research
 // @access  Private
@@ -258,7 +286,7 @@ router.delete(
   (req, res) => {
     Research.findOne({ _id: req.params.id }).then(research => {
       research.images.map(image => {
-        //delete old logo from client folder
+        //delete research images from client folder
         try {
           fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
         } catch (error) {
