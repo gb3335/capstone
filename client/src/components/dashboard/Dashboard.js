@@ -23,7 +23,7 @@ class Dashboard extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.getColleges();
     this.props.getActivities();
     this.props.changePageTitle("Dashboard");
@@ -40,16 +40,16 @@ class Dashboard extends Component {
 
     let recentActivities = [];
 
-  
-    if(activities === null || actLoading || activities === undefined){
+    if (activities === null || actLoading || activities === undefined) {
       activityItems = (
         <div className="row">
           <div className="col-md-12 mt-5 mb-5">
             <Spinner />
           </div>
         </div>
-      )
-    }else{
+      );
+    } else {
+      try {
         activities.map(activity =>
           recentActivities.push({
             title: activity.title,
@@ -64,7 +64,8 @@ class Dashboard extends Component {
             </TableHeaderColumn>
             <TableHeaderColumn dataField="date">Time</TableHeaderColumn>
           </BootstrapTable>
-        )
+        );
+      } catch (error) {}
     }
 
     if (colleges === null || loading) {
@@ -76,75 +77,83 @@ class Dashboard extends Component {
         </div>
       );
     } else {
-      researchData = {
-        labels: colleges.map(college => college.name.initials),
-        datasets: [
-          {
-            data: colleges.map(college => college.researchTotal),
-            backgroundColor: colleges.map(college => college.color),
-            hoverBackgroundColor: colleges.map(college => college.color)
-          }
-        ]
-      };
+      try {
+        researchData = {
+          labels: colleges.map(college => college.name.initials),
+          datasets: [
+            {
+              data: colleges.map(college => college.researchTotal),
+              backgroundColor: colleges.map(college => college.color),
+              hoverBackgroundColor: colleges.map(college => college.color)
+            }
+          ]
+        };
 
-      journalData = {
-        labels: colleges.map(college => college.name.initials),
-        datasets: [
-          {
-            data: colleges.map(college => college.journalTotal),
-            backgroundColor: colleges.map(college => college.color),
-            hoverBackgroundColor: colleges.map(college => college.color)
-          }
-        ]
-      };
+        journalData = {
+          labels: colleges.map(college => college.name.initials),
+          datasets: [
+            {
+              data: colleges.map(college => college.journalTotal),
+              backgroundColor: colleges.map(college => college.color),
+              hoverBackgroundColor: colleges.map(college => college.color)
+            }
+          ]
+        };
 
-      dashboardItems = (
-        <div className="row">
-          <div className="col-md-8">
-            <div className="row">
-              <div className="col-md-12">
-                <div className="card">
-                  <div className="card-body">
-                    <h5 className="card-title" style={{ textAlign: "center" }}>
-                      Total Researches
-                    </h5>
-                    <DoughnutChart data={researchData} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="row mt-4">
-              <div className="col-md-12">
+        dashboardItems = (
+          <div className="row">
+            <div className="col-md-8">
+              <div className="row">
+                <div className="col-md-12">
                   <div className="card">
                     <div className="card-body">
-                      <h5 className="card-title" style={{ textAlign: "center" }}>
-                        Total Researches
+                      <h5
+                        className="card-title"
+                        style={{ textAlign: "center" }}
+                      >
+                        Researches
+                      </h5>
+                      <DoughnutChart data={researchData} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row mt-4">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5
+                        className="card-title"
+                        style={{ textAlign: "center" }}
+                      >
+                        Journals
                       </h5>
                       <DoughnutChart data={journalData} />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div className="col-md-4">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title" style={{ textAlign: "center" }}>
-                  Recent Activities
-                </h5>
-                {activityItems}
+            <div className="col-md-4">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title" style={{ textAlign: "center" }}>
+                    Recent Activities
+                  </h5>
+                  {activityItems}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      } catch (error) {}
     }
 
     return (
       <div className="container-fluid">
         <h1 className="display-4 text-center">Dashboard</h1>
         <p className="lead text-center">
-          See all colleges researches and journals in graphs
+          See all college researches and journals in graphs
         </p>
         {dashboardItems}
       </div>
@@ -156,7 +165,8 @@ Dashboard.propTypes = {
   changePageTitle: PropTypes.func.isRequired,
   getColleges: PropTypes.func.isRequired,
   getActivities: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  activity: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

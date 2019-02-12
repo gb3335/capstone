@@ -13,11 +13,6 @@ import CollegeActions from "./CollegeActions";
 import CollegeCourseActions from "./CollegeCourseActions";
 
 class College extends Component {
-  componentWillMount() {
-    if (this.props.match.params.initials) {
-      this.props.getCollegeByInitials(this.props.match.params.initials);
-    }
-  }
   componentDidMount() {
     if (this.props.match.params.initials) {
       this.props.getCollegeByInitials(this.props.match.params.initials);
@@ -37,23 +32,28 @@ class College extends Component {
     if (college === null || loading) {
       collegeContent = <Spinner />;
     } else {
-      collegeContent = (
-        <div>
-          <div className="row">
-            <div className="col-md-6">
-              <Link to="/colleges" className="btn btn-light mb-3 float-left">
-                <i className="fas fa-angle-left" /> Back to Colleges
-              </Link>
+      try {
+        collegeContent = (
+          <div>
+            <div hidden>
+              <p>{college.name.fullName}</p>
             </div>
-            <div className="col-md-6" />
+            <div className="row">
+              <div className="col-md-6">
+                <Link to="/colleges" className="btn btn-light mb-3 float-left">
+                  <i className="fas fa-angle-left" /> Back to Colleges
+                </Link>
+              </div>
+              <div className="col-md-6" />
+            </div>
+            <CollegeHeader college={college} />
+            <CollegeActions />
+            <CollegeDetails college={college} />
+            <CollegeCourseActions />
+            <CollegeCourses college={college} />
           </div>
-          <CollegeHeader college={college} />
-          <CollegeActions />
-          <CollegeDetails college={college} />
-          <CollegeCourseActions />
-          <CollegeCourses college={college} />
-        </div>
-      );
+        );
+      } catch (error) {}
     }
 
     return (

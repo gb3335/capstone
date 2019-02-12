@@ -17,12 +17,6 @@ import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
 
 class Research extends Component {
-  componentWillMount() {
-    if (this.props.match.params.id) {
-      this.props.getResearchById(this.props.match.params.id);
-    }
-  }
-
   componentDidMount() {
     if (this.props.match.params.id) {
       this.props.getResearchById(this.props.match.params.id);
@@ -42,31 +36,39 @@ class Research extends Component {
     if (research === null || loading) {
       researchContent = <Spinner />;
     } else {
-      researchContent = (
-        <div>
-          <div className="row">
-            <div className="col-md-6">
-              <Link to="/researches" className="btn btn-light mb-3 float-left">
-                <i className="fas fa-angle-left" /> Back to Researches
-              </Link>
+      try {
+        researchContent = (
+          <div>
+            {/* <div hidden>
+              <p>{research.title}</p>
+            </div> */}
+            <div className="row">
+              <div className="col-md-6">
+                <Link
+                  to="/researches"
+                  className="btn btn-light mb-3 float-left"
+                >
+                  <i className="fas fa-angle-left" /> Back to Researches
+                </Link>
+              </div>
+              <div className="col-md-6" />
             </div>
-            <div className="col-md-6" />
+            <ResearchHeader research={research} />
+            <br />
+            <ResearchActions />
+            <ResearchAbstract research={research} />
+            <br />
+            <ResearchAuthorActions />
+            <ResearchAuthors research={research} />
+            <br />
+            <ResearchImageActions />
+            <ResearchImages research={research} />
+            <br />
+            <ResearchDocumentActions research={research} />
+            <ResearchDocument research={research} />
           </div>
-          <ResearchHeader research={research} />
-          <br />
-          <ResearchActions />
-          <ResearchAbstract research={research} />
-          <br />
-          <ResearchAuthorActions />
-          <ResearchAuthors research={research} />
-          <br />
-          <ResearchImageActions />
-          <ResearchImages research={research} />
-          <br />
-          <ResearchDocumentActions research={research} />
-          <ResearchDocument research={research} />
-        </div>
-      );
+        );
+      } catch (error) {}
     }
 
     return (

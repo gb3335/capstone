@@ -9,9 +9,6 @@ import CollegeItem from "./CollegeItem";
 import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
-  componentWillMount() {
-    this.props.getColleges();
-  }
   componentDidMount() {
     this.props.getColleges();
   }

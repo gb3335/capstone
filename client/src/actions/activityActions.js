@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { GET_ACTIVITIES, ACTIVITY_LOADING } from "./types";
 
-// Get all colleges
+// Get all activities
 export const getActivities = () => dispatch => {
   dispatch(setActivityLoading());
   axios

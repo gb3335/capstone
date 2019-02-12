@@ -10,10 +10,6 @@ import { getResearches } from "../../actions/researchActions";
 import ResearchesActions from "./ResearchesActions";
 
 class Researches extends Component {
-  componentWillMount() {
-    this.props.getResearches();
-  }
-
   componentDidMount() {
     this.props.getResearches();
   }

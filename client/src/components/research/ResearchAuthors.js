@@ -6,12 +6,13 @@ class ResearchAuthors extends Component {
     const { research } = this.props;
     let authorItems;
 
-    if (Object.keys(research.author).length > 0) {
-      authorItems = <Authors author={research.author} />;
-    } else {
-      authorItems = <span>No author is added in this research</span>;
-    }
-
+    try {
+      if (Object.keys(research.author).length > 0) {
+        authorItems = <Authors author={research.author} />;
+      } else {
+        authorItems = <span>No author is added in this research</span>;
+      }
+    } catch (error) {}
     return (
       <div className="card">
         <div className="card-body">
