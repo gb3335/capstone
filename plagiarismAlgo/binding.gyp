@@ -6,7 +6,7 @@
                 "src",
                 "<!(node -e \"require('nan')\")"
             ],
-            "sources":["src/plagiarismAlgorithm.cc"]
+            "sources":["src/plagiarismAlgorithm.cc","src/index.cc"]
         }
     ],
     
