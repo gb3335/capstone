@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import Moment from "react-moment";
+import "moment-timezone";
 
 import "./Dashboard.css";
 
@@ -51,19 +52,17 @@ class Dashboard extends Component {
     } else {
       try {
         activities.map(activity =>
-          recentActivities.push({
-            title: activity.title,
-            date: activity.date.substring(0, 10)
-          })
+          recentActivities.push(
+            <p key={activity._id}>
+              <b>{activity.title}</b> <Moment fromNow>{activity.date}</Moment>
+            </p>
+          )
         );
 
         activityItems = (
-          <BootstrapTable data={recentActivities} pagination>
-            <TableHeaderColumn dataField="title" isKey>
-              Activity
-            </TableHeaderColumn>
-            <TableHeaderColumn dataField="date">Time</TableHeaderColumn>
-          </BootstrapTable>
+          <div style={{ overflow: "auto", height: "25rem" }}>
+            {recentActivities}
+          </div>
         );
       } catch (error) {}
     }
@@ -133,6 +132,7 @@ class Dashboard extends Component {
                   </div>
                 </div>
               </div>
+              <br />
             </div>
             <div className="col-md-4">
               <div className="card">
