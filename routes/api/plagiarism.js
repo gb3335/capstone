@@ -6,7 +6,7 @@ const ApiKey = 'AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg';
 const cx = '014684295069765089744:fvoycnmgzio';
 
  // Load Plagiarism Checker
- const plagiarsim = require('../../plagiarismAlgo/build/Release/plagiarism');
+const plagiarsim = require('../../plagiarismAlgo/build/Release/plagiarism');
 
 // Load Input Validation
 const validateOnlineInput = require('../../validation/plagiarism/online');

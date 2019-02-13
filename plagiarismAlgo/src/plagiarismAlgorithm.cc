@@ -30,8 +30,12 @@ double calculateResult(int numOfHits, int patternLen, int textLen){
     bitset<MAXW> out[MAXS];
     void initialize(vector<string> arr, string text)
     {
+        numofhitss=0, numofpatterns=0, numoftexts=0;
         arr2 = arr;
         text2 = text;
+        for(int x=0; x<MAXS; x++){
+            out[x].reset();
+        }
         memset(g,-1,sizeof g);
         memset(f,0,sizeof f);
     }
@@ -123,19 +127,18 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
         arr.push_back(number);
     }
 
-    numofhitss=0, numofpatterns=0, numoftexts=0;
-
     Nan::Utf8String param1(args[1]->ToString());
     // convert it to string
     string text = string(*param1);
 
-    numoftexts=text.size();
+    
 
     int myarraycounter=0;
 	Local<Array> myarray = Array::New(isolate);
 
     ////
     initialize(arr,text);
+    numoftexts=text.size();
     buildMachine();
     int state = 0;
     for(int i = 0; i<text.size(); i++)
@@ -191,11 +194,6 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
 	Nan::Set(jsonObject, numofpatternprop, numofpatternvalue);
 	Nan::Set(jsonObject, numoftextnprop, numoftextnvalue);
 	Nan::Set(jsonObject, arrayprop, arrayvalue);
-
-    string bar = std::string(*Nan::Utf8String(myarray->Get(2)->ToString()));
-
-    cout<<bar;
-	
 
 	args.GetReturnValue().Set(jsonObject);
 }
