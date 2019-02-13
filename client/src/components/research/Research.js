@@ -17,6 +17,11 @@ import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
 
 class Research extends Component {
+  componentWillMount() {
+    if (this.props.match.params.id) {
+      this.props.getResearchById(this.props.match.params.id);
+    }
+  }
   componentDidMount() {
     if (this.props.match.params.id) {
       this.props.getResearchById(this.props.match.params.id);
@@ -53,6 +58,7 @@ class Research extends Component {
               </div>
               <div className="col-md-6" />
             </div>
+
             <ResearchHeader research={research} />
             <br />
             <ResearchActions />

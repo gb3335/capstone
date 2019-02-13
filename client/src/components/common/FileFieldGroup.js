@@ -35,7 +35,7 @@ const FileFieldGroup = ({
         onChange={onChange}
         disabled={disabled}
         multiple={multiple}
-        accept=".docx"
+        accept=".pdf"
       />
       {info && <small className="form-text text-muted">{info}</small>}
       {error && <div className="invalid-feedback">{error}</div>}

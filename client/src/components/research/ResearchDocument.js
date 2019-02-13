@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import FileViewer from "react-file-viewer";
 
 class ResearchDocument extends Component {
   render() {
     const { research } = this.props;
+    const docPath = "/documents/researchDocuments/" + research.document;
     let fileItems;
-    const file = "/documents/researchDocuments/" + research.document;
-    const type = "docx";
 
     if (research.document) {
       fileItems = (
-        <FileViewer fileType={type} filePath={file} onError={this.onError} />
+        <a href={docPath} target="_blank">
+          View Document
+        </a>
       );
     } else {
       fileItems = <span>No document is added for this research</span>;

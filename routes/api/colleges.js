@@ -266,7 +266,8 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: "Course " + req.body.initials + " added"
+        title:
+          "Course " + req.body.initials + " added in " + college.name.initials
       };
       new Activity(newActivity).save();
 
@@ -294,7 +295,7 @@ router.delete(
 
         // add activity
         const newActivity = {
-          title: "Course deleted"
+          title: "Course deleted in " + college.name.initials
         };
         new Activity(newActivity).save();
 
@@ -316,7 +317,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     College.findOneAndDelete({ _id: req.params.id })
-      .then(() => {
+      .then(college => {
         res.json({ success: true });
 
         //delete old logo from client folder
@@ -328,7 +329,7 @@ router.post(
 
         // add activity
         const newActivity = {
-          title: "College deleted"
+          title: "College " + college.name.initials + " deleted"
         };
         new Activity(newActivity).save();
       })
