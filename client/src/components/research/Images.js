@@ -3,13 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ImageGallery from "react-image-gallery";
 import "react-image-gallery/styles/css/image-gallery.css";
-//import { deleteAuthor } from "../../actions/researchActions";
 
 class Images extends Component {
-  // onDeleteClick = (research, id) => {
-  //   this.props.deleteAuthor(research, id);
-  // };
-
   render() {
     const path = "/images/researchImages/";
     let imageData = [];
@@ -17,7 +12,8 @@ class Images extends Component {
     this.props.images.map(image =>
       imageData.push({
         original: path + image.name,
-        thumbnail: path + image.name
+        thumbnail: path + image.name,
+        sizes: "(max-width: 1em) 10vw"
       })
     );
 

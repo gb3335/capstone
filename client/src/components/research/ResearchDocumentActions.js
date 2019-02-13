@@ -32,6 +32,7 @@ class ResearchImageActions extends Component {
 
         const docuData = {
           researchId: this.props.research._id,
+          oldFile: this.props.research.document,
           file: this.state.file
         };
 
@@ -57,7 +58,7 @@ class ResearchImageActions extends Component {
       docuItem = (
         <div className="btn-group mb-3 btn-group-sm" role="group">
           <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1" />
+            <i className="fas fa-redo-alt text-info mr-1" />
             Update Document
           </label>
           <label
@@ -82,16 +83,18 @@ class ResearchImageActions extends Component {
     }
 
     return (
-      <div className="document">
+      <div>
         {docuItem}
 
-        <FileFieldGroup
-          placeholder="* Document"
-          name="filename"
-          value={this.state.filename}
-          onChange={this.onFileSelected}
-          id="docUpload"
-        />
+        <div hidden>
+          <FileFieldGroup
+            placeholder="* Document"
+            name="filename"
+            value={this.state.filename}
+            onChange={this.onFileSelected}
+            id="docUpload"
+          />
+        </div>
       </div>
     );
   }

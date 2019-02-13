@@ -5,6 +5,7 @@ const passport = require("passport");
 const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
+const pdf = require("pdf-parse");
 const uuid = require("uuid");
 
 // Research model
@@ -15,6 +16,29 @@ const Activity = require("../../models/Activity");
 //Validator
 const validateResearchInput = require("../../validation/research");
 const validateAuthorInput = require("../../validation/author");
+
+router.get("/pdfText", (req, res) => {
+  let dataBuffer = fs.readFileSync(
+    "client/public/documents/researchDocuments/sample.pdf"
+  );
+
+  pdf(dataBuffer).then(function(data) {
+    res.json({ text: data.text });
+    // // number of pages
+    // console.log(data.numpages);
+    // // number of rendered pages
+    // console.log(data.numrender);
+    // // PDF info
+    // console.log(data.info);
+    // // PDF metadata
+    // console.log(data.metadata);
+    // // PDF.js version
+    // // check https://mozilla.github.io/pdf.js/getting_started/
+    // console.log(data.version);
+    // // PDF text
+    // console.log(data.text);
+  });
+});
 
 // @route   GET api/researches/test
 // @desc    Tests get route
@@ -259,12 +283,23 @@ router.post(
     const rand = uuid();
     let base64String = req.body.file;
     let base64Doc = base64String.split(";base64,").pop();
-    const filename = req.body.researchId + "-" + rand + ".docx";
+    const filename = req.body.researchId + "-" + rand + ".pdf";
+
+    if (req.body.oldFile) {
+      // delete research document from client folder
+      try {
+        fs.unlinkSync(
+          `client/public/documents/researchDocuments/${req.body.oldFile}`
+        );
+      } catch (error) {
+        //console.log(error);
+      }
+    }
 
     fs.writeFile(
       `client/public/documents/researchDocuments/${req.body.researchId +
         "-" +
-        rand}.docx`,
+        rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
       function(err) {
