@@ -131,31 +131,34 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
     // convert it to string
     string text = string(*param1);
 
-    
+    Nan::Utf8String param2(args[2]->ToString());
+    // convert it to string
+    string flag = string(*param2);
+
 
     int myarraycounter=0;
 	Local<Array> myarray = Array::New(isolate);
 
-    ////
-    initialize(arr,text);
-    numoftexts=text.size();
-    buildMachine();
+    if(flag=="NEW"){
+        initialize(arr,text);
+        buildMachine();
+    }
     int state = 0;
     for(int i = 0; i<text.size(); i++)
     {
         state = nextState(state,text[i]); /// traverse the trie state/node for the text
         if(out[state].count() > 0) /// if the state has at least one output
         {
-            for(int j = 0; j<arr.size(); j++) ///For finding position of search strings.
+            for(int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
             {
                 if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
                 {
-                    numofhitss+=arr[j].size();
-                    int start = i -arr[j].size()+1;
+                    numofhitss+=arr2[j].size();
+                    int start = i -arr2[j].size()+1;
                    
                     ostringstream oss;
  
-                    oss <<"{ \"Word\": \""<<arr[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
+                    oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
                     string word = oss.str ();
                     
                     //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
@@ -172,7 +175,7 @@ void newsearch(const FunctionCallbackInfo<Value>& args){
 
     ////
 
-
+    numoftexts=text.size();
     double total = calculateResult(numofhitss, numofpatterns, numoftexts);
 
     v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
