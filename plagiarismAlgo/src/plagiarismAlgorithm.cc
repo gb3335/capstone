@@ -124,6 +124,7 @@ int nextState(int s, char ch)
 
 void newsearch(vector<string> arr, string text, string flag, string docuId){
     
+    // cout<<text<<" "<<docuId<<":"<<endl;
     if(flag=="NEW"){
         initialize(arr,text);
         buildMachine();
@@ -161,7 +162,7 @@ void newsearch(vector<string> arr, string text, string flag, string docuId){
     ////
 
     numoftexts=text.size();
-    double total = calculateResult(numofhitss, numofpatterns, numoftexts);
+    total = calculateResult(numofhitss, numofpatterns, numoftexts);
 }
 
 class MyAsyncWorker : public Nan::AsyncWorker {
@@ -278,7 +279,6 @@ NAN_METHOD(plagiarismAlgorithm::plagiarism) {
     Nan::Utf8String param3(info[3]->ToString());
     // convert it to string
     string docuId = string(*param3);
-
 
 
   // starting the async worker
