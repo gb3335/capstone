@@ -17,6 +17,9 @@ using namespace std;
 
 long numofhitss=0, numofpatterns=0, numoftexts=0;
 double total=0.0;
+int myarraycounter=0;
+Local<Array> myarray;
+Isolate* isolate;
 
 vector<string> arr2;
 string text2;
@@ -40,6 +43,8 @@ void initialize(vector<string> arr, string text)
     total=0.0;
     arr2 = arr;
     text2 = text;
+    myarraycounter=0;
+    myarray = Array::New(isolate);
     for(int x=0; x<MAXS; x++){
         out[x].reset();
     }
@@ -117,13 +122,8 @@ int nextState(int s, char ch)
 }
 
 
-void newsearch(vector<string> arr, string text, string flag){
-
-    Isolate* isolate = args.GetIsolate();
+void newsearch(vector<string> arr, string text, string flag, string docuId){
     
-    int myarraycounter=0;
-	Local<Array> myarray = Array::New(isolate);
-
     if(flag=="NEW"){
         initialize(arr,text);
         buildMachine();
@@ -143,7 +143,7 @@ void newsearch(vector<string> arr, string text, string flag){
                    
                     ostringstream oss;
  
-                    oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
+                    oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<",\"Docu\": "<<docuId<<"}";
                     string word = oss.str ();
                     
                     //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
@@ -162,10 +162,6 @@ void newsearch(vector<string> arr, string text, string flag){
 
     numoftexts=text.size();
     double total = calculateResult(numofhitss, numofpatterns, numoftexts);
-
-    
-
-	args.GetReturnValue().Set(jsonObject);
 }
 
 class MyAsyncWorker : public Nan::AsyncWorker {
@@ -173,22 +169,24 @@ public:
     vector<string> arr3;
     string text3;
     string flag3;
-
-	MyAsyncWorker(vector<string> arr, string text, string flag, Nan::Callback *callback)
+    string docuId3;
+    bool throwsError3;
+	MyAsyncWorker(vector<string> arr, string text, string flag, string docuId, bool throwsError, Nan::Callback *callback)
     : Nan::AsyncWorker(callback) {
         arr3=arr;
         text3=text;
         flag3=flag;
-    
+        docuId3=docuId;
+        throwsError3 = throwsError;
   }
 
 	void Execute() {
-		if (throwsError) {
+		if (throwsError3) {
 			this->SetErrorMessage("An error occured!");
       return;
 		}
 
-    newsearch(arr3,text3,flag3);
+    newsearch(arr3,text3,flag3,docuId3);
 	}
 
 	void HandleOKCallback() {
@@ -236,6 +234,27 @@ public:
 
 NAN_METHOD(plagiarismAlgorithm::plagiarism) {
 
+    isolate = info.GetIsolate();
+
+    if(!info[0]->IsArray()) {
+        return Nan::ThrowError(Nan::New("expected arg 0: Array of strings").ToLocalChecked());
+    }
+    if(!info[1]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 1: string text").ToLocalChecked());
+    }
+    if(!info[2]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 2: string flag").ToLocalChecked());
+    }
+    if(!info[3]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 3: string docuId").ToLocalChecked());
+    }
+    if(!info[4]->IsBoolean()) {
+        return Nan::ThrowError(Nan::New("expected arg 4: bool throwsError").ToLocalChecked());
+    }
+    if(!info[5]->IsFunction()) {
+        return Nan::ThrowError(Nan::New("expected arg 5: function callback").ToLocalChecked());
+    }
+
     v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);
 
     std::vector<string> arr;
@@ -256,6 +275,10 @@ NAN_METHOD(plagiarismAlgorithm::plagiarism) {
     // convert it to string
     string flag = string(*param2);
 
+    Nan::Utf8String param3(info[3]->ToString());
+    // convert it to string
+    string docuId = string(*param3);
+
 
 
   // starting the async worker
@@ -263,12 +286,11 @@ NAN_METHOD(plagiarismAlgorithm::plagiarism) {
     arr,
     text,
     flag,
-		new Nan::Callback(info[3].As<v8::Function>())
+    docuId,
+    info[4]->BooleanValue(),
+		new Nan::Callback(info[5].As<v8::Function>())
 	));
 }
-
-
-
 
 NAN_MODULE_INIT(plagiarismAlgorithm::Init) {
   Nan::SetMethod(target, "plagiarism", plagiarism);

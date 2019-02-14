@@ -64,18 +64,61 @@ router.post("/local", (req, res) => {
 
   const q = req.body.q;
 
-  let arr = [];
-  arr.push(q);
-  let text=req.body.text;
-  let flag=req.body.flag;
+  let arr = ["a","his","her"];
+  //arr.push(q);
+  let text=["a","his","her"];
+  let flag="NEW";
 
-  let result = plagiarism.search(arr, text, flag);
-  res.json({
-    localPlagiarism: {
-      success: true,
-      data: result
-    }
+  let docuIdArray=["docu1", "docu2"];
+
+  // wrap the callbacked doAsyncStuff in a promise
+const doAsyncStuffPromised = (docuId, text, throwsError = false) => {
+  return new Promise((resolve, reject) => {
+
+    // this is how we would invoke the function with a callback
+    plagiarism.doAsyncStuff(arr, text, flag, docuId, throwsError, function(error, result) {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(result);
+    });
+
   });
+}
+
+
+  const runAsync = (numTasks) => {
+    var docuIds = Array(numTasks).fill(0).map((_, i) => docuIdArray[i]);
+    var promises = docuIds.map(
+      (docuId, index) => doAsyncStuffPromised(docuId, text[index])
+        .then((tId) => {
+          console.log('task %s finished', tId);
+          return tId;
+        })
+    );
+  
+    console.time(logMsg);
+    return Promise.all(promises)
+      .then(docuId => {
+        console.log('all tasks finished:', docuId);
+        console.timeEnd(logMsg);
+      })
+      .catch(error => console.log(error))
+  }
+
+  runAsync(2).then(() => {
+    // after running the async example lets see what happens
+    // if we trigger an error
+    console.log('Done')
+  });
+
+  // let result = plagiarism.search(arr, text, flag);
+  // res.json({
+  //   localPlagiarism: {
+  //     success: true,
+  //     data: result
+  //   }
+  // });
 });
 
 module.exports = router;
