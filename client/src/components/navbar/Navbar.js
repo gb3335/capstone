@@ -10,13 +10,12 @@ import { hideSideBar } from "../../actions/sidebarActions";
 import "./Navbar.css";
 
 class Navbar extends Component {
-
-  constructor(){
+  constructor() {
     super();
     this.state = {
       aria: "false",
       forcol: "collapse minimenu"
-    }
+    };
   }
 
   onMouseEnter = () => {
@@ -69,11 +68,25 @@ class Navbar extends Component {
     const authLinks = (
       <ul className="mainUL">
         <li className="mainLI">
-          <a className="collapsed account_button" id="account" data-toggle="collapse" href="#userMenu" aria-expanded={this.state.aria} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+          <a
+            className="collapsed account_button"
+            id="account"
+            data-toggle="collapse"
+            href="#userMenu"
+            aria-expanded={this.state.aria}
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+          >
             <img className="user_img" src={user.avatar} alt="" />
             <p>{user.firstName}</p>
           </a>
-          <div id="userMenu" onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave} className={this.state.forcol} aria-expanded="false">
+          <div
+            id="userMenu"
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+            className={this.state.forcol}
+            aria-expanded="false"
+          >
             <ul className="account_submenus">
               <li>
                 <Link to="#">Account Setting</Link>
@@ -83,7 +96,9 @@ class Navbar extends Component {
                   Logout
                 </Link>
               </li>
-              <li>qwer</li>
+              <li>
+                <Link to="/register">Register</Link>
+              </li>
               <li>qwer</li>
             </ul>
           </div>

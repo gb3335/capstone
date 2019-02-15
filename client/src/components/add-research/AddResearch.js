@@ -55,26 +55,33 @@ class AddResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
+  onChangeEditor = value => {
+    this.setState({
+      abstract: value
+    });
+  };
+
   render() {
     const { college, errors } = this.props;
     let collegeOptions = [{ label: "* Select College", value: "" }];
     let courseOptions = [{ label: "* Select Course", value: "" }];
+    try {
+      college.colleges.map(college =>
+        collegeOptions.push({
+          label: college.name.fullName,
+          value: college.name.fullName
+        })
+      );
 
-    college.colleges.map(college =>
-      collegeOptions.push({
-        label: college.name.fullName,
-        value: college.name.fullName
-      })
-    );
-
-    college.colleges.map(college =>
-      college.course.map(course => {
-        courseOptions.push({
-          label: course.name,
-          value: course.name
-        });
-      })
-    );
+      college.colleges.map(college =>
+        college.course.map(course => {
+          courseOptions.push({
+            label: course.name,
+            value: course.name
+          });
+        })
+      );
+    } catch (error) {}
 
     return (
       <div className="create-research">

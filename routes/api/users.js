@@ -368,5 +368,20 @@ router.get(
     });
   }
 );
+// @route   GET api/users/all
+// @desc    Get activities
+// @access  Public
+router.get(
+  "/all",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    User.find()
+      .sort({ date: -1 })
+      .then(user => res.json(user))
+      .catch(err =>
+        res.status(404).json({ noActivitiesFound: "No User found" })
+      );
+  }
+);
 
 module.exports = router;

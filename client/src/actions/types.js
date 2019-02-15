@@ -20,3 +20,7 @@ export const RESEARCH_LOADING = "RESEARCH_LOADING";
 // Activities
 export const GET_ACTIVITIES = "GET_ACTIVITIES";
 export const ACTIVITY_LOADING = "ACTIVITY_LOADING";
+
+// Register
+export const REGISTER_ACCOUNT = "REGISTER_ACCOUNT";
+export const GET_USERS = "GET_USERS";

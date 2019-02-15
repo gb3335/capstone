@@ -26,6 +26,9 @@ import AddResearch from "../add-research/AddResearch";
 import AddAuthor from "../add-credentials/AddAuthor";
 import EditResearch from "../edit-research/EditResearch";
 
+//register and user
+import Register from "../register/Register";
+
 import PrivateRoute from "../common/PrivateRoute";
 
 import "./Main.css";
@@ -76,6 +79,7 @@ class Main extends Component {
               <Route exact path="/researches" component={Researches} />
               <Route exact path="/researches/:id" component={Research} />
               <Route exact path="/not-found" component={NotFound} />
+              <Route exact path="/register" component={Register} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
               </Switch>
