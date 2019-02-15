@@ -136,7 +136,7 @@ class Dashboard extends Component {
             </div>
             <div className="col-md-4">
               <div className="card">
-                <div className="card-body">
+                <div className="card-body pr-0">
                   <h5 className="card-title" style={{ textAlign: "center" }}>
                     Recent Activities
                   </h5>

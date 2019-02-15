@@ -7,6 +7,9 @@ const base64Img = require("base64-img");
 const fs = require("fs");
 const pdf = require("pdf-parse");
 const uuid = require("uuid");
+const PdfReader = require('pdfreader').PdfReader
+const Tokenizer = require('sentence-tokenizer');
+const { split, Syntax } = require('sentence-splitter')
 
 // Research model
 const Research = require("../../models/Research");
@@ -306,6 +309,31 @@ router.post(
       { encoding: "base64" },
       function(err) {
         console.log("file created");
+        let pdfString;
+        fs.readFile(`client/public/documents/researchDocuments/${req.body.researchId +
+          "-" +
+          rand}.pdf`, (err, pdfBuffer) => {
+          try {
+            new PdfReader().parseBuffer(pdfBuffer, function(err, item){
+              if(err){
+                console.log(err);
+              }
+              else if(!item){
+                const tokenizer = new Tokenizer('Chuck');
+                tokenizer.setEntry(pdfString);
+                console.log(tokenizer.getSentences());
+              }
+              else if(item.text){
+                //console.log(item.text);
+                let text = " "+item.text
+                pdfString = pdfString+text
+                //console.log(pdfString);
+              }
+            })
+          } catch (error) {
+            
+          }
+        })
       }
     );
 
