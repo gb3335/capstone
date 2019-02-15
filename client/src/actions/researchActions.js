@@ -136,10 +136,11 @@ export const addDocument = (docuData, history) => dispatch => {
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/document", docuData)
-    .then(
-      history.push("/researches/"),
+    .then((res)=>{
+      dispatch(getResearches())
+      history.push("/researches/")
       history.push(`/researches/${docuData.researchId}`)
-    )
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
