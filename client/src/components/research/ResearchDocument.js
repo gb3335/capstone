@@ -8,7 +8,7 @@ class ResearchDocument extends Component {
 
     if (research.document) {
       fileItems = (
-        <a href={docPath} target="_blank">
+        <a href={docPath} target="_blank" rel="noopener noreferrer">
           View Document
         </a>
       );
