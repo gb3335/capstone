@@ -20,6 +20,7 @@ class ResearchDocument extends Component {
       <div className="card">
         <div className="card-body">
           <h5 className="card-title text-info">Document</h5>
+          <hr />
           {fileItems}
         </div>
       </div>

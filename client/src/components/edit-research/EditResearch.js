@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { createResearch } from "../../actions/researchActions";
 import { getColleges } from "../../actions/collegeActions";
@@ -56,6 +58,14 @@ class EditResearch extends Component {
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
+  };
+
+  handleChange = value => {
+    this.setState({ abstract: value });
+  };
+
+  quillChange = () => {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
@@ -166,7 +176,21 @@ class EditResearch extends Component {
                     />
                   </div>
                 </div>
-                <TextAreaFieldGroup
+                <ReactQuill
+                  style={{ height: "20rem" }}
+                  placeholder="* Abstract"
+                  value={this.state.abstract}
+                  onChange={this.handleChange}
+                  onKeyPress={this.quillChange}
+                />
+                <br />
+                <br />
+                <div>
+                  <p style={{ color: "#d9534f", fontSize: 13 }}>
+                    {errors.abstract}
+                  </p>
+                </div>
+                {/* <TextAreaFieldGroup
                   placeholder="* Abstract"
                   name="abstract"
                   value={this.state.abstract}
@@ -174,7 +198,7 @@ class EditResearch extends Component {
                   error={errors.abstract}
                   info="Abstract of the research"
                   rows="10"
-                />
+                /> */}
                 <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"

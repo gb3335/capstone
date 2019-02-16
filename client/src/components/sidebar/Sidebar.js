@@ -442,7 +442,7 @@ class Sidebar extends Component {
   }
 }
 
-Sidebar.proptypes = {
+Sidebar.propTypes = {
   changePageTitle: Proptypes.func.isRequired
 };
 

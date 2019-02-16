@@ -41,6 +41,10 @@ module.exports = function validateResearchInput(data) {
     errors.pages = "Research pages is required";
   }
 
+  if (!Validator.isNumeric(data.pages)) {
+    errors.pages = "Research pages is invalid";
+  }
+
   // if (Validator.isEmpty(data.images)) {
   //   errors.images = "Research image is required";
   // }

@@ -5,11 +5,9 @@ const passport = require("passport");
 const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
-const pdf = require("pdf-parse");
 const uuid = require("uuid");
-const PdfReader = require('pdfreader').PdfReader
-const Tokenizer = require('sentence-tokenizer');
-const { split, Syntax } = require('sentence-splitter')
+const PdfReader = require("pdfreader").PdfReader;
+const Tokenizer = require("sentence-tokenizer");
 
 // Research model
 const Research = require("../../models/Research");
@@ -310,30 +308,94 @@ router.post(
       function(err) {
         console.log("file created");
         let pdfString;
-        fs.readFile(`client/public/documents/researchDocuments/${req.body.researchId +
-          "-" +
-          rand}.pdf`, (err, pdfBuffer) => {
-          try {
-            new PdfReader().parseBuffer(pdfBuffer, function(err, item){
-              if(err){
-                console.log(err);
-              }
-              else if(!item){
-                const tokenizer = new Tokenizer('Chuck');
-                tokenizer.setEntry(pdfString);
-                console.log(tokenizer.getSentences());
-              }
-              else if(item.text){
-                //console.log(item.text);
-                let text = " "+item.text
-                pdfString = pdfString+text
-                //console.log(pdfString);
-              }
-            })
-          } catch (error) {
-            
+        let documentsArray = [];
+        let pdfStringForAll;
+        fs.readFile(
+          `client/public/documents/researchDocuments/${req.body.researchId +
+            "-" +
+            rand}.pdf`,
+          (err, pdfBuffer) => {
+            try {
+              new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
+                if (err) {
+                  console.log(err);
+                } else if (!item) {
+                  // finished reading texts
+                  const tokenizer = new Tokenizer("Chuck");
+                  tokenizer.setEntry(pdfString);
+                  // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
+                  //console.log(tokenizer.getSentences());
+
+                  // find each documents
+                  try {
+                    Research.find()
+                      .sort({ title: 1 })
+                      .then(researches => {
+                        let ctr = 0;
+                        let ctr2 = 0;
+                        researches.map(research => {
+                          if (research._id != req.body.researchId) {
+                            if (research.document != "") {
+                              ctr++;
+                            }
+                          }
+                        });
+                        researches.map(research => {
+                          if (research._id != req.body.researchId) {
+                            if (research.document != "") {
+                              fs.readFile(
+                                `client/public/documents/researchDocuments/${
+                                  research.document
+                                }`,
+                                (err, pdfBuffer) => {
+                                  try {
+                                    new PdfReader().parseBuffer(
+                                      pdfBuffer,
+                                      function(err, item) {
+                                        if (err) {
+                                          console.log(err);
+                                        } else if (!item) {
+                                          const tokenizer = new Tokenizer(
+                                            "Chuck"
+                                          );
+                                          tokenizer.setEntry(pdfStringForAll);
+                                          documentsArray.push(
+                                            tokenizer.getSentences()
+                                          );
+                                          ctr2++;
+                                          if (ctr === ctr2) {
+                                            // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
+                                            // console.log(documentsArray);
+                                          }
+                                          pdfStringForAll = "";
+                                        } else if (item.text) {
+                                          let text = " " + item.text;
+                                          pdfStringForAll =
+                                            pdfStringForAll + text;
+                                        }
+                                      }
+                                    );
+                                  } catch (error) {}
+                                }
+                              );
+                            }
+                          }
+                        });
+                      })
+                      .catch(err =>
+                        res
+                          .status(404)
+                          .json({ noresearchfound: "No Researches found" })
+                      );
+                  } catch (error) {}
+                } else if (item.text) {
+                  let text = " " + item.text;
+                  pdfString = pdfString + text;
+                }
+              });
+            } catch (error) {}
           }
-        })
+        );
       }
     );
 
