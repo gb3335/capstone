@@ -6,17 +6,19 @@ const plagiarism = require("./");
 
 let arr = ["text1","he","hi"];
 //arr.push(q);
-let text=["text1"];
 let flag="NEW";
 
-let docuIdArray=["docu1"];
+let text=["text1"];
+let docuId=["docu1","docu2"];
+
+
 
 // wrap the callbacked doAsyncStuff in a promise
-const doAsyncStuffPromised = (docuId, text, throwsError = false) => {
+const doAsyncStuffPromised = (text, throwsError = false) => {
 return new Promise((resolve, reject) => {
 
   // this is how we would invoke the function with a callback
-  plagiarism.plagiarism(arr, text, flag, docuId, throwsError, function(error, result) {
+  plagiarism.plagiarism(arr, text, flag, throwsError, function(error, result) {
     if (error) {
       return reject(error);
     }
@@ -28,19 +30,15 @@ return new Promise((resolve, reject) => {
 
 
 const runAsync = (numTasks) => {
-  var docuIds = Array(numTasks).fill(0).map((_, i) => docuIdArray[i]);
-  var promises = docuIds.map(
-    (docuId, index) => doAsyncStuffPromised(docuId, text[index])
-      .then((tId) => {
-        console.log('task %s finished', tId);
-        return tId;
-      })
+  
+  var promises = text.map(
+    (text) => doAsyncStuffPromised(text)
   );
 
   
   return Promise.all(promises)
-    .then(docuId => {
-      console.log('all tasks finished:', docuId);
+    .then(result => {
+      console.log('all tasks finished:', result);
       
     })
     .catch(error => console.log(error))

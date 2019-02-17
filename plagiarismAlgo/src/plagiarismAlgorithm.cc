@@ -18,6 +18,7 @@ using namespace std;
 long numofhitss=0, numofpatterns=0, numoftexts=0;
 double total=0.0;
 int myarraycounter=0;
+int flag2=1;
 Local<Array> myarray;
 Isolate* isolate;
 
@@ -44,6 +45,7 @@ void initialize(vector<string> arr, string text)
     arr2 = arr;
     text2 = text;
     myarraycounter=0;
+
     myarray = Array::New(isolate);
     for(int x=0; x<MAXS; x++){
         out[x].reset();
@@ -122,12 +124,14 @@ int nextState(int s, char ch)
 }
 
 
-void newsearch(vector<string> arr, string text, string flag, string docuId){
+void newsearch(vector<string> arr, string text, string flag){
     
     // cout<<text<<" "<<docuId<<":"<<endl;
-    if(flag=="NEW"){
+    if(flag2==1){
         initialize(arr,text);
         buildMachine();
+        cout<<"Executed!";
+        flag2=0;
     }
     int state = 0;
     for(int i = 0; i<text.size(); i++)
@@ -144,7 +148,7 @@ void newsearch(vector<string> arr, string text, string flag, string docuId){
                    
                     ostringstream oss;
  
-                    oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<",\"Docu\": "<<docuId<<"}";
+                    oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<"}";
                     string word = oss.str ();
                     
                     //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
@@ -170,14 +174,14 @@ public:
     vector<string> arr3;
     string text3;
     string flag3;
-    string docuId3;
+    
     bool throwsError3;
-	MyAsyncWorker(vector<string> arr, string text, string flag, string docuId, bool throwsError, Nan::Callback *callback)
+	MyAsyncWorker(vector<string> arr, string text, string flag, bool throwsError, Nan::Callback *callback)
     : Nan::AsyncWorker(callback) {
         arr3=arr;
         text3=text;
         flag3=flag;
-        docuId3=docuId;
+        
         throwsError3 = throwsError;
   }
 
@@ -187,7 +191,7 @@ public:
       return;
 		}
 
-    newsearch(arr3,text3,flag3,docuId3);
+    newsearch(arr3,text3,flag3);
 	}
 
 	void HandleOKCallback() {
@@ -241,19 +245,16 @@ NAN_METHOD(plagiarismAlgorithm::plagiarism) {
         return Nan::ThrowError(Nan::New("expected arg 0: Array of strings").ToLocalChecked());
     }
     if(!info[1]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 1: string text").ToLocalChecked());
+        return Nan::ThrowError(Nan::New("expected arg 1: String text").ToLocalChecked());
     }
     if(!info[2]->IsString()) {
         return Nan::ThrowError(Nan::New("expected arg 2: string flag").ToLocalChecked());
     }
-    if(!info[3]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 3: string docuId").ToLocalChecked());
+    if(!info[3]->IsBoolean()) {
+        return Nan::ThrowError(Nan::New("expected arg 3: bool throwsError").ToLocalChecked());
     }
-    if(!info[4]->IsBoolean()) {
-        return Nan::ThrowError(Nan::New("expected arg 4: bool throwsError").ToLocalChecked());
-    }
-    if(!info[5]->IsFunction()) {
-        return Nan::ThrowError(Nan::New("expected arg 5: function callback").ToLocalChecked());
+    if(!info[4]->IsFunction()) {
+        return Nan::ThrowError(Nan::New("expected arg 4: function callback").ToLocalChecked());
     }
 
     v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);
@@ -272,23 +273,18 @@ NAN_METHOD(plagiarismAlgorithm::plagiarism) {
     // convert it to string
     string text = string(*param1);
 
+
     Nan::Utf8String param2(info[2]->ToString());
     // convert it to string
     string flag = string(*param2);
-
-    Nan::Utf8String param3(info[3]->ToString());
-    // convert it to string
-    string docuId = string(*param3);
-
 
   // starting the async worker
 	Nan::AsyncQueueWorker(new MyAsyncWorker(
     arr,
     text,
     flag,
-    docuId,
-    info[4]->BooleanValue(),
-		new Nan::Callback(info[5].As<v8::Function>())
+    info[3]->BooleanValue(),
+		new Nan::Callback(info[4].As<v8::Function>())
 	));
 }
 

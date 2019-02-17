@@ -48,6 +48,7 @@
     "node_use_bundled_v8": "true",
     "node_use_dtrace": "false",
     "node_use_etw": "true",
+    "node_use_large_pages": "false",
     "node_use_openssl": "true",
     "node_use_pch": "false",
     "node_use_perfctr": "true",
@@ -69,7 +70,7 @@
     "v8_typed_array_max_size_in_heap": 0,
     "v8_use_snapshot": "true",
     "want_separate_host_toolset": 0,
-    "nodedir": "C:\\Users\\CarloPonti\\.node-gyp\\10.13.0",
+    "nodedir": "C:\\Users\\Krishield\\.node-gyp\\10.15.0",
     "standalone_static_library": 1,
     "msbuild_path": "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe"
   }
