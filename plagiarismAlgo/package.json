@@ -1,0 +1,17 @@
+{
+  "name": "plagiarism",
+  "version": "1.0.0",
+  "description": "Plagiarism Checker Node addon",
+  "main": "binding.js",
+  "scripts": {
+    "build": "node-gyp build",
+    "install": "node-gyp rebuild",
+    "start": "node ./app.js"
+  },
+  "dependencies": {
+    "nan": "^2.12.1"
+  },
+  "author": "Krishield Kyle Santoyo",
+  "license": "ISC",
+  "gypfile": true
+}
