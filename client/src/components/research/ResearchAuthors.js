@@ -10,7 +10,12 @@ class ResearchAuthors extends Component {
       if (Object.keys(research.author).length > 0) {
         authorItems = <Authors author={research.author} />;
       } else {
-        authorItems = <span>No author is added in this research</span>;
+        authorItems = (
+          <p>
+            <hr />
+            <span>No author is added in this research</span>
+          </p>
+        );
       }
     } catch (error) {}
     return (

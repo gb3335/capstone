@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 import { createResearch } from "../../actions/researchActions";
 import { getColleges } from "../../actions/collegeActions";
@@ -55,10 +57,9 @@ class AddResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
-  onChangeEditor = value => {
-    this.setState({
-      abstract: value
-    });
+  handleChange = value => {
+    this.setState({ abstract: value });
+    this.refs.resBtn.removeAttribute("disabled");
   };
 
   render() {
@@ -166,7 +167,20 @@ class AddResearch extends Component {
                     />
                   </div>
                 </div>
-                <TextAreaFieldGroup
+                <ReactQuill
+                  style={{ height: "20rem" }}
+                  placeholder="* Abstract"
+                  value={this.state.abstract}
+                  onChange={this.handleChange}
+                />
+                <br />
+                <br />
+                <div>
+                  <p style={{ color: "#d9534f", fontSize: 13 }}>
+                    {errors.abstract}
+                  </p>
+                </div>
+                {/* <TextAreaFieldGroup
                   placeholder="* Abstract"
                   name="abstract"
                   value={this.state.abstract}
@@ -174,7 +188,7 @@ class AddResearch extends Component {
                   error={errors.abstract}
                   info="Abstract of the research"
                   rows="10"
-                />
+                /> */}
                 <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"
