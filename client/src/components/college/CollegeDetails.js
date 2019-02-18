@@ -44,10 +44,12 @@ class CollegeDetails extends Component {
                 <p className="infoText">
                   <i className="fas fa-redo-alt" />{" "}
                   <span>
-                    Last Update:{" "}
+                    Updated:{" "}
                     <Moment format="MMM. DD, YYYY">
                       {college.lastUpdate.date}
                     </Moment>
+                    {" at "}
+                    <Moment format="h:mm A">{college.lastUpdate.date}</Moment>
                   </span>
                 </p>
               </div>

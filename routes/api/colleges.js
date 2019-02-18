@@ -143,7 +143,10 @@ router.post(
       courseTotal,
       researchTotal,
       journalTotal,
-      color
+      color,
+      lastUpdate: {
+        date: Date.now()
+      }
     };
 
     College.findOne({ _id: req.body.id }).then(college => {
@@ -269,12 +272,24 @@ router.post(
         title:
           "Course " + req.body.initials + " added in " + college.name.initials
       };
-      new Activity(newActivity).save();
+      new Activity(newActivity).save().then(college);
 
       // Add to exp array
       college.course.unshift(newCourse);
 
-      college.save().then(college => res.json(college));
+      college.save();
+
+      const newCollege = {
+        lastUpdate: {
+          date: Date.now()
+        }
+      };
+
+      College.findOneAndUpdate(
+        { _id: req.body.colId },
+        { $set: newCollege },
+        { new: true }
+      ).then(college => res.json(college));
     });
   }
 );
@@ -292,6 +307,18 @@ router.delete(
         const removeIndex = college.course
           .map(item => item.id)
           .indexOf(req.params.course_id);
+
+        const newCollege = {
+          lastUpdate: {
+            date: Date.now()
+          }
+        };
+
+        College.findOneAndUpdate(
+          { _id: req.params.college_id },
+          { $set: newCollege },
+          { new: true }
+        ).then(college);
 
         // add activity
         const newActivity = {

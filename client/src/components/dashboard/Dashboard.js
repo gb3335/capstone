@@ -60,7 +60,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "25rem" }}>
+          <div style={{ overflow: "auto", height: "32.3rem" }}>
             {recentActivities}
           </div>
         );
