@@ -60,7 +60,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "32.3rem" }}>
+          <div style={{ overflow: "auto", height: "45vh", fontSize: "13px" }}>
             {recentActivities}
           </div>
         );
@@ -101,11 +101,14 @@ class Dashboard extends Component {
 
         dashboardItems = (
           <div className="row">
-            <div className="col-md-8">
-              <div className="row">
-                <div className="col-md-12">
-                  <div className="card">
-                    <div className="card-body">
+            <div className="col-md-9">
+              <div className="card">
+                <div className="row">
+                  <div className="col-md-6">
+                    <div
+                      className="card-body"
+                      style={{ paddingRight: "15%", paddingLeft: "15%" }}
+                    >
                       <h5
                         className="card-title"
                         style={{ textAlign: "center" }}
@@ -115,12 +118,11 @@ class Dashboard extends Component {
                       <DoughnutChart data={researchData} />
                     </div>
                   </div>
-                </div>
-              </div>
-              <div className="row mt-4">
-                <div className="col-md-12">
-                  <div className="card">
-                    <div className="card-body">
+                  <div className="col-md-6">
+                    <div
+                      className="card-body"
+                      style={{ paddingRight: "15%", paddingLeft: "15%" }}
+                    >
                       <h5
                         className="card-title"
                         style={{ textAlign: "center" }}
@@ -134,7 +136,8 @@ class Dashboard extends Component {
               </div>
               <br />
             </div>
-            <div className="col-md-4">
+
+            <div className="col-md-3">
               <div className="card">
                 <div className="card-body pr-0">
                   <h5 className="card-title" style={{ textAlign: "center" }}>
