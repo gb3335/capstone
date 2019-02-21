@@ -42,7 +42,6 @@ class CreateCollege extends Component {
           .split(".")
           .slice(0, -1)
           .join(".") + Date.now(),
-      ext: logoname.split(".").pop(),
       librarian: this.state.librarian,
       file: this.state.selectedFile,
       color: this.state.background

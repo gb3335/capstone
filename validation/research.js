@@ -1,5 +1,6 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
+const striptags = require("striptags");
 
 module.exports = function validateResearchInput(data) {
   let errors = {};
@@ -33,7 +34,7 @@ module.exports = function validateResearchInput(data) {
     errors.abstract = "Research abstract is required";
   }
 
-  if (!Validator.isLength(data.abstract, { min: 100 })) {
+  if (!Validator.isLength(striptags(data.abstract), { min: 100 })) {
     errors.abstract = "Abstract must be at least 100 characters";
   }
 

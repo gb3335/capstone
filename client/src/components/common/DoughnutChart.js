@@ -8,7 +8,10 @@ class DoughnutChart extends Component {
     return (
       <div className="doughnutChart">
         <h4 style={{ textAlign: "center" }}>{chartTitle}</h4>
-        <Doughnut data={data} height="70" width="70" />
+        <Doughnut
+          data={data}
+          legend={{ display: true, position: "left", fullWidth: false }}
+        />
       </div>
     );
   }

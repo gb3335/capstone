@@ -60,7 +60,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "45vh", fontSize: "13px" }}>
+          <div style={{ overflow: "auto", height: "40rem", fontSize: "13px" }}>
             {recentActivities}
           </div>
         );
@@ -105,10 +105,7 @@ class Dashboard extends Component {
               <div className="card">
                 <div className="row">
                   <div className="col-md-6">
-                    <div
-                      className="card-body"
-                      style={{ paddingRight: "15%", paddingLeft: "15%" }}
-                    >
+                    <div className="card-body">
                       <h5
                         className="card-title"
                         style={{ textAlign: "center" }}
@@ -119,10 +116,7 @@ class Dashboard extends Component {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <div
-                      className="card-body"
-                      style={{ paddingRight: "15%", paddingLeft: "15%" }}
-                    >
+                    <div className="card-body">
                       <h5
                         className="card-title"
                         style={{ textAlign: "center" }}
