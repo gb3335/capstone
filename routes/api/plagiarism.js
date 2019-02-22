@@ -67,8 +67,8 @@ router.post("/local", (req, res) => {
 
   const q = req.body.q;
 
-  let arr = processor.arrayProcess(q);
-  let text = processor.textProcess(req.body.text);
+  let arr = processor.arrayProcess(q.toLowerCase());
+  let text = processor.textProcess(req.body.text.toLowerCase());
   let flag = req.body.flag;
 
   let result = plagiarism.search(arr, text, flag);
