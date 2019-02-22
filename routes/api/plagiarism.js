@@ -8,6 +8,9 @@ const cx = "014684295069765089744:fvoycnmgzio";
 // Load Plagiarism Checker
 const plagiarism = require("krishield-kyle-plagiarism");
 
+// Text Processor
+const processor = require('../../validation/plagiarism/processor');
+
 // Load Input Validation
 const validateOnlineInput = require("../../validation/plagiarism/online");
 const validateLocalInput = require("../../validation/plagiarism/local");
@@ -64,9 +67,8 @@ router.post("/local", (req, res) => {
 
   const q = req.body.q;
 
-  let arr = [];
-  arr.push(q);
-  let text = req.body.text;
+  let arr = processor.arrayProcess(q);
+  let text = processor.textProcess(req.body.text);
   let flag = req.body.flag;
 
   let result = plagiarism.search(arr, text, flag);
