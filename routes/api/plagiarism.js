@@ -69,7 +69,7 @@ router.post("/local", (req, res) => {
   let text = req.body.text;
   let flag = req.body.flag;
 
-  let result = plagiarism(arr, text, flag);
+  let result = plagiarism.search(arr, text, flag);
   res.json({
     localPlagiarism: {
       success: true,
