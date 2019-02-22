@@ -136,10 +136,10 @@ export const addDocument = (docuData, history) => dispatch => {
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/document", docuData)
-    .then((res)=>{
-      dispatch(getResearches())
-      history.push("/researches/")
-      history.push(`/researches/${docuData.researchId}`)
+    .then(res => {
+      dispatch(getResearches());
+      history.push("/researches/");
+      history.push(`/researches/${docuData.researchId}`);
     })
     .catch(err =>
       dispatch({
@@ -176,7 +176,7 @@ export const deleteResearch = (data, history) => dispatch => {
     dispatch(setResearchLoading());
     axios
       .delete(`/api/researches/${data.id}`)
-      .then(history.push(`/researches`), res =>
+      .then(dispatch(getResearches()), history.push(`/researches`), res =>
         dispatch({
           type: GET_RESEARCH,
           payload: res.data

@@ -51,9 +51,10 @@ export const getCollegeByInitials = initials => dispatch => {
 // Create / Update College
 export const createCollege = (collegeData, history) => dispatch => {
   axios
-    .post("/api/colleges", collegeData)
+    .post("/api/colleges/", collegeData)
     .then(res => {
       history.push(`/colleges/${collegeData.initials}`);
+      window.location.reload();
     })
     .catch(err =>
       dispatch({
@@ -68,8 +69,8 @@ export const changeCollegeLogo = (collegeData, history) => dispatch => {
   axios
     .post("/api/colleges/changeLogo", collegeData)
     .then(res => {
-      history.push(`/colleges`);
       history.push(`/colleges/${collegeData.initials}`);
+      window.location.reload();
     })
     .catch(err =>
       dispatch({

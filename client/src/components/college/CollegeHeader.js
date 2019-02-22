@@ -2,7 +2,8 @@ import React, { Component } from "react";
 
 class CollegeHeader extends Component {
   render() {
-    const path = "/images/collegeLogos/";
+    const path =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/";
     const { college } = this.props;
     let fontColor;
 
