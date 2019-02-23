@@ -9,7 +9,6 @@ import { createResearch } from "../../actions/researchActions";
 import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
-import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 
 class AddResearch extends Component {
