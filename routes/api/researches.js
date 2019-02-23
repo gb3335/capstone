@@ -14,6 +14,15 @@ const Research = require("../../models/Research");
 const College = require("../../models/College");
 const Activity = require("../../models/Activity");
 
+// file upload
+const AWS = require("aws-sdk");
+const s3config = require("../../config/s3keys");
+AWS.config.update({
+  accessKeyId: s3config.iamUser,
+  secretAccessKey: s3config.iamSecret,
+  region: "us-east-2"
+});
+
 //Validator
 const validateResearchInput = require("../../validation/research");
 const validateAuthorInput = require("../../validation/author");
@@ -231,25 +240,53 @@ router.post(
     let imageArray = [];
     for (i = 0; i < req.body.images.length; i++) {
       const rand = uuid();
-      let ext = req.body.images[i].split(";")[0].split("/")[1];
+      // let ext = req.body.images[i].split(";")[0].split("/")[1];
 
-      if (ext == "jpeg") {
-        ext = "jpg";
-      }
+      // if (ext == "jpeg") {
+      //   ext = "jpg";
+      // }
 
-      base64Img.img(
-        req.body.images[i],
-        "client/public/images/researchImages/",
-        req.body.id + "-" + rand,
-        function(err, filepath) {
-          if (err) {
-            console.log(err);
-          }
-        }
+      // S3 upload
+      s3 = new AWS.S3();
+
+      const base64Data = new Buffer(
+        req.body.images[i].replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
       );
-      console.log(ext);
 
-      imageArray.push(req.body.id + "-" + rand + "." + ext);
+      const type = req.body.images[i].split(";")[0].split("/")[1];
+
+      const userId = 1;
+
+      params = {
+        Bucket: "bulsu-capstone",
+        Key: `researchImages/${req.body.id + "-" + rand}.png`, // type is not required
+        Body: base64Data,
+        ACL: "public-read",
+        ContentEncoding: "base64", // required
+        ContentType: `image/${type}` // required. Notice the back ticks
+      };
+
+      s3.upload(params, (err, data) => {
+        if (err) {
+          return console.log(err);
+        }
+
+        console.log("Image successfully uploaded.");
+      });
+
+      // base64Img.img(
+      //   req.body.images[i],
+      //   "client/public/images/researchImages/",
+      //   req.body.id + "-" + rand,
+      //   function(err, filepath) {
+      //     if (err) {
+      //       console.log(err);
+      //     }
+      //   }
+      // );
+
+      imageArray.push(req.body.id + "-" + rand + ".png");
     }
 
     Research.findOne({ _id: req.body.id }).then(research => {
@@ -289,115 +326,154 @@ router.post(
     const filename = req.body.researchId + "-" + rand + ".pdf";
 
     if (req.body.oldFile) {
-      // delete research document from client folder
-      try {
-        fs.unlinkSync(
-          `client/public/documents/researchDocuments/${req.body.oldFile}`
-        );
-      } catch (error) {
-        //console.log(error);
-      }
+      // delete research document from s3
+      let s3 = new AWS.S3();
+
+      let params = {
+        Bucket: "bulsu-capstone",
+        Key: `researchDocuments/${req.body.oldFile}`
+      };
+
+      s3.deleteObject(params, function(err, data) {
+        if (err) console.log(err, err.stack);
+        else console.log(data);
+      });
+      // try {
+      //   fs.unlinkSync(
+      //     `client/public/documents/researchDocuments/${req.body.oldFile}`
+      //   );
+      // } catch (error) {
+      //   //console.log(error);
+      // }
     }
+    // S3 upload
+    s3 = new AWS.S3();
 
-    fs.writeFile(
-      `client/public/documents/researchDocuments/${req.body.researchId +
-        "-" +
-        rand}.pdf`,
-      base64Doc,
-      { encoding: "base64" },
-      function(err) {
-        console.log("file created");
-        let pdfString;
-        let documentsArray = [];
-        let pdfStringForAll;
-        fs.readFile(
-          `client/public/documents/researchDocuments/${req.body.researchId +
-            "-" +
-            rand}.pdf`,
-          (err, pdfBuffer) => {
-            try {
-              new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
-                if (err) {
-                  console.log(err);
-                } else if (!item) {
-                  // finished reading texts
-                  const tokenizer = new Tokenizer("Chuck");
-                  tokenizer.setEntry(pdfString);
-                  // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
-                  //console.log(tokenizer.getSentences());
-
-                  // find each documents
-                  try {
-                    Research.find()
-                      .sort({ title: 1 })
-                      .then(researches => {
-                        let ctr = 0;
-                        let ctr2 = 0;
-                        researches.map(research => {
-                          if (research._id != req.body.researchId) {
-                            if (research.document != "") {
-                              ctr++;
-                            }
-                          }
-                        });
-                        researches.map(research => {
-                          if (research._id != req.body.researchId) {
-                            if (research.document != "") {
-                              fs.readFile(
-                                `client/public/documents/researchDocuments/${
-                                  research.document
-                                }`,
-                                (err, pdfBuffer) => {
-                                  try {
-                                    new PdfReader().parseBuffer(
-                                      pdfBuffer,
-                                      function(err, item) {
-                                        if (err) {
-                                          console.log(err);
-                                        } else if (!item) {
-                                          const tokenizer = new Tokenizer(
-                                            "Chuck"
-                                          );
-                                          tokenizer.setEntry(pdfStringForAll);
-                                          documentsArray.push(
-                                            tokenizer.getSentences()
-                                          );
-                                          ctr2++;
-                                          if (ctr === ctr2) {
-                                            // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
-                                            // console.log(documentsArray);
-                                          }
-                                          pdfStringForAll = "";
-                                        } else if (item.text) {
-                                          let text = " " + item.text;
-                                          pdfStringForAll =
-                                            pdfStringForAll + text;
-                                        }
-                                      }
-                                    );
-                                  } catch (error) {}
-                                }
-                              );
-                            }
-                          }
-                        });
-                      })
-                      .catch(err =>
-                        res
-                          .status(404)
-                          .json({ noresearchfound: "No Researches found" })
-                      );
-                  } catch (error) {}
-                } else if (item.text) {
-                  let text = " " + item.text;
-                  pdfString = pdfString + text;
-                }
-              });
-            } catch (error) {}
-          }
-        );
-      }
+    const base64Data = new Buffer(
+      base64String.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
     );
+
+    const type = base64String.split(";")[0].split("/")[1];
+
+    const userId = 1;
+
+    params = {
+      Bucket: "bulsu-capstone",
+      Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
+      Body: base64Data,
+      ACL: "public-read",
+      ContentEncoding: "base64", // required
+      ContentType: `application/${type}` // required. Notice the back ticks
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+
+      console.log("Document successfully uploaded.");
+    });
+
+    // fs.writeFile(
+    //   `client/public/documents/researchDocuments/${req.body.researchId +
+    //     "-" +
+    //     rand}.pdf`,
+    //   base64Doc,
+    //   { encoding: "base64" },
+    //   function(err) {
+    //     console.log("file created");
+    //     let pdfString;
+    //     let documentsArray = [];
+    //     let pdfStringForAll;
+    //     fs.readFile(
+    //       `client/public/documents/researchDocuments/${req.body.researchId +
+    //         "-" +
+    //         rand}.pdf`,
+    //       (err, pdfBuffer) => {
+    //         try {
+    //           new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
+    //             if (err) {
+    //               console.log(err);
+    //             } else if (!item) {
+    //               // finished reading texts
+    //               const tokenizer = new Tokenizer("Chuck");
+    //               tokenizer.setEntry(pdfString);
+    //               // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
+    //               //console.log(tokenizer.getSentences());
+
+    //               // find each documents
+    //               try {
+    //                 Research.find()
+    //                   .sort({ title: 1 })
+    //                   .then(researches => {
+    //                     let ctr = 0;
+    //                     let ctr2 = 0;
+    //                     researches.map(research => {
+    //                       if (research._id != req.body.researchId) {
+    //                         if (research.document != "") {
+    //                           ctr++;
+    //                         }
+    //                       }
+    //                     });
+    //                     researches.map(research => {
+    //                       if (research._id != req.body.researchId) {
+    //                         if (research.document != "") {
+    //                           fs.readFile(
+    //                             `client/public/documents/researchDocuments/${
+    //                               research.document
+    //                             }`,
+    //                             (err, pdfBuffer) => {
+    //                               try {
+    //                                 new PdfReader().parseBuffer(
+    //                                   pdfBuffer,
+    //                                   function(err, item) {
+    //                                     if (err) {
+    //                                       console.log(err);
+    //                                     } else if (!item) {
+    //                                       const tokenizer = new Tokenizer(
+    //                                         "Chuck"
+    //                                       );
+    //                                       tokenizer.setEntry(pdfStringForAll);
+    //                                       documentsArray.push(
+    //                                         tokenizer.getSentences()
+    //                                       );
+    //                                       ctr2++;
+    //                                       if (ctr === ctr2) {
+    //                                         // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
+    //                                         // console.log(documentsArray);
+    //                                       }
+    //                                       pdfStringForAll = "";
+    //                                     } else if (item.text) {
+    //                                       let text = " " + item.text;
+    //                                       pdfStringForAll =
+    //                                         pdfStringForAll + text;
+    //                                     }
+    //                                   }
+    //                                 );
+    //                               } catch (error) {}
+    //                             }
+    //                           );
+    //                         }
+    //                       }
+    //                     });
+    //                   })
+    //                   .catch(err =>
+    //                     res
+    //                       .status(404)
+    //                       .json({ noresearchfound: "No Researches found" })
+    //                   );
+    //               } catch (error) {}
+    //             } else if (item.text) {
+    //               let text = " " + item.text;
+    //               pdfString = pdfString + text;
+    //             }
+    //           });
+    //         } catch (error) {}
+    //       }
+    //     );
+    //   }
+    // );
 
     const newDocument = {
       document: filename
@@ -425,14 +501,25 @@ router.delete(
   "/document/:research_id/:filename",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    // delete research document from client folder
-    try {
-      fs.unlinkSync(
-        `client/public/documents/researchDocuments/${req.params.filename}`
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    //delete research document from s3
+    let s3 = new AWS.S3();
+
+    let params = {
+      Bucket: "bulsu-capstone",
+      Key: `researchDocuments/${req.params.filename}`
+    };
+
+    s3.deleteObject(params, function(err, data) {
+      if (err) console.log(err, err.stack);
+      else console.log(data);
+    });
+    // try {
+    //   fs.unlinkSync(
+    //     `client/public/documents/researchDocuments/${req.params.filename}`
+    //   );
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
     const newDocument = {
       document: ""
@@ -463,12 +550,25 @@ router.delete(
   (req, res) => {
     Research.findOne({ _id: req.params.id }).then(research => {
       research.images.map(image => {
+        //delete research images from s3
+        let s3 = new AWS.S3();
+
+        let params = {
+          Bucket: "bulsu-capstone",
+          Key: `researchImages/${image.name}`
+        };
+
+        s3.deleteObject(params, function(err, data) {
+          if (err) console.log(err, err.stack);
+          else console.log(data);
+        });
+
         //delete research images from client folder
-        try {
-          fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
-        } catch (error) {
-          //console.log(error);
-        }
+        // try {
+        //   fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
+        // } catch (error) {
+        //   //console.log(error);
+        // }
       });
 
       // delete research document from client folder

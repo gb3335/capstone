@@ -6,7 +6,8 @@ import "react-image-gallery/styles/css/image-gallery.css";
 
 class Images extends Component {
   render() {
-    const path = "/images/researchImages/";
+    const path =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchImages/";
     let imageData = [];
 
     this.props.images.map(image =>

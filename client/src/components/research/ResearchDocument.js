@@ -3,7 +3,9 @@ import React, { Component } from "react";
 class ResearchDocument extends Component {
   render() {
     const { research } = this.props;
-    const docPath = "/documents/researchDocuments/" + research.document;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      research.document;
     let fileItems;
 
     if (research.document) {
