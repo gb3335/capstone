@@ -10,20 +10,31 @@ class Authors extends Component {
 
   render() {
     const { research } = this.props.research;
-    const author = this.props.author.map(author => (
-      <tr key={author._id}>
-        <td>{author.name}</td>
-        <td>{author.role}</td>
-        <td>
-          <button
-            onClick={this.onDeleteClick.bind(this, research._id, author._id)}
-            className="btn btn-danger"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
+    let author;
+
+    if (this.props.auth.isAuthenticated === true) {
+      author = this.props.author.map(author => (
+        <tr key={author._id}>
+          <td>{author.name}</td>
+          <td>{author.role}</td>
+          <td>
+            <button
+              onClick={this.onDeleteClick.bind(this, research._id, author._id)}
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ));
+    } else {
+      author = this.props.author.map(author => (
+        <tr key={author._id}>
+          <td>{author.name}</td>
+          <td>{author.role}</td>
+        </tr>
+      ));
+    }
 
     return (
       <div>
@@ -44,11 +55,13 @@ class Authors extends Component {
 
 Authors.propTypes = {
   deleteAuthor: PropTypes.func.isRequired,
-  research: PropTypes.object.isRequired
+  research: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research
+  research: state.research,
+  auth: state.auth
 });
 
 export default connect(

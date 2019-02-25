@@ -20,6 +20,7 @@ class Colleges extends Component {
   render() {
     const { colleges, loading } = this.props.college;
     let collegeItems;
+    let action;
 
     if (colleges === null || loading) {
       collegeItems = <Spinner />;
@@ -33,6 +34,10 @@ class Colleges extends Component {
       }
     }
 
+    if (this.props.auth.isAuthenticated) {
+      action = <CollegesActions />;
+    }
+
     return (
       <div className="colleges">
         <div className="container">
@@ -42,7 +47,7 @@ class Colleges extends Component {
               <p className="lead text-center">
                 See all colleges and their informations
               </p>
-              <CollegesActions />
+              {action}
               {collegeItems}
             </div>
           </div>
@@ -54,11 +59,13 @@ class Colleges extends Component {
 
 Colleges.propTypes = {
   getColleges: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  auth: state.auth
 });
 
 export default connect(

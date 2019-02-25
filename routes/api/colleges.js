@@ -27,12 +27,12 @@ AWS.config.update({
 // @route   GET api/colleges/test
 // @desc    Tests get route
 // @access  Public
-router.post("/test", (req, res) => {
-  const singleUpload = upload.single("file");
-  singleUpload(req, res, function(err) {
-    return res.json({ file: req.file });
-  });
-});
+// router.post("/test", (req, res) => {
+//   const singleUpload = upload.single("file");
+//   singleUpload(req, res, function(err) {
+//     return res.json({ file: req.file });
+//   });
+// });
 
 // @route   GET api/colleges
 // @desc    Get colleges

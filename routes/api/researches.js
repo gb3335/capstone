@@ -56,7 +56,7 @@ router.get("/pdfText", (req, res) => {
 router.get("/test", (req, res) => res.json({ msg: "Research Works" }));
 
 // @route   GET api/researches
-// @desc    Get colleges
+// @desc    Get researches
 // @access  Public
 router.get("/", (req, res) => {
   Research.find()
@@ -90,7 +90,7 @@ router.get("/:id", (req, res) => {
 // @access  Private
 router.post(
   "/",
-  //passport.authenticate("jwt", { session: false }),
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateResearchInput(req.body);
 
@@ -350,7 +350,7 @@ router.post(
     s3 = new AWS.S3();
 
     const base64Data = new Buffer(
-      base64String.replace(/^data:image\/\w+;base64,/, ""),
+      base64Doc.replace(/^data:image\/\w+;base64,/, ""),
       "base64"
     );
 
@@ -364,7 +364,7 @@ router.post(
       Body: base64Data,
       ACL: "public-read",
       ContentEncoding: "base64", // required
-      ContentType: `application/${type}` // required. Notice the back ticks
+      ContentType: `application/pdf` // required. Notice the back ticks
     };
 
     s3.upload(params, (err, data) => {

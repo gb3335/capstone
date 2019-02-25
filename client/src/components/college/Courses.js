@@ -10,21 +10,32 @@ class Courses extends Component {
 
   render() {
     const { college } = this.props.college;
+    let course;
 
-    const course = this.props.course.map(cou => (
-      <tr key={cou._id}>
-        <td>{cou.name}</td>
-        <td>{cou.initials}</td>
-        <td>
-          <button
-            onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
-            className="btn btn-danger"
-          >
-            Delete
-          </button>
-        </td>
-      </tr>
-    ));
+    if (this.props.auth.isAuthenticated === true) {
+      course = this.props.course.map(cou => (
+        <tr key={cou._id}>
+          <td>{cou.name}</td>
+          <td>{cou.initials}</td>
+          <td>
+            <button
+              onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
+              className="btn btn-danger"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ));
+    } else {
+      course = this.props.course.map(cou => (
+        <tr key={cou._id}>
+          <td>{cou.name}</td>
+          <td>{cou.initials}</td>
+        </tr>
+      ));
+    }
+
     return (
       <div>
         <table className="table">
@@ -44,11 +55,13 @@ class Courses extends Component {
 
 Courses.propTypes = {
   deleteCourse: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  auth: state.auth
 });
 
 export default connect(

@@ -21,6 +21,7 @@ class Researches extends Component {
   render() {
     const { researches, loading } = this.props.research;
     let researchItems;
+    let action;
 
     if (researches === null || loading) {
       researchItems = <Spinner />;
@@ -58,6 +59,10 @@ class Researches extends Component {
       } else {
         researchItems = <h4>No research found</h4>;
       }
+
+      if (this.props.auth.isAuthenticated) {
+        action = <ResearchesActions />;
+      }
     }
 
     return (
@@ -69,7 +74,7 @@ class Researches extends Component {
               <p className="lead text-center">
                 See all research and it's informations
               </p>
-              <ResearchesActions />
+              {action}
               {researchItems}
             </div>
           </div>
@@ -81,11 +86,13 @@ class Researches extends Component {
 
 Researches.propTypes = {
   getResearches: PropTypes.func.isRequired,
-  research: PropTypes.object.isRequired
+  research: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research
+  research: state.research,
+  auth: state.auth
 });
 
 export default connect(
