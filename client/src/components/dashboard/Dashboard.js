@@ -42,6 +42,8 @@ class Dashboard extends Component {
     let journalDiv;
     let graphsDiv;
     let activityDiv = "col-md-12";
+    let recactDiv;
+    let graphDiv = "row";
 
     let recentActivities = [];
 
@@ -156,18 +158,8 @@ class Dashboard extends Component {
           );
         }
 
-        dashboardItems = (
-          <div className="row">
-            <div className={graphsDiv}>
-              <div className="card">
-                <div className="row">
-                  {researchDiv}
-                  {journalDiv}
-                </div>
-              </div>
-              <br />
-            </div>
-
+        if (this.props.auth.isAuthenticated) {
+          recactDiv = (
             <div className={activityDiv}>
               <div className="card">
                 <div className="card-body pr-0">
@@ -178,6 +170,24 @@ class Dashboard extends Component {
                 </div>
               </div>
             </div>
+          );
+        } else {
+          graphDiv = "container";
+          graphsDiv = "col-md-12";
+        }
+
+        dashboardItems = (
+          <div className={graphDiv}>
+            <div className={graphsDiv}>
+              <div className="card">
+                <div className="row">
+                  {researchDiv}
+                  {journalDiv}
+                </div>
+              </div>
+              <br />
+            </div>
+            {recactDiv}
           </div>
         );
       } catch (error) {}
@@ -200,12 +210,14 @@ Dashboard.propTypes = {
   getColleges: PropTypes.func.isRequired,
   getActivities: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  activity: PropTypes.object.isRequired
+  activity: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   college: state.college,
-  activity: state.activity
+  activity: state.activity,
+  auth: state.auth
 });
 
 export default connect(
