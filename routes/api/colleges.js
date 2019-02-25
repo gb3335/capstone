@@ -27,12 +27,12 @@ AWS.config.update({
 // @route   GET api/colleges/test
 // @desc    Tests get route
 // @access  Public
-router.post("/test", (req, res) => {
-  const singleUpload = upload.single("file");
-  singleUpload(req, res, function(err) {
-    return res.json({ file: req.file });
-  });
-});
+// router.post("/test", (req, res) => {
+//   const singleUpload = upload.single("file");
+//   singleUpload(req, res, function(err) {
+//     return res.json({ file: req.file });
+//   });
+// });
 
 // @route   GET api/colleges
 // @desc    Get colleges
@@ -73,7 +73,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const date = Date.now();
-    const logoName = req.body.initials + date + "." + req.body.ext;
+    const logoName = req.body.initials + date + ".png";
 
     const newCollege = {
       logo: logoName,
@@ -82,7 +82,7 @@ router.post(
       }
     };
 
-    //delete old logo from client folder
+    //delete old logo from s3
     let s3 = new AWS.S3();
 
     let params = {
@@ -100,7 +100,7 @@ router.post(
     //   console.log(error);
     // }
 
-    // move image to cilent folder
+    // move image to s3
     // S3 upload
     s3 = new AWS.S3();
 
@@ -115,7 +115,7 @@ router.post(
 
     params = {
       Bucket: "bulsu-capstone",
-      Key: `collegeLogos/${req.body.initials + date}.png`, // type is not required
+      Key: `collegeLogos/${req.body.initials + date + ".png"}`, // type is not required
       Body: base64Data,
       ACL: "public-read",
       ContentEncoding: "base64", // required
@@ -430,7 +430,7 @@ router.post(
       .then(college => {
         res.json({ success: true });
 
-        //delete old logo from client folder
+        //delete old logo from s3
         // try {
         //   fs.unlinkSync(`client/public/images/collegeLogos/${req.body.logo}`);
         // } catch (error) {

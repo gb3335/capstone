@@ -37,6 +37,19 @@ class Research extends Component {
   render() {
     const { research, loading } = this.props.research;
     let researchContent;
+    let researchAction;
+    let authorAction;
+    let imageAction;
+    let docAction;
+    let doc;
+
+    if (this.props.auth.isAuthenticated) {
+      researchAction = <ResearchActions />;
+      authorAction = <ResearchAuthorActions />;
+      imageAction = <ResearchImageActions />;
+      docAction = <ResearchDocumentActions research={research} />;
+      doc = <ResearchDocument research={research} />;
+    }
 
     if (research === null || loading) {
       researchContent = <Spinner />;
@@ -61,17 +74,17 @@ class Research extends Component {
 
             <ResearchHeader research={research} />
             <br />
-            <ResearchActions />
+            {researchAction}
             <ResearchAbstract research={research} />
             <br />
-            <ResearchAuthorActions />
+            {authorAction}
             <ResearchAuthors research={research} />
             <br />
-            <ResearchImageActions />
+            {imageAction}
             <ResearchImages research={research} />
             <br />
-            <ResearchDocumentActions research={research} />
-            <ResearchDocument research={research} />
+            {docAction}
+            {doc}
           </div>
         );
       } catch (error) {}
@@ -91,11 +104,13 @@ class Research extends Component {
 
 Research.propTypes = {
   research: PropTypes.object.isRequired,
-  getResearchById: PropTypes.func.isRequired
+  getResearchById: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research
+  research: state.research,
+  auth: state.auth
 });
 
 export default connect(

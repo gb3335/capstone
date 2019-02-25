@@ -28,6 +28,13 @@ class College extends Component {
   render() {
     const { college, loading } = this.props.college;
     let collegeContent;
+    let colAction;
+    let courseAction;
+
+    if (this.props.auth.isAuthenticated) {
+      colAction = <CollegeActions />;
+      courseAction = <CollegeCourseActions />;
+    }
 
     if (college === null || loading) {
       collegeContent = <Spinner />;
@@ -47,9 +54,9 @@ class College extends Component {
               <div className="col-md-6" />
             </div>
             <CollegeHeader college={college} />
-            <CollegeActions />
+            {colAction}
             <CollegeDetails college={college} />
-            <CollegeCourseActions />
+            {courseAction}
             <CollegeCourses college={college} />
           </div>
         );
@@ -70,11 +77,13 @@ class College extends Component {
 
 College.propTypes = {
   college: PropTypes.object.isRequired,
-  getCollegeByInitials: PropTypes.func.isRequired
+  getCollegeByInitials: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  auth: state.auth
 });
 
 export default connect(

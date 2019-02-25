@@ -38,6 +38,12 @@ class Dashboard extends Component {
     let journalData;
     let dashboardItems;
     let activityItems;
+    let researchDiv;
+    let journalDiv;
+    let graphsDiv;
+    let activityDiv = "col-md-12";
+    let recactDiv;
+    let graphDiv = "row";
 
     let recentActivities = [];
 
@@ -77,61 +83,84 @@ class Dashboard extends Component {
       );
     } else {
       try {
-        researchData = {
-          labels: colleges.map(college => college.name.initials),
-          datasets: [
-            {
-              data: colleges.map(college => college.researchTotal),
-              backgroundColor: colleges.map(college => college.color),
-              hoverBackgroundColor: colleges.map(college => college.color)
-            }
-          ]
-        };
+        let researchCtr = 0;
+        let journalCtr = 0;
+        colleges.map(college => {
+          researchCtr += parseInt(college.researchTotal, 10);
+          journalCtr += parseInt(college.journalTotal, 10);
+        });
 
-        journalData = {
-          labels: colleges.map(college => college.name.initials),
-          datasets: [
-            {
-              data: colleges.map(college => college.journalTotal),
-              backgroundColor: colleges.map(college => college.color),
-              hoverBackgroundColor: colleges.map(college => college.color)
-            }
-          ]
-        };
+        if (researchCtr > 0) {
+          researchData = {
+            labels: colleges.map(college => college.name.initials),
+            datasets: [
+              {
+                data: colleges.map(college => college.researchTotal),
+                backgroundColor: colleges.map(college => college.color),
+                hoverBackgroundColor: colleges.map(college => college.color)
+              }
+            ]
+          };
 
-        dashboardItems = (
-          <div className="row">
-            <div className="col-md-9">
-              <div className="card">
-                <div className="row">
-                  <div className="col-md-6">
-                    <div className="card-body">
-                      <h5
-                        className="card-title"
-                        style={{ textAlign: "center" }}
-                      >
-                        Researches
-                      </h5>
-                      <DoughnutChart data={researchData} />
-                    </div>
-                  </div>
-                  <div className="col-md-6">
-                    <div className="card-body">
-                      <h5
-                        className="card-title"
-                        style={{ textAlign: "center" }}
-                      >
-                        Journals
-                      </h5>
-                      <DoughnutChart data={journalData} />
-                    </div>
-                  </div>
-                </div>
+          let div;
+          if (journalCtr > 0) {
+            div = "col-md-6";
+            graphsDiv = "col-md-9";
+            activityDiv = "col-md-3";
+          } else {
+            div = "col-md-12";
+            graphsDiv = "col-md-7";
+            activityDiv = "col-md-5";
+          }
+          researchDiv = (
+            <div className={div}>
+              <div className="card-body">
+                <h5 className="card-title" style={{ textAlign: "center" }}>
+                  Researches
+                </h5>
+                <DoughnutChart data={researchData} />
               </div>
-              <br />
             </div>
+          );
+        }
 
-            <div className="col-md-3">
+        if (journalCtr > 0) {
+          journalData = {
+            labels: colleges.map(college => college.name.initials),
+            datasets: [
+              {
+                data: colleges.map(college => college.journalTotal),
+                backgroundColor: colleges.map(college => college.color),
+                hoverBackgroundColor: colleges.map(college => college.color)
+              }
+            ]
+          };
+
+          let div;
+          if (researchCtr > 0) {
+            div = "col-md-6";
+            graphsDiv = "col-md-9";
+            activityDiv = "col-md-3";
+          } else {
+            div = "col-md-12";
+            graphsDiv = "col-md-7";
+            activityDiv = "col-md-5";
+          }
+          journalDiv = (
+            <div className={div}>
+              <div className="card-body">
+                <h5 className="card-title" style={{ textAlign: "center" }}>
+                  Journals
+                </h5>
+                <DoughnutChart data={journalData} />
+              </div>
+            </div>
+          );
+        }
+
+        if (this.props.auth.isAuthenticated) {
+          recactDiv = (
+            <div className={activityDiv}>
               <div className="card">
                 <div className="card-body pr-0">
                   <h5 className="card-title" style={{ textAlign: "center" }}>
@@ -141,6 +170,24 @@ class Dashboard extends Component {
                 </div>
               </div>
             </div>
+          );
+        } else {
+          graphDiv = "container";
+          graphsDiv = "col-md-12";
+        }
+
+        dashboardItems = (
+          <div className={graphDiv}>
+            <div className={graphsDiv}>
+              <div className="card">
+                <div className="row">
+                  {researchDiv}
+                  {journalDiv}
+                </div>
+              </div>
+              <br />
+            </div>
+            {recactDiv}
           </div>
         );
       } catch (error) {}
@@ -163,12 +210,14 @@ Dashboard.propTypes = {
   getColleges: PropTypes.func.isRequired,
   getActivities: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  activity: PropTypes.object.isRequired
+  activity: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   college: state.college,
-  activity: state.activity
+  activity: state.activity,
+  auth: state.auth
 });
 
 export default connect(

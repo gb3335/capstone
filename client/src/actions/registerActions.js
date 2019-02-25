@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { REGISTER_ACCOUNT, GET_ERRORS, CLEAR_ERRORS } from "./types";
+import { GET_ERRORS } from "./types";
 
 // Register
 export const createAccount = (userData, history) => dispatch => {

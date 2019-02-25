@@ -11,10 +11,12 @@ class ResearchAuthors extends Component {
         authorItems = <Authors author={research.author} />;
       } else {
         authorItems = (
-          <p>
+          <div>
             <hr />
-            <span>No author is added in this research</span>
-          </p>
+            <p>
+              <span>No author is added in this research</span>
+            </p>
+          </div>
         );
       }
     } catch (error) {}
