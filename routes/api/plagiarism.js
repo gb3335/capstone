@@ -65,13 +65,18 @@ router.post("/local", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const q = req.body.q;
-
-  let arr = processor.arrayProcess(q.toLowerCase());
+  let arr = processor.arrayProcess(req.body.q.toLowerCase());
   let text = processor.textProcess(req.body.text.toLowerCase());
   let flag = req.body.flag;
+  if(flag=="true"){
+    flag=true;
+  }else{
+    flag=false;
+  }
+  let docu1 = req.body.docu1;
+  let docu2 = req.body.docu2;
 
-  let result = plagiarism.search(arr, text, flag);
+  let result = plagiarism.search(arr, text, flag, docu1, docu2);
   res.json({
     localPlagiarism: {
       success: true,
