@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
 import "moment-timezone";
+import windowSize from "react-window-size";
 
 import "./Dashboard.css";
 
@@ -44,8 +45,13 @@ class Dashboard extends Component {
     let activityDiv = "col-md-12";
     let recactDiv;
     let graphDiv = "row";
+    let graphLegendDisplay;
 
     let recentActivities = [];
+
+    if (this.props.windowWidth <= 450) {
+      graphLegendDisplay = true;
+    }
 
     if (activities === null || actLoading || activities === undefined) {
       activityItems = (
@@ -66,7 +72,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "40rem", fontSize: "13px" }}>
+          <div style={{ overflow: "auto", height: "40vh", fontSize: "13px" }}>
             {recentActivities}
           </div>
         );
@@ -118,7 +124,10 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Researches
                 </h5>
-                <DoughnutChart data={researchData} />
+                <DoughnutChart
+                  data={researchData}
+                  display={graphLegendDisplay}
+                />
               </div>
             </div>
           );
@@ -152,7 +161,10 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Journals
                 </h5>
-                <DoughnutChart data={journalData} />
+                <DoughnutChart
+                  data={journalData}
+                  display={graphLegendDisplay}
+                />
               </div>
             </div>
           );
@@ -223,4 +235,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { changePageTitle, getColleges, getActivities }
-)(Dashboard);
+)(windowSize(Dashboard));

@@ -25,8 +25,8 @@ class CollegeItem extends Component {
     return (
       <div className="card card-body bg-light mb-3">
         <div className="row">
-          <div className="col-2">{image}</div>
-          <div className="col-lg-6 col-md-4 col-8">
+          <div className="col-lg-2 col-md-4 col-3">{image}</div>
+          <div className="col-lg-6 col-md-4 col-9">
             <h3>{college.name.fullName}</h3>
             <p>{colStatus} </p>
             <Link

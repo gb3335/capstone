@@ -184,6 +184,7 @@ class EditResearch extends Component {
                 />
                 <br />
                 <br />
+                <br/>
                 <div>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
                     {errors.abstract}

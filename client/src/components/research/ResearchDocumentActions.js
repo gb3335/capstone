@@ -61,6 +61,10 @@ class ResearchImageActions extends Component {
             <i className="fas fa-redo-alt text-info mr-1" />
             Update Document
           </label>
+          <label to="#" htmlFor="docUpload" className="btn btn-light">
+            <i className="fas fa-redo-alt text-info mr-1" />
+            Check Document
+          </label>
           <label
             to="#"
             onClick={this.onDeleteDocument}
