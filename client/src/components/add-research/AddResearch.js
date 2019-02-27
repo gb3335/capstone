@@ -21,6 +21,7 @@ class AddResearch extends Component {
       course: "",
       abstract: "",
       pages: "",
+      schoolYear: "",
       errors: {}
     };
   }
@@ -44,6 +45,7 @@ class AddResearch extends Component {
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
+      schoolYear: this.state.schoolYear,
       pages: this.state.pages
     };
 
@@ -196,6 +198,14 @@ class AddResearch extends Component {
                   onChange={this.onChange}
                   error={errors.pages}
                   info="Number of pages in your research"
+                />
+                <TextFieldGroup
+                  placeholder="* School Year"
+                  name="schoolYear"
+                  value={this.state.schoolYear}
+                  onChange={this.onChange}
+                  error={errors.schoolYear}
+                  info="School Year you've finished the research"
                 />
                 <input
                   ref="resBtn"

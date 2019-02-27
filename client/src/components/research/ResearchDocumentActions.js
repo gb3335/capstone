@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
 import { addDocument, deleteDocument } from "../../actions/researchActions";
+import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -50,6 +51,18 @@ class ResearchImageActions extends Component {
     this.props.deleteDocument(researchId, filename);
   };
 
+  onLocalCheck = e => {
+    const input = {
+      q: "This food is good. This place is bad.",
+      text: "This food is good. This place is clean.",
+      flag: "true",
+      docu1: "docu1",
+      docu2: "docu2"
+    };
+
+    this.props.checkPlagiarismLocal(input, this.props.history);
+  };
+
   render() {
     const { research } = this.props;
     let docuItem;
@@ -61,8 +74,8 @@ class ResearchImageActions extends Component {
             <i className="fas fa-redo-alt text-info mr-1" />
             Update Document
           </label>
-          <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-redo-alt text-info mr-1" />
+          <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
+            <i className="fas fa-search text-info mr-1" />
             Check Document
           </label>
           <label
@@ -107,6 +120,7 @@ class ResearchImageActions extends Component {
 ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
+  checkPlagiarismLocal: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired
 };
 
@@ -116,5 +130,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addDocument, deleteDocument }
+  { addDocument, deleteDocument, checkPlagiarismLocal }
 )(withRouter(ResearchImageActions));

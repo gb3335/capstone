@@ -27,6 +27,10 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
+  schoolYear: {
+    type: String,
+    required: true
+  },
   images: [
     {
       name: {

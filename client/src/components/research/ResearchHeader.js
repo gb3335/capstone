@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Moment from "react-moment";
+import "moment-timezone";
 
 class ResearchHeader extends Component {
   render() {
@@ -24,6 +26,17 @@ class ResearchHeader extends Component {
           <br />
           <span>
             <b>Pages:</b> {research.pages}
+          </span>
+          <br />
+          <span>
+            <b>School Year:</b> {research.schoolYear}
+          </span>
+          <br />
+          <span>
+            <b>Updated:</b>{" "}
+            <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
+            {" at "}
+            <Moment format="h:mm A">{research.lastUpdate}</Moment>
           </span>
           <br />
           {type}

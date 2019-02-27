@@ -29,6 +29,9 @@ import EditResearch from "../edit-research/EditResearch";
 //register and user
 import Register from "../register/Register";
 
+// Plagiarism Results
+import LocalResult from "../plagiarism-result/LocalResult";
+
 import PrivateRoute from "../common/PrivateRoute";
 
 import "./Main.css";
@@ -112,6 +115,13 @@ class Main extends Component {
                   exact
                   path="/edit-research"
                   component={EditResearch}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/localResult"
+                  component={LocalResult}
                 />
               </Switch>
             </div>

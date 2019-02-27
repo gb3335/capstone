@@ -10,6 +10,7 @@ module.exports = function validateResearchInput(data) {
   data.college = !isEmpty(data.college) ? data.college : "";
   data.course = !isEmpty(data.course) ? data.course : "";
   data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
+  data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   //data.author = !isEmpty(data.author) ? data.author : "";
@@ -36,6 +37,10 @@ module.exports = function validateResearchInput(data) {
 
   if (!Validator.isLength(striptags(data.abstract), { min: 100 })) {
     errors.abstract = "Abstract must be at least 100 characters";
+  }
+
+  if (Validator.isEmpty(data.schoolYear)) {
+    errors.schoolYear = "School year is required";
   }
 
   if (Validator.isEmpty(data.pages)) {

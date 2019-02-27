@@ -106,7 +106,9 @@ router.post(
       college: req.body.college,
       course: req.body.course,
       abstract: req.body.abstract,
-      pages: req.body.pages
+      pages: req.body.pages,
+      schoolYear: req.body.schoolYear,
+      lastUpdate: Date.now()
     };
 
     Research.findOne({ _id: req.body.id }).then(research => {
@@ -187,6 +189,16 @@ router.post(
       };
       new Activity(newActivity).save();
 
+      const newResearch = {
+        lastUpdate: Date.now()
+      };
+
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newResearch },
+        { new: true }
+      ).then(research);
+
       // Add to exp array
       research.author.unshift(newAuthor);
 
@@ -219,6 +231,16 @@ router.delete(
             research.title
         };
         new Activity(newActivity).save();
+
+        const newResearch = {
+          lastUpdate: Date.now()
+        };
+
+        Research.findOneAndUpdate(
+          { _id: req.params.research_id },
+          { $set: newResearch },
+          { new: true }
+        ).then(research);
 
         // Splice out of array
         research.author.splice(removeIndex, 1);
@@ -298,6 +320,16 @@ router.post(
         // Add to exp array
         research.images.unshift(newImage);
       }
+
+      const newResearch = {
+        lastUpdate: Date.now()
+      };
+
+      Research.findOneAndUpdate(
+        { _id: req.body.id },
+        { $set: newResearch },
+        { new: true }
+      ).then(research);
 
       // add activity
       const newActivity = {
@@ -476,7 +508,8 @@ router.post(
     // );
 
     const newDocument = {
-      document: filename
+      document: filename,
+      lastUpdate: Date.now()
     };
     Research.findOne({ _id: req.body.researchId }).then(research => {
       // add activity
@@ -522,7 +555,8 @@ router.delete(
     // }
 
     const newDocument = {
-      document: ""
+      document: "",
+      lastUpdate: Date.now()
     };
 
     Research.findOne({ _id: req.params.research_id }).then(research => {

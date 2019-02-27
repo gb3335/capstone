@@ -24,6 +24,7 @@ class EditResearch extends Component {
       course: research.course,
       abstract: research.abstract,
       pages: research.pages,
+      schoolYear: research.schoolYear,
       errors: {}
     };
   }
@@ -48,6 +49,7 @@ class EditResearch extends Component {
       course: this.state.course,
       abstract: this.state.abstract,
       pages: this.state.pages,
+      schoolYear: this.state.schoolYear,
       id: this.props.research.research._id
     };
 
@@ -184,7 +186,7 @@ class EditResearch extends Component {
                 />
                 <br />
                 <br />
-                <br/>
+                <br />
                 <div>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
                     {errors.abstract}
@@ -206,6 +208,14 @@ class EditResearch extends Component {
                   onChange={this.onChange}
                   error={errors.pages}
                   info="Number of pages in your research"
+                />
+                <TextFieldGroup
+                  placeholder="* School Year"
+                  name="schoolYear"
+                  value={this.state.schoolYear}
+                  onChange={this.onChange}
+                  error={errors.schoolYear}
+                  info="School Year you've finished the research"
                 />
                 <input
                   ref="resBtn"
