@@ -4,7 +4,11 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import { ImagePicker } from "react-file-picker";
 
-import { changeCollegeLogo, deleteCollege } from "../../actions/collegeActions";
+import {
+  changeCollegeLogo,
+  deleteCollege,
+  restoreCollege
+} from "../../actions/collegeActions";
 
 class CollegeActions extends Component {
   constructor(props) {
@@ -49,7 +53,40 @@ class CollegeActions extends Component {
     this.props.deleteCollege(data, this.props.history);
   };
 
+  onRestoreCollege = e => {
+    e.preventDefault();
+
+    const data = {
+      id: this.props.college.college._id,
+      logo: this.props.college.college.logo
+    };
+
+    this.props.restoreCollege(data, this.props.history);
+  };
+
   render() {
+    const status = this.props.college.college.status;
+    let statusAction;
+    if (status === 1) {
+      statusAction = (
+        <Link
+          to="#"
+          onClick={this.onRestoreCollege}
+          className="btn btn-success"
+        >
+          <i className="fas fa-recycle text-light mr-1" />
+          Restore
+        </Link>
+      );
+    } else {
+      statusAction = (
+        <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
+          <i className="fas fa-trash text-light mr-1" />
+          Move to Bin
+        </Link>
+      );
+    }
+
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         <Link to="/edit-college" className="btn btn-light">
@@ -74,11 +111,7 @@ class CollegeActions extends Component {
             </span>
           </ImagePicker>
         </li>
-
-        <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
-          <i className="fas fa-trash text-light mr-1" />
-          Move to Bin
-        </Link>
+        {statusAction}
       </div>
     );
   }
@@ -87,6 +120,7 @@ class CollegeActions extends Component {
 CollegeActions.propTypes = {
   changeCollegeLogo: PropTypes.func.isRequired,
   deleteCollege: PropTypes.func.isRequired,
+  restoreCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -97,5 +131,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeCollegeLogo, deleteCollege }
+  { changeCollegeLogo, deleteCollege, restoreCollege }
 )(withRouter(CollegeActions));

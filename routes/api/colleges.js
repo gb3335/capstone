@@ -94,12 +94,6 @@ router.post(
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
-    // try {
-    //   fs.unlinkSync(`client/public/images/collegeLogos/${req.body.oldLogo}`);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
     // move image to s3
     // S3 upload
     s3 = new AWS.S3();
@@ -129,17 +123,6 @@ router.post(
 
       console.log("Image successfully uploaded.");
     });
-
-    // base64Img.img(
-    //   req.body.file,
-    //   "client/public/images/collegeLogos/",
-    //   req.body.initials + date,
-    //   function(err, filepath) {
-    //     if (err) {
-    //       console.log(err);
-    //     }
-    //   }
-    // );
 
     // add activity
     const newActivity = {
@@ -296,19 +279,6 @@ router.post(
                     console.log("Image successfully uploaded.");
                   });
 
-                  // if (req.body.file !== "") {
-                  //   base64Img.img(
-                  //     req.body.file,
-                  //     "client/public/images/collegeLogos/",
-                  //     req.body.logo,
-                  //     function(err, filepath) {
-                  //       if (err) {
-                  //         console.log(err);
-                  //       }
-                  //     }
-                  //   );
-                  // }
-
                   // add activity
                   const newActivity = {
                     title: "College " + req.body.initials + " created"
@@ -419,42 +389,57 @@ router.delete(
   }
 );
 
-// @route   DELETE api/colleges/:id
+// @route   POST api/colleges/remove/:id
 // @desc    Delete college
 // @access  Private
 router.post(
-  "/:id",
+  "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOneAndDelete({ _id: req.params.id })
-      .then(college => {
-        res.json({ success: true });
+    const newCollege = {
+      status: 1
+    };
 
-        //delete old logo from s3
-        // try {
-        //   fs.unlinkSync(`client/public/images/collegeLogos/${req.body.logo}`);
-        // } catch (error) {
-        //   console.log(error);
-        // }
-        const s3 = new AWS.S3();
+    College.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: newCollege },
+      { new: true }
+    ).then(college => {
+      // add activity
+      const newActivity = {
+        title: "College " + college.name.initials + " deactivated"
+      };
+      new Activity(newActivity).save();
 
-        const params = {
-          Bucket: "bulsu-capstone",
-          Key: `collegeLogos/${req.body.logo}`
-        };
+      res.json(college);
+    });
+  }
+);
 
-        s3.deleteObject(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          else console.log(data);
-        });
+// @route   POST api/colleges/restore/:id
+// @desc    Resotre college
+// @access  Private
+router.post(
+  "/restore/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const newCollege = {
+      status: 0
+    };
 
-        // add activity
-        const newActivity = {
-          title: "College " + college.name.initials + " deleted"
-        };
-        new Activity(newActivity).save();
-      })
-      .catch(err => res.status(404).json(err));
+    College.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: newCollege },
+      { new: true }
+    ).then(college => {
+      // add activity
+      const newActivity = {
+        title: "College " + college.name.initials + " activated"
+      };
+      new Activity(newActivity).save();
+
+      res.json(college);
+    });
   }
 );
 

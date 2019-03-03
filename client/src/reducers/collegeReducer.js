@@ -1,9 +1,16 @@
-import { GET_COLLEGE, GET_COLLEGES, COLLEGE_LOADING } from "../actions/types";
+import {
+  GET_COLLEGE,
+  GET_COLLEGES,
+  COLLEGE_LOADING,
+  TOGGLE_COLLEGE_BIN,
+  TOGGLE_COLLEGE_LIST
+} from "../actions/types";
 
 const initialState = {
   college: {},
   colleges: {},
-  loading: false
+  loading: false,
+  bin: false
 };
 
 export default function(state = initialState, action) {
@@ -12,6 +19,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case TOGGLE_COLLEGE_BIN:
+      return {
+        ...state,
+        bin: true
+      };
+    case TOGGLE_COLLEGE_LIST:
+      return {
+        ...state,
+        bin: false
       };
     case GET_COLLEGE:
       return {

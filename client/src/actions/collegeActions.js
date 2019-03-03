@@ -5,7 +5,9 @@ import {
   GET_COLLEGE,
   COLLEGE_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  TOGGLE_COLLEGE_BIN,
+  TOGGLE_COLLEGE_LIST
 } from "./types";
 
 // Get all colleges
@@ -26,6 +28,19 @@ export const getColleges = () => dispatch => {
         payload: null
       })
     );
+};
+
+// Toggle College Bin
+export const toggleCollegeBin = toggle => {
+  if (toggle === 1) {
+    return {
+      type: TOGGLE_COLLEGE_BIN
+    };
+  } else {
+    return {
+      type: TOGGLE_COLLEGE_LIST
+    };
+  }
 };
 
 // Get college by initials
@@ -118,10 +133,31 @@ export const deleteCourse = (college, id) => dispatch => {
 
 // Delete College
 export const deleteCollege = (data, history) => dispatch => {
-  if (window.confirm("Are you sure? This can NOT be undone.")) {
+  if (window.confirm("Are you sure?")) {
     dispatch(setCollegeLoading());
     axios
-      .post(`/api/colleges/${data.id}`, data)
+      .post(`/api/colleges/remove/${data.id}`, data)
+      .then(history.push(`/colleges`), res =>
+        dispatch({
+          type: GET_COLLEGE,
+          payload: res.data
+        })
+      )
+      .catch(err =>
+        dispatch({
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      );
+  }
+};
+
+// Restore College
+export const restoreCollege = (data, history) => dispatch => {
+  if (window.confirm("Are you sure?")) {
+    dispatch(setCollegeLoading());
+    axios
+      .post(`/api/colleges/restore/${data.id}`, data)
       .then(history.push(`/colleges`), res =>
         dispatch({
           type: GET_COLLEGE,

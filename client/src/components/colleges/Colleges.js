@@ -9,12 +9,23 @@ import CollegeItem from "./CollegeItem";
 import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      bin: false
+    };
+  }
+
   componentWillMount() {
     this.props.getColleges();
   }
 
   componentDidMount() {
     this.props.getColleges();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ bin: nextProps.bin });
   }
 
   render() {
@@ -26,9 +37,23 @@ class Colleges extends Component {
       collegeItems = <Spinner />;
     } else {
       if (colleges.length > 0) {
-        collegeItems = colleges.map(college => (
-          <CollegeItem key={college._id} college={college} />
-        ));
+        if (this.state.bin) {
+          collegeItems = colleges.map(college =>
+            college.status === 1 ? (
+              <CollegeItem key={college._id} college={college} />
+            ) : (
+              ""
+            )
+          );
+        } else {
+          collegeItems = colleges.map(college =>
+            college.status === 0 ? (
+              <CollegeItem key={college._id} college={college} />
+            ) : (
+              ""
+            )
+          );
+        }
       } else {
         collegeItems = <h4>No colleges found</h4>;
       }
@@ -65,6 +90,7 @@ Colleges.propTypes = {
 
 const mapStateToProps = state => ({
   college: state.college,
+  bin: state.college.bin,
   auth: state.auth
 });
 
