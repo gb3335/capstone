@@ -22,7 +22,7 @@ class Authors extends Component {
               onClick={this.onDeleteClick.bind(this, research._id, author._id)}
               className="btn btn-danger"
             >
-              Delete
+              Remove
             </button>
           </td>
         </tr>

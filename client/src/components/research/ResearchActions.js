@@ -25,7 +25,7 @@ class ResearchAction extends Component {
 
         <Link to="#" onClick={this.onDeleteResearch} className="btn btn-danger">
           <i className="fas fa-trash text-light mr-1" />
-          Delete Research
+          Move to Bin
         </Link>
       </div>
     );

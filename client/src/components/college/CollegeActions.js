@@ -77,7 +77,7 @@ class CollegeActions extends Component {
 
         <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
           <i className="fas fa-trash text-light mr-1" />
-          Delete College
+          Move to Bin
         </Link>
       </div>
     );

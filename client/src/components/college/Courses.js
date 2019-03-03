@@ -22,7 +22,7 @@ class Courses extends Component {
               onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
               className="btn btn-danger"
             >
-              Delete
+              Remove
             </button>
           </td>
         </tr>
