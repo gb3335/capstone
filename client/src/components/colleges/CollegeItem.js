@@ -10,7 +10,7 @@ class CollegeItem extends Component {
     const image = (
       <img
         src={path + college.logo}
-        alt="Logo"
+        alt={college.name.initials}
         className="rounded-circle"
         style={{ width: "100%" }}
       />
