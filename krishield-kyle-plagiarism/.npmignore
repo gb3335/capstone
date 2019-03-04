@@ -1,0 +1,5 @@
+*.config
+node_modules/
+plagiarism-addon/build/
+plagiarism-addon/lib/
+package-lock.json
