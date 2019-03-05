@@ -98,12 +98,17 @@ class Dashboard extends Component {
 
         if (researchCtr > 0) {
           researchData = {
-            labels: colleges.map(college => college.name.initials),
+            labels: colleges.map(college =>
+              college.status === 0 ? college.name.initials : null
+            ),
             datasets: [
               {
-                data: colleges.map(college => college.researchTotal),
-                backgroundColor: colleges.map(college => college.color),
-                hoverBackgroundColor: colleges.map(college => college.color)
+                data: colleges.map(college =>
+                  college.status === 0 ? college.researchTotal : null
+                ),
+                backgroundColor: colleges.map(college =>
+                  college.status === 0 ? college.color : null
+                )
               }
             ]
           };
@@ -118,6 +123,31 @@ class Dashboard extends Component {
             graphsDiv = "col-md-7";
             activityDiv = "col-md-5";
           }
+
+          const labelsFiltered = researchData.labels.filter(function(el) {
+            return el != null;
+          });
+          const datasetsDataFiltered = researchData.datasets[0].data.filter(
+            function(el) {
+              return el != null;
+            }
+          );
+          const datasetsColorFiltered = researchData.datasets[0].backgroundColor.filter(
+            function(el) {
+              return el != null;
+            }
+          );
+
+          const researchDataFiltered = {
+            labels: labelsFiltered,
+            datasets: [
+              {
+                data: datasetsDataFiltered,
+                backgroundColor: datasetsColorFiltered
+              }
+            ]
+          };
+
           researchDiv = (
             <div className={div}>
               <div className="card-body">
@@ -125,7 +155,7 @@ class Dashboard extends Component {
                   Researches
                 </h5>
                 <DoughnutChart
-                  data={researchData}
+                  data={researchDataFiltered}
                   display={graphLegendDisplay}
                 />
               </div>
@@ -135,12 +165,17 @@ class Dashboard extends Component {
 
         if (journalCtr > 0) {
           journalData = {
-            labels: colleges.map(college => college.name.initials),
+            labels: colleges.map(college =>
+              college.status === 0 ? college.name.initials : null
+            ),
             datasets: [
               {
-                data: colleges.map(college => college.journalTotal),
-                backgroundColor: colleges.map(college => college.color),
-                hoverBackgroundColor: colleges.map(college => college.color)
+                data: colleges.map(college =>
+                  college.status === 0 ? college.journalTotal : null
+                ),
+                backgroundColor: colleges.map(college =>
+                  college.status === 0 ? college.color : null
+                )
               }
             ]
           };
@@ -155,6 +190,31 @@ class Dashboard extends Component {
             graphsDiv = "col-md-7";
             activityDiv = "col-md-5";
           }
+
+          const labelsFiltered1 = journalData.labels.filter(function(el) {
+            return el != null;
+          });
+          const datasetsDataFiltered1 = journalData.datasets[0].data.filter(
+            function(el) {
+              return el != null;
+            }
+          );
+          const datasetsColorFiltered1 = journalData.datasets[0].backgroundColor.filter(
+            function(el) {
+              return el != null;
+            }
+          );
+
+          const journalDataFiltered = {
+            labels: labelsFiltered1,
+            datasets: [
+              {
+                data: datasetsDataFiltered1,
+                backgroundColor: datasetsColorFiltered1
+              }
+            ]
+          };
+
           journalDiv = (
             <div className={div}>
               <div className="card-body">
@@ -162,7 +222,7 @@ class Dashboard extends Component {
                   Journals
                 </h5>
                 <DoughnutChart
-                  data={journalData}
+                  data={journalDataFiltered}
                   display={graphLegendDisplay}
                 />
               </div>

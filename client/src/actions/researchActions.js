@@ -110,7 +110,6 @@ export const addImages = (data, history) => dispatch => {
     .then(
       history.push("/researches"),
       history.push(`/researches/${data.id}`),
-      window.location.reload(),
       res =>
         dispatch(
           {
@@ -175,7 +174,7 @@ export const deleteResearch = (data, history) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/researches/${data.id}`)
+      .post(`/api/researches/remove/${data.id}`)
       .then(dispatch(getResearches()), history.push(`/researches`), res =>
         dispatch({
           type: GET_RESEARCH,

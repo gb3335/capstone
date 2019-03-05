@@ -31,6 +31,10 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
+  status: {
+    type: Number,
+    default: 0
+  },
   images: [
     {
       name: {

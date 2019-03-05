@@ -27,22 +27,48 @@ class Researches extends Component {
       researchItems = <Spinner />;
     } else {
       if (researches.length > 0) {
-        const researchData = researches.map(research => ({
-          title:
-            research.title.length > 30
-              ? research.title.substring(0, 27) + "..."
-              : research.title,
-          college: research.college,
-          course: research.course,
-          view: (
-            <Link
-              to={/researches/ + research._id}
-              className="btn btn-outline-info btn-sm"
-            >
-              View Details
-            </Link>
-          )
-        }));
+        let researchData = researches.map(research =>
+          research.status === 0
+            ? {
+                title:
+                  research.title.length > 30
+                    ? research.title.substring(0, 27) + "..."
+                    : research.title,
+                college: research.college,
+                course: research.course,
+                view: (
+                  <Link
+                    to={/researches/ + research._id}
+                    className="btn btn-outline-info btn-sm"
+                  >
+                    View Details
+                  </Link>
+                )
+              }
+            : {
+                title: null,
+                college: null,
+                course: null,
+                view: null
+              }
+        );
+
+        // let researchDataFiltered;
+        // researchDataFiltered = researchData.map((data, index) => {
+        //   Object.keys(researchData[index]).forEach(
+        //     key =>
+        //       researchData[index][key] === null &&
+        //       delete researchData[index][key]
+        //   );
+        // });
+
+        researchData.map((data, index) => {
+          if (data.title === null) {
+            researchData.splice(index, 1);
+          }
+        });
+
+        console.log(researchData);
 
         researchItems = (
           <MaterialTable

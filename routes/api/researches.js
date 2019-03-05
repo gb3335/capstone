@@ -578,75 +578,26 @@ router.delete(
 // @route   DELETE api/researches/:id
 // @desc    Delete research
 // @access  Private
-router.delete(
-  "/:id",
+router.post(
+  "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Research.findOne({ _id: req.params.id }).then(research => {
-      research.images.map(image => {
-        //delete research images from s3
-        let s3 = new AWS.S3();
+    const newResearch = {
+      status: 1
+    };
 
-        let params = {
-          Bucket: "bulsu-capstone",
-          Key: `researchImages/${image.name}`
-        };
+    Research.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: newResearch },
+      { new: true }
+    ).then(research => {
+      // add activity
+      const newActivity = {
+        title: "Research: " + research.title + " deactivated"
+      };
+      new Activity(newActivity).save();
 
-        s3.deleteObject(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          else console.log(data);
-        });
-
-        //delete research images from client folder
-        // try {
-        //   fs.unlinkSync(`client/public/images/researchImages/${image.name}`);
-        // } catch (error) {
-        //   //console.log(error);
-        // }
-      });
-
-      // delete research document from client folder
-      try {
-        fs.unlinkSync(
-          `client/public/documents/researchDocuments/${research.document}`
-        );
-      } catch (error) {
-        //console.log(error);
-      }
-    });
-
-    Research.findOne({ _id: req.params.id }).then(research => {
-      try {
-        College.findOne({ "name.fullName": research.college }).then(college => {
-          if (college) {
-            const total = --college.researchTotal;
-
-            const newCollege = {
-              researchTotal: total
-            };
-
-            //update research count on college
-            College.findOneAndUpdate(
-              { "name.fullName": research.college },
-              { $set: newCollege },
-              { new: true }
-            ).then(college => res.json(college));
-          }
-        });
-
-        // add activity
-        const newActivity = {
-          title: "Research " + research.title + " removed"
-        };
-        new Activity(newActivity).save();
-
-        // delete research
-        Research.findOneAndDelete({ _id: req.params.id })
-          .then(console.log("Delete Successful"))
-          .catch(err => res.status(404).json(err));
-      } catch (error) {
-        console.log(error);
-      }
+      res.json(research);
     });
   }
 );
