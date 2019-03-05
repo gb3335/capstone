@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import { SketchPicker } from "react-color";
 
 import { createCollege } from "../../actions/collegeActions";
+import AvatarEditor from 'react-avatar-editor'
+import Dropzone from 'react-dropzone'
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import ImageFieldGroup from "../common/ImageFieldGroup";
@@ -19,6 +21,7 @@ class CreateCollege extends Component {
       librarian: "",
       selectedFile: "",
       background: "#000000",
+      image: "",
       errors: {}
     };
   }
@@ -59,7 +62,7 @@ class CreateCollege extends Component {
   onFileSelected = e => {
     this.setState({ [e.target.name]: e.target.value });
     this.refs.colBtn.removeAttribute("disabled");
-
+    console.log("res")
     try {
       let files = e.target.files;
       let reader = new FileReader();
@@ -77,6 +80,32 @@ class CreateCollege extends Component {
   handleChangeComplete = color => {
     this.setState({ background: color.hex });
   };
+
+  handleDrop = dropped => {
+    this.setState({ logo: dropped[0] })
+    
+  }
+
+  onClickSave = () => {
+    if (this.editor) {
+      // This returns a HTMLCanvasElement, it can be made into a data URL or a blob,
+      // drawn on another canvas, or added to the DOM.
+      const canvas = this.editor.getImage()
+      let reader = new FileReader();
+      reader.readAsDataURL(canvas);
+      reader.onload = e => {
+        this.setState({
+          selectedFile: e.target.result
+        });
+        console.log(this.state.selectedFile)
+      };
+ 
+      // If you want the image resized to the canvas size (also a HTMLCanvasElement)
+      const canvasScaled = this.editor.getImageScaledToCanvas()
+    }
+  }
+ 
+  setEditorRef = (editor) => this.editor = editor
 
   render() {
     const { errors } = this.props;
@@ -133,7 +162,7 @@ class CreateCollege extends Component {
                     </div>
                   </div>
                   <div className="col-md-6">
-                    <label
+                    {/* <label
                       to="#"
                       htmlFor="collegeLogo"
                       className="btn btn-light"
@@ -149,6 +178,21 @@ class CreateCollege extends Component {
                       error={errors.logo}
                       info={this.state.logo.replace(/^.*\\/, "")}
                       id="collegeLogo"
+                    /> */}
+                    <Dropzone onDrop={this.handleDrop} disableClick style={{ width: '250px', height: '250px' }}>
+                    <AvatarEditor
+                        
+                        ref={this.setEditorRef}
+                        image={this.state.logo}
+                        width={250}
+                        height={250}
+                      />
+                    </Dropzone>
+                    <input
+                      onClick={this.onClickSave}
+                      type="button"
+                      value="test"
+                      className="btn btn-info btn-block mt-4"
                     />
                   </div>
                 </div>
