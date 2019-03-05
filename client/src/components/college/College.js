@@ -32,8 +32,10 @@ class College extends Component {
     let courseAction;
 
     if (this.props.auth.isAuthenticated) {
+      if (college.status === 0) {
+        courseAction = <CollegeCourseActions />;
+      }
       colAction = <CollegeActions />;
-      courseAction = <CollegeCourseActions />;
     }
 
     if (college === null || loading) {

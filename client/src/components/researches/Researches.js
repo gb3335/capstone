@@ -10,6 +10,13 @@ import { getResearches } from "../../actions/researchActions";
 import ResearchesActions from "./ResearchesActions";
 
 class Researches extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      bin: false
+    };
+  }
+
   componentWillMount() {
     this.props.getResearches();
   }
@@ -18,57 +25,99 @@ class Researches extends Component {
     this.props.getResearches();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ bin: nextProps.bin });
+  }
+
   render() {
     const { researches, loading } = this.props.research;
     let researchItems;
+    let researchData;
     let action;
+    let title = <h1 className="display-4 text-center">Researches</h1>;
+    let info = "See all research and it's informations";
 
     if (researches === null || loading) {
       researchItems = <Spinner />;
     } else {
       if (researches.length > 0) {
-        let researchData = researches.map(research =>
-          research.status === 0
-            ? {
-                title:
-                  research.title.length > 30
-                    ? research.title.substring(0, 27) + "..."
-                    : research.title,
-                college: research.college,
-                course: research.course,
-                view: (
-                  <Link
-                    to={/researches/ + research._id}
-                    className="btn btn-outline-info btn-sm"
-                  >
-                    View Details
-                  </Link>
-                )
-              }
-            : {
-                title: null,
-                college: null,
-                course: null,
-                view: null
-              }
-        );
+        if (this.state.bin) {
+          researchData = researches.map(research =>
+            research.status === 1
+              ? {
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  view: (
+                    <Link
+                      to={/researches/ + research._id}
+                      className="btn btn-outline-danger btn-sm"
+                    >
+                      View Details
+                    </Link>
+                  )
+                }
+              : {
+                  title: null,
+                  college: null,
+                  course: null,
+                  view: null
+                }
+          );
+          researchData.map((data, index) => {
+            if (data.title === null) {
+              researchData.splice(index, 1);
+            }
+          });
 
-        // let researchDataFiltered;
-        // researchDataFiltered = researchData.map((data, index) => {
-        //   Object.keys(researchData[index]).forEach(
-        //     key =>
-        //       researchData[index][key] === null &&
-        //       delete researchData[index][key]
-        //   );
-        // });
+          title = (
+            <h1 className="display-4 text-danger text-center">Research Bin</h1>
+          );
+          info = "List of Removed Researches";
+        } else {
+          researchData = researches.map(research =>
+            research.status === 0
+              ? {
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  view: (
+                    <Link
+                      to={/researches/ + research._id}
+                      className="btn btn-outline-info btn-sm"
+                    >
+                      View Details
+                    </Link>
+                  )
+                }
+              : {
+                  title: null,
+                  college: null,
+                  course: null,
+                  view: null
+                }
+          );
+          researchData.map((data, index) => {
+            if (data.title === null) {
+              researchData.splice(index, 1);
+            }
+          });
+
+          title = <h1 className="display-4 text-center">Researches</h1>;
+          info = "See all research and it's informations";
+        }
 
         researchData.map((data, index) => {
           if (data.title === null) {
             researchData.splice(index, 1);
           }
         });
-
-        console.log(researchData);
 
         researchItems = (
           <MaterialTable
@@ -96,10 +145,8 @@ class Researches extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h1 className="display-4 text-center">Researches</h1>
-              <p className="lead text-center">
-                See all research and it's informations
-              </p>
+              {title}
+              <p className="lead text-center">{info}</p>
               {action}
               {researchItems}
             </div>
@@ -118,6 +165,7 @@ Researches.propTypes = {
 
 const mapStateToProps = state => ({
   research: state.research,
+  bin: state.research.bin,
   auth: state.auth
 });
 

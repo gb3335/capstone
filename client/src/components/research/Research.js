@@ -44,10 +44,12 @@ class Research extends Component {
     let doc;
 
     if (this.props.auth.isAuthenticated) {
+      if (research.status === 0) {
+        authorAction = <ResearchAuthorActions />;
+        imageAction = <ResearchImageActions />;
+        docAction = <ResearchDocumentActions research={research} />;
+      }
       researchAction = <ResearchActions />;
-      authorAction = <ResearchAuthorActions />;
-      imageAction = <ResearchImageActions />;
-      docAction = <ResearchDocumentActions research={research} />;
       doc = <ResearchDocument research={research} />;
     }
 

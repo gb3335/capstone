@@ -67,6 +67,9 @@ class CollegeActions extends Component {
   render() {
     const status = this.props.college.college.status;
     let statusAction;
+    let editAction;
+    let logoAction;
+
     if (status === 1) {
       statusAction = (
         <Link
@@ -85,14 +88,12 @@ class CollegeActions extends Component {
           Move to Bin
         </Link>
       );
-    }
-
-    return (
-      <div className="btn-group mb-3 btn-group-sm" role="group">
+      editAction = (
         <Link to="/edit-college" className="btn btn-light">
           <i className="fas fa-pen text-info mr-1" /> Edit College
         </Link>
-
+      );
+      logoAction = (
         <li to="#" className="btn btn-light">
           <ImagePicker
             extensions={["jpg", "jpeg", "png"]}
@@ -111,6 +112,13 @@ class CollegeActions extends Component {
             </span>
           </ImagePicker>
         </li>
+      );
+    }
+
+    return (
+      <div className="btn-group mb-3 btn-group-sm" role="group">
+        {editAction}
+        {logoAction}
         {statusAction}
       </div>
     );

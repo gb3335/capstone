@@ -5,7 +5,9 @@ import {
   GET_RESEARCHES,
   RESEARCH_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  TOGGLE_RESEARCH_BIN,
+  TOGGLE_RESEARCH_LIST
 } from "./types";
 
 // Get all researches
@@ -26,6 +28,19 @@ export const getResearches = () => dispatch => {
         payload: null
       })
     );
+};
+
+// Toggle Research Bin
+export const toggleResearchBin = toggle => {
+  if (toggle === 1) {
+    return {
+      type: TOGGLE_RESEARCH_BIN
+    };
+  } else {
+    return {
+      type: TOGGLE_RESEARCH_LIST
+    };
+  }
 };
 
 // Get research by id
@@ -169,9 +184,9 @@ export const deleteDocument = (researchId, filename) => dispatch => {
   }
 };
 
-// Delete Research
+// Move to bin Research
 export const deleteResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure? This can NOT be undone.")) {
+  if (window.confirm("Are you sure?")) {
     dispatch(setResearchLoading());
     axios
       .post(`/api/researches/remove/${data.id}`)
@@ -186,6 +201,26 @@ export const deleteResearch = (data, history) => dispatch => {
           type: GET_ERRORS,
           payload: err.response.data
         })
+      );
+  }
+};
+
+// Restore Research
+export const restoreResearch = (data, history) => dispatch => {
+  if (window.confirm("Are you sure?")) {
+    dispatch(setResearchLoading());
+    axios
+      .post(`/api/researches/restore/${data.id}`)
+      .then(dispatch(getResearches()), history.push(`/researches`), res =>
+        dispatch({
+          type: GET_RESEARCH,
+          payload: res.data
+        }).catch(err =>
+          dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+          })
+        )
       );
   }
 };

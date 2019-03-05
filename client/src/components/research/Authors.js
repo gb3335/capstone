@@ -13,20 +13,33 @@ class Authors extends Component {
     let author;
 
     if (this.props.auth.isAuthenticated === true) {
-      author = this.props.author.map(author => (
-        <tr key={author._id}>
-          <td>{author.name}</td>
-          <td>{author.role}</td>
-          <td>
-            <button
-              onClick={this.onDeleteClick.bind(this, research._id, author._id)}
-              className="btn btn-danger"
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
-      ));
+      if (research.status === 0) {
+        author = this.props.author.map(author => (
+          <tr key={author._id}>
+            <td>{author.name}</td>
+            <td>{author.role}</td>
+            <td>
+              <button
+                onClick={this.onDeleteClick.bind(
+                  this,
+                  research._id,
+                  author._id
+                )}
+                className="btn btn-danger"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        ));
+      } else {
+        author = this.props.author.map(author => (
+          <tr key={author._id}>
+            <td>{author.name}</td>
+            <td>{author.role}</td>
+          </tr>
+        ));
+      }
     } else {
       author = this.props.author.map(author => (
         <tr key={author._id}>

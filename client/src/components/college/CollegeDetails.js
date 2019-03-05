@@ -7,7 +7,12 @@ import "./College.css";
 class CollegeDetails extends Component {
   render() {
     const { college } = this.props;
-    const status = college.status === 0 ? "Active" : "Not Active";
+    const status =
+      college.status === 0 ? (
+        <span className="badge badge-success">Active</span>
+      ) : (
+        <span className="badge badge-danger">Not Active</span>
+      );
 
     return (
       <div className="row">

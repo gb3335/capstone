@@ -575,7 +575,7 @@ router.delete(
   }
 );
 
-// @route   DELETE api/researches/:id
+// @route   DELETE api/researches/remove/:id
 // @desc    Delete research
 // @access  Private
 router.post(
@@ -593,7 +593,34 @@ router.post(
     ).then(research => {
       // add activity
       const newActivity = {
-        title: "Research: " + research.title + " deactivated"
+        title: "Research: " + research.title + " moved to bin"
+      };
+      new Activity(newActivity).save();
+
+      res.json(research);
+    });
+  }
+);
+
+// @route   POST api/research/restore/:id
+// @desc    Resotre research
+// @access  Private
+router.post(
+  "/restore/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const newResearch = {
+      status: 0
+    };
+
+    Research.findOneAndUpdate(
+      { _id: req.params.id },
+      { $set: newResearch },
+      { new: true }
+    ).then(research => {
+      // add activity
+      const newActivity = {
+        title: "Research: " + research.title + " restored from bin"
       };
       new Activity(newActivity).save();
 

@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
 import { toggleCollegeBin } from "../../actions/collegeActions";
-import { stat } from "fs";
 
 class CollegesActions extends Component {
   constructor(props) {

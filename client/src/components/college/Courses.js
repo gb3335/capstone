@@ -13,20 +13,29 @@ class Courses extends Component {
     let course;
 
     if (this.props.auth.isAuthenticated === true) {
-      course = this.props.course.map(cou => (
-        <tr key={cou._id}>
-          <td>{cou.name}</td>
-          <td>{cou.initials}</td>
-          <td>
-            <button
-              onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
-              className="btn btn-danger"
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
-      ));
+      if (college.status === 0) {
+        course = this.props.course.map(cou => (
+          <tr key={cou._id}>
+            <td>{cou.name}</td>
+            <td>{cou.initials}</td>
+            <td>
+              <button
+                onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
+                className="btn btn-danger"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        ));
+      } else {
+        course = this.props.course.map(cou => (
+          <tr key={cou._id}>
+            <td>{cou.name}</td>
+            <td>{cou.initials}</td>
+          </tr>
+        ));
+      }
     } else {
       course = this.props.course.map(cou => (
         <tr key={cou._id}>

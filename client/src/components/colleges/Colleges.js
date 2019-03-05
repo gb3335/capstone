@@ -32,7 +32,7 @@ class Colleges extends Component {
     const { colleges, loading } = this.props.college;
     let collegeItems;
     let action;
-    let title = "Colleges";
+    let title = <h1 className="display-4 text-center">Colleges</h1>;
     let info = "See all colleges and their informations";
 
     if (colleges === null || loading) {
@@ -47,7 +47,10 @@ class Colleges extends Component {
               ""
             )
           );
-          title = "College Bin";
+          title = (
+            <h1 className="display-4 text-danger text-center">College Bin</h1>
+          );
+
           info = "List of Deactivated Colleges";
         } else {
           collegeItems = colleges.map(college =>
@@ -57,7 +60,7 @@ class Colleges extends Component {
               ""
             )
           );
-          title = "Colleges";
+          title = <h1 className="display-4 text-center">Colleges</h1>;
           info = "See all colleges and their informations";
         }
       } else {
@@ -74,7 +77,7 @@ class Colleges extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <h1 className="display-4 text-center">{title}</h1>
+              {title}
               <p className="lead text-center">{info}</p>
               {action}
               {collegeItems}

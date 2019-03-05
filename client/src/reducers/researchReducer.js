@@ -1,13 +1,16 @@
 import {
   GET_RESEARCH,
   GET_RESEARCHES,
-  RESEARCH_LOADING
+  RESEARCH_LOADING,
+  TOGGLE_RESEARCH_BIN,
+  TOGGLE_RESEARCH_LIST
 } from "../actions/types";
 
 const initialState = {
   research: {},
   researches: {},
-  loading: false
+  loading: false,
+  bin: false
 };
 
 export default function(state = initialState, action) {
@@ -16,6 +19,16 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case TOGGLE_RESEARCH_BIN:
+      return {
+        ...state,
+        bin: true
+      };
+    case TOGGLE_RESEARCH_LIST:
+      return {
+        ...state,
+        bin: false
       };
     case GET_RESEARCH:
       return {
