@@ -41,45 +41,86 @@ class Researches extends Component {
       researchItems = <Spinner />;
     } else {
       if (researches.length > 0) {
-        if (this.state.bin) {
-          researchData = researches.map(research =>
-            research.status === 1
-              ? {
-                  title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
-                  view: (
-                    <Link
-                      to={/researches/ + research._id}
-                      className="btn btn-outline-danger btn-sm"
-                    >
-                      View Details
-                    </Link>
-                  )
-                }
-              : {
-                  title: null,
-                  college: null,
-                  course: null,
-                  view: null
-                }
-          );
-          researchData.map((data, index) => {
-            if (data.title === null) {
-              researchData.splice(index, 1);
-            }
-          });
+        if (this.props.auth.isAuthenticated) {
+          if (this.state.bin) {
+            // Research Bin
+            researchData = researches.map(research =>
+              research.deleted === 1
+                ? {
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-danger btn-sm"
+                      >
+                        View Details
+                      </Link>
+                    )
+                  }
+                : {
+                    title: null,
+                    college: null,
+                    course: null,
+                    view: null
+                  }
+            );
+            researchData.map((data, index) => {
+              if (data.title === null) {
+                researchData.splice(index, 1);
+              }
+            });
 
-          title = (
-            <h1 className="display-4 text-danger text-center">Research Bin</h1>
-          );
-          info = "List of Removed Researches";
+            title = (
+              <h1 className="display-4 text-danger text-center">
+                Research Bin
+              </h1>
+            );
+            info = "List of Removed Researches";
+          } else {
+            // Research List
+            researchData = researches.map(research =>
+              research.deleted === 0
+                ? {
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-info btn-sm"
+                      >
+                        View Details
+                      </Link>
+                    )
+                  }
+                : {
+                    title: null,
+                    college: null,
+                    course: null,
+                    view: null
+                  }
+            );
+            researchData.map((data, index) => {
+              if (data.title === null) {
+                researchData.splice(index, 1);
+              }
+            });
+
+            title = <h1 className="display-4 text-center">Researches</h1>;
+            info = "See all research and it's informations";
+          }
         } else {
+          // Research List not logged in
           researchData = researches.map(research =>
-            research.status === 0
+            research.deleted === 0
               ? {
                   title:
                     research.title.length > 30

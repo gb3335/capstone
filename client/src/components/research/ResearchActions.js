@@ -27,12 +27,12 @@ class ResearchAction extends Component {
   };
 
   render() {
-    const status = this.props.research.research.status;
-    let statusAction;
+    const deleted = this.props.research.research.deleted;
+    let deletedAction;
     let editAction;
 
-    if (status === 1) {
-      statusAction = (
+    if (deleted === 1) {
+      deletedAction = (
         <Link
           to="#"
           onClick={this.onRestoreResearch}
@@ -43,7 +43,7 @@ class ResearchAction extends Component {
         </Link>
       );
     } else {
-      statusAction = (
+      deletedAction = (
         <Link to="#" onClick={this.onDeleteResearch} className="btn btn-danger">
           <i className="fas fa-trash text-light mr-1" />
           Move to Bin
@@ -59,7 +59,7 @@ class ResearchAction extends Component {
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
-        {statusAction}
+        {deletedAction}
       </div>
     );
   }

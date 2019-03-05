@@ -31,7 +31,11 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  status: {
+  hidden: {
+    type: Number,
+    default: 0
+  },
+  deleted: {
     type: Number,
     default: 0
   },

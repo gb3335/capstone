@@ -583,7 +583,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newResearch = {
-      status: 1
+      deleted: 1
     };
 
     Research.findOneAndUpdate(
@@ -603,14 +603,14 @@ router.post(
 );
 
 // @route   POST api/research/restore/:id
-// @desc    Resotre research
+// @desc    Restore research
 // @access  Private
 router.post(
   "/restore/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newResearch = {
-      status: 0
+      deleted: 0
     };
 
     Research.findOneAndUpdate(

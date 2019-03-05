@@ -25,6 +25,10 @@ const CollegeSchema = new Schema({
     type: Number,
     default: 0
   },
+  deleted: {
+    type: Number,
+    default: 0
+  },
   researchTotal: {
     type: String
   },

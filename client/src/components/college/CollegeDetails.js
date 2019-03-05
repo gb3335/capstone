@@ -14,6 +14,13 @@ class CollegeDetails extends Component {
         <span className="badge badge-danger">Not Active</span>
       );
 
+    const deleted =
+      college.deleted === 1 ? (
+        <span className="badge badge-danger">Deleted</span>
+      ) : (
+        ""
+      );
+
     return (
       <div className="row">
         <div className="col-md-12">
@@ -44,7 +51,9 @@ class CollegeDetails extends Component {
               <div className="col md-4">
                 <p className="infoText">
                   <i className="fas fa-check-circle" />{" "}
-                  <span>Status: {status}</span>
+                  <span>
+                    Status: {status} {deleted}
+                  </span>
                 </p>
                 <p className="infoText">
                   <i className="fas fa-redo-alt" />{" "}

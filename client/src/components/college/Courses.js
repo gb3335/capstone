@@ -13,7 +13,7 @@ class Courses extends Component {
     let course;
 
     if (this.props.auth.isAuthenticated === true) {
-      if (college.status === 0) {
+      if (college.deleted === 0) {
         course = this.props.course.map(cou => (
           <tr key={cou._id}>
             <td>{cou.name}</td>

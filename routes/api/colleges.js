@@ -397,7 +397,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newCollege = {
-      status: 1
+      deleted: 1
     };
 
     College.findOneAndUpdate(
@@ -424,7 +424,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newCollege = {
-      status: 0
+      deleted: 0
     };
 
     College.findOneAndUpdate(

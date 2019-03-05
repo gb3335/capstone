@@ -99,15 +99,15 @@ class Dashboard extends Component {
         if (researchCtr > 0) {
           researchData = {
             labels: colleges.map(college =>
-              college.status === 0 ? college.name.initials : null
+              college.deleted === 0 ? college.name.initials : null
             ),
             datasets: [
               {
                 data: colleges.map(college =>
-                  college.status === 0 ? college.researchTotal : null
+                  college.deleted === 0 ? college.researchTotal : null
                 ),
                 backgroundColor: colleges.map(college =>
-                  college.status === 0 ? college.color : null
+                  college.deleted === 0 ? college.color : null
                 )
               }
             ]
@@ -166,15 +166,15 @@ class Dashboard extends Component {
         if (journalCtr > 0) {
           journalData = {
             labels: colleges.map(college =>
-              college.status === 0 ? college.name.initials : null
+              college.deleted === 0 ? college.name.initials : null
             ),
             datasets: [
               {
                 data: colleges.map(college =>
-                  college.status === 0 ? college.journalTotal : null
+                  college.deleted === 0 ? college.journalTotal : null
                 ),
                 backgroundColor: colleges.map(college =>
-                  college.status === 0 ? college.color : null
+                  college.deleted === 0 ? college.color : null
                 )
               }
             ]

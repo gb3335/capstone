@@ -50,7 +50,15 @@ class CollegeActions extends Component {
       logo: this.props.college.college.logo
     };
 
-    this.props.deleteCollege(data, this.props.history);
+    const totalResAndJour =
+      parseInt(this.props.college.college.researchTotal, 10) +
+      parseInt(this.props.college.college.journalTotal, 10);
+
+    if (totalResAndJour === 0) {
+      this.props.deleteCollege(data, this.props.history);
+    } else {
+      alert("This College cannot be deleted as this College have researches.");
+    }
   };
 
   onRestoreCollege = e => {
@@ -65,13 +73,13 @@ class CollegeActions extends Component {
   };
 
   render() {
-    const status = this.props.college.college.status;
-    let statusAction;
+    const deleted = this.props.college.college.deleted;
+    let deletedAction;
     let editAction;
     let logoAction;
 
-    if (status === 1) {
-      statusAction = (
+    if (deleted === 1) {
+      deletedAction = (
         <Link
           to="#"
           onClick={this.onRestoreCollege}
@@ -82,7 +90,7 @@ class CollegeActions extends Component {
         </Link>
       );
     } else {
-      statusAction = (
+      deletedAction = (
         <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
           <i className="fas fa-trash text-light mr-1" />
           Move to Bin
@@ -119,7 +127,7 @@ class CollegeActions extends Component {
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
         {logoAction}
-        {statusAction}
+        {deletedAction}
       </div>
     );
   }

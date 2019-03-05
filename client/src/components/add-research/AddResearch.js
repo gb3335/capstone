@@ -69,7 +69,7 @@ class AddResearch extends Component {
     let courseOptions = [{ label: "* Select Course", value: "" }];
     try {
       college.colleges.map(college =>
-        college.status === 0
+        college.deleted === 0
           ? collegeOptions.push({
               label: college.name.fullName,
               value: college.name.fullName
@@ -79,7 +79,7 @@ class AddResearch extends Component {
 
       college.colleges.map(college =>
         college.course.map(course =>
-          college.status === 0
+          college.deleted === 0
             ? courseOptions.push({
                 label: course.name,
                 value: course.name

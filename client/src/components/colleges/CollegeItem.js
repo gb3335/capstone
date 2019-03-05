@@ -16,10 +16,16 @@ class CollegeItem extends Component {
       />
     );
     let colStatus;
+    let colDeleted;
+
     if (college.status === 0) {
       colStatus = <span className="badge badge-success">Active</span>;
     } else {
       colStatus = <span className="badge badge-danger">Not Active</span>;
+    }
+
+    if (college.deleted === 1) {
+      colDeleted = <span className="badge badge-danger">Deleted</span>;
     }
 
     return (
@@ -28,7 +34,9 @@ class CollegeItem extends Component {
           <div className="col-lg-2 col-md-4 col-3">{image}</div>
           <div className="col-lg-6 col-md-4 col-9">
             <h3>{college.name.fullName}</h3>
-            <p>{colStatus} </p>
+            <p>
+              {colStatus} {colDeleted}
+            </p>
             <Link
               to={`/colleges/${college.name.initials}`}
               className="btn btn-info"

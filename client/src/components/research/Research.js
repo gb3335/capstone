@@ -44,7 +44,7 @@ class Research extends Component {
     let doc;
 
     if (this.props.auth.isAuthenticated) {
-      if (research.status === 0) {
+      if (research.deleted === 0) {
         authorAction = <ResearchAuthorActions />;
         imageAction = <ResearchImageActions />;
         docAction = <ResearchDocumentActions research={research} />;

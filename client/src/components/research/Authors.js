@@ -13,7 +13,7 @@ class Authors extends Component {
     let author;
 
     if (this.props.auth.isAuthenticated === true) {
-      if (research.status === 0) {
+      if (research.deleted === 0) {
         author = this.props.author.map(author => (
           <tr key={author._id}>
             <td>{author.name}</td>

@@ -6,15 +6,15 @@ class ResearchHeader extends Component {
   render() {
     const { research } = this.props;
     let type;
-    let status;
+    let deleted;
     if (research.type === "thesis") {
       type = <span className="badge badge-success">Thesis</span>;
     } else {
       type = <span className="badge badge-info">Undergrad Research</span>;
     }
 
-    if (research.status === 1) {
-      status = <span className="badge badge-danger">Deleted</span>;
+    if (research.deleted === 1) {
+      deleted = <span className="badge badge-danger">Deleted</span>;
     }
 
     return (
@@ -46,7 +46,7 @@ class ResearchHeader extends Component {
           <br />
           {type}
           <br />
-          {status}
+          {deleted}
         </div>
       </div>
     );

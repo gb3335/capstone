@@ -39,22 +39,37 @@ class Colleges extends Component {
       collegeItems = <Spinner />;
     } else {
       if (colleges.length > 0) {
-        if (this.state.bin) {
-          collegeItems = colleges.map(college =>
-            college.status === 1 ? (
-              <CollegeItem key={college._id} college={college} />
-            ) : (
-              ""
-            )
-          );
-          title = (
-            <h1 className="display-4 text-danger text-center">College Bin</h1>
-          );
+        if (this.props.auth.isAuthenticated) {
+          if (this.state.bin) {
+            // College Bin
+            collegeItems = colleges.map(college =>
+              college.deleted === 1 ? (
+                <CollegeItem key={college._id} college={college} />
+              ) : (
+                ""
+              )
+            );
+            title = (
+              <h1 className="display-4 text-danger text-center">College Bin</h1>
+            );
 
-          info = "List of Deactivated Colleges";
+            info = "List of Deactivated Colleges";
+          } else {
+            // College list
+            collegeItems = colleges.map(college =>
+              college.deleted === 0 ? (
+                <CollegeItem key={college._id} college={college} />
+              ) : (
+                ""
+              )
+            );
+            title = <h1 className="display-4 text-center">Colleges</h1>;
+            info = "See all colleges and their informations";
+          }
         } else {
+          // College list not logged in
           collegeItems = colleges.map(college =>
-            college.status === 0 ? (
+            college.deleted === 0 ? (
               <CollegeItem key={college._id} college={college} />
             ) : (
               ""
