@@ -160,6 +160,12 @@ class Researches extends Component {
           }
         });
 
+        researchData.map((data, index) => {
+          if (data.title === null) {
+            researchData.splice(index, 1);
+          }
+        });
+
         researchItems = (
           <MaterialTable
             columns={[
