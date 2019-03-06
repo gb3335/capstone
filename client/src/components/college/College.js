@@ -14,6 +14,7 @@ import CollegeHeader from "./CollegeHeader";
 import CollegeDetails from "./CollegeDetails";
 import CollegeCourses from "./CollegeCourses";
 import CollegeActions from "./CollegeActions";
+import Report from "./Report";
 import CollegeCourseActions from "./CollegeCourseActions";
 
 class College extends Component {
@@ -101,6 +102,8 @@ class College extends Component {
             <CollegeCourses college={college} />
           </div>
         );
+
+        collegeReports = <Report />;
 
         // collegeContent = (
         //   <div>
@@ -234,7 +237,7 @@ class College extends Component {
                 aria-labelledby="list-reports-list"
               >
                 {collegeContent}
-                Reports
+                {collegeReports}
               </div>
             </div>
           </div>

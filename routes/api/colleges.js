@@ -6,6 +6,9 @@ const randomColor = require("randomcolor");
 const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
+const path = require("path");
+const pdf = require("html-pdf");
+const pdfCollegeTemplate = require("../../document/collegeTemplate");
 
 // College model
 const College = require("../../models/College");
@@ -386,6 +389,37 @@ router.delete(
         college.save().then(college => res.json(college));
       })
       .catch(err => res.status(404).json(err));
+  }
+);
+
+// @route   POST api/colleges/createReport
+// @desc    Generate individual College Report
+// @access  Private
+router.post(
+  "/createReport/college",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    pdf
+      .create(pdfCollegeTemplate(req.body), {})
+      .toFile("collegePdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/colleges/createReport
+// @desc    Send the generated pdf to client
+// @access  Private
+router.get(
+  "/fetchReport/college",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/collegePdf.pdf`);
   }
 );
 

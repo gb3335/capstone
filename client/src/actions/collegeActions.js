@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 import {
   GET_COLLEGES,
@@ -23,6 +24,27 @@ export const getColleges = () => dispatch => {
         type: GET_COLLEGES,
         payload: res.data
       })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_COLLEGES,
+        payload: null
+      })
+    );
+};
+
+// Create Report
+export const createReport = reportData => dispatch => {
+  axios
+    .post("/api/colleges/createReport/college", reportData)
+    .then(() =>
+      axios
+        .get("/api/colleges/fetchReport/college", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+
+          saveAs(pdfBlob, "newCollegeReportPdf.pdf");
+        })
     )
     .catch(err =>
       dispatch({
