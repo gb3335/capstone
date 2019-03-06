@@ -202,7 +202,7 @@ router.post(
               errors.fullName = "College Name already exists";
               res.status(400).json(errors);
             } else {
-              // Check if college name exists
+              // Check if college initials exists
               College.findOne({
                 "name.initials": newCollege.name.initials
               }).then(college => {

@@ -267,10 +267,10 @@ class Dashboard extends Component {
 
     return (
       <div className="container-fluid">
-        <h1 className="display-4 text-center">Dashboard</h1>
+        {/* <h1 className="display-4 text-center">Dashboard</h1>
         <p className="lead text-center">
           See all college researches and journals in graphs
-        </p>
+        </p> */}
         {dashboardItems}
       </div>
     );

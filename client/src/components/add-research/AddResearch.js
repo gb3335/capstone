@@ -209,7 +209,7 @@ class AddResearch extends Component {
                   value={this.state.schoolYear}
                   onChange={this.onChange}
                   error={errors.schoolYear}
-                  info="School Year you've finished the research"
+                  info="Academic Year you've finished the research"
                 />
                 <input
                   ref="resBtn"

@@ -7,7 +7,9 @@ import {
   GET_ERRORS,
   CLEAR_ERRORS,
   TOGGLE_COLLEGE_BIN,
-  TOGGLE_COLLEGE_LIST
+  TOGGLE_COLLEGE_LIST,
+  TOGGLE_COLLEGE_GRIDVIEW,
+  TOGGLE_COLLEGE_LISTVIEW
 } from "./types";
 
 // Get all colleges
@@ -39,6 +41,19 @@ export const toggleCollegeBin = toggle => {
   } else {
     return {
       type: TOGGLE_COLLEGE_LIST
+    };
+  }
+};
+
+// Toggle College View
+export const toggleCollegeList = toggle => {
+  if (toggle === 1) {
+    return {
+      type: TOGGLE_COLLEGE_GRIDVIEW
+    };
+  } else {
+    return {
+      type: TOGGLE_COLLEGE_LISTVIEW
     };
   }
 };
