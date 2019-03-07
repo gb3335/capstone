@@ -412,10 +412,10 @@ router.post(
       footer: {
         height: "28mm",
         contents: {
-          default: `<div class="item5">
-          <h5 style="float: left">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
-            1}. ${today.getFullYear()}.`}</h5>
-          <h5 style="float: right">Page {{page}} of {{pages}}</h5>
+          default: `<div class="item5" style="font-size: "8px";">
+          <p style="float: left">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
+            1}. ${today.getFullYear()}.`}</p>
+          <p style="float: right">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
       }

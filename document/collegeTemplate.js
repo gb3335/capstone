@@ -53,6 +53,7 @@ module.exports = ({
     );
   } else {
     totalcourse = "Not Available";
+    coursesList = "Not Available";
   }
 
   return `<!DOCTYPE html>
@@ -76,7 +77,6 @@ module.exports = ({
           background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
           padding: 20px 0;
-          font-size: 30px;
         }
   
         .bulsu-logo {
@@ -111,7 +111,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 12px">
+        <div class="item1 headerr" style="font-size: 9px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
@@ -133,8 +133,8 @@ module.exports = ({
           <br />
           <h4>${typeOfReport}</h4>
         </div>
-        <div class="reportBody" style="padding: 7px; border:solid gray">
-          <div style="font-size: 14px;">
+        <div class="reportBody" style="padding: 7px; border: 1px solid gray">
+          <div style="font-size: 10px;">
             <h3 style="float: left;">
               ${collegeName}
             </h3>
@@ -144,8 +144,8 @@ module.exports = ({
           <br />
           <br />
           <hr />
-          <div class="details" style="font-size: 12px">
-            <h4 style="font-size: 13px">Details:</h4>
+          <div class="details" style="font-size: 10px">
+            <h4 style="font-size: 9px">Details:</h4>
             <div>
               <ul style="list-style-type:circle; text-align: left">
                 <li>Librarian: ${librarian}</li>
@@ -157,8 +157,8 @@ module.exports = ({
               </ul>
             </div>
           </div>
-          <div class="courses" style="font-size: 12px">
-            <h4 style="font-size: 13px">Courses:</h4>
+          <div class="courses" style="font-size: 9px">
+            <h4 style="font-size: 10px">Courses:</h4>
             <table>
               <tr>
                 <th>Name</th>
