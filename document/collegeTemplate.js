@@ -141,8 +141,6 @@ module.exports = ({
           </div>
   
           <br />
-          <br />
-          <br />
           <hr />
           <div class="details" style="font-size: 10px">
             <h4 style="font-size: 9px">Details:</h4>
