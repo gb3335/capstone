@@ -111,7 +111,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 15px">
+        <div class="item1 headerr" style="font-size: 12px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
@@ -134,7 +134,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
         </div>
         <div class="reportBody" style="padding: 7px; border:solid gray">
-          <div style="font-size: 18px;">
+          <div style="font-size: 14px;">
             <h3 style="float: left;">
               ${collegeName}
             </h3>
@@ -144,8 +144,8 @@ module.exports = ({
           <br />
           <br />
           <hr />
-          <div class="details" style="font-size: 15px">
-            <h4 style="font-size: 16px">Details:</h4>
+          <div class="details" style="font-size: 12px">
+            <h4 style="font-size: 13px">Details:</h4>
             <div>
               <ul style="list-style-type:circle; text-align: left">
                 <li>Librarian: ${librarian}</li>
@@ -158,7 +158,7 @@ module.exports = ({
             </div>
           </div>
           <div class="courses" style="font-size: 12px">
-            <h4 style="font-size: 16px">Courses:</h4>
+            <h4 style="font-size: 13px">Courses:</h4>
             <table>
               <tr>
                 <th>Name</th>
