@@ -6,14 +6,8 @@ import { deleteCourse } from "../../actions/collegeActions";
 
 import "./College.css";
 class Courses extends Component {
-  onDeleteClick = (college, id) => {
-    //this.props.deleteCourse(college, id);
-    console.log("REMOVE");
-  };
-
-  onEditClick = (college, id) => {
-    //this.props.editCourse(college, id);
-    console.log("EDIT");
+  onDeleteClick = course => {
+    this.props.deleteCourse(course, this.props.history);
   };
 
   render() {
@@ -22,87 +16,118 @@ class Courses extends Component {
 
     if (this.props.auth.isAuthenticated === true) {
       if (college.deleted === 0) {
-        course = this.props.course.map(cou => (
-          <tr key={cou._id}>
-            <td>{cou.name}</td>
-            <td>{cou.initials}</td>
-            <td>
-              {cou.status === 0 ? (
-                <span className="badge badge-success">Active</span>
-              ) : (
-                <span className="badge badge-danger">Not Active</span>
-              )}
-            </td>
-            <td>{cou.researchTotal}</td>
-            <td>{cou.journalTotal}</td>
-            <td>
-              <Link
-                to={{
-                  pathname: "/edit-course",
-                  course: {
-                    courseName: cou.name,
-                    courseInitials: cou.initials,
-                    courseTotalRes: cou.researchTotal,
-                    courseTotalJour: cou.journalTotal,
-                    courseId: cou._id,
-                    collegeId: college._id,
-                    courseStatus: cou.status,
-                    courseDeleted: cou.deleted
-                  }
-                }}
-                className="btn btn-info"
-              >
-                <i
-                  className="fas fa-pen text-light"
-                  style={{ fontSize: "12px" }}
-                />
-              </Link>
-              {" - "}
-              <button
-                onClick={this.onDeleteClick.bind(this, college._id, cou._id)}
-                className="btn btn-danger"
-              >
-                <i
-                  className="fas fa-trash text-light"
-                  style={{ fontSize: "12px" }}
-                />
-              </button>
-            </td>
-          </tr>
-        ));
+        // college not deleted with buttons
+        course = this.props.course.map(cou =>
+          // ternary operator if deleted do not show
+          cou.deleted === 0 ? (
+            <tr key={cou._id}>
+              <td>{cou.name}</td>
+              <td>{cou.initials}</td>
+              <td>
+                {cou.deleted === 1 ? (
+                  <span className="badge badge-danger">Deleted</span>
+                ) : cou.status === 0 ? (
+                  <span className="badge badge-success">Active</span>
+                ) : (
+                  <span className="badge badge-danger">Inactive</span>
+                )}
+              </td>
+              <td>{cou.researchTotal}</td>
+              <td>{cou.journalTotal}</td>
+              <td>
+                <Link
+                  to={{
+                    pathname: "/edit-course",
+                    course: {
+                      courseName: cou.name,
+                      courseInitials: cou.initials,
+                      courseTotalRes: cou.researchTotal,
+                      courseTotalJour: cou.journalTotal,
+                      courseId: cou._id,
+                      collegeId: college._id,
+                      courseStatus: cou.status,
+                      courseDeleted: cou.deleted
+                    }
+                  }}
+                  className="btn btn-info"
+                >
+                  <i
+                    className="fas fa-pen text-light"
+                    style={{ fontSize: "12px" }}
+                  />
+                </Link>
+                {" - "}
+                <button
+                  onClick={this.onDeleteClick.bind(
+                    this,
+                    (course = {
+                      courseName: cou.name,
+                      courseInitials: cou.initials,
+                      courseTotalRes: cou.researchTotal,
+                      courseTotalJour: cou.journalTotal,
+                      courseId: cou._id,
+                      collegeId: college._id,
+                      courseStatus: cou.status,
+                      courseDeleted: cou.deleted,
+                      collegeInit: college.name.initials
+                    })
+                  )}
+                  className="btn btn-danger"
+                >
+                  <i
+                    className="fas fa-trash text-light"
+                    style={{ fontSize: "12px" }}
+                  />
+                </button>
+              </td>
+            </tr>
+          ) : (
+            ""
+          )
+        );
       } else {
-        course = this.props.course.map(cou => (
-          <tr key={cou._id}>
-            <td>{cou.name}</td>
-            <td>{cou.initials}</td>
-            <td>
-              {cou.status === 0 ? (
-                <span className="badge badge-success">Active</span>
-              ) : (
-                <span className="badge badge-danger">Not Active</span>
-              )}
-            </td>
-            <td>{cou.researchTotal}</td>
-            <td>{cou.journalTotal}</td>
-          </tr>
-        ));
+        // college deleted no buttons
+        course = this.props.course.map(cou =>
+          cou.deleted === 0 ? (
+            <tr key={cou._id}>
+              <td>{cou.name}</td>
+              <td>{cou.initials}</td>
+              <td>
+                {cou.status === 0 ? (
+                  <span className="badge badge-success">Active</span>
+                ) : (
+                  <span className="badge badge-danger">Not Active</span>
+                )}
+              </td>
+              <td>{cou.researchTotal}</td>
+              <td>{cou.journalTotal}</td>
+            </tr>
+          ) : (
+            ""
+          )
+        );
       }
     } else {
-      course = this.props.course.map(cou => (
-        <tr key={cou._id}>
-          <td>{cou.name}</td>
-          <td>{cou.initials}</td>
-          <td>
-            {cou.status === 0 ? (
-              <span className="badge badge-success">Active</span>
-            ) : (
-              <span className="badge badge-danger">Not Active</span>
-            )}
-          </td>
-          <td>{cou.researchTotal}</td>
-          <td>{cou.journalTotal}</td>
-        </tr>
-      ));
+      // Not logged in no buttons
+      course = this.props.course.map(cou =>
+        cou.deleted === 0 ? (
+          <tr key={cou._id}>
+            <td>{cou.name}</td>
+            <td>{cou.initials}</td>
+            <td>
+              {cou.status === 0 ? (
+                <span className="badge badge-success">Active</span>
+              ) : (
+                <span className="badge badge-danger">Not Active</span>
+              )}
+            </td>
+            <td>{cou.researchTotal}</td>
+            <td>{cou.journalTotal}</td>
+          </tr>
+        ) : (
+          ""
+        )
+      );
     }
 
     return (
@@ -146,4 +171,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { deleteCourse }
-)(Courses);
+)(withRouter(Courses));

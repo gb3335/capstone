@@ -24,6 +24,12 @@ class College extends Component {
     }
   }
 
+  componentWillMount() {
+    if (this.props.match.params.initials) {
+      this.props.getCollegeByInitials(this.props.match.params.initials);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.college.college === null && this.props.college.loading) {
       this.props.history.push("/not-found");
@@ -58,10 +64,6 @@ class College extends Component {
     };
 
     this.props.restoreCollege(data, this.props.history);
-  };
-
-  onCollegeStatus = e => {
-    console.log("COLLEGE DEACTIVATE");
   };
 
   render() {

@@ -437,41 +437,47 @@ router.post(
   }
 );
 
-// @route   DELETE api/colleges/course/:college_id/:course_id
+// @route   POST api/colleges/deletecourse
 // @desc    Delete course from college
 // @access  Private
-router.delete(
-  "/course/:college_id/:course_id",
+router.post(
+  "/deletecourse",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOne({ _id: req.params.college_id })
+    College.findOne({ _id: req.body.collegeId })
       .then(college => {
-        // Get remove index
-        const removeIndex = college.course
-          .map(item => item.id)
-          .indexOf(req.params.course_id);
+        const newCourse = {
+          name: req.body.courseName,
+          initials: req.body.courseInitials,
+          status: req.body.courseStatus,
+          deleted: req.body.courseDeleted === 0 ? 1 : 0,
+          researchTotal: req.body.courseTotalRes,
+          journalTotal: req.body.courseTotalJour
+        };
 
         const newCollege = {
           lastUpdate: {
             date: Date.now()
           }
         };
-
         College.findOneAndUpdate(
-          { _id: req.params.college_id },
+          { _id: req.body.collegeId },
           { $set: newCollege },
           { new: true }
-        ).then(college);
-
+        );
         // add activity
         const newActivity = {
           title: "Course deleted in " + college.name.initials
         };
         new Activity(newActivity).save();
-
+        // Get remove index
+        const removeIndex = college.course
+          .map(item => item.id)
+          .indexOf(req.body.courseId);
         // Splice out of array
         college.course.splice(removeIndex, 1);
-
+        // Add to exp array
+        college.course.unshift(newCourse);
         // Save
         college.save().then(college => res.json(college));
       })

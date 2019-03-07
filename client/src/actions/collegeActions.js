@@ -10,7 +10,9 @@ import {
   TOGGLE_COLLEGE_BIN,
   TOGGLE_COLLEGE_LIST,
   TOGGLE_COLLEGE_GRIDVIEW,
-  TOGGLE_COLLEGE_LISTVIEW
+  TOGGLE_COLLEGE_LISTVIEW,
+  TOGGLE_COURSE_BIN,
+  TOGGLE_COURSE_LIST
 } from "./types";
 
 // Get all colleges
@@ -76,6 +78,19 @@ export const toggleCollegeList = toggle => {
   } else {
     return {
       type: TOGGLE_COLLEGE_LISTVIEW
+    };
+  }
+};
+
+// Toggle Course Bin
+export const toggleCourseBin = toggle => {
+  if (toggle === 1) {
+    return {
+      type: TOGGLE_COURSE_BIN
+    };
+  } else {
+    return {
+      type: TOGGLE_COURSE_LIST
     };
   }
 };
@@ -161,16 +176,19 @@ export const editCourse = (courseData, history) => dispatch => {
 };
 
 // Delete Course
-export const deleteCourse = (college, id) => dispatch => {
-  if (window.confirm("Are you sure? This can NOT be undone.")) {
+export const deleteCourse = (course, history) => dispatch => {
+  if (window.confirm("Are you sure to delete?")) {
     dispatch(setCollegeLoading());
     axios
-      .delete(`/api/colleges/course/${college}/${id}`)
-      .then(res =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: res.data
-        })
+      .post(`/api/colleges/deletecourse`, course)
+      .then(
+        history.push(`/colleges`),
+        history.push(`/colleges/${course.collegeInit}`),
+        res =>
+          dispatch({
+            type: GET_COLLEGE,
+            payload: res.data
+          })
       )
       .catch(err =>
         dispatch({
