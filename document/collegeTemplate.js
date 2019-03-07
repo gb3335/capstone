@@ -12,6 +12,7 @@ module.exports = ({
   let totaljour;
   let totalcourse;
   let coursesList;
+  let coursesListHeader;
   let lastUpdate = college.lastUpdate.date;
   let collegeName = college.name.fullName;
   let today = new Date();
@@ -51,9 +52,19 @@ module.exports = ({
         `<td>${indCourse.journalTotal}</td>` +
         "</tr>"
     );
+
+    coursesListHeader =
+      "<tr>" +
+      "<th>Name</th>" +
+      "<th>Initials</th>" +
+      "<th>Status</th>" +
+      "<th>Research Total</th>" +
+      "<th>Journal Total</th>" +
+      "</tr>";
   } else {
     totalcourse = "Not Available";
     coursesList = "Not Available";
+    coursesListHeader = "";
   }
 
   return `<!DOCTYPE html>
@@ -141,6 +152,7 @@ module.exports = ({
           </div>
   
           <br />
+          <br />
           <hr />
           <div class="details" style="font-size: 10px">
             <h4 style="font-size: 9px">Details:</h4>
@@ -158,14 +170,8 @@ module.exports = ({
           <div class="courses" style="font-size: 9px">
             <h4 style="font-size: 10px">Courses:</h4>
             <table>
-              <tr>
-                <th>Name</th>
-                <th>Initials</th>
-                <th>Status</th>
-                <th>Research Total</th>
-                <th>Journal Total</th>
-              </tr>
-             ${coursesList}
+              ${coursesListHeader}
+              ${coursesList}
             </table>
           </div>
         </div>
