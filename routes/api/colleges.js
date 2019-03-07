@@ -399,8 +399,30 @@ router.post(
   "/createReport/college",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const printedBy = "Carl Justine";
+    const today = new Date();
+    const options = {
+      format: "Letter",
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <h5 style="float: left">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
+            1}. ${today.getFullYear()}.`}</h5>
+          <h5 style="float: right">Page {{page}} of {{pages}}</h5>
+        </div>` // fallback value
+        }
+      }
+    };
     pdf
-      .create(pdfCollegeTemplate(req.body), {})
+      .create(pdfCollegeTemplate(req.body), options)
       .toFile("collegePdf.pdf", err => {
         if (err) {
           res.send(Promise.reject());

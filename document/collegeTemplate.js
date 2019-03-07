@@ -1,138 +1,178 @@
 module.exports = ({
-  courses,
-  status = "John doe",
+  status,
   researchTotal,
-  journalTotal
+  journalTotal,
+  courses,
+  typeOfReport,
+  college
 }) => {
-  const today = new Date();
-  return `
-  <!doctype html>
+  let librarian = college.librarian;
+  let stat;
+  let totalres;
+  let totaljour;
+  let totalcourse;
+  let coursesList;
+  let lastUpdate = college.lastUpdate.date;
+  let collegeName = college.name.fullName;
+  let today = new Date();
+
+  if (status === true) {
+    if (college.status === 0) {
+      stat = "Active";
+    } else {
+      stat = "Inactive";
+    }
+  } else {
+    stat = "Not Available";
+  }
+
+  if (researchTotal === true) {
+    totalres = college.researchTotal;
+  } else {
+    totalres = "Not Available";
+  }
+
+  if (journalTotal === true) {
+    totaljour = college.journalTotal;
+  } else {
+    totaljour = "Not Available";
+  }
+
+  if (courses === true) {
+    totalcourse = college.course.length;
+
+    coursesList = college.course.map(
+      indCourse =>
+        "<tr>" +
+        `<td>${indCourse.name}</td>` +
+        `<td>${indCourse.initials}</td>` +
+        `<td>${indCourse.status === 0 ? "Active" : "Inactive"}</td>` +
+        `<td>${indCourse.researchTotal}</td>` +
+        `<td>${indCourse.journalTotal}</td>` +
+        "</tr>"
+    );
+  } else {
+    totalcourse = "Not Available";
+  }
+
+  return `<!DOCTYPE html>
   <html>
-     <head>
-        <meta charset="utf-8">
-        <title>PDF Result Template</title>
-        <style>
-           .invoice-box {
-           max-width: 800px;
-           margin: auto;
-           padding: 30px;
-           border: 1px solid #eee;
-           box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-           font-size: 16px;
-           line-height: 24px;
-           font-family: 'Helvetica Neue', 'Helvetica',
-           color: #555;
-           }
-           .margin-top {
-           margin-top: 50px;
-           }
-           .justify-center {
-           text-align: center;
-           }
-           .invoice-box table {
-           width: 100%;
-           line-height: inherit;
-           text-align: left;
-           }
-           .invoice-box table td {
-           padding: 5px;
-           vertical-align: top;
-           }
-           .invoice-box table tr td:nth-child(2) {
-           text-align: right;
-           }
-           .invoice-box table tr.top table td {
-           padding-bottom: 20px;
-           }
-           .invoice-box table tr.top table td.title {
-           font-size: 45px;
-           line-height: 45px;
-           color: #333;
-           }
-           .invoice-box table tr.information table td {
-           padding-bottom: 40px;
-           }
-           .invoice-box table tr.heading td {
-           background: #eee;
-           border-bottom: 1px solid #ddd;
-           font-weight: bold;
-           }
-           .invoice-box table tr.details td {
-           padding-bottom: 20px;
-           }
-           .invoice-box table tr.item td {
-           border-bottom: 1px solid #eee;
-           }
-           .invoice-box table tr.item.last td {
-           border-bottom: none;
-           }
-           .invoice-box table tr.total td:nth-child(2) {
-           border-top: 2px solid #eee;
-           font-weight: bold;
-           }
-           @media only screen and (max-width: 600px) {
-           .invoice-box table tr.top table td {
-           width: 100%;
-           display: block;
-           text-align: center;
-           }
-           .invoice-box table tr.information table td {
-           width: 100%;
-           display: block;
-           text-align: center;
-           }
-           }
-        </style>
-     </head>
-     <body>
-        <div class="invoice-box">
-           <table cellpadding="0" cellspacing="0">
-              <tr class="top">
-                 <td colspan="2">
-                    <table>
-                       <tr>
-                          <td class="title"><img  src="https://i2.wp.com/cleverlogos.co/wp-content/uploads/2018/05/reciepthound_1.jpg?fit=800%2C600&ssl=1"
-                             style="width:100%; max-width:156px;"></td>
-                          <td>
-                             Datum: ${`${today.getDate()}. ${today.getMonth() +
-                               1}. ${today.getFullYear()}.`}
-                          </td>
-                       </tr>
-                    </table>
-                 </td>
-              </tr>
-              <tr class="information">
-                 <td colspan="2">
-                    <table>
-                       <tr>
-                          <td>
-                             Customer name: ${courses}
-                          </td>
-                          <td>
-                             Receipt number: ${journalTotal}
-                          </td>
-                       </tr>
-                    </table>
-                 </td>
-              </tr>
-              <tr class="heading">
-                 <td>Bought items:</td>
-                 <td>Price</td>
-              </tr>
-              <tr class="item">
-                 <td>First item:</td>
-                 <td>${status}$</td>
-              </tr>
-              <tr class="item">
-                 <td>Second item:</td>
-                 <td>${researchTotal}$</td>
-              </tr>
-           </table>
-           <br />
-           <h1 class="justify-center">Total price: ${parseInt("13") +
-             parseInt("2345")}$</h1>
+    <head>
+      <style>
+        .item1 {
+          grid-area: header;
+        }
+  
+        .grid-container {
+          display: grid;
+          grid-template-areas:
+            "header header header header header header"
+            "menu main main main right right"
+            "menu footer footer footer footer footer";
+          grid-gap: 10px;
+        }
+  
+        .grid-container > .headerr {
+          background-color: rgba(255, 255, 255, 0.8);
+          text-align: center;
+          padding: 20px 0;
+          font-size: 30px;
+        }
+  
+        .bulsu-logo {
+          width: 5rem;
+          height: 5rem;
+          float: left;
+        }
+  
+        .cict-logo {
+          width: 5rem;
+          height: 5rem;
+          float: right;
+        }
+  
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+  
+        td,
+        th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+        }
+  
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="grid-container">
+        <div class="item1 headerr" style="font-size: 15px">
+          <img
+            src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+            alt="bulsu-logo"
+            class="bulsu-logo"
+          />
+          <img
+            src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
+            alt="cict-logo"
+            class="cict-logo"
+          />
+          <br />
+          Bulacan State University
+          <br />
+          City of Malolos
+          <br />
+          College of Information and Communications Technology
+          <br />
+          <br />
+          <br />
+          <h4>${typeOfReport}</h4>
         </div>
-     </body>
+        <div class="reportBody" style="padding: 7px; border:solid gray">
+          <div style="font-size: 18px;">
+            <h3 style="float: left;">
+              ${collegeName}
+            </h3>
+          </div>
+  
+          <br />
+          <br />
+          <br />
+          <hr />
+          <div class="details" style="font-size: 15px">
+            <h4 style="font-size: 16px">Details:</h4>
+            <div>
+              <ul style="list-style-type:circle; text-align: left">
+                <li>Librarian: ${librarian}</li>
+                <li>Status: ${stat}</li>
+                <li>Total Researches: ${totalres}</li>
+                <li>Total Journals: ${totaljour}</li>
+                <li>Total Courses: ${totalcourse}</li>
+                <li>Last Update: ${lastUpdate}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="courses" style="font-size: 12px">
+            <h4 style="font-size: 16px">Courses:</h4>
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>Initials</th>
+                <th>Status</th>
+                <th>Research Total</th>
+                <th>Journal Total</th>
+              </tr>
+             ${coursesList}
+            </table>
+          </div>
+        </div>
+      </div>
+    </body>
   </html>
   `;
 };

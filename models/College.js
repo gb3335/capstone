@@ -58,11 +58,17 @@ const CollegeSchema = new Schema({
         type: String,
         required: true
       },
+      status: {
+        type: Number,
+        default: 0
+      },
       researchTotal: {
-        type: String
+        type: Number,
+        default: 0
       },
       journalTotal: {
-        type: String
+        type: Number,
+        default: 0
       }
     }
   ]

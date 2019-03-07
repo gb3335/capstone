@@ -8,8 +8,8 @@ class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      researchCount: false,
-      journalCount: false,
+      researchTotal: false,
+      journalTotal: false,
       status: false,
       courses: false
     };
@@ -26,30 +26,21 @@ class Report extends Component {
   };
 
   onGenerateReport = e => {
-    // console.log(
-    //   "course: ",
-    //   this.state.courses,
-    //   "jc: ",
-    //   this.state.journalCount,
-    //   "rc: ",
-    //   this.state.researchCount,
-    //   "stat: ",
-    //   this.state.status
-    // );
-
     if (
-      this.state.researchCount === false &&
-      this.state.journalCount === false &&
+      this.state.researchTotal === false &&
+      this.state.journalTotal === false &&
       this.state.status === false &&
       this.state.courses === false
     ) {
       alert("Please Check at least one");
     } else {
       const reportData = {
-        researchCount: this.state.researchCount,
-        journalCount: this.state.journalCount,
+        researchTotal: this.state.researchTotal,
+        journalTotal: this.state.journalTotal,
         status: this.state.status,
-        courses: this.state.courses
+        courses: this.state.courses,
+        college: this.props.college.college,
+        typeOfReport: "College Report"
       };
 
       this.props.createReport(reportData);
@@ -65,12 +56,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="researchCount"
-            id="researchCount"
-            value={this.state.researchCount}
+            name="researchTotal"
+            id="researchTotal"
+            value={this.state.researchTotal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="researchCount">
+          <label className="form-check-label" htmlFor="researchTotal">
             Research Count
           </label>
         </div>
@@ -78,12 +69,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="journalCount"
-            id="journalCount"
-            value={this.state.journalCount}
+            name="journalTotal"
+            id="journalTotal"
+            value={this.state.journalTotal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="journalCount">
+          <label className="form-check-label" htmlFor="journalTotal">
             Journal Count
           </label>
         </div>
@@ -126,10 +117,15 @@ class Report extends Component {
 }
 
 Report.propTypes = {
-  createReport: PropTypes.func.isRequired
+  createReport: PropTypes.func.isRequired,
+  college: PropTypes.object.isRequired
 };
 
+const mapStateToProps = state => ({
+  college: state.college
+});
+
 export default connect(
-  null,
+  mapStateToProps,
   { createReport }
 )(Report);
