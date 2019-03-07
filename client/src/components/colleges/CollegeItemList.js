@@ -26,6 +26,9 @@ class CollegeItemList extends Component {
 
     if (college.deleted === 1) {
       colDeleted = <span className="badge badge-danger">Deleted</span>;
+    } else {
+      // not status, just indicate that its not deleted
+      colDeleted = <span className="badge badge-success">Active</span>;
     }
 
     return (
@@ -33,7 +36,7 @@ class CollegeItemList extends Component {
         <div className="row">
           <div className="col-lg-1 col-md-1 col-3">{image}</div>
           <div
-            className="col-lg-6 col-md-7 col-3"
+            className="col-lg-7 col-md-7 col-3"
             style={{
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -45,7 +48,8 @@ class CollegeItemList extends Component {
           </div>
           <div className="col-lg-2 col-md-2 col-3 d-sm-none d-md-block d-none d-sm-block">
             <p>
-              {colStatus} {colDeleted}
+              {/* {colStatus}  */}
+              {colDeleted}
             </p>
           </div>
           <div className="col-lg-2 col-md-2 col-3">

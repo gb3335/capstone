@@ -22,6 +22,7 @@ class AddResearch extends Component {
       abstract: "",
       pages: "",
       schoolYear: "",
+      courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
     };
   }
@@ -58,6 +59,30 @@ class AddResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
+  onChangeSelect = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
+
+    this.state.courseOptions.length = 0;
+    this.state.courseOptions.push({
+      label: "* Select Course",
+      value: ""
+    });
+
+    this.props.college.colleges.map(college =>
+      college.name.fullName === e.target.value
+        ? college.course.map(course =>
+            college.deleted === 0
+              ? this.state.courseOptions.push({
+                  label: course.name,
+                  value: course.name
+                })
+              : ""
+          )
+        : ""
+    );
+  };
+
   handleChange = value => {
     this.setState({ abstract: value });
     this.refs.resBtn.removeAttribute("disabled");
@@ -66,7 +91,7 @@ class AddResearch extends Component {
   render() {
     const { college, errors } = this.props;
     let collegeOptions = [{ label: "* Select College", value: "" }];
-    let courseOptions = [{ label: "* Select Course", value: "" }];
+
     try {
       college.colleges.map(college =>
         college.deleted === 0
@@ -75,17 +100,6 @@ class AddResearch extends Component {
               value: college.name.fullName
             })
           : ""
-      );
-
-      college.colleges.map(college =>
-        college.course.map(course =>
-          college.deleted === 0
-            ? courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
-            : ""
-        )
       );
     } catch (error) {}
 
@@ -154,7 +168,7 @@ class AddResearch extends Component {
                       placeholder="College"
                       name="college"
                       value={this.state.college}
-                      onChange={this.onChange}
+                      onChange={this.onChangeSelect}
                       options={collegeOptions}
                       error={errors.college}
                       info="Select your college"
@@ -165,8 +179,8 @@ class AddResearch extends Component {
                       placeholder="Course"
                       name="course"
                       value={this.state.course}
-                      onChange={this.onChange}
-                      options={courseOptions}
+                      onChange={this.onChangeSelect}
+                      options={this.state.courseOptions}
                       error={errors.course}
                       info="Select your course"
                     />

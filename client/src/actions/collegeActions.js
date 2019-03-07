@@ -147,6 +147,19 @@ export const addCourse = (courseData, history) => dispatch => {
     );
 };
 
+// Edit Course
+export const editCourse = (courseData, history) => dispatch => {
+  axios
+    .post("/api/colleges/editcourse", courseData)
+    .then(res => history.push(`/colleges/${courseData.colInit}`))
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Delete Course
 export const deleteCourse = (college, id) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {

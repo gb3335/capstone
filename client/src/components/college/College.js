@@ -186,14 +186,6 @@ class College extends Component {
                 <i className="fas fa-university mr-2" />
                 Courses
               </a>
-              <a
-                className="list-group-item list-group-item-action"
-                href="#deactivate"
-                role="tab"
-              >
-                <i className="fas fa-ban mr-2" />
-                Deactivate College
-              </a>
               {deletedAction}
               <a
                 className="list-group-item list-group-item-action"

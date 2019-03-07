@@ -44,6 +44,8 @@ class Report extends Component {
       };
 
       this.props.createReport(reportData);
+
+      alert("Please wait while your report is being generated");
     }
   };
 

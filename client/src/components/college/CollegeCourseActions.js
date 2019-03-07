@@ -7,6 +7,9 @@ const CollegeCourseActions = () => {
       <Link to="/add-course" className="btn btn-light">
         <i className="fas fa-plus text-info mr-1" /> Add Course
       </Link>
+      <Link to="#" className="btn btn-light">
+        <i className="fas fa-trash text-danger mr-1" /> Bin
+      </Link>
     </div>
   );
 };

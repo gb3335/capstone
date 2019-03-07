@@ -18,7 +18,8 @@ class CollegeDetails extends Component {
       college.deleted === 1 ? (
         <span className="badge badge-danger">Deleted</span>
       ) : (
-        ""
+        // not status, just indicate that its not deleted
+        <span className="badge badge-success">Active</span>
       );
 
     return (
@@ -51,9 +52,7 @@ class CollegeDetails extends Component {
               <div className="col md-4">
                 <p className="infoText">
                   <i className="fas fa-check-circle" />{" "}
-                  <span>
-                    Status: {status} {deleted}
-                  </span>
+                  <span>Status: {deleted}</span>
                 </p>
                 <p className="infoText">
                   <i className="fas fa-redo-alt" />{" "}

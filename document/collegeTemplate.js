@@ -12,6 +12,7 @@ module.exports = ({
   let totaljour;
   let totalcourse;
   let coursesList;
+  let coursesListNoComma = "";
   let coursesListHeader;
   let lastUpdate = college.lastUpdate.date;
   let collegeName = college.name.fullName;
@@ -42,25 +43,34 @@ module.exports = ({
   if (courses === true) {
     totalcourse = college.course.length;
 
-    coursesList = college.course.map(
-      indCourse =>
-        "<tr>" +
-        `<td>${indCourse.name}</td>` +
-        `<td>${indCourse.initials}</td>` +
-        `<td>${indCourse.status === 0 ? "Active" : "Inactive"}</td>` +
-        `<td>${indCourse.researchTotal}</td>` +
-        `<td>${indCourse.journalTotal}</td>` +
-        "</tr>"
-    );
+    if (totalcourse == 0) {
+      coursesList = "Not Courses in this College";
+      coursesListHeader = "";
+    } else {
+      coursesList = college.course.map(
+        indCourse =>
+          "<tr>" +
+          `<td>${indCourse.name}</td>` +
+          `<td>${indCourse.initials}</td>` +
+          `<td>${indCourse.status === 0 ? "Active" : "Inactive"}</td>` +
+          `<td>${indCourse.researchTotal}</td>` +
+          `<td>${indCourse.journalTotal}</td>` +
+          "</tr>"
+      );
 
-    coursesListHeader =
-      "<tr>" +
-      "<th>Name</th>" +
-      "<th>Initials</th>" +
-      "<th>Status</th>" +
-      "<th>Research Total</th>" +
-      "<th>Journal Total</th>" +
-      "</tr>";
+      coursesList.map(item => {
+        coursesListNoComma = coursesListNoComma + item;
+      });
+
+      coursesListHeader =
+        "<tr>" +
+        "<th>Name</th>" +
+        "<th>Initials</th>" +
+        "<th>Status</th>" +
+        "<th>Research Total</th>" +
+        "<th>Journal Total</th>" +
+        "</tr>";
+    }
   } else {
     totalcourse = "Not Available";
     coursesList = "Not Available";
@@ -171,7 +181,7 @@ module.exports = ({
             <h4 style="font-size: 10px">Courses:</h4>
             <table>
               ${coursesListHeader}
-              ${coursesList}
+              ${coursesListNoComma}
             </table>
           </div>
         </div>

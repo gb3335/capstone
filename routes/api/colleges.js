@@ -316,8 +316,17 @@ router.post(
       // Return any errors with 400 status
       return res.status(400).json(errors);
     }
-
     College.findOne({ _id: req.body.colId }).then(college => {
+      college.course.map(cou => {
+        if (req.body.name === cou.name) {
+          errors.name = "Course Name already exists";
+          res.status(400).json(errors);
+        }
+        if (req.body.initials === cou.initials) {
+          errors.initials = "Course Initials already exists";
+          res.status(400).json(errors);
+        }
+      });
       const newCourse = {
         name: req.body.name,
         initials: req.body.initials
@@ -346,6 +355,84 @@ router.post(
         { $set: newCollege },
         { new: true }
       ).then(college => res.json(college));
+    });
+  }
+);
+
+// @route   POST api/colleges/editcourse
+// @desc    Edit course of college
+// @access  Private
+router.post(
+  "/editcourse",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateCourseInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+    let mark = false;
+
+    College.findOne({ _id: req.body.colId }).then(college => {
+      college.course.map(cou => {
+        if (req.body.name === cou.name && cou._id != req.body.courseId) {
+          errors.name = "Course Name already exists";
+          mark = true;
+          return res.status(400).json(errors);
+        }
+        if (
+          req.body.initials === cou.initials &&
+          cou._id != req.body.courseId
+        ) {
+          errors.initials = "Course Initials already exists";
+          mark = true;
+          return res.status(400).json(errors);
+        }
+      });
+      if (mark === false) {
+        const newCourse = {
+          name: req.body.name,
+          initials: req.body.initials,
+          status: req.body.deactivate === false ? 0 : 1,
+          deleted: req.body.deleted,
+          researchTotal: req.body.researchTotal,
+          journalTotal: req.body.journalTotal
+        };
+
+        // add activity
+        const newActivity = {
+          title:
+            "Course " + req.body.initials + " added in " + college.name.initials
+        };
+        new Activity(newActivity).save().then(college);
+
+        // Get remove index
+        const removeIndex = college.course
+          .map(item => item.id)
+          .indexOf(req.body.courseId);
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+
+        // Add to exp array
+        college.course.unshift(newCourse);
+
+        college.save();
+
+        const newCollege = {
+          lastUpdate: {
+            date: Date.now()
+          }
+        };
+
+        College.findOneAndUpdate(
+          { _id: req.body.colId },
+          { $set: newCollege },
+          { new: true }
+        ).then(college => res.json(college));
+      }
     });
   }
 );
