@@ -402,7 +402,6 @@ router.post(
     const printedBy = "Carl Justine";
     const today = new Date();
     const options = {
-      format: "Letter",
       border: {
         top: "0.5in",
         right: "0.5in",
