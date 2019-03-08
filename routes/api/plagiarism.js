@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const request = require("request");
-const PdfReader = require('pdfreader').PdfReader;
-const fs = require("fs");
-var download = require('download-pdf')
+const pdfUtil = require('pdf-to-text');
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
 const cx = "014684295069765089744:fvoycnmgzio";
@@ -71,43 +69,35 @@ router.post("/local", (req, res) => {
   let docuId = req.body.docuId;
   let document = req.body.document;
 
-  const docPath = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" + document;
+  //option to extract text from page 0 to 10
+  const option = {from: 0, to: 10};
   
-    const options = {
-        directory: "./routes/downloadedDocu"
-    }
-    
-    download(docPath, options, function(err){
-        if (err) throw err
-        console.log("meow")
-        fs.readFile(`./routes/downloadedDocu/${document}`, (err, pdfBuffer) => {
-          // pdfBuffer contains the file content
-          new PdfReader().parseBuffer(pdfBuffer, function(err, item){
-            if (err)
-              callback(err);
-            else if (!item)
-              callback();
-            else if (item.text)
-              console.log(item.text);
-            });
-        });
-    }) 
-
   
-    
-    
+  //Omit option to extract all text from the pdf file
+  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
+    if (err) throw(err);
+    console.log(data); //print all text    
+  });
 
-    // new PdfReader().parseFileItems(docPath, function(err, item) {
-    //   if (err){
-    //     console.log("Error: "+ err)
-    //   }
-    //   else if (!item){
-    //     console.log("No item")
-    //   }
-    //   else if (item.text){ console.log(item.text)};
-    // });
-  // let arr = processor.arrayProcess(req.body.q.toLowerCase());
-  // let text = processor.textProcess(req.body.text.toLowerCase());
+    
+  // let extext=""
+  // fs.readFile(`./routes/downloadedDocu/${docuId}.pdf`, (err, pdfBuffer) => {
+  //   // pdfBuffer contains the file content
+  //   new PdfReader().parseBuffer(pdfBuffer, function(err, item){
+  //     if (err)
+  //       callback(err);
+  //     else if (!item)
+  //       callback();
+  //     else if (item.text)
+  //       extext = item.text;
+  //       //extext = extext.toString().split("\n").join("");
+  //       console.log(extext)
+        
+  //     });
+  // });
+
+  // let arr = processor.arrayProcess(extext.toString().toLowerCase());
+  // let text = processor.textProcess(extext.toString().toLowerCase());
   // let flag = req.body.flag;
   // if(flag=="true"){
   //   flag=true;
@@ -117,13 +107,15 @@ router.post("/local", (req, res) => {
   // let docu1 = req.body.docu1;
   // let docu2 = req.body.docu2;
 
-  // let result = plagiarism.search(arr, text, flag, docu1, docu2);
+  // let result = plagiarism.search(arr, text, true, "docu1", "docu2");
   // res.json({
   //   localPlagiarism: {
   //     success: true,
   //     data: result
   //   }
   // });
+  // console.log(result)
+  
 });
 
 module.exports = router;

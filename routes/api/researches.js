@@ -8,6 +8,7 @@ const fs = require("fs");
 const uuid = require("uuid");
 const PdfReader = require("pdfreader").PdfReader;
 const Tokenizer = require("sentence-tokenizer");
+const download = require('download-pdf')
 
 // Research model
 const Research = require("../../models/Research");
@@ -390,6 +391,8 @@ router.post(
 
     const userId = 1;
 
+    let researchObject= {};
+
     params = {
       Bucket: "bulsu-capstone",
       Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
@@ -403,8 +406,34 @@ router.post(
       if (err) {
         return console.log(err);
       }
+      const docPath = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" + filename;
+      const options = {
+        directory: "./routes/downloadedDocu",
+        filename: req.body.researchId + ".pdf"
+      }
+      download(docPath, options, function(err){
+        if (err) console.log(err) 
+        console.log("Document successfully uploaded.");
+      }) 
 
-      console.log("Document successfully uploaded.");
+      const newDocument = {
+        document: filename,
+        lastUpdate: Date.now()
+      };
+      Research.findOne({ _id: req.body.researchId }).then(research => {
+        // add activity
+        const newActivity = {
+          title: "Document added to " + research.title
+        };
+        new Activity(newActivity).save();
+      });
+  
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newDocument },
+        { new: true }
+      ).then(research => res.json(research));
+     
     });
 
     // fs.writeFile(
@@ -506,24 +535,6 @@ router.post(
     //     );
     //   }
     // );
-
-    const newDocument = {
-      document: filename,
-      lastUpdate: Date.now()
-    };
-    Research.findOne({ _id: req.body.researchId }).then(research => {
-      // add activity
-      const newActivity = {
-        title: "Document added to " + research.title
-      };
-      new Activity(newActivity).save();
-    });
-
-    Research.findOneAndUpdate(
-      { _id: req.body.researchId },
-      { $set: newDocument },
-      { new: true }
-    ).then(research => res.json(research));
   }
 );
 
