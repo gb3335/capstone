@@ -6,7 +6,6 @@ const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
 const uuid = require("uuid");
-const PdfReader = require("pdfreader").PdfReader;
 const Tokenizer = require("sentence-tokenizer");
 const download = require('download-pdf')
 
