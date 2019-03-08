@@ -72,11 +72,16 @@ class CollegeActions extends Component {
     this.props.restoreCollege(data, this.props.history);
   };
 
+  onCollegeStatus = e => {
+    console.log("COLLEGE DEACTIVATE");
+  };
+
   render() {
     const deleted = this.props.college.college.deleted;
     let deletedAction;
     let editAction;
     let logoAction;
+    let statusAction;
 
     if (deleted === 1) {
       deletedAction = (
@@ -121,13 +126,20 @@ class CollegeActions extends Component {
           </ImagePicker>
         </li>
       );
+      statusAction = (
+        <Link to="#" onClick={this.onCollegeStatus} className="btn btn-light">
+          <i className="fas fa-ban text-info mr-1" />
+          Deactivate
+        </Link>
+      );
     }
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
         {logoAction}
-        {deletedAction}
+        {/* {statusAction}
+        {deletedAction} */}
       </div>
     );
   }

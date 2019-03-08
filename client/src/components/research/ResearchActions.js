@@ -26,10 +26,15 @@ class ResearchAction extends Component {
     this.props.restoreResearch(data, this.props.history);
   };
 
+  onHideResearch = e => {
+    console.log("HIDE FUNCTION");
+  };
+
   render() {
     const deleted = this.props.research.research.deleted;
     let deletedAction;
     let editAction;
+    let hideAction;
 
     if (deleted === 1) {
       deletedAction = (
@@ -54,11 +59,17 @@ class ResearchAction extends Component {
           <i className="fas fa-pen text-info mr-1" /> Edit Research
         </Link>
       );
+      hideAction = (
+        <Link to="#" onClick={this.onHideResearch} className="btn btn-light">
+          <i className="fas fa-eye-slash text-info mr-1" /> Hide Research
+        </Link>
+      );
     }
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
+        {hideAction}
         {deletedAction}
       </div>
     );

@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
+import Tesseract from "tesseract.js";
+
 import "react-quill/dist/quill.snow.css";
 
 import { createResearch } from "../../actions/researchActions";
@@ -20,8 +22,10 @@ class AddResearch extends Component {
       college: "",
       course: "",
       abstract: "",
+      researchId: "",
       pages: "",
       schoolYear: "",
+      courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
     };
   }
@@ -45,6 +49,7 @@ class AddResearch extends Component {
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
+      researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages
     };
@@ -58,15 +63,54 @@ class AddResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
+  onChangeSelect = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
+
+    this.state.courseOptions.length = 0;
+    this.state.courseOptions.push({
+      label: "* Select Course",
+      value: ""
+    });
+
+    this.props.college.colleges.map(college =>
+      college.name.fullName === e.target.value
+        ? college.course.map(course =>
+            college.deleted === 0
+              ? this.state.courseOptions.push({
+                  label: course.name,
+                  value: course.name
+                })
+              : ""
+          )
+        : ""
+    );
+  };
+
   handleChange = value => {
     this.setState({ abstract: value });
     this.refs.resBtn.removeAttribute("disabled");
   };
 
+  onOCR = e => {
+    try {
+      let files = e.target.files;
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = e => {
+        Tesseract.recognize(e.target.result).then(function(result) {
+          console.log(result);
+        });
+      };
+    } catch (error) {
+      console.log("Not Blob");
+    }
+  };
+
   render() {
     const { college, errors } = this.props;
     let collegeOptions = [{ label: "* Select College", value: "" }];
-    let courseOptions = [{ label: "* Select Course", value: "" }];
+
     try {
       college.colleges.map(college =>
         college.deleted === 0
@@ -75,17 +119,6 @@ class AddResearch extends Component {
               value: college.name.fullName
             })
           : ""
-      );
-
-      college.colleges.map(college =>
-        college.course.map(course =>
-          college.deleted === 0
-            ? courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
-            : ""
-        )
       );
     } catch (error) {}
 
@@ -154,7 +187,7 @@ class AddResearch extends Component {
                       placeholder="College"
                       name="college"
                       value={this.state.college}
-                      onChange={this.onChange}
+                      onChange={this.onChangeSelect}
                       options={collegeOptions}
                       error={errors.college}
                       info="Select your college"
@@ -165,19 +198,21 @@ class AddResearch extends Component {
                       placeholder="Course"
                       name="course"
                       value={this.state.course}
-                      onChange={this.onChange}
-                      options={courseOptions}
+                      onChange={this.onChangeSelect}
+                      options={this.state.courseOptions}
                       error={errors.course}
                       info="Select your course"
                     />
                   </div>
                 </div>
+                <input type="file" onChange={this.onOCR} name="name" />
                 <ReactQuill
                   style={{ height: "20rem" }}
                   placeholder="* Abstract"
                   value={this.state.abstract}
                   onChange={this.handleChange}
                 />
+
                 <br />
                 <br />
                 <br />
@@ -186,15 +221,14 @@ class AddResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
-                {/* <TextAreaFieldGroup
-                  placeholder="* Abstract"
-                  name="abstract"
-                  value={this.state.abstract}
+                <TextFieldGroup
+                  placeholder="* Research ID"
+                  name="researchId"
+                  value={this.state.researchId}
                   onChange={this.onChange}
-                  error={errors.abstract}
-                  info="Abstract of the research"
-                  rows="10"
-                /> */}
+                  error={errors.researchId}
+                  info="Research ID give by the college library"
+                />
                 <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"
@@ -209,7 +243,7 @@ class AddResearch extends Component {
                   value={this.state.schoolYear}
                   onChange={this.onChange}
                   error={errors.schoolYear}
-                  info="School Year you've finished the research"
+                  info="Academic Year you've finished the research"
                 />
                 <input
                   ref="resBtn"

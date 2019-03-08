@@ -16,6 +16,7 @@ import NotFound from "../not-found/NotFound";
 import Colleges from "../colleges/Colleges";
 import College from "../college/College";
 import AddCourse from "../add-credentials/AddCourse";
+import EditCourse from "../edit-credentials/EditCourse";
 import AddCollege from "../add-college/AddCollege";
 import EditCollege from "../edit-college/EditCollege";
 
@@ -85,6 +86,13 @@ class Main extends Component {
               <Route exact path="/register" component={Register} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-course"
+                  component={EditCourse}
+                />
               </Switch>
               <Switch>
                 <PrivateRoute exact path="/add-author" component={AddAuthor} />

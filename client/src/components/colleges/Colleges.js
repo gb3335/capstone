@@ -3,16 +3,21 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 
-import { getColleges } from "../../actions/collegeActions";
+import {
+  getColleges,
+  getCollegeByInitials
+} from "../../actions/collegeActions";
 
 import CollegeItem from "./CollegeItem";
+import CollegeItemList from "./CollegeItemList";
 import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bin: false
+      bin: false,
+      list: false
     };
   }
 
@@ -22,10 +27,17 @@ class Colleges extends Component {
 
   componentDidMount() {
     this.props.getColleges();
+    let initials;
+    try {
+      initials = this.props.college.colleges[0].name.initials;
+    } catch (error) {}
+
+    this.props.getCollegeByInitials(initials);
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({ bin: nextProps.bin });
+    this.setState({ list: nextProps.list });
   }
 
   render() {
@@ -44,7 +56,11 @@ class Colleges extends Component {
             // College Bin
             collegeItems = colleges.map(college =>
               college.deleted === 1 ? (
-                <CollegeItem key={college._id} college={college} />
+                this.state.list ? (
+                  <CollegeItemList key={college._id} college={college} />
+                ) : (
+                  <CollegeItem key={college._id} college={college} />
+                )
               ) : (
                 ""
               )
@@ -58,7 +74,11 @@ class Colleges extends Component {
             // College list
             collegeItems = colleges.map(college =>
               college.deleted === 0 ? (
-                <CollegeItem key={college._id} college={college} />
+                this.state.list ? (
+                  <CollegeItemList key={college._id} college={college} />
+                ) : (
+                  <CollegeItem key={college._id} college={college} />
+                )
               ) : (
                 ""
               )
@@ -70,7 +90,11 @@ class Colleges extends Component {
           // College list not logged in
           collegeItems = colleges.map(college =>
             college.deleted === 0 ? (
-              <CollegeItem key={college._id} college={college} />
+              this.state.list ? (
+                <CollegeItemList key={college._id} college={college} />
+              ) : (
+                <CollegeItem key={college._id} college={college} />
+              )
             ) : (
               ""
             )
@@ -83,10 +107,10 @@ class Colleges extends Component {
       }
     }
 
-    if (this.props.auth.isAuthenticated) {
-      action = <CollegesActions />;
-    }
-
+    // if (this.props.auth.isAuthenticated) {
+    //   action = <CollegesActions />;
+    // }
+    action = <CollegesActions />;
     return (
       <div className="colleges">
         <div className="container">
@@ -95,6 +119,7 @@ class Colleges extends Component {
               {title}
               <p className="lead text-center">{info}</p>
               {action}
+              <br />
               {collegeItems}
             </div>
           </div>
@@ -106,6 +131,7 @@ class Colleges extends Component {
 
 Colleges.propTypes = {
   getColleges: PropTypes.func.isRequired,
+  getCollegeByInitials: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -113,10 +139,11 @@ Colleges.propTypes = {
 const mapStateToProps = state => ({
   college: state.college,
   bin: state.college.bin,
+  list: state.college.list,
   auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { getColleges }
+  { getColleges, getCollegeByInitials }
 )(Colleges);

@@ -114,49 +114,69 @@ router.post(
 
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
-        // add activity
-        const newActivity = {
-          title: "Research " + req.body.title + " updated"
-        };
-        new Activity(newActivity).save();
+        Research.findOne({ title: req.body.title }).then(research => {
+          let title;
+          try {
+            title = research.title;
+          } catch (error) {
+            title = "";
+          }
+          if (research && title != req.body.oldTitle) {
+            errors.title = "Research Title already exists";
+            res.status(400).json(errors);
+          } else {
+            // add activity
+            const newActivity = {
+              title: "Research " + req.body.title + " updated"
+            };
+            new Activity(newActivity).save();
 
-        // update college
-        Research.findOneAndUpdate(
-          { _id: req.body.id },
-          { $set: newResearch },
-          { new: true }
-        ).then(research => res.json(research));
+            // update college
+            Research.findOneAndUpdate(
+              { _id: req.body.id },
+              { $set: newResearch },
+              { new: true }
+            ).then(research => res.json(research));
+          }
+        });
       } else {
-        // Save Research
-        new Research(newResearch).save();
-        try {
-          // increase college research total
-          College.findOne({ "name.fullName": req.body.college }).then(
-            college => {
-              if (college) {
-                // add activity
-                const newActivity = {
-                  title: "Research " + req.body.title + " added"
-                };
-                new Activity(newActivity).save();
+        Research.findOne({ title: req.body.title }).then(research => {
+          if (research) {
+            errors.title = "Research Title already exists";
+            res.status(400).json(errors);
+          } else {
+            // Save Research
+            new Research(newResearch).save();
+            try {
+              // increase college research total
+              College.findOne({ "name.fullName": req.body.college }).then(
+                college => {
+                  if (college) {
+                    // add activity
+                    const newActivity = {
+                      title: "Research " + req.body.title + " added"
+                    };
+                    new Activity(newActivity).save();
 
-                const total = ++college.researchTotal;
+                    const total = ++college.researchTotal;
 
-                const newCollege = {
-                  researchTotal: total
-                };
+                    const newCollege = {
+                      researchTotal: total
+                    };
 
-                College.findOneAndUpdate(
-                  { "name.fullName": req.body.college },
-                  { $set: newCollege },
-                  { new: true }
-                ).then(college => res.json(college));
-              }
+                    College.findOneAndUpdate(
+                      { "name.fullName": req.body.college },
+                      { $set: newCollege },
+                      { new: true }
+                    ).then(college => res.json(college));
+                  }
+                }
+              );
+            } catch (error) {
+              console.log(error);
             }
-          );
-        } catch (error) {
-          console.log(error);
-        }
+          }
+        });
       }
     });
   }
@@ -298,17 +318,6 @@ router.post(
         console.log("Image successfully uploaded.");
       });
 
-      // base64Img.img(
-      //   req.body.images[i],
-      //   "client/public/images/researchImages/",
-      //   req.body.id + "-" + rand,
-      //   function(err, filepath) {
-      //     if (err) {
-      //       console.log(err);
-      //     }
-      //   }
-      // );
-
       imageArray.push(req.body.id + "-" + rand + ".png");
     }
 
@@ -371,13 +380,6 @@ router.post(
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
-      // try {
-      //   fs.unlinkSync(
-      //     `client/public/documents/researchDocuments/${req.body.oldFile}`
-      //   );
-      // } catch (error) {
-      //   //console.log(error);
-      // }
     }
     // S3 upload
     s3 = new AWS.S3();

@@ -12,6 +12,7 @@ module.exports = function validateResearchInput(data) {
   data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
   data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
+  data.researchId = !isEmpty(data.researchId) ? data.researchId : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   //data.author = !isEmpty(data.author) ? data.author : "";
 
@@ -37,6 +38,10 @@ module.exports = function validateResearchInput(data) {
 
   if (!Validator.isLength(striptags(data.abstract), { min: 100 })) {
     errors.abstract = "Abstract must be at least 100 characters";
+  }
+
+  if (Validator.isEmpty(data.researchId)) {
+    errors.researchId = "Research ID is required";
   }
 
   if (Validator.isEmpty(data.schoolYear)) {
