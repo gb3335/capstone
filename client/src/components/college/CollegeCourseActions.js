@@ -13,6 +13,10 @@ class CollegeCourseActions extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ coursebin: nextProps.coursebin });
+  }
+
   onToggleCourseBin = e => {
     if (this.props.college.coursebin === false) {
       this.props.toggleCourseBin(1);
@@ -22,25 +26,46 @@ class CollegeCourseActions extends Component {
   };
 
   render() {
+    let courseBinAction;
+    let courseBinActionForAuth;
+
+    if (this.state.coursebin) {
+      courseBinAction = (
+        <Link to="#" onClick={this.onToggleCourseBin} className="btn btn-light">
+          <i className="fas fa-list-ul text-success mr-1" /> Courses
+        </Link>
+      );
+    } else {
+      courseBinAction = (
+        <Link to="#" onClick={this.onToggleCourseBin} className="btn btn-light">
+          <i className="fas fa-trash-alt text-danger mr-1" /> Bin
+        </Link>
+      );
+    }
+
+    if (this.props.auth.isAuthenticated) {
+      courseBinActionForAuth = courseBinAction;
+    }
+
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         <Link to="/add-course" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" /> Add Course
         </Link>
-        <Link to="#" onClick={this.onToggleCourseBin} className="btn btn-light">
-          <i className="fas fa-trash text-danger mr-1" /> Bin
-        </Link>
+        {courseBinActionForAuth}
       </div>
     );
   }
 }
 CollegeCourseActions.propTypes = {
-  toggleCourseBin: PropTypes.func.isRequired
+  toggleCourseBin: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   college: state.college,
-  coursebin: state.college.coursebin
+  coursebin: state.college.coursebin,
+  auth: state.auth
 });
 
 export default connect(

@@ -202,7 +202,7 @@ class College extends Component {
                 aria-controls="reports"
               >
                 <i className="fas fa-poll-h mr-2" />
-                Reports
+                Create Report
               </a>
             </div>
           </div>

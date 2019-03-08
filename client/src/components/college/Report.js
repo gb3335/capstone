@@ -58,13 +58,26 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
+            name="status"
+            id="status"
+            value={this.state.status}
+            onChange={this.onChange}
+          />
+          <label className="form-check-label" htmlFor="status">
+            Status
+          </label>
+        </div>
+        <div className="form-check">
+          <input
+            className="form-check-input"
+            type="checkbox"
             name="researchTotal"
             id="researchTotal"
             value={this.state.researchTotal}
             onChange={this.onChange}
           />
           <label className="form-check-label" htmlFor="researchTotal">
-            Research Count
+            Research
           </label>
         </div>
         <div className="form-check">
@@ -77,20 +90,7 @@ class Report extends Component {
             onChange={this.onChange}
           />
           <label className="form-check-label" htmlFor="journalTotal">
-            Journal Count
-          </label>
-        </div>
-        <div className="form-check">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            name="status"
-            id="status"
-            value={this.state.status}
-            onChange={this.onChange}
-          />
-          <label className="form-check-label" htmlFor="status">
-            Status
+            Journal
           </label>
         </div>
         <div className="form-check disabled">

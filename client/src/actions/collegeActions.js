@@ -165,11 +165,14 @@ export const addCourse = (courseData, history) => dispatch => {
 export const editCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/editcourse", courseData)
-    .then(history.push(`/colleges/${courseData.colInit}`), res =>
-      dispatch({
-        type: GET_COLLEGE,
-        payload: res.data
-      })
+    .then(
+      history.push(`/colleges/${courseData.colInit}`),
+      window.location.reload(),
+      res =>
+        dispatch({
+          type: GET_COLLEGE,
+          payload: res.data
+        })
     )
     .catch(err =>
       dispatch({
@@ -181,13 +184,14 @@ export const editCourse = (courseData, history) => dispatch => {
 
 // Delete Course
 export const deleteCourse = (course, history) => dispatch => {
-  if (window.confirm("Are you sure to delete?")) {
+  if (window.confirm("Are you sure?")) {
     dispatch(setCollegeLoading());
     axios
       .post(`/api/colleges/deletecourse`, course)
       .then(
         history.push(`/colleges`),
         history.push(`/colleges/${course.collegeInit}`),
+        window.location.reload(),
         res =>
           dispatch({
             type: GET_COLLEGE,
