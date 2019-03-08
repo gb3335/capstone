@@ -125,7 +125,13 @@ class Courses extends Component {
             <td>{cou.journalTotal}</td>
           </tr>
         ) : (
-          ""
+          <tr key={cou._id}>
+            <td />
+            <td />
+            <td />
+            <td />
+            <td />
+          </tr>
         )
       );
     }

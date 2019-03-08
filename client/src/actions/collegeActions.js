@@ -121,7 +121,6 @@ export const createCollege = (collegeData, history) => dispatch => {
     .post("/api/colleges/", collegeData)
     .then(res => {
       history.push(`/colleges/${collegeData.initials}`);
-      window.location.reload();
     })
     .catch(err =>
       dispatch({
@@ -166,7 +165,12 @@ export const addCourse = (courseData, history) => dispatch => {
 export const editCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/editcourse", courseData)
-    .then(res => history.push(`/colleges/${courseData.colInit}`))
+    .then(history.push(`/colleges/${courseData.colInit}`), res =>
+      dispatch({
+        type: GET_COLLEGE,
+        payload: res.data
+      })
+    )
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

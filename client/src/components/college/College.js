@@ -18,14 +18,16 @@ import Report from "./Report";
 import CollegeCourseActions from "./CollegeCourseActions";
 
 class College extends Component {
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.match.params.initials) {
+      console.log("dfg");
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.match.params.initials) {
+      console.log("asd");
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
   }
@@ -67,7 +69,8 @@ class College extends Component {
   };
 
   render() {
-    const { college, loading } = this.props.college;
+    let { college, loading } = this.props.college;
+
     let collegeDetails;
     let collegeCourses;
     let collegeReports;
@@ -77,79 +80,80 @@ class College extends Component {
     let deletedAction;
     let statusAction;
 
-    if (this.props.auth.isAuthenticated) {
-      try {
-        if (college.deleted === 0) {
-          courseAction = <CollegeCourseActions />;
-        }
-        colAction = <CollegeActions />;
-      } catch (error) {}
-    }
-
-    if (college === null || loading) {
-      collegeContent = <Spinner />;
-    } else {
-      try {
-        collegeContent = "";
-        collegeDetails = (
-          <div>
-            <CollegeHeader college={college} />
-            {colAction}
-            <CollegeDetails college={college} />
-          </div>
-        );
-        collegeCourses = (
-          <div>
-            {courseAction}
-            <CollegeCourses college={college} />
-          </div>
-        );
-
-        collegeReports = <Report />;
-
-        // collegeContent = (
-        //   <div>
-        //     <div hidden>
-        //       <p>{college.name.fullName}</p>
-        //     </div>
-
-        //     <CollegeHeader college={college} />
-        //     {colAction}
-        //     <CollegeDetails college={college} />
-        //     {courseAction}
-        //     <CollegeCourses college={college} />
-        //   </div>
-        // );
-      } catch (error) {}
-    }
     try {
-      if (college.deleted === 1) {
-        deletedAction = (
-          <a
-            className="list-group-item list-group-item-action btn btn-success"
-            href="#bin"
-            role="tab"
-            onClick={this.onRestoreCollege}
-          >
-            <i className="fas fa-recycle mr-2" />
-            Restore
-          </a>
-        );
-      } else {
-        deletedAction = (
-          <a
-            className="list-group-item list-group-item-action btn btn-danger"
-            href="#bin"
-            role="tab"
-            onClick={this.onDeleteCollege}
-          >
-            <i className="fas fa-trash mr-2" />
-            Move to Bin
-          </a>
-        );
+      if (this.props.auth.isAuthenticated) {
+        try {
+          if (college.deleted === 0) {
+            courseAction = <CollegeCourseActions />;
+          }
+          colAction = <CollegeActions />;
+        } catch (error) {}
       }
-    } catch (error) {}
 
+      if (college === null || loading) {
+        collegeContent = <Spinner />;
+      } else {
+        try {
+          collegeContent = "";
+          collegeDetails = (
+            <div>
+              <CollegeHeader college={college} />
+              {colAction}
+              <CollegeDetails college={college} />
+            </div>
+          );
+          collegeCourses = (
+            <div>
+              {courseAction}
+              <CollegeCourses college={college} />
+            </div>
+          );
+
+          collegeReports = <Report />;
+
+          // collegeContent = (
+          //   <div>
+          //     <div hidden>
+          //       <p>{college.name.fullName}</p>
+          //     </div>
+
+          //     <CollegeHeader college={college} />
+          //     {colAction}
+          //     <CollegeDetails college={college} />
+          //     {courseAction}
+          //     <CollegeCourses college={college} />
+          //   </div>
+          // );
+        } catch (error) {}
+      }
+      try {
+        if (college.deleted === 1) {
+          deletedAction = (
+            <a
+              className="list-group-item list-group-item-action btn btn-success"
+              href="#bin"
+              role="tab"
+              onClick={this.onRestoreCollege}
+            >
+              <i className="fas fa-recycle mr-2" />
+              Restore
+            </a>
+          );
+        } else {
+          deletedAction = (
+            <a
+              className="list-group-item list-group-item-action btn btn-danger"
+              href="#bin"
+              role="tab"
+              onClick={this.onDeleteCollege}
+            >
+              <i className="fas fa-trash mr-2" />
+              Move to Bin
+            </a>
+          );
+        }
+      } catch (error) {}
+    } catch (error) {}
     return (
       <div className="college">
         {/* Back button */}

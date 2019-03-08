@@ -3,7 +3,10 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 
-import { getColleges } from "../../actions/collegeActions";
+import {
+  getColleges,
+  getCollegeByInitials
+} from "../../actions/collegeActions";
 
 import CollegeItem from "./CollegeItem";
 import CollegeItemList from "./CollegeItemList";
@@ -24,6 +27,12 @@ class Colleges extends Component {
 
   componentDidMount() {
     this.props.getColleges();
+    let initials;
+    try {
+      initials = this.props.college.colleges[0].name.initials;
+    } catch (error) {}
+
+    this.props.getCollegeByInitials(initials);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -122,6 +131,7 @@ class Colleges extends Component {
 
 Colleges.propTypes = {
   getColleges: PropTypes.func.isRequired,
+  getCollegeByInitials: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -135,5 +145,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getColleges }
+  { getColleges, getCollegeByInitials }
 )(Colleges);
