@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
+import Tesseract from "tesseract.js";
+
 import "react-quill/dist/quill.snow.css";
 
 import { createResearch } from "../../actions/researchActions";
@@ -20,6 +22,7 @@ class AddResearch extends Component {
       college: "",
       course: "",
       abstract: "",
+      researchId: "",
       pages: "",
       schoolYear: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
@@ -46,6 +49,7 @@ class AddResearch extends Component {
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
+      researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages
     };
@@ -86,6 +90,21 @@ class AddResearch extends Component {
   handleChange = value => {
     this.setState({ abstract: value });
     this.refs.resBtn.removeAttribute("disabled");
+  };
+
+  onOCR = e => {
+    try {
+      let files = e.target.files;
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = e => {
+        Tesseract.recognize(e.target.result).then(function(result) {
+          console.log(result);
+        });
+      };
+    } catch (error) {
+      console.log("Not Blob");
+    }
   };
 
   render() {
@@ -186,12 +205,14 @@ class AddResearch extends Component {
                     />
                   </div>
                 </div>
+                <input type="file" onChange={this.onOCR} name="name" />
                 <ReactQuill
                   style={{ height: "20rem" }}
                   placeholder="* Abstract"
                   value={this.state.abstract}
                   onChange={this.handleChange}
                 />
+
                 <br />
                 <br />
                 <br />
@@ -200,15 +221,14 @@ class AddResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
-                {/* <TextAreaFieldGroup
-                  placeholder="* Abstract"
-                  name="abstract"
-                  value={this.state.abstract}
+                <TextFieldGroup
+                  placeholder="* Research ID"
+                  name="researchId"
+                  value={this.state.researchId}
                   onChange={this.onChange}
-                  error={errors.abstract}
-                  info="Abstract of the research"
-                  rows="10"
-                /> */}
+                  error={errors.researchId}
+                  info="Research ID give by the college library"
+                />
                 <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"

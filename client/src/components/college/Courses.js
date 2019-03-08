@@ -51,50 +51,53 @@ class Courses extends Component {
                 <td>{cou.researchTotal}</td>
                 <td>{cou.journalTotal}</td>
                 <td>
-                  <Link
-                    to={{
-                      pathname: "/edit-course",
-                      course: {
-                        courseName: cou.name,
-                        courseInitials: cou.initials,
-                        courseTotalRes: cou.researchTotal,
-                        courseTotalJour: cou.journalTotal,
-                        courseId: cou._id,
-                        collegeId: college._id,
-                        courseStatus: cou.status,
-                        courseDeleted: cou.deleted
-                      }
-                    }}
-                    className="btn btn-info"
-                  >
-                    <i
-                      className="fas fa-pen text-light"
-                      style={{ fontSize: "12px" }}
-                    />
-                  </Link>
-                  {" - "}
-                  <button
-                    onClick={this.onRestoreClick.bind(
-                      this,
-                      (course = {
-                        courseName: cou.name,
-                        courseInitials: cou.initials,
-                        courseTotalRes: cou.researchTotal,
-                        courseTotalJour: cou.journalTotal,
-                        courseId: cou._id,
-                        collegeId: college._id,
-                        courseStatus: cou.status,
-                        courseDeleted: cou.deleted,
-                        collegeInit: college.name.initials
-                      })
-                    )}
-                    className="btn btn-success"
-                  >
-                    <i
-                      className="fas fa-recycle text-light"
-                      style={{ fontSize: "12px" }}
-                    />
-                  </button>
+                  <div className="btn-group">
+                    <Link
+                      to={{
+                        pathname: "/edit-course",
+                        course: {
+                          courseName: cou.name,
+                          courseInitials: cou.initials,
+                          courseTotalRes: cou.researchTotal,
+                          courseTotalJour: cou.journalTotal,
+                          courseId: cou._id,
+                          collegeId: college._id,
+                          courseStatus: cou.status,
+                          courseDeleted: cou.deleted
+                        }
+                      }}
+                      className="btn btn-info"
+                      title="Edit Course"
+                    >
+                      <i
+                        className="fas fa-pen text-light"
+                        style={{ fontSize: "12px" }}
+                      />
+                    </Link>
+                    <button
+                      onClick={this.onRestoreClick.bind(
+                        this,
+                        (course = {
+                          courseName: cou.name,
+                          courseInitials: cou.initials,
+                          courseTotalRes: cou.researchTotal,
+                          courseTotalJour: cou.journalTotal,
+                          courseId: cou._id,
+                          collegeId: college._id,
+                          courseStatus: cou.status,
+                          courseDeleted: cou.deleted,
+                          collegeInit: college.name.initials
+                        })
+                      )}
+                      className="btn btn-success"
+                      title="Restore Course"
+                    >
+                      <i
+                        className="fas fa-recycle text-light"
+                        style={{ fontSize: "12px" }}
+                      />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ) : (
@@ -144,50 +147,53 @@ class Courses extends Component {
                 <td>{cou.researchTotal}</td>
                 <td>{cou.journalTotal}</td>
                 <td>
-                  <Link
-                    to={{
-                      pathname: "/edit-course",
-                      course: {
-                        courseName: cou.name,
-                        courseInitials: cou.initials,
-                        courseTotalRes: cou.researchTotal,
-                        courseTotalJour: cou.journalTotal,
-                        courseId: cou._id,
-                        collegeId: college._id,
-                        courseStatus: cou.status,
-                        courseDeleted: cou.deleted
-                      }
-                    }}
-                    className="btn btn-info"
-                  >
-                    <i
-                      className="fas fa-pen text-light"
-                      style={{ fontSize: "12px" }}
-                    />
-                  </Link>
-                  {" - "}
-                  <button
-                    onClick={this.onDeleteClick.bind(
-                      this,
-                      (course = {
-                        courseName: cou.name,
-                        courseInitials: cou.initials,
-                        courseTotalRes: cou.researchTotal,
-                        courseTotalJour: cou.journalTotal,
-                        courseId: cou._id,
-                        collegeId: college._id,
-                        courseStatus: cou.status,
-                        courseDeleted: cou.deleted,
-                        collegeInit: college.name.initials
-                      })
-                    )}
-                    className="btn btn-danger"
-                  >
-                    <i
-                      className="fas fa-trash text-light"
-                      style={{ fontSize: "12px" }}
-                    />
-                  </button>
+                  <div className="btn-group">
+                    <Link
+                      to={{
+                        pathname: "/edit-course",
+                        course: {
+                          courseName: cou.name,
+                          courseInitials: cou.initials,
+                          courseTotalRes: cou.researchTotal,
+                          courseTotalJour: cou.journalTotal,
+                          courseId: cou._id,
+                          collegeId: college._id,
+                          courseStatus: cou.status,
+                          courseDeleted: cou.deleted
+                        }
+                      }}
+                      className="btn btn-info"
+                      title="Edit Course"
+                    >
+                      <i
+                        className="fas fa-pen text-light"
+                        style={{ fontSize: "12px" }}
+                      />
+                    </Link>
+                    <button
+                      onClick={this.onDeleteClick.bind(
+                        this,
+                        (course = {
+                          courseName: cou.name,
+                          courseInitials: cou.initials,
+                          courseTotalRes: cou.researchTotal,
+                          courseTotalJour: cou.journalTotal,
+                          courseId: cou._id,
+                          collegeId: college._id,
+                          courseStatus: cou.status,
+                          courseDeleted: cou.deleted,
+                          collegeInit: college.name.initials
+                        })
+                      )}
+                      className="btn btn-danger"
+                      title="Delete Course"
+                    >
+                      <i
+                        className="fas fa-trash text-light"
+                        style={{ fontSize: "12px" }}
+                      />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ) : (
@@ -235,16 +241,15 @@ class Courses extends Component {
             <td>{cou.journalTotal}</td>
           </tr>
         ) : (
-          <tr key={cou._id}>
-            <td />
-            <td />
-            <td />
-            <td />
-            <td />
-          </tr>
+          ""
         )
       );
     }
+
+    // remove whitespace in course array
+    const courseFiltered = course.filter(function(el) {
+      return el !== "";
+    });
 
     return (
       <div style={{ overflowX: "auto" }}>
@@ -266,7 +271,7 @@ class Courses extends Component {
               <th />
             </tr>
           </thead>
-          <tbody>{course}</tbody>
+          <tbody>{courseFiltered}</tbody>
         </table>
       </div>
     );

@@ -30,13 +30,13 @@ class ResearchesAction extends Component {
     if (this.state.bin) {
       binAction = (
         <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
-          <i className="fas fa-list-ul text-success mr-1" /> Research List
+          <i className="fas fa-list-ul text-success mr-1" /> Researches
         </Link>
       );
     } else {
       binAction = (
         <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
-          <i className="fas fa-trash-alt text-danger mr-1" /> Research Bin
+          <i className="fas fa-trash-alt text-danger mr-1" /> Bin
         </Link>
       );
     }

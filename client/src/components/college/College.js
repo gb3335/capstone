@@ -20,14 +20,12 @@ import CollegeCourseActions from "./CollegeCourseActions";
 class College extends Component {
   componentWillMount() {
     if (this.props.match.params.initials) {
-      console.log("dfg");
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
   }
 
   componentDidMount() {
     if (this.props.match.params.initials) {
-      console.log("asd");
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
   }
@@ -151,6 +149,9 @@ class College extends Component {
               Move to Bin
             </a>
           );
+        }
+        if (college.course.length !== 0) {
+          deletedAction = "";
         }
       } catch (error) {}
     } catch (error) {}

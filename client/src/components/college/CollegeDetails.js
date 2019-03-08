@@ -7,6 +7,14 @@ import "./College.css";
 class CollegeDetails extends Component {
   render() {
     const { college } = this.props;
+    let activeCourseLenght = 0;
+
+    college.course.map(cou => {
+      if (cou.status === 0 && cou.deleted === 0) {
+        activeCourseLenght++;
+      }
+    });
+
     const status =
       college.status === 0 ? (
         <span className="badge badge-success">Active</span>
@@ -36,7 +44,7 @@ class CollegeDetails extends Component {
                 </p>
                 <p className="infoText">
                   <i className="fas fa-university" />{" "}
-                  <span>Total Courses: {college.course.length}</span>
+                  <span>Total Courses: {activeCourseLenght}</span>
                 </p>
               </div>
               <div className="col-md-4">
