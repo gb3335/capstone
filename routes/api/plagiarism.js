@@ -79,7 +79,6 @@ router.post("/local", (req, res) => {
   //   console.log(data); //print all text    
   // });
 
-    
   // let extext=""
   // fs.readFile(`./routes/downloadedDocu/${docuId}.pdf`, (err, pdfBuffer) => {
   //   // pdfBuffer contains the file content
