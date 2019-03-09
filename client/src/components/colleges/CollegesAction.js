@@ -2,18 +2,40 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import Modal from "react-modal";
 
 import {
   toggleCollegeBin,
-  toggleCollegeList
+  toggleCollegeList,
+  createReportForColleges
 } from "../../actions/collegeActions";
+
+const customStyles = {
+  content: {
+    top: "35%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "10px",
+    width: "350px",
+    height: "340px"
+  }
+};
+
+Modal.setAppElement("#root");
 
 class CollegesActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
       bin: false,
-      list: false
+      list: false,
+      modalIsOpen: false,
+      researchTotal: false,
+      journalTotal: false,
+      coursesTotal: false,
+      status: false
     };
   }
 
@@ -38,11 +60,66 @@ class CollegesActions extends Component {
     }
   };
 
+  openModal = () => {
+    this.setState({ modalIsOpen: true });
+  };
+
+  afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = "#2874A6";
+  };
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  };
+
+  onChange = e => {
+    let bool;
+    if (e.target.value === "false") {
+      bool = true;
+    } else {
+      bool = false;
+    }
+    this.setState({ [e.target.name]: bool });
+  };
+
+  onGenerateReport = () => {
+    if (
+      this.state.status === false &&
+      this.state.coursesTotal === false &&
+      this.state.researchTotal === false &&
+      this.state.journalTotal === false
+    ) {
+      alert("Please check at least one");
+    } else {
+      const name =
+        this.props.auth.user.firstName +
+        " " +
+        this.props.auth.user.middleName +
+        " " +
+        this.props.auth.user.lastName;
+
+      const collegesReportData = {
+        status: this.state.status,
+        coursesTotal: this.state.coursesTotal,
+        researchTotal: this.state.researchTotal,
+        journalTotal: this.state.journalTotal,
+        colleges: this.props.college.colleges,
+        typeOfReport: "List of Colleges",
+        printedBy: name
+      };
+
+      this.props.createReportForColleges(collegesReportData);
+      alert("Please wait while your report is being generated");
+    }
+  };
+
   render() {
     let binAction;
     let binActionForAuth;
     let listAction;
     let addAction;
+    let reportAction;
 
     if (this.state.bin) {
       binAction = (
@@ -78,6 +155,11 @@ class CollegesActions extends Component {
           <i className="fas fa-plus text-info mr-1" /> Add College
         </Link>
       );
+      reportAction = (
+        <Link to="#" onClick={this.openModal} className="btn btn-light">
+          <i className="fas fa-poll-h text-info mr-1" /> Create Report
+        </Link>
+      );
       binActionForAuth = binAction;
     }
 
@@ -85,6 +167,7 @@ class CollegesActions extends Component {
       <div>
         <div className="btn-group mb-3 btn-group-sm" role="group">
           {addAction}
+          {reportAction}
           {binActionForAuth}
         </div>
         <div
@@ -94,6 +177,94 @@ class CollegesActions extends Component {
         >
           {listAction}
         </div>
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <button
+            className="btn btn-danger"
+            style={{ float: "right", fontSize: "15px" }}
+            onClick={this.closeModal}
+          >
+            <i className="fas fa-times" />
+          </button>
+          <br />
+          <br />
+          <div className="row">
+            <div className="col-12">
+              <h2 ref={subtitle => (this.subtitle = subtitle)}>
+                Create Report
+              </h2>
+              <div>
+                <h4>Filter</h4>
+              </div>
+              <form>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="status"
+                    id="status"
+                    value={this.state.status}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="status">
+                    Status
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="coursesTotal"
+                    id="coursesTotal"
+                    value={this.state.coursesTotal}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="coursesTotal">
+                    Number of Course
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="researchTotal"
+                    id="researchTotal"
+                    value={this.state.researchTotal}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchTotal">
+                    Number of Researches
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="journalTotal"
+                    id="journalTotal"
+                    value={this.state.journalTotal}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="journalTotal">
+                    Number of Journals
+                  </label>
+                </div>
+                <br />
+                <input
+                  type="button"
+                  value="Generate Report"
+                  onClick={this.onGenerateReport}
+                  className="btn btn-info"
+                />
+              </form>
+            </div>
+          </div>
+        </Modal>
       </div>
     );
   }
@@ -101,7 +272,9 @@ class CollegesActions extends Component {
 CollegesActions.propTypes = {
   toggleCollegeBin: PropTypes.func.isRequired,
   toggleCollegeList: PropTypes.func.isRequired,
-  auth: PropTypes.object.isRequired
+  createReportForColleges: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  college: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -113,5 +286,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { toggleCollegeBin, toggleCollegeList }
+  { toggleCollegeBin, toggleCollegeList, createReportForColleges }
 )(CollegesActions);

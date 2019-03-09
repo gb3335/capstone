@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createReport } from "../../actions/collegeActions";
+import { createReportForCollege } from "../../actions/collegeActions";
 
 class Report extends Component {
   constructor(props) {
@@ -58,8 +58,7 @@ class Report extends Component {
         printedBy: name
       };
 
-      this.props.createReport(reportData);
-
+      this.props.createReportForCollege(reportData);
       alert("Please wait while your report is being generated");
     }
   };
@@ -134,7 +133,7 @@ class Report extends Component {
 }
 
 Report.propTypes = {
-  createReport: PropTypes.func.isRequired,
+  createReportForCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   research: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -148,5 +147,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createReport }
+  { createReportForCollege }
 )(Report);

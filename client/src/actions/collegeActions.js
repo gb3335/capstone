@@ -35,8 +35,8 @@ export const getColleges = () => dispatch => {
     );
 };
 
-// Create Report
-export const createReport = reportData => dispatch => {
+// Create Report for individual College
+export const createReportForCollege = reportData => dispatch => {
   axios
     .post("/api/colleges/createReport/college", reportData)
     .then(() =>
@@ -45,7 +45,28 @@ export const createReport = reportData => dispatch => {
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
 
-          saveAs(pdfBlob, "newCollegeReportPdf.pdf");
+          saveAs(pdfBlob, "CollegeReport.pdf");
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_COLLEGES,
+        payload: null
+      })
+    );
+};
+
+// Create Report for individual Colleges
+export const createReportForColleges = reportData => dispatch => {
+  axios
+    .post("/api/colleges/createReport/colleges", reportData)
+    .then(() =>
+      axios
+        .get("/api/colleges/fetchReport/colleges", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+
+          saveAs(pdfBlob, "CollegesReport.pdf");
         })
     )
     .catch(err =>

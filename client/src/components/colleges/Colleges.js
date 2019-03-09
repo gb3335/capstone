@@ -9,9 +9,11 @@ import {
 } from "../../actions/collegeActions";
 
 import CollegeItem from "./CollegeItem";
-import CollegeItemList from "./CollegeItemList";
+//import CollegeItemList from "./CollegeItemList";
 import CollegeItemGrid from "./CollegeItemGrid";
 import CollegesActions from "./CollegesAction";
+
+import "./Colleges.css";
 
 class Colleges extends Component {
   constructor(props) {
@@ -121,7 +123,10 @@ class Colleges extends Component {
               {title}
               <p className="lead text-center">{info}</p>
               {action}
-              <br />
+              <div id="showIfSmall">
+                <br />
+                <br />
+              </div>
               {loadingItem}
               <div className="row">{collegeItems}</div>
             </div>

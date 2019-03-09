@@ -105,13 +105,15 @@ class AddResearch extends Component {
 
     Tesseract.recognize(files[0])
       .progress(data => {
-        //console.log(data.status);
+        let dataProg = data.progress * 100;
+        dataProg = dataProg.toString();
+        dataProg = dataProg.substring(0, 5);
+
         this.setState({
-          ocrProgress: data.status + " at " + data.progress * 100 + "%"
+          ocrProgress: data.status + " at " + dataProg + "%"
         });
       })
       .then(data => {
-        //console.log(data.text);
         this.setState({ abstract: data.text });
       })
       .catch(console.error);
@@ -267,7 +269,7 @@ class AddResearch extends Component {
                   value={this.state.researchId}
                   onChange={this.onChange}
                   error={errors.researchId}
-                  info="Research ID give by the college library"
+                  info="Research ID given by the college library"
                 />
                 <TextFieldGroup
                   placeholder="* Pages"
@@ -278,7 +280,7 @@ class AddResearch extends Component {
                   info="Number of pages in your research"
                 />
                 <TextFieldGroup
-                  placeholder="* School Year"
+                  placeholder="* Academic Year"
                   name="schoolYear"
                   value={this.state.schoolYear}
                   onChange={this.onChange}
