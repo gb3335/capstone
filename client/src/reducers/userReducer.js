@@ -1,16 +1,33 @@
-import { GET_USERS } from "..action/types";
+import {
+  GET_USER,
+  GET_USERS,
+  USER_LOADING
+} from "../actions/types";
 
 const initialState = {
-  isAuthenticated: false,
-  user: {}
+  user: {},
+  users: {},
+  loading: false
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
+    case USER_LOADING:
+      return {
+        ...state,
+        loading: true
+      };
     case GET_USERS:
       return {
         ...state,
-        users: action.payload
+        users: action.payload,
+        loading: false
+      };
+    case GET_USER:
+      return {
+        ...state,
+        user: action.payload,
+        loading: false
       };
     default:
       return state;

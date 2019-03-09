@@ -124,7 +124,8 @@ router.post(
       },
       email: req.body.email,
       userName: req.body.username,
-      contact: req.body.contact
+      contact: req.body.contact,
+      college: req.body.college
     };
 
     if (profileData.userName.length > 0) {
@@ -204,6 +205,7 @@ router.post(
           avatar: "../../images/user.png",
           contact: req.body.contact,
           userType: req.body.usertype,
+          college: req.body.college,
           invitedBy: `${req.user.name.firstName} ${req.user.name.lastName}`
         });
 
@@ -213,16 +215,16 @@ router.post(
           subject: "Bulacan State University",
           text: `You are invited to be ${
             req.body.usertype
-          } in Bulacan State University by ${req.user.name.firstName} ${
+            } in Bulacan State University by ${req.user.name.firstName} ${
             req.user.name.lastName
-          }
+            }
                 
                 Login to <todo link>
                 Email: ${req.body.email}
                 Password: ${password}
                 `
         };
-        Transporter.sendMail(mailOptions, function(error, info) {
+        Transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
             errors.sendemail = "Sending Email Failed!";
             return res.status(400).json(errors);
@@ -383,5 +385,24 @@ router.get(
       );
   }
 );
+
+// @route   GET api/users/:id
+// @desc    Get user by id
+// @access  Public
+router.get("/:id", (req, res) => {
+  const errors = {};
+  User.findOne({ _id: req.params.id })
+    .populate("user", ["name", "avatar"])
+    .then(user => {
+      if (!user) {
+        errors.nouser = "There is no data for this research";
+        res.status(404).json(errors);
+      }
+
+      res.json(user);
+    })
+    .catch(err => res.status(404).json(err));
+});
+
 
 module.exports = router;

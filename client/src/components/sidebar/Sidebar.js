@@ -104,6 +104,16 @@ class Sidebar extends Component {
             </li>
             <li>
               <Link
+                to="/viewusers"
+                onClick={() => this.changeTitle("Accounts")}
+                className="parentA"
+              >
+                <i className="fas fa-user-alt" />
+                <p>Accounts</p>
+              </Link>
+            </li>
+            <li>
+              <Link
                 to="/colleges"
                 onClick={() => this.changeTitle("Colleges")}
                 className="parentA"
@@ -280,6 +290,17 @@ class Sidebar extends Component {
                 <p>Dashboard</p>
               </Link>
             </li>
+            <li>
+              <Link
+                to="/viewusers"
+                onClick={() => this.changeTitle("Accounts")}
+                className="parentA"
+              >
+                <i className="fas fa-user-alt" />
+                <p>Accounts</p>
+              </Link>
+            </li>
+            <li></li>
             <li>
               <Link
                 to="/colleges"

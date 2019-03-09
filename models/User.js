@@ -17,7 +17,7 @@ const UserSchema = new Schema({
             required: true
         }
     },
-    userName:{
+    userName: {
         type: String
     },
     email: {
@@ -35,23 +35,22 @@ const UserSchema = new Schema({
     contact: {
         type: String
     },
-    userType:{
+    userType: {
         type: String,
         required: true
     },
-    college:{
-        type: Schema.Types.ObjectId,
-        ref: 'colleges'
+    college: {
+        type: String
     },
-    isBlock:{
+    isBlock: {
         type: Number,
         default: 0
     },
-    isLock:{
+    isLock: {
         type: Number,
         default: 0
     },
-    invitedBy:{
+    invitedBy: {
         type: String,
         default: "NONE"
     },

@@ -28,6 +28,8 @@ import EditResearch from "../edit-research/EditResearch";
 
 //register and user
 import Register from "../register/Register";
+import ViewUsers from "../users/ViewUsers";
+import ViewUser from "../view-user/ViewUser";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
@@ -83,6 +85,9 @@ class Main extends Component {
               <Route exact path="/researches/:id" component={Research} />
               <Route exact path="/not-found" component={NotFound} />
               <Route exact path="/register" component={Register} />
+              <Route exact path="/viewusers" component={ViewUsers} />
+              <Route exact path="/viewusers/:id" component={ViewUser} />
+
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
               </Switch>

@@ -25,7 +25,7 @@ export const ACTIVITY_LOADING = "ACTIVITY_LOADING";
 
 // Register
 export const REGISTER_ACCOUNT = "REGISTER_ACCOUNT";
-export const GET_USERS = "GET_USERS";
+
 // Online Plagiarism
 export const PLAGIARISM_ONLINE = "PLAGIARISM_ONLINE";
 export const PLAGIARISM_ONLINE_INPUT = "PLAGIARISM_ONLINE_INPUT";
@@ -33,3 +33,9 @@ export const PLAGIARISM_ONLINE_INPUT = "PLAGIARISM_ONLINE_INPUT";
 // Local Plagiarism
 export const PLAGIARISM_LOCAL = "PLAGIARISM_LOCAL";
 export const PLAGIARISM_LOCAL_RESULT = "PLAGIARISM_LOCAL_RESULT";
+
+//Users
+export const GET_USERS = "GET_USERS";
+export const GET_USER = "GET_USER";
+export const USER_LOADING = "USER_LOADING";
+
