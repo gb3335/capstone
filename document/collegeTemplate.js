@@ -84,7 +84,7 @@ module.exports = ({
     }
   } else {
     totalcourse = "Not Available";
-    coursesList = "Not Available";
+    coursesListNoComma = "Not Available";
     coursesListHeader = "";
   }
 
@@ -128,7 +128,7 @@ module.exports = ({
     }
   } else {
     totalresearch = "Not Available";
-    researchList = "Not Available";
+    researchListNoComma = "Not Available";
     researchListHeader = "";
   }
 
