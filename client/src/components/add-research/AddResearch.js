@@ -77,7 +77,7 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            college.deleted === 0
+            course.deleted === 0 || course.status === 1
               ? this.state.courseOptions.push({
                   label: course.name,
                   value: course.name
@@ -86,6 +86,11 @@ class AddResearch extends Component {
           )
         : ""
     );
+  };
+
+  onChangeSelectCourse = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
   };
 
   handleChange = value => {
@@ -202,7 +207,7 @@ class AddResearch extends Component {
                       placeholder="Course"
                       name="course"
                       value={this.state.course}
-                      onChange={this.onChangeSelect}
+                      onChange={this.onChangeSelectCourse}
                       options={this.state.courseOptions}
                       error={errors.course}
                       info="Select your course"
@@ -235,6 +240,7 @@ class AddResearch extends Component {
                     onChange={this.onOCR}
                     name="name"
                     id="ocr"
+                    accept=".png, .jpg, .jpeg"
                   />
                   <p style={{ fontSize: "12px" }}>{progress}</p>
                 </div>

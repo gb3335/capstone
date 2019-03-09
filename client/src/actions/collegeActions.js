@@ -165,15 +165,7 @@ export const addCourse = (courseData, history) => dispatch => {
 export const editCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/editcourse", courseData)
-    .then(
-      history.push(`/colleges/${courseData.colInit}`),
-      window.location.reload(),
-      res =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: res.data
-        })
-    )
+    .then(res => history.push(`/colleges/${courseData.colInit}`))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

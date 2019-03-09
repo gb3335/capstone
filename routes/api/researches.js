@@ -106,6 +106,7 @@ router.post(
       college: req.body.college,
       course: req.body.course,
       abstract: req.body.abstract,
+      researchID: req.body.researchId,
       pages: req.body.pages,
       schoolYear: req.body.schoolYear,
       lastUpdate: Date.now()
@@ -144,8 +145,6 @@ router.post(
             errors.title = "Research Title already exists";
             res.status(400).json(errors);
           } else {
-            // Save Research
-            new Research(newResearch).save();
             try {
               // increase college research total
               College.findOne({ "name.fullName": req.body.college }).then(
@@ -157,11 +156,41 @@ router.post(
                     };
                     new Activity(newActivity).save();
 
+                    let courseResTotal;
+                    let dupliCourse;
+                    let courseId;
+                    college.course.map(cou => {
+                      if (cou.name === req.body.course) {
+                        courseId = cou._id;
+                        dupliCourse = cou;
+                        courseResTotal = ++dupliCourse.researchTotal;
+                        dupliCourse.researchTotal = courseResTotal;
+                      }
+                    });
+
+                    // Get remove index
+                    const removeIndex = college.course
+                      .map(item => item._id)
+                      .indexOf(courseId);
+
+                    console.log(removeIndex);
+
+                    // Splice out of array
+                    college.course.splice(removeIndex, 1);
+
+                    // Add to exp array
+                    college.course.unshift(dupliCourse);
+
+                    college.save();
+
                     const total = ++college.researchTotal;
 
                     const newCollege = {
                       researchTotal: total
                     };
+
+                    // Save Research
+                    new Research(newResearch).save();
 
                     College.findOneAndUpdate(
                       { "name.fullName": req.body.college },
