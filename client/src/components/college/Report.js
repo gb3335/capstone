@@ -36,7 +36,7 @@ class Report extends Component {
     } else {
       let researchOfCol = [];
       this.props.research.researches.map(research => {
-        if (research.college === this.props.research.research.college) {
+        if (research.college === this.props.college.college.name.fullName) {
           researchOfCol.push(research);
         }
       });
