@@ -77,11 +77,13 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            course.deleted === 0 || course.status === 1
-              ? this.state.courseOptions.push({
-                  label: course.name,
-                  value: course.name
-                })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
           )
         : ""

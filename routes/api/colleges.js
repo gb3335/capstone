@@ -492,7 +492,21 @@ router.post(
   "/createReport/college",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const printedBy = "Carl Justine";
+    const printedBy = req.body.printedBy;
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
     const today = new Date();
     const options = {
       border: {
@@ -506,8 +520,9 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
-            1}. ${today.getFullYear()}.`}</p>
+          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
+            months[today.getMonth()]
+          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }

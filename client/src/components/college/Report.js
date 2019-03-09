@@ -8,8 +8,8 @@ class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      researchTotal: false,
-      journalTotal: false,
+      research: false,
+      journal: false,
       status: false,
       courses: false
     };
@@ -27,20 +27,35 @@ class Report extends Component {
 
   onGenerateReport = e => {
     if (
-      this.state.researchTotal === false &&
-      this.state.journalTotal === false &&
+      this.state.research === false &&
+      this.state.journal === false &&
       this.state.status === false &&
       this.state.courses === false
     ) {
       alert("Please Check at least one");
     } else {
+      let researchOfCol = [];
+      this.props.research.researches.map(research => {
+        if (research.college === this.props.research.research.college) {
+          researchOfCol.push(research);
+        }
+      });
+
+      const name =
+        this.props.auth.user.firstName +
+        " " +
+        this.props.auth.user.middleName +
+        " " +
+        this.props.auth.user.lastName;
       const reportData = {
-        researchTotal: this.state.researchTotal,
-        journalTotal: this.state.journalTotal,
+        research: this.state.research,
+        journal: this.state.journal,
         status: this.state.status,
         courses: this.state.courses,
         college: this.props.college.college,
-        typeOfReport: "College Report"
+        researchOfCol: researchOfCol,
+        typeOfReport: "College Report",
+        printedBy: name
       };
 
       this.props.createReport(reportData);
@@ -71,12 +86,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="researchTotal"
-            id="researchTotal"
-            value={this.state.researchTotal}
+            name="research"
+            id="research"
+            value={this.state.research}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="researchTotal">
+          <label className="form-check-label" htmlFor="research">
             Research
           </label>
         </div>
@@ -84,12 +99,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="journalTotal"
-            id="journalTotal"
-            value={this.state.journalTotal}
+            name="journal"
+            id="journal"
+            value={this.state.journal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="journalTotal">
+          <label className="form-check-label" htmlFor="journal">
             Journal
           </label>
         </div>
@@ -120,11 +135,15 @@ class Report extends Component {
 
 Report.propTypes = {
   createReport: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  research: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  research: state.research,
+  auth: state.auth
 });
 
 export default connect(
