@@ -137,7 +137,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
         </div>
         <div class="reportBody" style="padding: 7px; border: 1px solid gray">
-          <div class="courses" style="font-size: 9px">
+          <div class="courses" style="font-size: 7px">
             <h4 style="font-size: 10px">Colleges:</h4>
             <table>
               ${collegesListHeader}
