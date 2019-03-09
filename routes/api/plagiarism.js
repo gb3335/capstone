@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const request = require("request");
-const pdfUtil = require('pdf-to-text');
 const fs = require('fs');
-const PdfReader = require('pdfreader').PdfReader;
 const pdf = require('pdf-parse');
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";

@@ -7,7 +7,8 @@ import {
   TOGGLE_COLLEGE_GRIDVIEW,
   TOGGLE_COLLEGE_LISTVIEW,
   TOGGLE_COURSE_BIN,
-  TOGGLE_COURSE_LIST
+  TOGGLE_COURSE_LIST,
+  CHANGE_BUTTON_STATUS
 } from "../actions/types";
 
 const initialState = {
@@ -16,7 +17,8 @@ const initialState = {
   loading: false,
   bin: false,
   list: false,
-  coursebin: false
+  coursebin: false,
+  buttonDisable: false
 };
 
 export default function(state = initialState, action) {
@@ -67,6 +69,11 @@ export default function(state = initialState, action) {
         ...state,
         colleges: action.payload,
         loading: false
+      };
+    case CHANGE_BUTTON_STATUS:
+      return {
+        ...state,
+        buttonDisable: action.payload
       };
     default:
       return state;
