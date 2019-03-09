@@ -29,7 +29,9 @@
     "react-window-size": "^1.2.2",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "stopword": "^0.1.13"
+    "stopword": "^0.1.13",
+    "tesseract.js": "^1.0.14",
+    "tesseract.ts": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

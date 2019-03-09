@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
-import Tesseract from "tesseract.js";
+import { Tesseract } from "tesseract.ts";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -26,7 +26,8 @@ class AddResearch extends Component {
       pages: "",
       schoolYear: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
-      errors: {}
+      errors: {},
+      ocrProgress: ""
     };
   }
 
@@ -93,22 +94,25 @@ class AddResearch extends Component {
   };
 
   onOCR = e => {
-    try {
-      let files = e.target.files;
-      let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-      reader.onload = e => {
-        Tesseract.recognize(e.target.result).then(function(result) {
-          console.log(result);
+    let files = e.target.files;
+
+    Tesseract.recognize(files[0])
+      .progress(data => {
+        //console.log(data.status);
+        this.setState({
+          ocrProgress: data.status + " at " + data.progress * 100 + "%"
         });
-      };
-    } catch (error) {
-      console.log("Not Blob");
-    }
+      })
+      .then(data => {
+        //console.log(data.text);
+        this.setState({ abstract: data.text });
+      })
+      .catch(console.error);
   };
 
   render() {
     const { college, errors } = this.props;
+    const progress = this.state.ocrProgress;
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
@@ -205,7 +209,33 @@ class AddResearch extends Component {
                     />
                   </div>
                 </div>
-                <input type="file" onChange={this.onOCR} name="name" />
+
+                <div>
+                  <label
+                    to="#"
+                    htmlFor="ocr"
+                    className="btn btn-light"
+                    style={{ fontSize: "12px" }}
+                  >
+                    <i className="fas fa-file-image" />
+                  </label>
+
+                  <input
+                    type="file"
+                    style={{
+                      border: 0,
+                      opacity: 0,
+                      position: "absolute",
+                      pointerEvents: "none",
+                      width: "1px",
+                      height: "1px"
+                    }}
+                    onChange={this.onOCR}
+                    name="name"
+                    id="ocr"
+                  />
+                  <p style={{ fontSize: "12px" }}>{progress}</p>
+                </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
                   placeholder="* Abstract"
