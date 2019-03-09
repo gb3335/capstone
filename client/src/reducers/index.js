@@ -7,6 +7,7 @@ import errorReducer from "./errorReducer";
 import collegeReducer from "./collegeReducer";
 import researchReducer from "./researchReducer";
 import activityReducer from "./activityReducer";
+import userReducer from "./userReducer";
 
 export default combineReducers({
   sidebar: sidebarReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
   localPlagiarism: localPlagiarismReducer,
   college: collegeReducer,
   research: researchReducer,
-  activity: activityReducer
+  activity: activityReducer,
+  users: userReducer
 });

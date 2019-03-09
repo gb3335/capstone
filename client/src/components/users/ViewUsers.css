@@ -1,0 +1,25 @@
+.img{
+  padding-left:3%;
+  width:70px;
+  
+}
+.img2{
+  padding-left:0%;
+  width:150px;
+  height: 0%
+}
+.pad{
+  padding-left: 70px;
+}
+.fontsize{
+  font-size: 200%;
+ font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+.fontsize2{
+  font-size: 150%;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+ 
+}
+.pointer:hover{
+  cursor: none;
+}

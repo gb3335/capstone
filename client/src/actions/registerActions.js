@@ -8,9 +8,9 @@ export const createAccount = (userData, history) => dispatch => {
     .post("/api/users/register", userData)
     .then(res => {
       if (userData.id) {
-        history.push(`/dashboard`);
+        history.push(`/viewusers`);
       } else {
-        history.push(`/dashboard`);
+        history.push(`/viewusers`);
       }
     })
     .catch(err =>

@@ -13,7 +13,7 @@ const initialState = {
   bin: false
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case RESEARCH_LOADING:
       return {

@@ -89,7 +89,7 @@ class Research extends Component {
             {doc}
           </div>
         );
-      } catch (error) {}
+      } catch (error) { }
     }
 
     return (
