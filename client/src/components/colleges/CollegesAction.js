@@ -105,7 +105,7 @@ class CollegesActions extends Component {
         researchTotal: this.state.researchTotal,
         journalTotal: this.state.journalTotal,
         colleges: this.props.college.colleges,
-        typeOfReport: "List of Colleges",
+        typeOfReport: "Colleges Report",
         printedBy: name
       };
 
@@ -210,6 +210,7 @@ class CollegesActions extends Component {
                     id="status"
                     value={this.state.status}
                     onChange={this.onChange}
+                    checked={this.state.status}
                   />
                   <label className="form-check-label" htmlFor="status">
                     Status
@@ -223,6 +224,7 @@ class CollegesActions extends Component {
                     id="coursesTotal"
                     value={this.state.coursesTotal}
                     onChange={this.onChange}
+                    checked={this.state.coursesTotal}
                   />
                   <label className="form-check-label" htmlFor="coursesTotal">
                     Number of Course
@@ -236,6 +238,7 @@ class CollegesActions extends Component {
                     id="researchTotal"
                     value={this.state.researchTotal}
                     onChange={this.onChange}
+                    checked={this.state.researchTotal}
                   />
                   <label className="form-check-label" htmlFor="researchTotal">
                     Number of Researches
@@ -249,6 +252,7 @@ class CollegesActions extends Component {
                     id="journalTotal"
                     value={this.state.journalTotal}
                     onChange={this.onChange}
+                    checked={this.state.journalTotal}
                   />
                   <label className="form-check-label" htmlFor="journalTotal">
                     Number of Journals

@@ -10,34 +10,46 @@ module.exports = ({
   let collegesListNoComma = "";
   let collegesListHeader;
 
+  let totalNumOfColleges = 0;
+  let numberOfColForEndRow = 0;
+
   let totalcol = colleges.length;
+
+  if (status === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (coursesTotal === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (researchTotal === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (journalTotal === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  numberOfColForEndRow = 5 + numberOfColForEndRow;
 
   if (totalcol == 0) {
     collegesList = "No Researches in this College";
     collegesListHeader = "";
   } else {
     collegesList = colleges.map(
-      college =>
+      (college, index) =>
         "<tr>" +
+        `<td>${++index}</td>` +
         `<td>${college.name.fullName}</td>` +
         `<td>${college.name.initials}</td>` +
         `<td>${college.librarian}</td>` +
-        `<td>${
+        `${
           status === true
             ? college.deleted === 0
-              ? "Active"
-              : "Deleted"
-            : "Not Available"
-        }</td>` +
-        `<td>${
-          coursesTotal === true ? college.course.length : "Not Available"
-        }</td>` +
-        `<td>${
-          researchTotal === true ? college.researchTotal : "Not Available"
-        }</td>` +
-        `<td>${
-          journalTotal === true ? college.journalTotal : "Not Available"
-        }</td>` +
+              ? "<td>Active</td>"
+              : "<td>Deleted</td>"
+            : ""
+        }` +
+        `${coursesTotal === true ? `<td>${college.course.length}</td>` : ""}` +
+        `${researchTotal === true ? `<td>${college.researchTotal}</td>` : ""}` +
+        `${journalTotal === true ? `<td>${college.journalTotal}</td>` : ""}` +
         `<td>${new Date(college.lastUpdate.date).toLocaleString()}</td>` +
         "</tr>"
     );
@@ -46,16 +58,23 @@ module.exports = ({
       collegesListNoComma = collegesListNoComma + item;
     });
 
+    totalNumOfColleges = collegesList.length;
+
+    collegesListNoComma =
+      collegesListNoComma +
+      `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
+
     collegesListHeader =
       "<tr>" +
-      "<th>Name</th>" +
-      "<th>Initials</th>" +
-      "<th>Librarian</th>" +
-      "<th>Status</th>" +
-      "<th>Total Courses</th>" +
-      "<th>Total Researches</th>" +
-      "<th>Total Journals</th>" +
-      "<th>Updated on</th>" +
+      "<th>NO</th>" +
+      "<th>NAME</th>" +
+      "<th>INITIALS</th>" +
+      "<th>LIBRARIAN</th>" +
+      `${status === true ? "<th>STATUS</th>" : ""}` +
+      `${coursesTotal === true ? "<th>TOTAL COURSES</th>" : ""}` +
+      `${researchTotal === true ? "<th>TOTAL RESEARCHES</th>" : ""}` +
+      `${journalTotal === true ? "<th>TOTAL JOURNALS</th>" : ""}` +
+      "<th>UPDATED ON</th>" +
       "</tr>";
   }
 
@@ -92,6 +111,7 @@ module.exports = ({
           width: 5rem;
           height: 5rem;
           float: right;
+          visibility:hidden;
         }
   
         table {
@@ -108,7 +128,13 @@ module.exports = ({
         }
   
         tr:nth-child(even) {
-          background-color: #dddddd;
+          background-color: #000000;
+          color: white;
+        }
+
+        .blank_row {
+            height: 10px !important; /* overwrites any other rules */
+            background-color: #FFFFFF;
         }
       </style>
     </head>
@@ -120,31 +146,32 @@ module.exports = ({
             alt="bulsu-logo"
             class="bulsu-logo"
           />
+
           <img
-            src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
-            alt="cict-logo"
+            src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+            alt="bulsu-logo"
             class="cict-logo"
           />
+         
+          <br />
+          Republic of the Philippines
           <br />
           Bulacan State University
           <br />
-          City of Malolos
-          <br />
-          College of Information and Communications Technology
+          City of Malolos, Bulacan
           <br />
           <br />
           <br />
           <h4>${typeOfReport}</h4>
+          <h4>University Research Office</h4>
         </div>
-        <div class="reportBody" style="padding: 7px; border: 1px solid gray">
           <div class="courses" style="font-size: 7px">
-            <h4 style="font-size: 10px">Colleges:</h4>
+            <p>Total # of Colleges: ${totalNumOfColleges}    Date Printed: Month day, year hh:mm  AM or PM</p>
             <table>
               ${collegesListHeader}
               ${collegesListNoComma}
             </table>
           </div>
-        </div>
       </div>
     </body>
   </html>

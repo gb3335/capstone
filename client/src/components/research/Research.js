@@ -73,28 +73,132 @@ class Research extends Component {
               </div>
               <div className="col-md-6" />
             </div>
+            <div className="row" style={{ margin: "5px" }}>
+              <div className="col-md-3">
+                <br />
+                <div className="list-group" id="list-tab" role="tablist">
+                  <a
+                    className="list-group-item list-group-item-action active"
+                    id="list-details-list"
+                    data-toggle="list"
+                    href="#list-details"
+                    role="tab"
+                    aria-controls="details"
+                  >
+                    <i className="fas fa-info-circle mr-2" />
+                    Research Details
+                  </a>
+                  <a
+                    className="list-group-item list-group-item-action"
+                    id="list-abstract-list"
+                    data-toggle="list"
+                    href="#list-abstract"
+                    role="tab"
+                    aria-controls="abstract"
+                  >
+                    <i class="fas fa-file-alt mr-2" />
+                    Abstract
+                  </a>
 
-            <ResearchHeader research={research} />
-            <br />
-            {researchAction}
-            <ResearchAbstract research={research} />
-            <br />
-            {authorAction}
-            <ResearchAuthors research={research} />
-            <br />
-            {imageAction}
-            <ResearchImages research={research} />
-            <br />
-            {docAction}
-            {doc}
+                  <a
+                    className="list-group-item list-group-item-action"
+                    id="list-authors-list"
+                    data-toggle="list"
+                    href="#list-authors"
+                    role="tab"
+                    aria-controls="authors"
+                  >
+                    <i class="fas fa-users mr-2" />
+                    Authors
+                  </a>
+
+                  <a
+                    className="list-group-item list-group-item-action"
+                    id="list-pictures-list"
+                    data-toggle="list"
+                    href="#list-pictures"
+                    role="tab"
+                    aria-controls="pictures"
+                  >
+                    <i class="fas fa-images mr-2" />
+                    Pictures
+                  </a>
+
+                  <a
+                    className="list-group-item list-group-item-action"
+                    id="list-document-list"
+                    data-toggle="list"
+                    href="#list-document"
+                    role="tab"
+                    aria-controls="document"
+                  >
+                    <i class="fas fa-file mr-2" />
+                    Document
+                  </a>
+                </div>
+              </div>
+
+              <div className="col-md-9">
+                <br />
+                <div className="tab-content" id="nav-tabContent">
+                  <div
+                    className="tab-pane fade show active"
+                    id="list-details"
+                    role="tabpanel"
+                    aria-labelledby="list-details-list"
+                  >
+                    <ResearchHeader research={research} />
+                    <br />
+                    <ResearchActions />
+                  </div>
+                  <div
+                    className="tab-pane fade"
+                    id="list-abstract"
+                    role="tabpanel"
+                    aria-labelledby="list-abstract-list"
+                  >
+                    <ResearchAbstract research={research} />
+                  </div>
+                  <div
+                    className="tab-pane fade"
+                    id="list-authors"
+                    role="tabpanel"
+                    aria-labelledby="list-authors-list"
+                  >
+                    {authorAction}
+                    <ResearchAuthors research={research} />
+                  </div>
+
+                  <div
+                    className="tab-pane fade"
+                    id="list-pictures"
+                    role="tabpanel"
+                    aria-labelledby="list-pictures-list"
+                  >
+                    {imageAction}
+                    <ResearchImages research={research} />
+                  </div>
+
+                  <div
+                    className="tab-pane fade"
+                    id="list-document"
+                    role="tabpanel"
+                    aria-labelledby="list-document-list"
+                  >
+                    {docAction}
+                    {doc}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         );
-      } catch (error) { }
+      } catch (error) {}
     }
 
     return (
       <div className="research">
-        <div className="container" style={{ padding: "1em" }}>
+        <div style={{ padding: "1em" }}>
           <div className="row">
             <div className="col-md-12">{researchContent}</div>
           </div>
