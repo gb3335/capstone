@@ -10,6 +10,7 @@ import {
 
 import CollegeItem from "./CollegeItem";
 import CollegeItemList from "./CollegeItemList";
+import CollegeItemGrid from "./CollegeItemGrid";
 import CollegesActions from "./CollegesAction";
 
 class Colleges extends Component {
@@ -43,12 +44,13 @@ class Colleges extends Component {
   render() {
     const { colleges, loading } = this.props.college;
     let collegeItems;
+    let loadingItem;
     let action;
     let title = <h1 className="display-4 text-center">Colleges</h1>;
     let info = "See all colleges and their informations";
 
     if (colleges === null || loading) {
-      collegeItems = <Spinner />;
+      loadingItem = <Spinner />;
     } else {
       if (colleges.length > 0) {
         if (this.props.auth.isAuthenticated) {
@@ -57,7 +59,7 @@ class Colleges extends Component {
             collegeItems = colleges.map(college =>
               college.deleted === 1 ? (
                 this.state.list ? (
-                  <CollegeItemList key={college._id} college={college} />
+                  <CollegeItemGrid key={college._id} college={college} />
                 ) : (
                   <CollegeItem key={college._id} college={college} />
                 )
@@ -75,7 +77,7 @@ class Colleges extends Component {
             collegeItems = colleges.map(college =>
               college.deleted === 0 ? (
                 this.state.list ? (
-                  <CollegeItemList key={college._id} college={college} />
+                  <CollegeItemGrid key={college._id} college={college} />
                 ) : (
                   <CollegeItem key={college._id} college={college} />
                 )
@@ -91,7 +93,7 @@ class Colleges extends Component {
           collegeItems = colleges.map(college =>
             college.deleted === 0 ? (
               this.state.list ? (
-                <CollegeItemList key={college._id} college={college} />
+                <CollegeItemGrid key={college._id} college={college} />
               ) : (
                 <CollegeItem key={college._id} college={college} />
               )
@@ -120,7 +122,8 @@ class Colleges extends Component {
               <p className="lead text-center">{info}</p>
               {action}
               <br />
-              {collegeItems}
+              {loadingItem}
+              <div className="row">{collegeItems}</div>
             </div>
           </div>
         </div>

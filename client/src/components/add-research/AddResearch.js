@@ -216,8 +216,10 @@ class AddResearch extends Component {
                     htmlFor="ocr"
                     className="btn btn-light"
                     style={{ fontSize: "12px" }}
+                    title="Use Image to Text"
                   >
-                    <i className="fas fa-file-image" />
+                    <i className="fas fa-file-image mr-1" />
+                    Image to Text
                   </label>
 
                   <input
