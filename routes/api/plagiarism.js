@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const request = require("request");
 const fs = require('fs');
-const pdf = require('pdf-parse');
 const extract = require('pdf-text-extract')
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
@@ -106,7 +105,7 @@ router.post("/local", (req, res) => {
     extext = text;
     extext = extext.toString().replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
 
-    
+
     console.dir(extext)
   })
 
