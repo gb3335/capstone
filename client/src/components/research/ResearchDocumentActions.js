@@ -53,11 +53,8 @@ class ResearchImageActions extends Component {
 
   onLocalCheck = e => {
     const input = {
-      q: "This food is good. This place is bad.",
-      text: "This food is good. This place is clean.",
-      flag: "true",
-      docu1: "docu1",
-      docu2: "docu2"
+      docuId : this.props.research._id,
+      document: this.props.research.document
     };
 
     this.props.checkPlagiarismLocal(input, this.props.history);

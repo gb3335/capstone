@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .item1 {
+        grid-area: header;
+      }
+      .item5 {
+        grid-area: footer;
+      }
+
+      .grid-container {
+        display: grid;
+        grid-template-areas:
+          "header header header header header header"
+          "menu main main main right right"
+          "menu footer footer footer footer footer";
+        grid-gap: 10px;
+        padding: 10px;
+        margin: 0.5in;
+      }
+
+      .grid-container > .headerr {
+        background-color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        padding: 20px 0;
+        font-size: 30px;
+      }
+
+      .bulsu-logo {
+        width: 5rem;
+        height: 5rem;
+        float: left;
+      }
+
+      .cict-logo {
+        width: 5rem;
+        height: 5rem;
+        float: right;
+      }
+
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      td,
+      th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid-container">
+      <div class="item1 headerr" style="font-size: 12px">
+        <img
+          src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+          alt="bulsu-logo"
+          class="bulsu-logo"
+        />
+        <img
+          src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
+          alt="cict-logo"
+          class="cict-logo"
+        />
+        <br />
+        Bulacan State University
+        <br />
+        City of Malolos
+        <br />
+        College of Information and Communications Technology
+        <br />
+        <br />
+        <br />
+        <h4>TYPE OF REPORT</h4>
+      </div>
+      <div class="reportBody" style="padding: 7px; border:solid gray">
+        <div style="font-size: 18px;">
+          <h3 style="float: left;">
+            Title
+          </h3>
+        </div>
+
+        <br />
+        <br />
+        <br />
+        <hr />
+        <div class="details" style="font-size: 12px">
+          <h4 style="font-size: 13px">Details:</h4>
+          <div>
+            <ul style="list-style-type:circle; text-align: left">
+              <li>Librarian</li>
+              <li>Status</li>
+              <li>Total Researches</li>
+              <li>Total Journals</li>
+              <li>Total Courses</li>
+              <li>Last Update</li>
+            </ul>
+          </div>
+        </div>
+        <div class="courses" style="font-size: 12px">
+          <h4 style="font-size: 13px">Courses:</h4>
+          <table>
+            <tr>
+              <th>Name</th>
+              <th>Initials</th>
+              <th>Status</th>
+              <th>Research Total</th>
+              <th>Journal Total</th>
+            </tr>
+            <tr>
+              <td>Alfreds Futterkiste</td>
+              <td>Maria Anders</td>
+              <td>Germany</td>
+              <td>Maria Anders</td>
+              <td>Germany</td>
+            </tr>
+            <tr>
+              <td>Centro comercial Moctezuma</td>
+              <td>Francisco Chang</td>
+              <td>Mexico</td>
+              <td>Maria Anders</td>
+              <td>Germany</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <br />
+      <hr />
+      <div class="item5">
+        <h5 style="float: left">Printed By: &nbsp;&nbsp;&nbsp; Date:</h5>
+        <h5 style="float: right">Page of</h5>
+      </div>
+    </div>
+  </body>
+</html>

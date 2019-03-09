@@ -138,8 +138,8 @@ class CollegeActions extends Component {
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
         {logoAction}
-        {statusAction}
-        {deletedAction}
+        {/* {statusAction}
+        {deletedAction} */}
       </div>
     );
   }

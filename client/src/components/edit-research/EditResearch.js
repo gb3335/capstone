@@ -19,6 +19,7 @@ class EditResearch extends Component {
 
     this.state = {
       title: research.title,
+      oldTitle: research.title,
       type: research.type,
       college: research.college,
       course: research.course,
@@ -44,6 +45,7 @@ class EditResearch extends Component {
 
     const researchData = {
       title: this.state.title,
+      oldTitle: this.state.oldTitle,
       type: this.state.type,
       college: this.state.college,
       course: this.state.course,

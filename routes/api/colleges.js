@@ -6,6 +6,9 @@ const randomColor = require("randomcolor");
 const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
+const path = require("path");
+const pdf = require("html-pdf");
+const pdfCollegeTemplate = require("../../document/collegeTemplate");
 
 // College model
 const College = require("../../models/College");
@@ -202,7 +205,7 @@ router.post(
               errors.fullName = "College Name already exists";
               res.status(400).json(errors);
             } else {
-              // Check if college name exists
+              // Check if college initials exists
               College.findOne({
                 "name.initials": newCollege.name.initials
               }).then(college => {
@@ -313,8 +316,17 @@ router.post(
       // Return any errors with 400 status
       return res.status(400).json(errors);
     }
-
     College.findOne({ _id: req.body.colId }).then(college => {
+      college.course.map(cou => {
+        if (req.body.name === cou.name) {
+          errors.name = "Course Name already exists";
+          res.status(400).json(errors);
+        }
+        if (req.body.initials === cou.initials) {
+          errors.initials = "Course Initials already exists";
+          res.status(400).json(errors);
+        }
+      });
       const newCourse = {
         name: req.body.name,
         initials: req.body.initials
@@ -347,19 +359,67 @@ router.post(
   }
 );
 
-// @route   DELETE api/colleges/course/:college_id/:course_id
-// @desc    Delete course from college
+// @route   POST api/colleges/editcourse
+// @desc    Edit course of college
 // @access  Private
-router.delete(
-  "/course/:college_id/:course_id",
+router.post(
+  "/editcourse",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    College.findOne({ _id: req.params.college_id })
-      .then(college => {
+    const { errors, isValid } = validateCourseInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+    let mark = false;
+
+    College.findOne({ _id: req.body.colId }).then(college => {
+      college.course.map(cou => {
+        if (req.body.name === cou.name && cou._id != req.body.courseId) {
+          errors.name = "Course Name already exists";
+          mark = true;
+          return res.status(400).json(errors);
+        }
+        if (
+          req.body.initials === cou.initials &&
+          cou._id != req.body.courseId
+        ) {
+          errors.initials = "Course Initials already exists";
+          mark = true;
+          return res.status(400).json(errors);
+        }
+      });
+      if (mark === false) {
+        const newCourse = {
+          name: req.body.name,
+          initials: req.body.initials,
+          status: req.body.deactivate === false ? 0 : 1,
+          deleted: req.body.deleted,
+          researchTotal: req.body.researchTotal,
+          journalTotal: req.body.journalTotal
+        };
+
+        // add activity
+        const newActivity = {
+          title:
+            "Course " + req.body.initials + " added in " + college.name.initials
+        };
+        new Activity(newActivity).save().then(college);
+
         // Get remove index
         const removeIndex = college.course
           .map(item => item.id)
-          .indexOf(req.params.course_id);
+          .indexOf(req.body.courseId);
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+
+        // Add to exp array
+        college.course.unshift(newCourse);
+
+        college.save();
 
         const newCollege = {
           lastUpdate: {
@@ -368,24 +428,112 @@ router.delete(
         };
 
         College.findOneAndUpdate(
-          { _id: req.params.college_id },
+          { _id: req.body.colId },
           { $set: newCollege },
           { new: true }
-        ).then(college);
+        ).then(college => res.json(college));
+      }
+    });
+  }
+);
 
+// @route   POST api/colleges/deletecourse
+// @desc    Delete course from college
+// @access  Private
+router.post(
+  "/deletecourse",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    College.findOne({ _id: req.body.collegeId })
+      .then(college => {
+        const newCourse = {
+          name: req.body.courseName,
+          initials: req.body.courseInitials,
+          status: req.body.courseStatus,
+          deleted: req.body.courseDeleted === 0 ? 1 : 0,
+          researchTotal: req.body.courseTotalRes,
+          journalTotal: req.body.courseTotalJour
+        };
+
+        const newCollege = {
+          lastUpdate: {
+            date: Date.now()
+          }
+        };
+        College.findOneAndUpdate(
+          { _id: req.body.collegeId },
+          { $set: newCollege },
+          { new: true }
+        );
         // add activity
         const newActivity = {
           title: "Course deleted in " + college.name.initials
         };
         new Activity(newActivity).save();
-
+        // Get remove index
+        const removeIndex = college.course
+          .map(item => item.id)
+          .indexOf(req.body.courseId);
         // Splice out of array
         college.course.splice(removeIndex, 1);
-
+        // Add to exp array
+        college.course.unshift(newCourse);
         // Save
         college.save().then(college => res.json(college));
       })
       .catch(err => res.status(404).json(err));
+  }
+);
+
+// @route   POST api/colleges/createReport
+// @desc    Generate individual College Report
+// @access  Private
+router.post(
+  "/createReport/college",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = "Carl Justine";
+    const today = new Date();
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
+            1}. ${today.getFullYear()}.`}</p>
+          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfCollegeTemplate(req.body), options)
+      .toFile("collegePdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/colleges/createReport
+// @desc    Send the generated pdf to client
+// @access  Private
+router.get(
+  "/fetchReport/college",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/collegePdf.pdf`);
   }
 );
 

@@ -23,6 +23,10 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
+  researchID: {
+    type: String,
+    required: true
+  },
   pages: {
     type: String,
     required: true

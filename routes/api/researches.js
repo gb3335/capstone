@@ -6,8 +6,8 @@ const isEmpty = require("../../validation/is-empty");
 const base64Img = require("base64-img");
 const fs = require("fs");
 const uuid = require("uuid");
-const PdfReader = require("pdfreader").PdfReader;
 const Tokenizer = require("sentence-tokenizer");
+const download = require('download-pdf')
 
 // Research model
 const Research = require("../../models/Research");
@@ -113,49 +113,69 @@ router.post(
 
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
-        // add activity
-        const newActivity = {
-          title: "Research " + req.body.title + " updated"
-        };
-        new Activity(newActivity).save();
+        Research.findOne({ title: req.body.title }).then(research => {
+          let title;
+          try {
+            title = research.title;
+          } catch (error) {
+            title = "";
+          }
+          if (research && title != req.body.oldTitle) {
+            errors.title = "Research Title already exists";
+            res.status(400).json(errors);
+          } else {
+            // add activity
+            const newActivity = {
+              title: "Research " + req.body.title + " updated"
+            };
+            new Activity(newActivity).save();
 
-        // update college
-        Research.findOneAndUpdate(
-          { _id: req.body.id },
-          { $set: newResearch },
-          { new: true }
-        ).then(research => res.json(research));
+            // update college
+            Research.findOneAndUpdate(
+              { _id: req.body.id },
+              { $set: newResearch },
+              { new: true }
+            ).then(research => res.json(research));
+          }
+        });
       } else {
-        // Save Research
-        new Research(newResearch).save();
-        try {
-          // increase college research total
-          College.findOne({ "name.fullName": req.body.college }).then(
-            college => {
-              if (college) {
-                // add activity
-                const newActivity = {
-                  title: "Research " + req.body.title + " added"
-                };
-                new Activity(newActivity).save();
+        Research.findOne({ title: req.body.title }).then(research => {
+          if (research) {
+            errors.title = "Research Title already exists";
+            res.status(400).json(errors);
+          } else {
+            // Save Research
+            new Research(newResearch).save();
+            try {
+              // increase college research total
+              College.findOne({ "name.fullName": req.body.college }).then(
+                college => {
+                  if (college) {
+                    // add activity
+                    const newActivity = {
+                      title: "Research " + req.body.title + " added"
+                    };
+                    new Activity(newActivity).save();
 
-                const total = ++college.researchTotal;
+                    const total = ++college.researchTotal;
 
-                const newCollege = {
-                  researchTotal: total
-                };
+                    const newCollege = {
+                      researchTotal: total
+                    };
 
-                College.findOneAndUpdate(
-                  { "name.fullName": req.body.college },
-                  { $set: newCollege },
-                  { new: true }
-                ).then(college => res.json(college));
-              }
+                    College.findOneAndUpdate(
+                      { "name.fullName": req.body.college },
+                      { $set: newCollege },
+                      { new: true }
+                    ).then(college => res.json(college));
+                  }
+                }
+              );
+            } catch (error) {
+              console.log(error);
             }
-          );
-        } catch (error) {
-          console.log(error);
-        }
+          }
+        });
       }
     });
   }
@@ -297,17 +317,6 @@ router.post(
         console.log("Image successfully uploaded.");
       });
 
-      // base64Img.img(
-      //   req.body.images[i],
-      //   "client/public/images/researchImages/",
-      //   req.body.id + "-" + rand,
-      //   function(err, filepath) {
-      //     if (err) {
-      //       console.log(err);
-      //     }
-      //   }
-      // );
-
       imageArray.push(req.body.id + "-" + rand + ".png");
     }
 
@@ -370,13 +379,6 @@ router.post(
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
-      // try {
-      //   fs.unlinkSync(
-      //     `client/public/documents/researchDocuments/${req.body.oldFile}`
-      //   );
-      // } catch (error) {
-      //   //console.log(error);
-      // }
     }
     // S3 upload
     s3 = new AWS.S3();
@@ -389,6 +391,8 @@ router.post(
     const type = base64String.split(";")[0].split("/")[1];
 
     const userId = 1;
+
+    let researchObject= {};
 
     params = {
       Bucket: "bulsu-capstone",
@@ -403,8 +407,34 @@ router.post(
       if (err) {
         return console.log(err);
       }
+      const docPath = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" + filename;
+      const options = {
+        directory: "./routes/downloadedDocu",
+        filename: req.body.researchId + ".pdf"
+      }
+      download(docPath, options, function(err){
+        if (err) console.log(err) 
+        console.log("Document successfully uploaded.");
+      }) 
 
-      console.log("Document successfully uploaded.");
+      const newDocument = {
+        document: filename,
+        lastUpdate: Date.now()
+      };
+      Research.findOne({ _id: req.body.researchId }).then(research => {
+        // add activity
+        const newActivity = {
+          title: "Document added to " + research.title
+        };
+        new Activity(newActivity).save();
+      });
+  
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newDocument },
+        { new: true }
+      ).then(research => res.json(research));
+     
     });
 
     // fs.writeFile(
@@ -506,24 +536,6 @@ router.post(
     //     );
     //   }
     // );
-
-    const newDocument = {
-      document: filename,
-      lastUpdate: Date.now()
-    };
-    Research.findOne({ _id: req.body.researchId }).then(research => {
-      // add activity
-      const newActivity = {
-        title: "Document added to " + research.title
-      };
-      new Activity(newActivity).save();
-    });
-
-    Research.findOneAndUpdate(
-      { _id: req.body.researchId },
-      { $set: newDocument },
-      { new: true }
-    ).then(research => res.json(research));
   }
 );
 

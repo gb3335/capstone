@@ -189,14 +189,12 @@ class Researches extends Component {
 
     return (
       <div className="researches">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
-              {title}
-              <p className="lead text-center">{info}</p>
-              {action}
-              {researchItems}
-            </div>
+        <div className="row" style={{ margin: "5px" }}>
+          <div className="col-md-12">
+            {title}
+            <p className="lead text-center">{info}</p>
+            {action}
+            {researchItems}
           </div>
         </div>
       </div>
