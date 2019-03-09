@@ -109,7 +109,6 @@ router.post("/local", (req, res) => {
     console.dir(extext)
   })
 
-
   // let dataBuffer = fs.readFileSync(`./routes/downloadedDocu/${docuId}.pdf`);
  
   // pdf(dataBuffer).then(function(data) {
