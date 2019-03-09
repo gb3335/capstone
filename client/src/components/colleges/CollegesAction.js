@@ -84,6 +84,7 @@ class CollegesActions extends Component {
   };
 
   onGenerateReport = () => {
+<<<<<<< HEAD
     if (
       this.state.status === false &&
       this.state.coursesTotal === false &&
@@ -111,6 +112,37 @@ class CollegesActions extends Component {
 
       this.props.createReportForColleges(collegesReportData);
       alert("Please wait while your report is being generated");
+=======
+    if(!this.props.college.buttonDisable){
+      if (
+        this.state.status === false &&
+        this.state.coursesTotal === false &&
+        this.state.researchTotal === false &&
+        this.state.journalTotal === false
+      ) {
+        alert("Please check at least one");
+      } else {
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
+  
+        const collegesReportData = {
+          status: this.state.status,
+          coursesTotal: this.state.coursesTotal,
+          researchTotal: this.state.researchTotal,
+          journalTotal: this.state.journalTotal,
+          colleges: this.props.college.colleges,
+          typeOfReport: "List of Colleges",
+          printedBy: name
+        };
+  
+        this.props.createReportForColleges(collegesReportData);
+        alert("Please wait while your report is being generated");
+      }
+>>>>>>> bbbf7f95a053079a5d10f8690fa467ab665f2f65
     }
   };
 
@@ -120,6 +152,8 @@ class CollegesActions extends Component {
     let listAction;
     let addAction;
     let reportAction;
+
+    const disableFlag = this.props.college.buttonDisable;
 
     if (this.state.bin) {
       binAction = (
@@ -162,6 +196,8 @@ class CollegesActions extends Component {
       );
       binActionForAuth = binAction;
     }
+
+    
 
     return (
       <div>
@@ -259,12 +295,18 @@ class CollegesActions extends Component {
                   </label>
                 </div>
                 <br />
-                <input
+                {disableFlag ? (<input
+                  type="button"
+                  value="Generate Report"
+                  onClick={this.onGenerateReport}
+                  className="btn btn-info disabled"
+                />) : (<input
                   type="button"
                   value="Generate Report"
                   onClick={this.onGenerateReport}
                   className="btn btn-info"
-                />
+                />)}
+                
               </form>
             </div>
           </div>

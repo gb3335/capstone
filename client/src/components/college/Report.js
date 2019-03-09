@@ -26,41 +26,44 @@ class Report extends Component {
   };
 
   onGenerateReport = e => {
-    if (
-      this.state.research === false &&
-      this.state.journal === false &&
-      this.state.status === false &&
-      this.state.courses === false
-    ) {
-      alert("Please Check at least one");
-    } else {
-      let researchOfCol = [];
-      this.props.research.researches.map(research => {
-        if (research.college === this.props.college.college.name.fullName) {
-          researchOfCol.push(research);
-        }
-      });
-
-      const name =
-        this.props.auth.user.firstName +
-        " " +
-        this.props.auth.user.middleName +
-        " " +
-        this.props.auth.user.lastName;
-      const reportData = {
-        research: this.state.research,
-        journal: this.state.journal,
-        status: this.state.status,
-        courses: this.state.courses,
-        college: this.props.college.college,
-        researchOfCol: researchOfCol,
-        typeOfReport: "College Report",
-        printedBy: name
-      };
-
-      this.props.createReportForCollege(reportData);
-      alert("Please wait while your report is being generated");
+    if(!this.props.college.buttonDisable){
+      if (
+        this.state.research === false &&
+        this.state.journal === false &&
+        this.state.status === false &&
+        this.state.courses === false
+      ) {
+        alert("Please Check at least one");
+      } else {
+        let researchOfCol = [];
+        this.props.research.researches.map(research => {
+          if (research.college === this.props.college.college.name.fullName) {
+            researchOfCol.push(research);
+          }
+        });
+  
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
+        const reportData = {
+          research: this.state.research,
+          journal: this.state.journal,
+          status: this.state.status,
+          courses: this.state.courses,
+          college: this.props.college.college,
+          researchOfCol: researchOfCol,
+          typeOfReport: "College Report",
+          printedBy: name
+        };
+  
+        this.props.createReportForCollege(reportData);
+        alert("Please wait while your report is being generated");
+      }
     }
+    
   };
 
   render() {
@@ -121,12 +124,20 @@ class Report extends Component {
           </label>
         </div>
         <br />
-        <input
+        {this.props.college.buttonDisable ? (
+          <input
           type="button"
           value="Generate Report"
           onClick={this.onGenerateReport}
-          className="btn btn-info"
+          className="btn btn-info disabled"
         />
+        ) : <input
+        type="button"
+        value="Generate Report"
+        onClick={this.onGenerateReport}
+        className="btn btn-info"
+      />}
+        
       </div>
     );
   }
