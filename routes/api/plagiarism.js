@@ -94,18 +94,39 @@ router.post("/local", (req, res) => {
         
   //     });
   // });
-  let extext = ""
-  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: true }, (err, text) => {
+  let extext = "kyle"
+  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
     if (err) {
       console.dir(err)
       return
     }
-    extext = text;
-    extext = extext.toString().replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
+    extext = data;
+    //extext = processor.textProcess(extext.toString().toLowerCase());
+    //console.log(extext)
+    //let wer = "kyle"
+    let arr = processor.arrayProcess("extext".toString().toLowerCase());
+    let text = processor.textProcess(extext.toString().toLowerCase());
+    let flag = req.body.flag;
+    if(flag=="true"){
+      flag=true;
+    }else{
+      flag=false;
+    }
+    let docu1 = req.body.docu1;
+    let docu2 = req.body.docu2;
 
-
-    console.dir(extext)
+    let result = plagiarism.search(arr, text, true, "docu1", "docu2");
+    res.json({
+      localPlagiarism: {
+        success: true,
+        data: result
+      }
+    });
+    
   })
+
+  
+  
 
   // let dataBuffer = fs.readFileSync(`./routes/downloadedDocu/${docuId}.pdf`);
  
@@ -132,25 +153,7 @@ router.post("/local", (req, res) => {
   // })
 
 
-  // let arr = processor.arrayProcess(extext.toString().toLowerCase());
-  // let text = processor.textProcess(extext.toString().toLowerCase());
-  // let flag = req.body.flag;
-  // if(flag=="true"){
-  //   flag=true;
-  // }else{
-  //   flag=false;
-  // }
-  // let docu1 = req.body.docu1;
-  // let docu2 = req.body.docu2;
-
-  // let result = plagiarism.search(arr, text, true, "docu1", "docu2");
-  // res.json({
-  //   localPlagiarism: {
-  //     success: true,
-  //     data: result
-  //   }
-  // });
-  // console.log(result)
+  
   
 });
 
