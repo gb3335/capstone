@@ -3,6 +3,7 @@ const router = express.Router();
 const request = require("request");
 const fs = require('fs');
 const pdf = require('pdf-parse');
+const extract = require('pdf-text-extract')
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
 const cx = "014684295069765089744:fvoycnmgzio";
@@ -96,33 +97,43 @@ router.post("/local", (req, res) => {
         
   //     });
   // });
+  let extext = ""
+  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: true }, (err, text) => {
+    if (err) {
+      console.dir(err)
+      return
+    }
+    extext = text;
+    extext = extext.toString().replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
+
+    
+    console.dir(extext)
+  })
 
 
-  let dataBuffer = fs.readFileSync(`./routes/downloadedDocu/${docuId}.pdf`);
+  // let dataBuffer = fs.readFileSync(`./routes/downloadedDocu/${docuId}.pdf`);
  
-  pdf(dataBuffer).then(function(data) {
+  // pdf(dataBuffer).then(function(data) {
   
-      // number of pages
-      console.log(data.numpages);
-      // number of rendered pages
-      console.log(data.numrender);
-      // PDF info
-      console.log(data.info);
-      // PDF metadata
-      console.log(data.metadata); 
-      // PDF.js version
-      // check https://mozilla.github.io/pdf.js/getting_started/
-      console.log(data.version);
-      // PDF text
-      console.log(data.text); 
+  //     // number of pages
+  //     console.log(data.numpages);
+  //     // number of rendered pages
+  //     console.log(data.numrender);
+  //     // PDF info
+  //     console.log(data.info);
+  //     // PDF metadata
+  //     console.log(data.metadata); 
+  //     // PDF.js version
+  //     // check https://mozilla.github.io/pdf.js/getting_started/
+  //     console.log(data.version);
+  //     // PDF text
+  //     console.log(data.text); 
           
-  })
-  .catch(function(error){
-    // handle exceptions
-    console.log(error)
-  })
-
-
+  // })
+  // .catch(function(error){
+  //   // handle exceptions
+  //   console.log(error)
+  // })
 
 
   // let arr = processor.arrayProcess(extext.toString().toLowerCase());
