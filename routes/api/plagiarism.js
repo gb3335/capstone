@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const request = require("request");
+const pdfUtil = require('pdf-to-text');
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
 const cx = "014684295069765089744:fvoycnmgzio";
@@ -59,30 +60,62 @@ router.post("/online", (req, res) => {
 // @desc    search local route
 // @access  public
 router.post("/local", (req, res) => {
-  const { errors, isValid } = validateLocalInput(req.body);
-  //Check Validation
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
+  // const { errors, isValid } = validateLocalInput(req.body);
+  // //Check Validation
+  // if (!isValid) {
+  //   return res.status(400).json(errors);
+  // }
 
-  let arr = processor.arrayProcess(req.body.q.toLowerCase());
-  let text = processor.textProcess(req.body.text.toLowerCase());
-  let flag = req.body.flag;
-  if(flag=="true"){
-    flag=true;
-  }else{
-    flag=false;
-  }
-  let docu1 = req.body.docu1;
-  let docu2 = req.body.docu2;
+  let docuId = req.body.docuId;
+  let document = req.body.document;
 
-  let result = plagiarism.search(arr, text, flag, docu1, docu2);
-  res.json({
-    localPlagiarism: {
-      success: true,
-      data: result
-    }
+  //option to extract text from page 0 to 10
+  const option = {from: 0, to: 10};
+  
+  
+  //Omit option to extract all text from the pdf file
+  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
+    if (err) throw(err);
+    console.log(data); //print all text    
   });
+
+    
+  // let extext=""
+  // fs.readFile(`./routes/downloadedDocu/${docuId}.pdf`, (err, pdfBuffer) => {
+  //   // pdfBuffer contains the file content
+  //   new PdfReader().parseBuffer(pdfBuffer, function(err, item){
+  //     if (err)
+  //       callback(err);
+  //     else if (!item)
+  //       callback();
+  //     else if (item.text)
+  //       extext = item.text;
+  //       //extext = extext.toString().split("\n").join("");
+  //       console.log(extext)
+        
+  //     });
+  // });
+
+  // let arr = processor.arrayProcess(extext.toString().toLowerCase());
+  // let text = processor.textProcess(extext.toString().toLowerCase());
+  // let flag = req.body.flag;
+  // if(flag=="true"){
+  //   flag=true;
+  // }else{
+  //   flag=false;
+  // }
+  // let docu1 = req.body.docu1;
+  // let docu2 = req.body.docu2;
+
+  // let result = plagiarism.search(arr, text, true, "docu1", "docu2");
+  // res.json({
+  //   localPlagiarism: {
+  //     success: true,
+  //     data: result
+  //   }
+  // });
+  // console.log(result)
+  
 });
 
 module.exports = router;
