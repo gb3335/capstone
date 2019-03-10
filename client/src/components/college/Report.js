@@ -2,14 +2,14 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
-import { createReport } from "../../actions/collegeActions";
+import { createReportForCollege } from "../../actions/collegeActions";
 
 class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      researchTotal: false,
-      journalTotal: false,
+      research: false,
+      journal: false,
       status: false,
       courses: false
     };
@@ -26,27 +26,44 @@ class Report extends Component {
   };
 
   onGenerateReport = e => {
-    if (
-      this.state.researchTotal === false &&
-      this.state.journalTotal === false &&
-      this.state.status === false &&
-      this.state.courses === false
-    ) {
-      alert("Please Check at least one");
-    } else {
-      const reportData = {
-        researchTotal: this.state.researchTotal,
-        journalTotal: this.state.journalTotal,
-        status: this.state.status,
-        courses: this.state.courses,
-        college: this.props.college.college,
-        typeOfReport: "College Report"
-      };
-
-      this.props.createReport(reportData);
-
-      alert("Please wait while your report is being generated");
+    if(!this.props.college.buttonDisable){
+      if (
+        this.state.research === false &&
+        this.state.journal === false &&
+        this.state.status === false &&
+        this.state.courses === false
+      ) {
+        alert("Please Check at least one");
+      } else {
+        let researchOfCol = [];
+        this.props.research.researches.map(research => {
+          if (research.college === this.props.college.college.name.fullName) {
+            researchOfCol.push(research);
+          }
+        });
+  
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
+        const reportData = {
+          research: this.state.research,
+          journal: this.state.journal,
+          status: this.state.status,
+          courses: this.state.courses,
+          college: this.props.college.college,
+          researchOfCol: researchOfCol,
+          typeOfReport: "College Report",
+          printedBy: name
+        };
+  
+        this.props.createReportForCollege(reportData);
+        alert("Please wait while your report is being generated");
+      }
     }
+    
   };
 
   render() {
@@ -71,12 +88,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="researchTotal"
-            id="researchTotal"
-            value={this.state.researchTotal}
+            name="research"
+            id="research"
+            value={this.state.research}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="researchTotal">
+          <label className="form-check-label" htmlFor="research">
             Research
           </label>
         </div>
@@ -84,12 +101,12 @@ class Report extends Component {
           <input
             className="form-check-input"
             type="checkbox"
-            name="journalTotal"
-            id="journalTotal"
-            value={this.state.journalTotal}
+            name="journal"
+            id="journal"
+            value={this.state.journal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="journalTotal">
+          <label className="form-check-label" htmlFor="journal">
             Journal
           </label>
         </div>
@@ -107,27 +124,39 @@ class Report extends Component {
           </label>
         </div>
         <br />
-        <input
+        {this.props.college.buttonDisable ? (
+          <input
           type="button"
           value="Generate Report"
           onClick={this.onGenerateReport}
-          className="btn btn-info"
+          className="btn btn-info disabled"
         />
+        ) : <input
+        type="button"
+        value="Generate Report"
+        onClick={this.onGenerateReport}
+        className="btn btn-info"
+      />}
+        
       </div>
     );
   }
 }
 
 Report.propTypes = {
-  createReport: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  createReportForCollege: PropTypes.func.isRequired,
+  college: PropTypes.object.isRequired,
+  research: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  college: state.college
+  college: state.college,
+  research: state.research,
+  auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { createReport }
+  { createReportForCollege }
 )(Report);

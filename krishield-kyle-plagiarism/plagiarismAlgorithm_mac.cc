@@ -215,6 +215,22 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
                         // cout << "Word " << arr[j] << " appears from "
                         // 	<< i - arr[j].size() + 1 << " to " << i << endl;
                         myarraycounter++;
+                    }else if(start==0 && i==text.size()-1){
+                        numofhitss+=arr2[j].size()+1;
+                        std::ostringstream oss;
+    
+                        oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
+                        std::string word = oss.str ();
+                        
+                        //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
+                        // Local<String> retval = String::NewFromUtf8(isolate, word.c_str());
+                        // Nan::Set(myarray, myarraycounter, retval);
+                        // myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
+                        v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
+                        Nan::Set(myarray, myarraycounter, newword);
+                        // cout << "Word " << arr[j] << " appears from "
+                        // 	<< i - arr[j].size() + 1 << " to " << i << endl;
+                        myarraycounter++;
                     }
                     else if(text[start-1]==' ' && text[i+1]==' '){
                         numofhitss+=arr2[j].size()+1;

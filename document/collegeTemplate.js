@@ -1,22 +1,32 @@
 module.exports = ({
   status,
-  researchTotal,
-  journalTotal,
+  research,
+  journal,
   courses,
   typeOfReport,
-  college
+  college,
+  researchOfCol
 }) => {
   let librarian = college.librarian;
   let stat;
-  let totalres;
+  let lastUpdate = college.lastUpdate.date;
+  lastUpdate = new Date(lastUpdate);
+  let collegeName = college.name.fullName;
+
+  // for researches table
+  let totalresearch;
+  let researchList;
+  let researchListNoComma = "";
+  let researchListHeader;
+
+  // for journals table
   let totaljour;
+
+  // for courses table
   let totalcourse;
   let coursesList;
   let coursesListNoComma = "";
   let coursesListHeader;
-  let lastUpdate = college.lastUpdate.date;
-  let collegeName = college.name.fullName;
-  let today = new Date();
 
   if (status === true) {
     if (college.status === 0) {
@@ -28,23 +38,18 @@ module.exports = ({
     stat = "Not Available";
   }
 
-  if (researchTotal === true) {
-    totalres = college.researchTotal;
-  } else {
-    totalres = "Not Available";
-  }
-
-  if (journalTotal === true) {
+  if (journal === true) {
     totaljour = college.journalTotal;
   } else {
     totaljour = "Not Available";
   }
 
+  // College course list and count
   if (courses === true) {
     totalcourse = college.course.length;
 
     if (totalcourse == 0) {
-      coursesList = "Not Courses in this College";
+      coursesList = "No Courses in this College";
       coursesListHeader = "";
     } else {
       coursesList = college.course.map(
@@ -52,7 +57,13 @@ module.exports = ({
           "<tr>" +
           `<td>${indCourse.name}</td>` +
           `<td>${indCourse.initials}</td>` +
-          `<td>${indCourse.status === 0 ? "Active" : "Inactive"}</td>` +
+          `<td>${
+            indCourse.deleted === 1
+              ? "Deleted"
+              : indCourse.status === 0
+              ? "Active"
+              : "Inactive"
+          }</td>` +
           `<td>${indCourse.researchTotal}</td>` +
           `<td>${indCourse.journalTotal}</td>` +
           "</tr>"
@@ -73,8 +84,52 @@ module.exports = ({
     }
   } else {
     totalcourse = "Not Available";
-    coursesList = "Not Available";
+    coursesListNoComma = "Not Available";
     coursesListHeader = "";
+  }
+
+  // College researches list and count
+  if (research === true) {
+    totalresearch = researchOfCol.length;
+
+    if (totalresearch == 0) {
+      researchList = "No Researches in this College";
+      researchListHeader = "";
+    } else {
+      researchList = researchOfCol.map(
+        indRes =>
+          "<tr>" +
+          `<td>${indRes.title}</td>` +
+          `<td>${indRes.type}</td>` +
+          `<td>${
+            indRes.deleted === 1
+              ? "Deleted"
+              : indRes.hidden === 0
+              ? "Active"
+              : "Hidden"
+          }</td>` +
+          `<td>${indRes.course}</td>` +
+          `<td>${indRes.schoolYear}</td>` +
+          "</tr>"
+      );
+
+      researchList.map(item => {
+        researchListNoComma = researchListNoComma + item;
+      });
+
+      researchListHeader =
+        "<tr>" +
+        "<th>Title</th>" +
+        "<th>Type</th>" +
+        "<th>Status</th>" +
+        "<th>Course</th>" +
+        "<th>Academic Year</th>" +
+        "</tr>";
+    }
+  } else {
+    totalresearch = "Not Available";
+    researchListNoComma = "Not Available";
+    researchListHeader = "";
   }
 
   return `<!DOCTYPE html>
@@ -170,10 +225,10 @@ module.exports = ({
               <ul style="list-style-type:circle; text-align: left">
                 <li>Librarian: ${librarian}</li>
                 <li>Status: ${stat}</li>
-                <li>Total Researches: ${totalres}</li>
+                <li>Total Researches: ${totalresearch}</li>
                 <li>Total Journals: ${totaljour}</li>
                 <li>Total Courses: ${totalcourse}</li>
-                <li>Last Update: ${lastUpdate}</li>
+                <li>Last Update: ${lastUpdate.toLocaleString()}</li>
               </ul>
             </div>
           </div>
@@ -182,6 +237,13 @@ module.exports = ({
             <table>
               ${coursesListHeader}
               ${coursesListNoComma}
+            </table>
+          </div>
+          <div class="researches" style="font-size: 9px">
+            <h4 style="font-size: 10px">Researches:</h4>
+            <table>
+              ${researchListHeader}
+              ${researchListNoComma}
             </table>
           </div>
         </div>

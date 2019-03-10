@@ -12,7 +12,8 @@ import {
   TOGGLE_COLLEGE_GRIDVIEW,
   TOGGLE_COLLEGE_LISTVIEW,
   TOGGLE_COURSE_BIN,
-  TOGGLE_COURSE_LIST
+  TOGGLE_COURSE_LIST,
+  CHANGE_BUTTON_STATUS
 } from "./types";
 
 // Get all colleges
@@ -35,8 +36,9 @@ export const getColleges = () => dispatch => {
     );
 };
 
-// Create Report
-export const createReport = reportData => dispatch => {
+// Create Report for individual College
+export const createReportForCollege = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
   axios
     .post("/api/colleges/createReport/college", reportData)
     .then(() =>
@@ -44,8 +46,8 @@ export const createReport = reportData => dispatch => {
         .get("/api/colleges/fetchReport/college", { responseType: "blob" })
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-
-          saveAs(pdfBlob, "newCollegeReportPdf.pdf");
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "CollegeReport.pdf");
         })
     )
     .catch(err =>
@@ -54,6 +56,37 @@ export const createReport = reportData => dispatch => {
         payload: null
       })
     );
+};
+
+// Create Report for individual Colleges
+export const createReportForColleges = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/colleges/createReport/colleges", reportData)
+    .then(() =>
+      axios
+        .get("/api/colleges/fetchReport/colleges", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "CollegesReport.pdf");
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_COLLEGES,
+        payload: null
+      })
+    );
+};
+
+// Change Status of Generate Report Button
+// set loading state
+export const changeButtonStatus = (flag) => {
+  return {
+    type: CHANGE_BUTTON_STATUS,
+    payload: flag
+  };
 };
 
 // Toggle College Bin
@@ -165,15 +198,7 @@ export const addCourse = (courseData, history) => dispatch => {
 export const editCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/editcourse", courseData)
-    .then(
-      history.push(`/colleges/${courseData.colInit}`),
-      window.location.reload(),
-      res =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: res.data
-        })
-    )
+    .then(res => history.push(`/colleges/${courseData.colInit}`))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,

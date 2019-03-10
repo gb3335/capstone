@@ -11,6 +11,7 @@ import Spinner from "../common/Spinner";
 import DoughnutChart from "../common/DoughnutChart";
 
 import { getColleges } from "../../actions/collegeActions";
+import { getResearches } from "../../actions/researchActions";
 import { changePageTitle } from "../../actions/sidebarActions";
 import { getActivities } from "../../actions/activityActions";
 
@@ -27,6 +28,7 @@ class Dashboard extends Component {
 
   componentDidMount() {
     this.props.getColleges();
+    this.props.getResearches();
     this.props.getActivities();
     this.props.changePageTitle("Dashboard");
   }
@@ -280,6 +282,7 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   changePageTitle: PropTypes.func.isRequired,
   getColleges: PropTypes.func.isRequired,
+  getResearches: PropTypes.func.isRequired,
   getActivities: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
@@ -294,5 +297,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changePageTitle, getColleges, getActivities }
+  { changePageTitle, getColleges, getActivities, getResearches }
 )(windowSize(Dashboard));

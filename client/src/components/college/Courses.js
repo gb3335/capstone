@@ -74,29 +74,56 @@ class Courses extends Component {
                         style={{ fontSize: "12px" }}
                       />
                     </Link>
-                    <button
-                      onClick={this.onRestoreClick.bind(
-                        this,
-                        (course = {
-                          courseName: cou.name,
-                          courseInitials: cou.initials,
-                          courseTotalRes: cou.researchTotal,
-                          courseTotalJour: cou.journalTotal,
-                          courseId: cou._id,
-                          collegeId: college._id,
-                          courseStatus: cou.status,
-                          courseDeleted: cou.deleted,
-                          collegeInit: college.name.initials
-                        })
-                      )}
-                      className="btn btn-success"
-                      title="Restore Course"
-                    >
-                      <i
-                        className="fas fa-recycle text-light"
-                        style={{ fontSize: "12px" }}
-                      />
-                    </button>
+                    {cou.researchTotal + cou.journalTotal === 0 ? (
+                      <button
+                        onClick={this.onRestoreClick.bind(
+                          this,
+                          (course = {
+                            courseName: cou.name,
+                            courseInitials: cou.initials,
+                            courseTotalRes: cou.researchTotal,
+                            courseTotalJour: cou.journalTotal,
+                            courseId: cou._id,
+                            collegeId: college._id,
+                            courseStatus: cou.status,
+                            courseDeleted: cou.deleted,
+                            collegeInit: college.name.initials
+                          })
+                        )}
+                        className="btn btn-success"
+                        title="Restore Course"
+                      >
+                        <i
+                          className="fas fa-recycle text-light"
+                          style={{ fontSize: "12px" }}
+                        />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={this.onRestoreClick.bind(
+                          this,
+                          (course = {
+                            courseName: cou.name,
+                            courseInitials: cou.initials,
+                            courseTotalRes: cou.researchTotal,
+                            courseTotalJour: cou.journalTotal,
+                            courseId: cou._id,
+                            collegeId: college._id,
+                            courseStatus: cou.status,
+                            courseDeleted: cou.deleted,
+                            collegeInit: college.name.initials
+                          })
+                        )}
+                        className="btn btn-success"
+                        title="Restore Course"
+                        disabled
+                      >
+                        <i
+                          className="fas fa-recycle text-light"
+                          style={{ fontSize: "12px" }}
+                        />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -170,29 +197,56 @@ class Courses extends Component {
                         style={{ fontSize: "12px" }}
                       />
                     </Link>
-                    <button
-                      onClick={this.onDeleteClick.bind(
-                        this,
-                        (course = {
-                          courseName: cou.name,
-                          courseInitials: cou.initials,
-                          courseTotalRes: cou.researchTotal,
-                          courseTotalJour: cou.journalTotal,
-                          courseId: cou._id,
-                          collegeId: college._id,
-                          courseStatus: cou.status,
-                          courseDeleted: cou.deleted,
-                          collegeInit: college.name.initials
-                        })
-                      )}
-                      className="btn btn-danger"
-                      title="Delete Course"
-                    >
-                      <i
-                        className="fas fa-trash text-light"
-                        style={{ fontSize: "12px" }}
-                      />
-                    </button>
+                    {cou.researchTotal + cou.journalTotal === 0 ? (
+                      <button
+                        onClick={this.onDeleteClick.bind(
+                          this,
+                          (course = {
+                            courseName: cou.name,
+                            courseInitials: cou.initials,
+                            courseTotalRes: cou.researchTotal,
+                            courseTotalJour: cou.journalTotal,
+                            courseId: cou._id,
+                            collegeId: college._id,
+                            courseStatus: cou.status,
+                            courseDeleted: cou.deleted,
+                            collegeInit: college.name.initials
+                          })
+                        )}
+                        className="btn btn-danger"
+                        title="Delete Course"
+                      >
+                        <i
+                          className="fas fa-trash text-light"
+                          style={{ fontSize: "12px" }}
+                        />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={this.onDeleteClick.bind(
+                          this,
+                          (course = {
+                            courseName: cou.name,
+                            courseInitials: cou.initials,
+                            courseTotalRes: cou.researchTotal,
+                            courseTotalJour: cou.journalTotal,
+                            courseId: cou._id,
+                            collegeId: college._id,
+                            courseStatus: cou.status,
+                            courseDeleted: cou.deleted,
+                            collegeInit: college.name.initials
+                          })
+                        )}
+                        className="btn btn-danger"
+                        title="Delete Course"
+                        disabled
+                      >
+                        <i
+                          className="fas fa-trash text-light"
+                          style={{ fontSize: "12px" }}
+                        />
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>

@@ -1,5 +1,5 @@
 const sw = require('stopword');
-const rp = require('remove-punctuation');
+const stripchar = require('stripchar').StripChar;
 
 const duplicateArray= (arr) => {
         let new_array = [];
@@ -12,14 +12,16 @@ const duplicateArray= (arr) => {
 }
 
 const arrayProcess = (arr) => {
-        arr = rp(arr);
+        arr = arr.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
+        arr = stripchar.RSspecChar(arr);
         const newarr = arr.split(' ');
         const dupliremoved = duplicateArray(newarr);
         return sw.removeStopwords(dupliremoved);
 }
 
 const textProcess = (text) => {
-        text = rp(text);
+        text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
+        text = stripchar.RSspecChar(text);
         const textarr = text.split(' ');
         const textdupliremoved = duplicateArray(textarr);
         const stopwordRemoved = sw.removeStopwords(textdupliremoved);

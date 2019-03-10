@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
-import Tesseract from "tesseract.js";
+import { Tesseract } from "tesseract.ts";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -26,7 +26,8 @@ class AddResearch extends Component {
       pages: "",
       schoolYear: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
-      errors: {}
+      errors: {},
+      ocrProgress: ""
     };
   }
 
@@ -76,15 +77,22 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            college.deleted === 0
-              ? this.state.courseOptions.push({
-                  label: course.name,
-                  value: course.name
-                })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
           )
         : ""
     );
+  };
+
+  onChangeSelectCourse = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
   };
 
   handleChange = value => {
@@ -93,22 +101,27 @@ class AddResearch extends Component {
   };
 
   onOCR = e => {
-    try {
-      let files = e.target.files;
-      let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
-      reader.onload = e => {
-        Tesseract.recognize(e.target.result).then(function(result) {
-          console.log(result);
+    let files = e.target.files;
+
+    Tesseract.recognize(files[0])
+      .progress(data => {
+        let dataProg = data.progress * 100;
+        dataProg = dataProg.toString();
+        dataProg = dataProg.substring(0, 5);
+
+        this.setState({
+          ocrProgress: data.status + " at " + dataProg + "%"
         });
-      };
-    } catch (error) {
-      console.log("Not Blob");
-    }
+      })
+      .then(data => {
+        this.setState({ abstract: data.text });
+      })
+      .catch(console.error);
   };
 
   render() {
     const { college, errors } = this.props;
+    const progress = this.state.ocrProgress;
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
@@ -198,14 +211,43 @@ class AddResearch extends Component {
                       placeholder="Course"
                       name="course"
                       value={this.state.course}
-                      onChange={this.onChangeSelect}
+                      onChange={this.onChangeSelectCourse}
                       options={this.state.courseOptions}
                       error={errors.course}
                       info="Select your course"
                     />
                   </div>
                 </div>
-                <input type="file" onChange={this.onOCR} name="name" />
+
+                <div>
+                  <label
+                    to="#"
+                    htmlFor="ocr"
+                    className="btn btn-light"
+                    style={{ fontSize: "12px" }}
+                    title="Use Image to Text"
+                  >
+                    <i className="fas fa-file-image mr-1" />
+                    Image to Text
+                  </label>
+
+                  <input
+                    type="file"
+                    style={{
+                      border: 0,
+                      opacity: 0,
+                      position: "absolute",
+                      pointerEvents: "none",
+                      width: "1px",
+                      height: "1px"
+                    }}
+                    onChange={this.onOCR}
+                    name="name"
+                    id="ocr"
+                    accept=".png, .jpg, .jpeg"
+                  />
+                  <p style={{ fontSize: "12px" }}>{progress}</p>
+                </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
                   placeholder="* Abstract"
@@ -227,7 +269,7 @@ class AddResearch extends Component {
                   value={this.state.researchId}
                   onChange={this.onChange}
                   error={errors.researchId}
-                  info="Research ID give by the college library"
+                  info="Research ID given by the college library"
                 />
                 <TextFieldGroup
                   placeholder="* Pages"
@@ -238,7 +280,7 @@ class AddResearch extends Component {
                   info="Number of pages in your research"
                 />
                 <TextFieldGroup
-                  placeholder="* School Year"
+                  placeholder="* Academic Year"
                   name="schoolYear"
                   value={this.state.schoolYear}
                   onChange={this.onChange}

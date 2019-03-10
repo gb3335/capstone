@@ -9,6 +9,7 @@ const fs = require("fs");
 const path = require("path");
 const pdf = require("html-pdf");
 const pdfCollegeTemplate = require("../../document/collegeTemplate");
+const pdfCollegesTemplate = require("../../document/collegesTemplate");
 
 // College model
 const College = require("../../models/College");
@@ -485,14 +486,28 @@ router.post(
   }
 );
 
-// @route   POST api/colleges/createReport
+// @route   POST api/colleges/createReport/college
 // @desc    Generate individual College Report
 // @access  Private
 router.post(
   "/createReport/college",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const printedBy = "Carl Justine";
+    const printedBy = req.body.printedBy;
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
     const today = new Date();
     const options = {
       border: {
@@ -506,8 +521,9 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${today.getDate()}. ${today.getMonth() +
-            1}. ${today.getFullYear()}.`}</p>
+          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
+            months[today.getMonth()]
+          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
@@ -525,8 +541,8 @@ router.post(
   }
 );
 
-// @route   GET api/colleges/createReport
-// @desc    Send the generated pdf to client
+// @route   GET api/colleges/fetchReport/college
+// @desc    Send the generated pdf to client - individual college
 // @access  Private
 router.get(
   "/fetchReport/college",
@@ -534,6 +550,73 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/collegePdf.pdf`);
+  }
+);
+
+// @route   POST api/colleges/createReport/colleges
+// @desc    Generate List of all Colleges Report
+// @access  Private
+router.post(
+  "/createReport/colleges",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ];
+    const today = new Date();
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
+            months[today.getMonth()]
+          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
+          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfCollegesTemplate(req.body), options)
+      .toFile("collegesPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/colleges/fetchReport/colleges
+// @desc    Send the generated pdf to client - list of colleges
+// @access  Private
+router.get(
+  "/fetchReport/colleges",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/collegesPdf.pdf`);
   }
 );
 
