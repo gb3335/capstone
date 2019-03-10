@@ -8,7 +8,7 @@
 #include <sstream>
 using namespace v8; 
 using namespace std;
-#define MAXS 1000
+#define MAXS 15000
 #define MAXC 93
 #define MAXW 1000000
 
@@ -42,17 +42,6 @@ string text2;
 int g[MAXS][MAXC];
 int f[MAXS];
 bitset<MAXW> out[MAXS];
-void initialize(vector<string> arr, string text)
-{
-    numofpatterns=0;
-    arr2 = arr;
-    text2 = text;
-    for(int x=0; x<MAXS; x++){
-        out[x].reset();
-    }
-    memset(g,-1,sizeof g);
-    memset(f,0,sizeof f);
-}
 void buildMachine()
 {
     int state = 0,currState = 0,index = 0;
@@ -114,6 +103,30 @@ void buildMachine()
     }
     numofpatterns--;
 }
+void initialize(const Nan::FunctionCallbackInfo<v8::Value>& info /*vector<string> arr, string text*/)
+{
+    v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);   
+
+    std::vector<string> arr;
+    for (unsigned int i = 0; i < jsArr->Length(); i++) {
+        v8::Local<v8::Value> jsElement = jsArr->Get(i);
+
+        Nan::Utf8String jselem(jsElement->ToString());
+        string number = string(*jselem);  
+
+        arr.push_back(number);
+    }
+
+    numofpatterns=0;
+    arr2 = arr;
+    for(int x=0; x<MAXS; x++){
+        out[x].reset();
+    }
+    memset(g,-1,sizeof g);
+    memset(f,0,sizeof f);
+    buildMachine();
+    //info.GetReturnValue().Set("Initialize");
+}
 int nextState(int s, char ch)
 {
     int index = ch - 33;
@@ -127,52 +140,52 @@ int nextState(int s, char ch)
 
 void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
-    if(info.Length()!=5){
+    if(info.Length()!=3){
         return Nan::ThrowError(Nan::New("Function expecting 5 arguments").ToLocalChecked());
     }
-    if(!info[0]->IsArray()) {
-        return Nan::ThrowError(Nan::New("expected arg 0: Should be an Array of Strings").ToLocalChecked());
+    // if(!info[0]->IsArray()) {
+    //     return Nan::ThrowError(Nan::New("expected arg 0: Should be an Array of Strings").ToLocalChecked());
+    // }
+    if(!info[0]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 0: Should be a String").ToLocalChecked());
     }
+    // if(!info[2]->IsBoolean()) {
+    //     return Nan::ThrowError(Nan::New("expected arg 2: Should be a Boolean").ToLocalChecked());
+    // }
     if(!info[1]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 1: Should be a String").ToLocalChecked());
+        return Nan::ThrowError(Nan::New("expected arg 1: String (Document name)").ToLocalChecked());
     }
-    if(!info[2]->IsBoolean()) {
-        return Nan::ThrowError(Nan::New("expected arg 2: Should be a Boolean").ToLocalChecked());
-    }
-    if(!info[3]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 3: String (Document name)").ToLocalChecked());
-    }
-    if(!info[4]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 4: String (Document name)").ToLocalChecked());
+    if(!info[2]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 2: String (Document name)").ToLocalChecked());
     }
 
     numofhitss=0, numoftexts=0;
-    v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);   
+    // v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);   
 
-    std::vector<string> arr;
-    for (unsigned int i = 0; i < jsArr->Length(); i++) {
-        v8::Local<v8::Value> jsElement = jsArr->Get(i);
+    // std::vector<string> arr;
+    // for (unsigned int i = 0; i < jsArr->Length(); i++) {
+    //     v8::Local<v8::Value> jsElement = jsArr->Get(i);
 
-        Nan::Utf8String jselem(jsElement->ToString());
-        string number = string(*jselem);  
+    //     Nan::Utf8String jselem(jsElement->ToString());
+    //     string number = string(*jselem);  
 
-        arr.push_back(number);
-    }
+    //     arr.push_back(number);
+    // }
 
-    Nan::Utf8String param1(info[1]->ToString());
+    Nan::Utf8String param1(info[0]->ToString());
     // convert it to string
     string text = string(*param1);
 
-    boolean flag = info[2]->BooleanValue();
+    // boolean flag = info[2]->BooleanValue();
 
 
     int myarraycounter=0;
 	Local<Array> myarray = Nan::New<v8::Array>();
 
-    if(flag){
-        initialize(arr,text);
-        buildMachine();
-    }
+    // if(flag){
+    //     initialize(arr,text);
+    //     buildMachine();
+    // }
     int state = 0;
     for(int i = 0; i<text.size(); i++)
     {
@@ -274,7 +287,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     // Object for Document1
     v8::Local<v8::Object> docuObject1 = Nan::New<v8::Object>();
 
-    v8::Local<v8::Value> docuname1 = info[3]->ToString();
+    v8::Local<v8::Value> docuname1 = info[1]->ToString();
     v8::Local<v8::Value> docuvalue1 = Nan::New(totaldoc1);
     Nan::Set(docuObject1, docunameprop, docuname1);
     Nan::Set(docuObject1, docuscoreprop, docuvalue1);
@@ -282,7 +295,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     // Object for Document2
     v8::Local<v8::Object> docuObject2 = Nan::New<v8::Object>();
 
-    v8::Local<v8::Value> docuname2 = info[4]->ToString();
+    v8::Local<v8::Value> docuname2 = info[2]->ToString();
     v8::Local<v8::Value> docuvalue2 = Nan::New(totaldoc2);
     Nan::Set(docuObject2, docunameprop, docuname2);
     Nan::Set(docuObject2, docuscoreprop, docuvalue2);
@@ -324,6 +337,8 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 void Init(v8::Local<v8::Object> exports) {
   exports->Set(Nan::New("search").ToLocalChecked(),
                Nan::New<v8::FunctionTemplate>(newsearch)->GetFunction());
+    exports->Set(Nan::New("initialize").ToLocalChecked(),
+               Nan::New<v8::FunctionTemplate>(initialize)->GetFunction());
 }
 
 NODE_MODULE(plagiarism, Init)
