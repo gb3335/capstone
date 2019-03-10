@@ -106,7 +106,6 @@ router.post("/local", (req, res) => {
     //let wer = "kyle"
     let arr = processor.arrayProcess(extext.toString().toLowerCase());
     let text = processor.textProcess(extext.toString().toLowerCase());
-    let rev = text.toString().toUpperCase();
     let flag = req.body.flag;
     if(flag=="true"){
       flag=true;
@@ -116,7 +115,7 @@ router.post("/local", (req, res) => {
     let docu1 = req.body.docu1;
     let docu2 = req.body.docu2;
 
-    let result = plagiarism.search(arr, rev, true, "docu1", "docu2");
+    let result = plagiarism.search(arr, text, true, "docu1", "docu2");
     console.log(result);
     res.json({
       localPlagiarism: {

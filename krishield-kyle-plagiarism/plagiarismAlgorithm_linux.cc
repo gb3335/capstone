@@ -7,7 +7,7 @@
 #include <bitset>
 #include <sstream>
 using namespace v8;
-#define MAXS 1000
+#define MAXS 15000
 #define MAXC 93
 #define MAXW 1000000
 
