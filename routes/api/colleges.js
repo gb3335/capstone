@@ -57,7 +57,6 @@ router.get("/:initials", (req, res) => {
   const errors = {};
 
   College.findOne({ "name.initials": req.params.initials })
-    .populate("college", ["name.fullName", "logo"])
     .then(college => {
       if (!college) {
         errors.nocollege = "There is no profile for this user";
@@ -494,21 +493,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const printedBy = req.body.printedBy;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    const today = new Date();
     const options = {
       border: {
         top: "0.5in",
@@ -521,9 +505,7 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
-            months[today.getMonth()]
-          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
+          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
@@ -561,21 +543,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const printedBy = req.body.printedBy;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    const today = new Date();
     const options = {
       border: {
         top: "0.5in",
@@ -588,9 +555,7 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
-            months[today.getMonth()]
-          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
+          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }

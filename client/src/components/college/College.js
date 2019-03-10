@@ -168,7 +168,7 @@ class College extends Component {
         </div>
         {/* Back button */}
         <div className="row" style={{ margin: "5px" }}>
-          <div className="col-md-4">
+          <div className="col-md-3">
             <br />
             <div className="list-group" id="list-tab" role="tablist">
               <a
@@ -208,7 +208,7 @@ class College extends Component {
             </div>
           </div>
 
-          <div className="col-md-8">
+          <div className="col-md-9">
             <br />
             <div className="tab-content" id="nav-tabContent">
               <div

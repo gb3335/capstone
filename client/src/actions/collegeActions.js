@@ -18,6 +18,7 @@ import {
 
 // Get all colleges
 export const getColleges = () => dispatch => {
+  dispatch(changeButtonStatus(false));
   dispatch(clearErrors());
   dispatch(setCollegeLoading());
   axios
@@ -82,7 +83,7 @@ export const createReportForColleges = reportData => dispatch => {
 
 // Change Status of Generate Report Button
 // set loading state
-export const changeButtonStatus = (flag) => {
+export const changeButtonStatus = flag => {
   return {
     type: CHANGE_BUTTON_STATUS,
     payload: flag
@@ -132,6 +133,7 @@ export const toggleCourseBin = toggle => {
 export const getCollegeByInitials = initials => dispatch => {
   dispatch(clearErrors());
   dispatch(setCollegeLoading());
+  dispatch(changeButtonStatus(false));
   axios
     .get(`/api/colleges/${initials}`)
     .then(res =>

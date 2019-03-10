@@ -1,8 +1,11 @@
+const moment = require("moment");
+
 module.exports = ({
   status,
   coursesTotal,
   researchTotal,
   journalTotal,
+  lastUpdate,
   colleges,
   typeOfReport
 }) => {
@@ -14,6 +17,8 @@ module.exports = ({
   let numberOfColForEndRow = 0;
 
   let totalcol = colleges.length;
+
+  const currentDate = moment().format("MMMM Do YYYY, h:mm a");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -27,7 +32,10 @@ module.exports = ({
   if (journalTotal === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  numberOfColForEndRow = 5 + numberOfColForEndRow;
+  if (lastUpdate === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  numberOfColForEndRow = 4 + numberOfColForEndRow;
 
   if (totalcol == 0) {
     collegesList = "No Researches in this College";
@@ -50,7 +58,13 @@ module.exports = ({
         `${coursesTotal === true ? `<td>${college.course.length}</td>` : ""}` +
         `${researchTotal === true ? `<td>${college.researchTotal}</td>` : ""}` +
         `${journalTotal === true ? `<td>${college.journalTotal}</td>` : ""}` +
-        `<td>${new Date(college.lastUpdate.date).toLocaleString()}</td>` +
+        `${
+          lastUpdate === true
+            ? `<td>${moment(college.lastUpdate.date).format(
+                "MMMM Do YYYY, h:mm a"
+              )}</td>`
+            : ""
+        }` +
         "</tr>"
     );
 
@@ -74,7 +88,7 @@ module.exports = ({
       `${coursesTotal === true ? "<th>TOTAL COURSES</th>" : ""}` +
       `${researchTotal === true ? "<th>TOTAL RESEARCHES</th>" : ""}` +
       `${journalTotal === true ? "<th>TOTAL JOURNALS</th>" : ""}` +
-      "<th>UPDATED ON</th>" +
+      `${lastUpdate === true ? "<th>UPDATED ON</th>" : ""}` +
       "</tr>";
   }
 
@@ -166,7 +180,7 @@ module.exports = ({
           <h4>University Research Office</h4>
         </div>
           <div class="courses" style="font-size: 7px">
-            <p>Total # of Colleges: ${totalNumOfColleges}    Date Printed: Month day, year hh:mm  AM or PM</p>
+            <p style="font-size: 9px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
             <table>
               ${collegesListHeader}
               ${collegesListNoComma}

@@ -96,7 +96,7 @@ class Research extends Component {
                     role="tab"
                     aria-controls="abstract"
                   >
-                    <i class="fas fa-file-alt mr-2" />
+                    <i className="fas fa-file-alt mr-2" />
                     Abstract
                   </a>
 
@@ -108,7 +108,7 @@ class Research extends Component {
                     role="tab"
                     aria-controls="authors"
                   >
-                    <i class="fas fa-users mr-2" />
+                    <i className="fas fa-users mr-2" />
                     Authors
                   </a>
 
@@ -120,7 +120,7 @@ class Research extends Component {
                     role="tab"
                     aria-controls="pictures"
                   >
-                    <i class="fas fa-images mr-2" />
+                    <i className="fas fa-images mr-2" />
                     Pictures
                   </a>
 
@@ -132,7 +132,7 @@ class Research extends Component {
                     role="tab"
                     aria-controls="document"
                   >
-                    <i class="fas fa-file mr-2" />
+                    <i className="fas fa-file mr-2" />
                     Document
                   </a>
                 </div>
