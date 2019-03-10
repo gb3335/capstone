@@ -73,6 +73,7 @@ class College extends Component {
     let collegeCourses;
     let collegeReports;
     let collegeContent;
+    let collegeReportButton;
     let colAction;
     let courseAction;
     let deletedAction;
@@ -85,6 +86,20 @@ class College extends Component {
             courseAction = <CollegeCourseActions />;
           }
           colAction = <CollegeActions />;
+          collegeReports = <Report />;
+          collegeReportButton = (
+            <a
+              className="list-group-item list-group-item-action"
+              id="list-reports-list"
+              data-toggle="list"
+              href="#list-reports"
+              role="tab"
+              aria-controls="reports"
+            >
+              <i className="fas fa-poll-h mr-2" />
+              Create Report
+            </a>
+          );
         } catch (error) {}
       }
 
@@ -106,8 +121,6 @@ class College extends Component {
               <CollegeCourses college={college} />
             </div>
           );
-
-          collegeReports = <Report />;
 
           // collegeContent = (
           //   <div>
@@ -194,17 +207,7 @@ class College extends Component {
                 Courses
               </a>
               {deletedAction}
-              <a
-                className="list-group-item list-group-item-action"
-                id="list-reports-list"
-                data-toggle="list"
-                href="#list-reports"
-                role="tab"
-                aria-controls="reports"
-              >
-                <i className="fas fa-poll-h mr-2" />
-                Create Report
-              </a>
+              {collegeReportButton}
             </div>
           </div>
 

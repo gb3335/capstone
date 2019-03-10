@@ -1,3 +1,5 @@
+const moment = require("moment");
+
 module.exports = ({
   status,
   researchTotal,
@@ -21,6 +23,8 @@ module.exports = ({
   let courseTitle;
   let coursesListNoComma = "";
   let coursesListHeader;
+
+  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
 
   if (researchTotal === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -47,7 +51,9 @@ module.exports = ({
   }
 
   if (lastUpdate === true) {
-    updatedon = `<li>Updated on: ${college.lastUpdate.date}</li>`;
+    updatedon = `<li>Updated on: ${moment(college.lastUpdate.date).format(
+      "MMMM Do YYYY, h:mm A"
+    )}</li>`;
   } else {
     updatedon = "";
   }
@@ -63,7 +69,7 @@ module.exports = ({
     totalcourse = `<li>Total Courses: ${college.course.length}</li>`;
 
     if (college.course.length == 0) {
-      coursesList = "No Courses in this College";
+      coursesListNoComma = "No Courses in this College";
       coursesListHeader = "";
     } else {
       coursesList = college.course.map(
@@ -138,16 +144,17 @@ module.exports = ({
           padding: 20px 0;
         }
   
-        .bulsu-logo {
+        .rep-logo {
           width: 5rem;
           height: 5rem;
           float: left;
         }
   
-        .cict-logo {
+        .hidden-logo {
           width: 5rem;
           height: 5rem;
           float: right;
+          visibility:hidden;
         }
   
         table {
@@ -180,13 +187,27 @@ module.exports = ({
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
-            class="bulsu-logo"
+            class="rep-logo"
           />
           <img
-            src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
-            alt="cict-logo"
-            class="cict-logo"
+            src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
+              college.logo
+            }"
+            alt="college-logo"
+            class="rep-logo"
           />
+          <img
+          src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+          alt="bulsu-logo"
+          class="hidden-logo"
+        />
+        <img
+          src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
+            college.logo
+          }"
+          alt="college-logo"
+          class="hidden-logo"
+        />
           <br />
           Bulacan State University
           <br />
@@ -200,9 +221,9 @@ module.exports = ({
           <h4>University Research Office</h4>
         </div>
           <div style="font-size: 10px;">
-            <h3 style="float: left;">
-              ${collegeName}
-            </h3>
+            <p style="float: left;">
+              <b>College Name: </b>${collegeName}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}
+            </p>
           </div>
           <br />
           <br />

@@ -567,7 +567,6 @@ router.post(
         if (err) {
           res.send(Promise.reject());
         }
-
         res.send(Promise.resolve());
       });
   }
