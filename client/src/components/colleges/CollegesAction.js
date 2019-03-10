@@ -109,7 +109,6 @@ class CollegesActions extends Component {
           journalTotal: this.state.journalTotal,
           lastUpdate: this.state.lastUpdate,
           colleges: this.props.college.colleges,
-          android: true,
           typeOfReport: "List of Colleges",
           printedBy: name
         };
