@@ -18,7 +18,7 @@ module.exports = ({
 
   let totalcol = colleges.length;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm a");
+  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -61,7 +61,7 @@ module.exports = ({
         `${
           lastUpdate === true
             ? `<td>${moment(college.lastUpdate.date).format(
-                "MMMM Do YYYY, h:mm a"
+                "MMMM Do YYYY, h:mm A"
               )}</td>`
             : ""
         }` +
