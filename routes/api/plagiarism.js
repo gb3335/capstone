@@ -2,7 +2,11 @@ const express = require("express");
 const router = express.Router();
 const request = require("request");
 const fs = require('fs');
-const extract = require('pdf-text-extract')
+const extract = require('pdf-text-extract');
+
+const {gzip, ungzip} = require('node-gzip');
+const jsscompress = require("js-string-compression");
+const hm = new jsscompress.Hauffman();
 
 const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
 const cx = "014684295069765089744:fvoycnmgzio";
@@ -57,6 +61,27 @@ router.post("/online", (req, res) => {
   );
 });
 
+// @routes  POST api/extract/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/initialize/pattern", (req,res) => {
+  let docuId = req.body.docuId;
+  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
+    if (err) {
+      console.dir(err)
+      return
+    }
+    
+    let extext = data;
+    extext = processor.arrayProcess(extext.toString().toLowerCase());
+    plagiarism.initialize(extext);
+    res.json({ 
+      success: true
+    })
+  })
+})
+
+
 // @routes  POST api/plagiarism/local
 // @desc    search local route
 // @access  public
@@ -67,64 +92,70 @@ router.post("/local", (req, res) => {
   //   return res.status(400).json(errors);
   // }
 
-  let docuId = req.body.docuId;
-  let document = req.body.document;
-
-  // //option to extract text from page 0 to 10
-  // const option = {from: 0, to: 10};
+  let title = req.body.title;
+  let textId = req.body.textId;
+  let textTitle = req.body.textTitle;
   
-  // //Omit option to extract all text from the pdf file
-  // pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
-  //   if (err) throw(err);
-  //   console.log(data); //print all text    
-  // });
+  // console.log(`DocuID: ${docuId}, Title: ${title}, TextID: ${textId}, TextTitle: ${textTitle}`);
+  
+      extract(`./routes/downloadedDocu/${textId}.pdf`, { splitPages: false }, (err, data2) => {
+        if (err) {
+          console.dir(err)
+          return
+        }
+        let text = processor.textProcess(data2.toString().toLowerCase());
 
-  // let extext=""
-  // fs.readFile(`./routes/downloadedDocu/${docuId}.pdf`, (err, pdfBuffer) => {
-  //   // pdfBuffer contains the file content
-  //   new PdfReader().parseBuffer(pdfBuffer, function(err, item){
-  //     if (err)
-  //       callback(err);
-  //     else if (!item)
-  //       callback();
-  //     else if (item.text)
-  //       extext = item.text;
-  //       //extext = extext.toString().split("\n").join("");
-  //       console.log(extext)
-        
-  //     });
-  // });
-  let extext = "kyle"
-  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
-    if (err) {
-      console.dir(err)
-      return
-    }
-    extext = data;
-    //extext = processor.textProcess(extext.toString().toLowerCase());
-    //console.log(extext)
-    //let wer = "kyle"
-    let arr = processor.arrayProcess(extext.toString().toLowerCase());
-    let text = processor.textProcess(extext.toString().toLowerCase());
-    let flag = req.body.flag;
-    if(flag=="true"){
-      flag=true;
-    }else{
-      flag=false;
-    }
-    let docu1 = req.body.docu1;
-    let docu2 = req.body.docu2;
+        let result = plagiarism.search(text, title, textTitle);
+        if(result.SimilarityScore == 100){
+          delete result.Index;
+        }
+        const compressed = hm.compress(JSON.stringify(result));
+        // gzip(JSON.stringify(result))
+        // .then((compressed) => {
+        //   console.log(compressed);
+        //   //return ungzip(compressed);
+        //   res.json({
+        //     localPlagiarism: {
+        //       success: true,
+        //       data: compressed
+        //     }
+        //   });
+        // })
+        // .then((decompressed) => {
+        //   console.log(JSON.parse(decompressed)); 
+        // });
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      })
+  
+  
 
-    let result = plagiarism.search(arr, text, true, "docu1", "docu2");
-    console.log(result);
-    res.json({
-      localPlagiarism: {
-        success: true,
-        data: result
-      }
-    });
+
+  // extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
+  //   if (err) {
+  //     console.dir(err)
+  //     return
+  //   }
+  //   extext = data;
+  //   let arr = processor.arrayProcess(extext.toString().toLowerCase());
+  //   let text = processor.textProcess(extext.toString().toLowerCase());
     
-  })
+  //   let docu1 = req.body.docu1;
+  //   let docu2 = req.body.docu2;
+
+  //   let result = plagiarism.search(arr, text, true, "docu1", "docu2");
+  //   res.json({
+  //     localPlagiarism: {
+  //       success: true,
+  //       data: result
+  //     }
+  //   });
+    
+  // })
 
   
   

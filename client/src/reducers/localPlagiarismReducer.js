@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING } from "../actions/types";
 
 const initialState = {
   output: {},
@@ -10,7 +10,14 @@ export default function(state = initialState, action) {
     case PLAGIARISM_LOCAL:
       return {
         ...state,
-        output: action.payload
+        // output: [...state.output, action.payload]
+        output: action.payload,
+        loading: false
+      };
+    case PLAGIARISM_LOCAL_LOADING:
+      return {
+        ...state,
+        loading: true
       };
     default:
       return state;

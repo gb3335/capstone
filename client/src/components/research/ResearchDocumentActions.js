@@ -5,6 +5,7 @@ import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
 import { addDocument, deleteDocument } from "../../actions/researchActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
+import Spinner from "../common/Spinner";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -32,8 +33,8 @@ class ResearchImageActions extends Component {
         });
 
         const docuData = {
-          researchId: this.props.research._id,
-          oldFile: this.props.research.document,
+          researchId: this.props.research.research._id,
+          oldFile: this.props.research.research.document,
           file: this.state.file
         };
 
@@ -45,23 +46,25 @@ class ResearchImageActions extends Component {
   };
 
   onDeleteDocument = e => {
-    const researchId = this.props.research._id;
-    const filename = this.props.research.document;
+    const researchId = this.props.research.research._id;
+    const filename = this.props.research.research.document;
 
     this.props.deleteDocument(researchId, filename);
   };
 
   onLocalCheck = e => {
     const input = {
-      docuId : this.props.research._id,
-      document: this.props.research.document
+      docuId : this.props.research.research._id,
+      title: this.props.research.research.title,
+      researches: this.props.research.researches,
+      flag: true
     };
 
     this.props.checkPlagiarismLocal(input, this.props.history);
   };
 
   render() {
-    const { research } = this.props;
+    const { research } = this.props.research;
     let docuItem;
 
     if (research.document) {
@@ -98,7 +101,7 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {docuItem}
+        {this.props.localPlagiarism.loading ? <Spinner/> : docuItem}
 
         <div hidden>
           <FileFieldGroup
@@ -118,11 +121,15 @@ ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
   checkPlagiarismLocal: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  research: PropTypes.object.isRequired,
+  localPlagiarism: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  errors: state.errors
+  errors: state.errors,
+  research:state.research,
+  localPlagiarism: state.localPlagiarism
 });
 
 export default connect(
