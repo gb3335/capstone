@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import initials from "initials"
+
 
 class ViewUserHeader extends Component {
   render() {
