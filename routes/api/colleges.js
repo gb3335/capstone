@@ -57,7 +57,6 @@ router.get("/:initials", (req, res) => {
   const errors = {};
 
   College.findOne({ "name.initials": req.params.initials })
-    .populate("college", ["name.fullName", "logo"])
     .then(college => {
       if (!college) {
         errors.nocollege = "There is no profile for this user";
@@ -486,6 +485,40 @@ router.post(
   }
 );
 
+// @route   POST api/colleges/uploadS3/android
+// @desc    Upload Generated report to s3 for android
+// @access  Private
+router.post(
+  "/uploadS3/android",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    // S3 upload
+    const s3 = new AWS.S3();
+
+    const base64Data = new Buffer(
+      req.body.base64.replace(/^data:application\/\w+;base64,/, ""),
+      "base64"
+    );
+
+    const params = {
+      Bucket: "bulsu-capstone",
+      Key: `androidReport/generatedReport.pdf`, // type is not required
+      Body: base64Data,
+      ACL: "public-read",
+      ContentEncoding: "base64", // required
+      ContentType: `application/pdf` // required. Notice the back ticks
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+
+      console.log("-ANDROID- Report successfully uploaded.");
+    });
+  }
+);
+
 // @route   POST api/colleges/createReport/college
 // @desc    Generate individual College Report
 // @access  Private
@@ -494,21 +527,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const printedBy = req.body.printedBy;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    const today = new Date();
     const options = {
       border: {
         top: "0.5in",
@@ -521,9 +539,7 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
-            months[today.getMonth()]
-          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
+          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
@@ -561,21 +577,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const printedBy = req.body.printedBy;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec"
-    ];
-    const today = new Date();
     const options = {
       border: {
         top: "0.5in",
@@ -588,9 +589,7 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px">Printed By: ${printedBy} &nbsp;&nbsp;&nbsp; Date: ${`${
-            months[today.getMonth()]
-          }. ${today.getDate()} , ${today.getFullYear()}`}</p>
+          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
@@ -602,7 +601,6 @@ router.post(
         if (err) {
           res.send(Promise.reject());
         }
-
         res.send(Promise.resolve());
       });
   }

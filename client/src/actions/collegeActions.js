@@ -18,6 +18,7 @@ import {
 
 // Get all colleges
 export const getColleges = () => dispatch => {
+  dispatch(changeButtonStatus(false));
   dispatch(clearErrors());
   dispatch(setCollegeLoading());
   axios
@@ -48,6 +49,21 @@ export const createReportForCollege = reportData => dispatch => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
           dispatch(changeButtonStatus(false));
           saveAs(pdfBlob, "CollegeReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function() {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
         })
     )
     .catch(err =>
@@ -58,7 +74,7 @@ export const createReportForCollege = reportData => dispatch => {
     );
 };
 
-// Create Report for individual Colleges
+// Create Report for all Colleges
 export const createReportForColleges = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
   axios
@@ -70,6 +86,21 @@ export const createReportForColleges = reportData => dispatch => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
           dispatch(changeButtonStatus(false));
           saveAs(pdfBlob, "CollegesReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function() {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
         })
     )
     .catch(err =>
@@ -82,7 +113,7 @@ export const createReportForColleges = reportData => dispatch => {
 
 // Change Status of Generate Report Button
 // set loading state
-export const changeButtonStatus = (flag) => {
+export const changeButtonStatus = flag => {
   return {
     type: CHANGE_BUTTON_STATUS,
     payload: flag
@@ -132,6 +163,7 @@ export const toggleCourseBin = toggle => {
 export const getCollegeByInitials = initials => dispatch => {
   dispatch(clearErrors());
   dispatch(setCollegeLoading());
+  dispatch(changeButtonStatus(false));
   axios
     .get(`/api/colleges/${initials}`)
     .then(res =>

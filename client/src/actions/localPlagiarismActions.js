@@ -27,7 +27,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       .then(res => {
         const hm = new jsscompress.Hauffman();
         let newres = [];
-        console.log(res);
+        // console.log(res);
         // console.log("decompressing");
         // console.log(res)
         res.forEach(function(r, index){
