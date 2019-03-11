@@ -1,5 +1,8 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
+const passwordValidator = require('password-validator');
+
+
 
 module.exports = function validateProfileInput(data) {
     let errors = {};
@@ -9,8 +12,8 @@ module.exports = function validateProfileInput(data) {
     data.middlename = !isEmpty(data.middlename) ? data.middlename : '';
     data.email = !isEmpty(data.email) ? data.email : '';
     data.contact = !isEmpty(data.contact) ? data.contact : '';
-    data.username = !isEmpty(data.username) ? data.username : '';
-    data.password = !isEmpty(data.password) ? data.password : '';
+
+    console.log(data)
 
 
     if (Validator.isEmpty(data.firstname)) {
@@ -39,15 +42,9 @@ module.exports = function validateProfileInput(data) {
         errors.contact = "Contact Number field is Required";
     }
 
-    if(data.username.length>0){
-        if (!Validator.isLength(data.username, { min: 5, max: 12 })) {
-            errors.username = "Username must between 5 to 12 characters";
-        }
-    }
-    
-    if (Validator.isEmpty(data.password)) {
-        errors.password = "Password field is Required";
-    }
+
+
+
 
     // if (Validator.isEmpty(data.password2)) {
     //     errors.password2 = "Confirm Password field is Required";

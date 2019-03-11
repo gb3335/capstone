@@ -1,67 +1,167 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import Moment from "react-moment";
+import "moment-timezone";
+
+import {Pie} from 'react-chartjs-2';
 
 import Output from './Output';
 
+import './LocalResults.css'
+
 class LocalResult extends Component {
+  constructor() {
+    super();
+    this.state = {
+      little: 0,
+      moderate: 0,
+      heavy: 0,
+      score: []
+    };
+  }
+
+
+  componentDidMount(){
+    const {output} = this.props.localPlagiarism; 
+    let little= 0, moderate= 0, heavy=0;
+    let score=[]
+    output.forEach(out =>{
+      if(out.SimilarityScore<30){
+        little++;
+      }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
+        moderate++;
+      }
+      else if(out.SimilarityScore>70){
+        heavy++;
+      }
+    })
+
+    score.push(little);
+    score.push(moderate);
+    score.push(heavy);
+
+    this.setState({little})
+    this.setState({moderate})
+    this.setState({heavy})
+    this.setState({score});
+  }
+
   render() {
+
     const {output} = this.props.localPlagiarism;
+    const {research} = this.props.research;
     let outputItems;
 
     if (Object.keys(output).length > 0) {
-      outputItems = <Output output={output} />;
+      outputItems = <Output output={output} research={this.props.research}/>;
     } else {
       outputItems = <span>No output</span>;
     }
 
-    // const {
-    //   SimilarityScore
-    // } = this.props.localPlagiarism.output.localPlagiarism.data;
-    // const Name1 = this.props.localPlagiarism.output.localPlagiarism.data
-    //   .DocumentScore.Document_1.Name;
-    // const Score1 = this.props.localPlagiarism.output.localPlagiarism.data
-    //   .DocumentScore.Document_1.Score;
-    // const Name2 = this.props.localPlagiarism.output.localPlagiarism.data
-    //   .DocumentScore.Document_2.Name;
-    // const Score2 = this.props.localPlagiarism.output.localPlagiarism.data
-    //   .DocumentScore.Document_2.Score;
-    // const {
-    //   NumOfHits
-    // } = this.props.localPlagiarism.output.localPlagiarism.data;
-    // const {
-    //   NumOfPattern
-    // } = this.props.localPlagiarism.output.localPlagiarism.data;
-    // const {
-    //   NumOfText
-    // } = this.props.localPlagiarism.output.localPlagiarism.data;
-    // const { Index } = this.props.localPlagiarism.output.localPlagiarism.data;
+    const data = {
+      labels: [
+        'Little Plagiarism',
+        'Moderate Plagiarism',
+        'Heavy Plagiarism'
+      ],
+      datasets: [{
+        data: this.state.score,
+        backgroundColor: [
+        '#36A2EB',
+        '#f49e61',
+        '#FF6384'
+        ],
+        hoverBackgroundColor: [
+          '#36A2EB',
+          '#f49e61',
+          '#FF6384'
+        ]
+      }]
+    };
 
     return (
       <div className="research">
-        <div className="container" style={{ padding: "1em" }}>
+        <div className="container-fluid" style={{ padding: "1em" }}>
+        <div className="row">
+              <div className="col-md-8">
+                <Link
+                  to={`/researches/${this.props.localPlagiarism.docuId}`}
+                  className="btn btn-light mb-3 float-left"
+                >
+                  <i className="fas fa-angle-left" /> Back
+                </Link>
+                <Link
+                  to={`/researches/${this.props.localPlagiarism.docuId}`}
+                  className="btn btn-light mb-3 float-right"
+                >
+                  <i className="fas fa-flag text-danger" /> Generate Report
+                </Link>
+              </div>
+            </div>
           <div className="row">
-            <div className="col-md-12">Local Result</div>
-            
-              {outputItems}
-              {/* Similarity Score: <span>{SimilarityScore}</span>
-              <br />
-              Document 1: <span>{Name1}</span>
-              <br />
-              Document 1 Similarity Score: <span>{Score1}</span>
-              <br />
-              Document 2: <span>{Name2}</span>
-              <br />
-              Document 2 Similarity Score: <span>{Score2}</span>
-              <br />
-              Hits: <span>{NumOfHits}</span>
-              <br />
-              Pattern: <span>{NumOfPattern}</span>
-              <br />
-              Text: <span>{NumOfText}</span>
-              <br />
-              {JSON.stringify(Index)} */}
-            
+              <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-md-8">
+                      <div className="sourceResearch">
+                          <div className="sourceHeader">Result Statistics</div>
+                          <div className="sourceContent">
+                            <div className="row">
+                                <div className="col-md-7">
+                                  <Pie data={data} height={300} options={{ maintainAspectRatio: false}}/>
+                                </div>
+                                <div className="col-md-5">
+                                    <div className="overview">Statistics Overview</div>
+                                    <div className="overviewContent mb-2">Number Of Candidate Document: {this.state.little+this.state.moderate+this.state.heavy}</div>
+                                    <div className="overviewContent heavy-text">Heavy Plagiarism: {this.state.heavy}</div>
+                                    <div className="overviewContent moderate-text">Moderate Plagiarism: {this.state.moderate}</div>
+                                    <div className="overviewContent little-text">Little Plagiarism: {this.state.little}</div>
+                                    <div className="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
+                                </div>
+                            </div>
+                          </div>
+                          <div className="sourceHeader">Research Title</div>
+                          <div className="sourceContent">{research.title}</div>
+                          <div className="sourceHeader">Research Details</div>
+                          <div className="sourceContent researchDetails">
+                              <div>
+                                  <span>College: </span>
+                                  {research.college}
+                              </div>
+                              <div>
+                                  <span>Course: </span>
+                                  {research.course}
+                              </div>
+                              <div>
+                                  <span>Research Type: </span>
+                                  {research.type==="thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
+                              </div>
+                              <div>
+                                  <span>Pages: </span>
+                                  {research.pages}
+                              </div>
+                              <div>
+                                  <span>School Year: </span>
+                                  {research.schoolYear}
+                              </div>  
+                              <div>
+                                  <span>Last Update: </span>
+                                  <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
+                                  {" at "}
+                                  <Moment format="h:mm A">{research.lastUpdate}</Moment>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="container-fluid">
+                        <div className="sourceHeader">Result List</div>
+                        <div className="results">{outputItems}</div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
@@ -70,11 +170,13 @@ class LocalResult extends Component {
 }
 
 LocalResult.propTypes = {
-  localPlagiarism: PropTypes.object.isRequired
+  localPlagiarism: PropTypes.object.isRequired,
+  research: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  localPlagiarism: state.localPlagiarism
+  localPlagiarism: state.localPlagiarism,
+  research: state.research
 });
 
 export default connect(mapStateToProps)(LocalResult);

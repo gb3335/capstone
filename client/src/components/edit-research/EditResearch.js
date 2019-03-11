@@ -44,15 +44,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === this.props.research.research.college
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
   }
@@ -96,15 +96,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
   };
@@ -124,6 +124,7 @@ class EditResearch extends Component {
 
   render() {
     const { college, errors } = this.props;
+
     const path = "/researches/" + this.props.research.research._id;
     let collegeOptions = [{ label: "* Select College", value: "" }];
     let courseOptions = [{ label: "* Select Course", value: "" }];
@@ -132,12 +133,12 @@ class EditResearch extends Component {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-              label: college.name.fullName,
-              value: college.name.fullName
-            })
+            label: college.name.fullName,
+            value: college.name.fullName
+          })
           : ""
       );
-    } catch (error) {}
+    } catch (error) { }
 
     return (
       <div className="create-research">
