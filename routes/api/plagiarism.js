@@ -91,7 +91,7 @@ router.post("/local", (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-
+  let docuId = req.body.docuId;
   let title = req.body.title;
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;

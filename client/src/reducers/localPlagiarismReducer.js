@@ -1,7 +1,8 @@
-import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID } from "../actions/types";
 
 const initialState = {
   output: {},
+  docuId: "",
   loading: false
 };
 
@@ -18,6 +19,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         loading: true
+      };
+    case PLAGIARISM_LOCAL_ID:
+      return {
+        ...state,
+        docuId: action.payload
       };
     default:
       return state;

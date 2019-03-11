@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING } from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID } from "./types";
 import axios from "axios";
 
 import jsscompress from "js-string-compression";
@@ -7,7 +7,8 @@ let promises = [];
 
 // Check Plagiarism Local
 export const checkPlagiarismLocal = (input, history) => dispatch => {
-  dispatch(setPlagiarismLocalLoading())
+  dispatch(setPlagiarismLocalLoading());
+  dispatch(setDocumentId(input.docuId));
   console.time("Initialize")
   axios
   .post("/api/plagiarism/initialize/pattern", input)
@@ -35,6 +36,12 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
           //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
           newres.push(r.data.localPlagiarism.data)
         })
+        console.log(newres)
+        newres.sort(function(obj1, obj2) {
+          // Ascending: first age less than the previous
+          return obj2.SimilarityScore - obj1.SimilarityScore;
+        });
+        console.log(newres)
         console.timeEnd("Initialize")
         dispatch(outputLocalPlagiarism(newres));
         history.push(`/localResult`);
@@ -47,6 +54,13 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       });
   })
 
+};
+
+export const setDocumentId = (id) => {
+  return {
+    type: PLAGIARISM_LOCAL_ID,
+    payload: id
+  };
 };
 
 export const setPlagiarismLocalLoading = () => {

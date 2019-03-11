@@ -34,6 +34,7 @@ import ViewUser from "../view-user/ViewUser";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
+import LocalResult_id from "../plagiarism-result/LocalResult_id";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -135,6 +136,13 @@ class Main extends Component {
                   exact
                   path="/localResult"
                   component={LocalResult}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/localResult/:id"
+                  component={LocalResult_id}
                 />
               </Switch>
             </div>
