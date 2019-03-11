@@ -1,60 +1,81 @@
+const moment = require("moment");
+
 module.exports = ({
   status,
-  research,
-  journal,
+  researchTotal,
+  journalTotal,
+  lastUpdate,
   courses,
   typeOfReport,
-  college,
-  researchOfCol
+  college
 }) => {
   let librarian = college.librarian;
   let stat;
-  let lastUpdate = college.lastUpdate.date;
-  lastUpdate = new Date(lastUpdate);
-  let collegeName = college.name.fullName;
-
-  // for researches table
-  let totalresearch;
-  let researchList;
-  let researchListNoComma = "";
-  let researchListHeader;
-
-  // for journals table
   let totaljour;
+  let totalres;
+  let updatedon;
+  let collegeName = college.name.fullName;
+  let numberOfColForEndRow = 0;
 
   // for courses table
   let totalcourse;
   let coursesList;
+  let courseTitle;
   let coursesListNoComma = "";
   let coursesListHeader;
 
+  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+
+  if (researchTotal === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (journalTotal === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  numberOfColForEndRow = 4 + numberOfColForEndRow;
+
   if (status === true) {
-    if (college.status === 0) {
-      stat = "Active";
+    if (college.deleted === 0) {
+      stat = "<li>Status: Active</li>";
     } else {
-      stat = "Inactive";
+      stat = "<li>Status: Deleted</li>";
     }
   } else {
-    stat = "Not Available";
+    stat = "";
   }
 
-  if (journal === true) {
-    totaljour = college.journalTotal;
+  if (journalTotal === true) {
+    totaljour = `<li>Total Journals: ${college.journalTotal}</li>`;
   } else {
-    totaljour = "Not Available";
+    totaljour = "";
+  }
+
+  if (lastUpdate === true) {
+    updatedon = `<li>Updated on: ${moment(college.lastUpdate.date).format(
+      "MMMM Do YYYY, h:mm A"
+    )}</li>`;
+  } else {
+    updatedon = "";
+  }
+
+  if (researchTotal === true) {
+    totalres = `<li>Total Researches: ${college.researchTotal}</li>`;
+  } else {
+    totalres = "";
   }
 
   // College course list and count
   if (courses === true) {
-    totalcourse = college.course.length;
+    totalcourse = `<li>Total Courses: ${college.course.length}</li>`;
 
-    if (totalcourse == 0) {
-      coursesList = "No Courses in this College";
+    if (college.course.length == 0) {
+      coursesListNoComma = "No Courses in this College";
       coursesListHeader = "";
     } else {
       coursesList = college.course.map(
-        indCourse =>
+        (indCourse, index) =>
           "<tr>" +
+          `<td>${++index}</td>` +
           `<td>${indCourse.name}</td>` +
           `<td>${indCourse.initials}</td>` +
           `<td>${
@@ -64,8 +85,12 @@ module.exports = ({
               ? "Active"
               : "Inactive"
           }</td>` +
-          `<td>${indCourse.researchTotal}</td>` +
-          `<td>${indCourse.journalTotal}</td>` +
+          `${
+            researchTotal === true ? `<td>${indCourse.researchTotal}</td>` : ""
+          }` +
+          `${
+            journalTotal === true ? `<td>${indCourse.journalTotal}</td>` : ""
+          }` +
           "</tr>"
       );
 
@@ -73,63 +98,27 @@ module.exports = ({
         coursesListNoComma = coursesListNoComma + item;
       });
 
+      coursesListNoComma =
+        coursesListNoComma +
+        `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
+
       coursesListHeader =
         "<tr>" +
-        "<th>Name</th>" +
-        "<th>Initials</th>" +
-        "<th>Status</th>" +
-        "<th>Research Total</th>" +
-        "<th>Journal Total</th>" +
+        "<th>NO</th>" +
+        "<th>COURSE NAME</th>" +
+        "<th>INITIALS</th>" +
+        "<th>STATUS</th>" +
+        `${researchTotal === true ? `<th>RESEARCH TOTAL</th>` : ""}` +
+        `${journalTotal === true ? `<th>JOURNAL TOTAL</th>` : ""}` +
         "</tr>";
     }
+
+    courseTitle = `<h4 style="font-size: 10px">Courses:</h4>`;
   } else {
-    totalcourse = "Not Available";
-    coursesListNoComma = "Not Available";
+    totalcourse = "";
+    courseTitle = "";
+    coursesListNoComma = "";
     coursesListHeader = "";
-  }
-
-  // College researches list and count
-  if (research === true) {
-    totalresearch = researchOfCol.length;
-
-    if (totalresearch == 0) {
-      researchList = "No Researches in this College";
-      researchListHeader = "";
-    } else {
-      researchList = researchOfCol.map(
-        indRes =>
-          "<tr>" +
-          `<td>${indRes.title}</td>` +
-          `<td>${indRes.type}</td>` +
-          `<td>${
-            indRes.deleted === 1
-              ? "Deleted"
-              : indRes.hidden === 0
-              ? "Active"
-              : "Hidden"
-          }</td>` +
-          `<td>${indRes.course}</td>` +
-          `<td>${indRes.schoolYear}</td>` +
-          "</tr>"
-      );
-
-      researchList.map(item => {
-        researchListNoComma = researchListNoComma + item;
-      });
-
-      researchListHeader =
-        "<tr>" +
-        "<th>Title</th>" +
-        "<th>Type</th>" +
-        "<th>Status</th>" +
-        "<th>Course</th>" +
-        "<th>Academic Year</th>" +
-        "</tr>";
-    }
-  } else {
-    totalresearch = "Not Available";
-    researchListNoComma = "Not Available";
-    researchListHeader = "";
   }
 
   return `<!DOCTYPE html>
@@ -155,16 +144,17 @@ module.exports = ({
           padding: 20px 0;
         }
   
-        .bulsu-logo {
+        .rep-logo {
           width: 5rem;
           height: 5rem;
           float: left;
         }
   
-        .cict-logo {
+        .hidden-logo {
           width: 5rem;
           height: 5rem;
           float: right;
+          visibility:hidden;
         }
   
         table {
@@ -181,8 +171,14 @@ module.exports = ({
         }
   
         tr:nth-child(even) {
-          background-color: #dddddd;
+          background-color: #000000;
+          color: white;
         }
+
+        .blank_row {
+          height: 10px !important; /* overwrites any other rules */
+          background-color: #FFFFFF;
+      }
       </style>
     </head>
     <body>
@@ -191,13 +187,27 @@ module.exports = ({
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
-            class="bulsu-logo"
+            class="rep-logo"
           />
           <img
-            src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
-            alt="cict-logo"
-            class="cict-logo"
+            src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
+              college.logo
+            }"
+            alt="college-logo"
+            class="rep-logo"
           />
+          <img
+          src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+          alt="bulsu-logo"
+          class="hidden-logo"
+        />
+        <img
+          src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
+            college.logo
+          }"
+          alt="college-logo"
+          class="hidden-logo"
+        />
           <br />
           Bulacan State University
           <br />
@@ -208,45 +218,36 @@ module.exports = ({
           <br />
           <br />
           <h4>${typeOfReport}</h4>
+          <h4>University Research Office</h4>
         </div>
-        <div class="reportBody" style="padding: 7px; border: 1px solid gray">
           <div style="font-size: 10px;">
-            <h3 style="float: left;">
-              ${collegeName}
-            </h3>
+            <p style="float: left;">
+              <b>College Name: </b>${collegeName}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}
+            </p>
           </div>
-  
           <br />
           <br />
           <hr />
           <div class="details" style="font-size: 10px">
-            <h4 style="font-size: 9px">Details:</h4>
+            <h4 style="font-size: 10px">Details:</h4>
             <div>
               <ul style="list-style-type:circle; text-align: left">
                 <li>Librarian: ${librarian}</li>
-                <li>Status: ${stat}</li>
-                <li>Total Researches: ${totalresearch}</li>
-                <li>Total Journals: ${totaljour}</li>
-                <li>Total Courses: ${totalcourse}</li>
-                <li>Last Update: ${lastUpdate.toLocaleString()}</li>
+                ${stat}
+                ${totalres}
+                ${totaljour}
+                ${totalcourse}
+                ${updatedon}
               </ul>
             </div>
           </div>
           <div class="courses" style="font-size: 9px">
-            <h4 style="font-size: 10px">Courses:</h4>
+            ${courseTitle}
             <table>
               ${coursesListHeader}
               ${coursesListNoComma}
             </table>
           </div>
-          <div class="researches" style="font-size: 9px">
-            <h4 style="font-size: 10px">Researches:</h4>
-            <table>
-              ${researchListHeader}
-              ${researchListNoComma}
-            </table>
-          </div>
-        </div>
       </div>
     </body>
   </html>

@@ -8,8 +8,9 @@ class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      research: false,
-      journal: false,
+      researchTotal: false,
+      journalTotal: false,
+      lastUpdate: false,
       status: false,
       courses: false
     };
@@ -26,22 +27,23 @@ class Report extends Component {
   };
 
   onGenerateReport = e => {
-    if(!this.props.college.buttonDisable){
+    if (!this.props.college.buttonDisable) {
       if (
-        this.state.research === false &&
-        this.state.journal === false &&
+        this.state.researchTotal === false &&
+        this.state.journalTotal === false &&
         this.state.status === false &&
+        this.state.lastUpdate === false &&
         this.state.courses === false
       ) {
         alert("Please Check at least one");
       } else {
-        let researchOfCol = [];
-        this.props.research.researches.map(research => {
-          if (research.college === this.props.college.college.name.fullName) {
-            researchOfCol.push(research);
-          }
-        });
-  
+        // let researchOfCol = [];
+        // this.props.research.researches.map(research => {
+        //   if (research.college === this.props.college.college.name.fullName) {
+        //     researchOfCol.push(research);
+        //   }
+        // });
+
         const name =
           this.props.auth.user.firstName +
           " " +
@@ -49,21 +51,20 @@ class Report extends Component {
           " " +
           this.props.auth.user.lastName;
         const reportData = {
-          research: this.state.research,
-          journal: this.state.journal,
+          researchTotal: this.state.researchTotal,
+          journalTotal: this.state.journalTotal,
           status: this.state.status,
+          lastUpdate: this.state.lastUpdate,
           courses: this.state.courses,
           college: this.props.college.college,
-          researchOfCol: researchOfCol,
           typeOfReport: "College Report",
           printedBy: name
         };
-  
+
         this.props.createReportForCollege(reportData);
         alert("Please wait while your report is being generated");
       }
     }
-    
   };
 
   render() {
@@ -81,33 +82,46 @@ class Report extends Component {
             onChange={this.onChange}
           />
           <label className="form-check-label" htmlFor="status">
-            Status
+            College Status
           </label>
         </div>
         <div className="form-check">
           <input
             className="form-check-input"
             type="checkbox"
-            name="research"
-            id="research"
-            value={this.state.research}
+            name="researchTotal"
+            id="researchTotal"
+            value={this.state.researchTotal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="research">
-            Research
+          <label className="form-check-label" htmlFor="researchTotal">
+            Total Number of Research
           </label>
         </div>
         <div className="form-check">
           <input
             className="form-check-input"
             type="checkbox"
-            name="journal"
-            id="journal"
-            value={this.state.journal}
+            name="journalTotal"
+            id="journalTotal"
+            value={this.state.journalTotal}
             onChange={this.onChange}
           />
-          <label className="form-check-label" htmlFor="journal">
-            Journal
+          <label className="form-check-label" htmlFor="journalTotal">
+            Total Number of Journal
+          </label>
+        </div>
+        <div className="form-check disabled">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="lastUpdate"
+            id="lastUpdate"
+            value={this.state.lastUpdate}
+            onChange={this.onChange}
+          />
+          <label className="form-check-label" htmlFor="lastUpdate">
+            Last Update
           </label>
         </div>
         <div className="form-check disabled">
@@ -126,18 +140,19 @@ class Report extends Component {
         <br />
         {this.props.college.buttonDisable ? (
           <input
-          type="button"
-          value="Generate Report"
-          onClick={this.onGenerateReport}
-          className="btn btn-info disabled"
-        />
-        ) : <input
-        type="button"
-        value="Generate Report"
-        onClick={this.onGenerateReport}
-        className="btn btn-info"
-      />}
-        
+            type="button"
+            value="Generate Report"
+            onClick={this.onGenerateReport}
+            className="btn btn-info disabled"
+          />
+        ) : (
+          <input
+            type="button"
+            value="Generate Report"
+            onClick={this.onGenerateReport}
+            className="btn btn-info"
+          />
+        )}
       </div>
     );
   }

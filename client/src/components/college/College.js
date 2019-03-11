@@ -73,10 +73,10 @@ class College extends Component {
     let collegeCourses;
     let collegeReports;
     let collegeContent;
+    let collegeReportButton;
     let colAction;
     let courseAction;
     let deletedAction;
-    let statusAction;
 
     try {
       if (this.props.auth.isAuthenticated) {
@@ -85,6 +85,20 @@ class College extends Component {
             courseAction = <CollegeCourseActions />;
           }
           colAction = <CollegeActions />;
+          collegeReports = <Report />;
+          collegeReportButton = (
+            <a
+              className="list-group-item list-group-item-action"
+              id="list-reports-list"
+              data-toggle="list"
+              href="#list-reports"
+              role="tab"
+              aria-controls="reports"
+            >
+              <i className="fas fa-poll-h mr-2" />
+              Create Report
+            </a>
+          );
         } catch (error) {}
       }
 
@@ -106,8 +120,6 @@ class College extends Component {
               <CollegeCourses college={college} />
             </div>
           );
-
-          collegeReports = <Report />;
 
           // collegeContent = (
           //   <div>
@@ -168,7 +180,7 @@ class College extends Component {
         </div>
         {/* Back button */}
         <div className="row" style={{ margin: "5px" }}>
-          <div className="col-md-4">
+          <div className="col-md-3">
             <br />
             <div className="list-group" id="list-tab" role="tablist">
               <a
@@ -194,21 +206,11 @@ class College extends Component {
                 Courses
               </a>
               {deletedAction}
-              <a
-                className="list-group-item list-group-item-action"
-                id="list-reports-list"
-                data-toggle="list"
-                href="#list-reports"
-                role="tab"
-                aria-controls="reports"
-              >
-                <i className="fas fa-poll-h mr-2" />
-                Create Report
-              </a>
+              {collegeReportButton}
             </div>
           </div>
 
-          <div className="col-md-8">
+          <div className="col-md-9">
             <br />
             <div className="tab-content" id="nav-tabContent">
               <div

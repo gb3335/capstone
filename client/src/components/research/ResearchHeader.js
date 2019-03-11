@@ -7,14 +7,18 @@ class ResearchHeader extends Component {
     const { research } = this.props;
     let type;
     let deleted;
+    let hidden;
     if (research.type === "thesis") {
-      type = <span className="badge badge-success">Thesis</span>;
+      type = "Thesis";
     } else {
-      type = <span className="badge badge-info">Undergrad Research</span>;
+      type = "Undergrad Research";
     }
 
     if (research.deleted === 1) {
       deleted = <span className="badge badge-danger">Deleted</span>;
+    }
+    if (research.hidden === 1) {
+      hidden = <span className="badge badge-warning">Hidden</span>;
     }
 
     return (
@@ -27,6 +31,10 @@ class ResearchHeader extends Component {
           <br />
           <span>
             <b>Course:</b> {research.course}
+          </span>
+          <br />
+          <span>
+            <b>Research ID:</b> {research.researchID}
           </span>
           <br />
           <span>
@@ -44,9 +52,11 @@ class ResearchHeader extends Component {
             <Moment format="h:mm A">{research.lastUpdate}</Moment>
           </span>
           <br />
-          {type}
+          <span>
+            <b>Type:</b> {type}
+          </span>
           <br />
-          {deleted}
+          {deleted} {hidden}
         </div>
       </div>
     );

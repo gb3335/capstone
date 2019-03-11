@@ -78,29 +78,10 @@ class CollegeActions extends Component {
 
   render() {
     const deleted = this.props.college.college.deleted;
-    let deletedAction;
     let editAction;
     let logoAction;
-    let statusAction;
 
-    if (deleted === 1) {
-      deletedAction = (
-        <Link
-          to="#"
-          onClick={this.onRestoreCollege}
-          className="btn btn-success"
-        >
-          <i className="fas fa-recycle text-light mr-1" />
-          Restore
-        </Link>
-      );
-    } else {
-      deletedAction = (
-        <Link to="#" onClick={this.onDeleteCollege} className="btn btn-danger">
-          <i className="fas fa-trash text-light mr-1" />
-          Move to Bin
-        </Link>
-      );
+    if (deleted === 0) {
       editAction = (
         <Link to="/edit-college" className="btn btn-light">
           <i className="fas fa-pen text-info mr-1" /> Edit College
@@ -126,20 +107,12 @@ class CollegeActions extends Component {
           </ImagePicker>
         </li>
       );
-      statusAction = (
-        <Link to="#" onClick={this.onCollegeStatus} className="btn btn-light">
-          <i className="fas fa-ban text-info mr-1" />
-          Deactivate
-        </Link>
-      );
     }
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {editAction}
         {logoAction}
-        {/* {statusAction}
-        {deletedAction} */}
       </div>
     );
   }

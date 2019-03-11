@@ -24,14 +24,37 @@ class EditResearch extends Component {
       college: research.college,
       course: research.course,
       abstract: research.abstract,
+      researchId: research.researchID,
       pages: research.pages,
       schoolYear: research.schoolYear,
+      courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
     };
   }
 
   componentDidMount() {
     this.props.getColleges();
+
+    this.state.courseOptions.length = 0;
+    this.state.courseOptions.push({
+      label: "* Select Course",
+      value: ""
+    });
+
+    this.props.college.colleges.map(college =>
+      college.name.fullName === this.props.research.research.college
+        ? college.course.map(course =>
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
+              : ""
+            : ""
+        )
+        : ""
+    );
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,6 +74,7 @@ class EditResearch extends Component {
       course: this.state.course,
       abstract: this.state.abstract,
       pages: this.state.pages,
+      researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
       id: this.props.research.research._id
     };
@@ -60,6 +84,32 @@ class EditResearch extends Component {
   };
 
   onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
+
+    this.state.courseOptions.length = 0;
+    this.state.courseOptions.push({
+      label: "* Select Course",
+      value: ""
+    });
+
+    this.props.college.colleges.map(college =>
+      college.name.fullName === e.target.value
+        ? college.course.map(course =>
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
+              : ""
+            : ""
+        )
+        : ""
+    );
+  };
+
+  onChangeSelectCourse = e => {
     this.setState({ [e.target.name]: e.target.value });
     this.refs.resBtn.removeAttribute("disabled");
   };
@@ -79,25 +129,16 @@ class EditResearch extends Component {
     let collegeOptions = [{ label: "* Select College", value: "" }];
     let courseOptions = [{ label: "* Select Course", value: "" }];
 
-    college.colleges.map(college =>
-      college.deleted === 0
-        ? collegeOptions.push({
-          label: college.name.fullName,
-          value: college.name.fullName
-        })
-        : ""
-    );
-
-    college.colleges.map(college =>
-      college.course.map(course =>
+    try {
+      college.colleges.map(college =>
         college.deleted === 0
-          ? courseOptions.push({
-            label: course.name,
-            value: course.name
+          ? collegeOptions.push({
+            label: college.name.fullName,
+            value: college.name.fullName
           })
           : ""
-      )
-    );
+      );
+    } catch (error) { }
 
     return (
       <div className="create-research">
@@ -177,8 +218,8 @@ class EditResearch extends Component {
                       placeholder="Course"
                       name="course"
                       value={this.state.course}
-                      onChange={this.onChange}
-                      options={courseOptions}
+                      onChange={this.onChangeSelectCourse}
+                      options={this.state.courseOptions}
                       error={errors.course}
                       info="Select your course"
                     />
@@ -208,6 +249,14 @@ class EditResearch extends Component {
                   info="Abstract of the research"
                   rows="10"
                 /> */}
+                <TextFieldGroup
+                  placeholder="* Research ID"
+                  name="researchId"
+                  value={this.state.researchId}
+                  onChange={this.onChange}
+                  error={errors.researchId}
+                  info="Research ID given by the college library"
+                />
                 <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"

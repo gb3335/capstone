@@ -19,7 +19,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
     width: "350px",
-    height: "340px"
+    height: "360px"
   }
 };
 
@@ -35,6 +35,7 @@ class CollegesActions extends Component {
       researchTotal: false,
       journalTotal: false,
       coursesTotal: false,
+      lastUpdate: false,
       status: false
     };
   }
@@ -84,12 +85,13 @@ class CollegesActions extends Component {
   };
 
   onGenerateReport = () => {
-    if(!this.props.college.buttonDisable){
+    if (!this.props.college.buttonDisable) {
       if (
         this.state.status === false &&
         this.state.coursesTotal === false &&
         this.state.researchTotal === false &&
-        this.state.journalTotal === false
+        this.state.journalTotal === false &&
+        this.state.lastUpdate === false
       ) {
         alert("Please check at least one");
       } else {
@@ -99,17 +101,18 @@ class CollegesActions extends Component {
           this.props.auth.user.middleName +
           " " +
           this.props.auth.user.lastName;
-  
+
         const collegesReportData = {
           status: this.state.status,
           coursesTotal: this.state.coursesTotal,
           researchTotal: this.state.researchTotal,
           journalTotal: this.state.journalTotal,
+          lastUpdate: this.state.lastUpdate,
           colleges: this.props.college.colleges,
-          typeOfReport: "List of Colleges",
+          typeOfReport: "Colleges Report",
           printedBy: name
         };
-  
+
         this.props.createReportForColleges(collegesReportData);
         alert("Please wait while your report is being generated");
       }
@@ -167,8 +170,6 @@ class CollegesActions extends Component {
       binActionForAuth = binAction;
     }
 
-    
-
     return (
       <div>
         <div className="btn-group mb-3 btn-group-sm" role="group">
@@ -216,6 +217,7 @@ class CollegesActions extends Component {
                     id="status"
                     value={this.state.status}
                     onChange={this.onChange}
+                    checked={this.state.status}
                   />
                   <label className="form-check-label" htmlFor="status">
                     Status
@@ -229,6 +231,7 @@ class CollegesActions extends Component {
                     id="coursesTotal"
                     value={this.state.coursesTotal}
                     onChange={this.onChange}
+                    checked={this.state.coursesTotal}
                   />
                   <label className="form-check-label" htmlFor="coursesTotal">
                     Number of Course
@@ -242,6 +245,7 @@ class CollegesActions extends Component {
                     id="researchTotal"
                     value={this.state.researchTotal}
                     onChange={this.onChange}
+                    checked={this.state.researchTotal}
                   />
                   <label className="form-check-label" htmlFor="researchTotal">
                     Number of Researches
@@ -255,24 +259,42 @@ class CollegesActions extends Component {
                     id="journalTotal"
                     value={this.state.journalTotal}
                     onChange={this.onChange}
+                    checked={this.state.journalTotal}
                   />
                   <label className="form-check-label" htmlFor="journalTotal">
                     Number of Journals
                   </label>
                 </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="lastUpdate"
+                    id="lastUpdate"
+                    value={this.state.lastUpdate}
+                    onChange={this.onChange}
+                    checked={this.state.lastUpdate}
+                  />
+                  <label className="form-check-label" htmlFor="lastUpdate">
+                    Last Update
+                  </label>
+                </div>
                 <br />
-                {disableFlag ? (<input
-                  type="button"
-                  value="Generate Report"
-                  onClick={this.onGenerateReport}
-                  className="btn btn-info disabled"
-                />) : (<input
-                  type="button"
-                  value="Generate Report"
-                  onClick={this.onGenerateReport}
-                  className="btn btn-info"
-                />)}
-                
+                {disableFlag ? (
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info disabled"
+                  />
+                ) : (
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info"
+                  />
+                )}
               </form>
             </div>
           </div>

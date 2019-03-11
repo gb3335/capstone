@@ -49,10 +49,11 @@ class UserAction extends Component {
     return (
       <div className="" role="group">
         {editAction}
-
+        &nbsp;
         <label to="#" htmlFor="imageUpload" className="btn btn-light">
           <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
         </label>
+        &nbsp;
         <label to="#" htmlFor="imageUpload" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" />
           Change Image

@@ -7,7 +7,7 @@ const base64Img = require("base64-img");
 const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
-const download = require('download-pdf')
+const download = require("download-pdf");
 
 // Research model
 const Research = require("../../models/Research");
@@ -73,7 +73,6 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const errors = {};
   Research.findOne({ _id: req.params.id })
-    .populate("research", ["title", "_id"])
     .then(research => {
       if (!research) {
         errors.noresearch = "There is no data for this research";
@@ -136,7 +135,9 @@ router.post(
               { _id: req.body.id },
               { $set: newResearch },
               { new: true }
-            ).then(research => res.json(research));
+            )
+              .then(research => res.json(research))
+              .catch(err => console.log(err));
           }
         });
       } else {
@@ -196,7 +197,9 @@ router.post(
                       { "name.fullName": req.body.college },
                       { $set: newCollege },
                       { new: true }
-                    ).then(college => res.json(college));
+                    )
+                      .then(college => res.json(college))
+                      .catch(err => console.log(err));
                   }
                 }
               );
@@ -233,8 +236,7 @@ router.post(
 
       // add activity
       const newActivity = {
-        title:
-          req.body.name + " added as " + req.body.role + " in " + research.title
+        title: req.body.name + " added as Author in " + research.title
       };
       new Activity(newActivity).save();
 
@@ -421,7 +423,7 @@ router.post(
 
     const userId = 1;
 
-    let researchObject= {};
+    let researchObject = {};
 
     params = {
       Bucket: "bulsu-capstone",
@@ -436,15 +438,17 @@ router.post(
       if (err) {
         return console.log(err);
       }
-      const docPath = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" + filename;
+      const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        filename;
       const options = {
         directory: "./routes/downloadedDocu",
         filename: req.body.researchId + ".pdf"
-      }
-      download(docPath, options, function(err){
-        if (err) console.log(err) 
+      };
+      download(docPath, options, function(err) {
+        if (err) console.log(err);
         console.log("Document successfully uploaded.");
-      }) 
+      });
 
       const newDocument = {
         document: filename,
@@ -457,13 +461,12 @@ router.post(
         };
         new Activity(newActivity).save();
       });
-  
+
       Research.findOneAndUpdate(
         { _id: req.body.researchId },
         { $set: newDocument },
         { new: true }
       ).then(research => res.json(research));
-     
     });
 
     // fs.writeFile(
@@ -623,9 +626,16 @@ router.post(
   "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const newResearch = {
-      deleted: 1
-    };
+    let newResearch;
+    if (req.body.hidden) {
+      newResearch = {
+        hidden: 1
+      };
+    } else {
+      newResearch = {
+        deleted: 1
+      };
+    }
 
     Research.findOneAndUpdate(
       { _id: req.params.id },
@@ -634,9 +644,50 @@ router.post(
     ).then(research => {
       // add activity
       const newActivity = {
-        title: "Research: " + research.title + " moved to bin"
+        title: req.body.hidden
+          ? "Research: " + research.title + " hidden from list"
+          : "Research: " + research.title + " moved to bin"
       };
       new Activity(newActivity).save();
+
+      // increase decrease research count in college and course
+      College.findOne({ "name.fullName": research.college }).then(college => {
+        let researchCount = parseInt(college.researchTotal, 10);
+        let newCourse;
+        let removeIndex;
+        const newCollege = {
+          researchTotal: req.body.hidden ? researchCount : --researchCount
+        };
+
+        college.course.map((cou, index) => {
+          if (cou.name === research.course) {
+            newCourse = {
+              name: cou.name,
+              initials: cou.initials,
+              status: cou.status,
+              deleted: cou.deleted,
+              researchTotal: req.body.hidden
+                ? cou.researchTotal
+                : --cou.researchTotal,
+              journalTotal: cou.journalTotal
+            };
+            removeIndex = index;
+          }
+        });
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+        // Add to exp array
+        college.course.unshift(newCourse);
+        // Save college for course
+        college.save();
+        // save college
+        College.findOneAndUpdate(
+          { "name.fullName": college.name.fullName },
+          { $set: newCollege },
+          { new: true }
+        ).then(research);
+      });
 
       res.json(research);
     });
@@ -650,9 +701,16 @@ router.post(
   "/restore/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const newResearch = {
-      deleted: 0
-    };
+    let newResearch;
+    if (req.body.hidden) {
+      newResearch = {
+        hidden: 0
+      };
+    } else {
+      newResearch = {
+        deleted: 0
+      };
+    }
 
     Research.findOneAndUpdate(
       { _id: req.params.id },
@@ -661,10 +719,50 @@ router.post(
     ).then(research => {
       // add activity
       const newActivity = {
-        title: "Research: " + research.title + " restored from bin"
+        title: req.body.hidden
+          ? "Research: " + research.title + " showed in list"
+          : "Research: " + research.title + " restored from bin"
       };
       new Activity(newActivity).save();
 
+      // increase research count in college and course
+      College.findOne({ "name.fullName": research.college }).then(college => {
+        let researchCount = parseInt(college.researchTotal, 10);
+        let newCourse;
+        let removeIndex;
+        const newCollege = {
+          researchTotal: req.body.hidden ? researchCount : ++researchCount
+        };
+
+        college.course.map((cou, index) => {
+          if (cou.name === research.course) {
+            newCourse = {
+              name: cou.name,
+              initials: cou.initials,
+              status: cou.status,
+              deleted: cou.deleted,
+              researchTotal: req.body.hidden
+                ? cou.researchTotal
+                : ++cou.researchTotal,
+              journalTotal: cou.journalTotal
+            };
+            removeIndex = index;
+          }
+        });
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+        // Add to exp array
+        college.course.unshift(newCourse);
+        // Save college for course
+        college.save();
+        // save college
+        College.findOneAndUpdate(
+          { "name.fullName": college.name.fullName },
+          { $set: newCollege },
+          { new: true }
+        ).then(research);
+      });
       res.json(research);
     });
   }

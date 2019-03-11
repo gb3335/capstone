@@ -47,27 +47,34 @@ class Researches extends Component {
             researchData = researches.map(research =>
               research.deleted === 1
                 ? {
-                  title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
-                  view: (
-                    <Link
-                      to={/researches/ + research._id}
-                      className="btn btn-outline-danger btn-sm"
-                    >
-                      View Details
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    status:
+                      research.deleted === 0
+                        ? research.hidden === 0
+                          ? "Active"
+                          : "Hidden"
+                        : "Deleted",
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-danger btn-sm"
+                      >
+                        View Details
                       </Link>
-                  )
-                }
+                    )
+                  }
                 : {
-                  title: null,
-                  college: null,
-                  course: null,
-                  view: null
-                }
+                    title: null,
+                    college: null,
+                    course: null,
+                    status: null,
+                    view: null
+                  }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -86,27 +93,34 @@ class Researches extends Component {
             researchData = researches.map(research =>
               research.deleted === 0
                 ? {
-                  title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
-                  view: (
-                    <Link
-                      to={/researches/ + research._id}
-                      className="btn btn-outline-info btn-sm"
-                    >
-                      View Details
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    status:
+                      research.deleted === 0
+                        ? research.hidden === 0
+                          ? "Active"
+                          : "Hidden"
+                        : "Deleted",
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-info btn-sm"
+                      >
+                        View Details
                       </Link>
-                  )
-                }
+                    )
+                  }
                 : {
-                  title: null,
-                  college: null,
-                  course: null,
-                  view: null
-                }
+                    title: null,
+                    college: null,
+                    course: null,
+                    status: null,
+                    view: null
+                  }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -121,28 +135,43 @@ class Researches extends Component {
           // Research List not logged in
           researchData = researches.map(research =>
             research.deleted === 0
-              ? {
-                title:
-                  research.title.length > 30
-                    ? research.title.substring(0, 27) + "..."
-                    : research.title,
-                college: research.college,
-                course: research.course,
-                view: (
-                  <Link
-                    to={/researches/ + research._id}
-                    className="btn btn-outline-info btn-sm"
-                  >
-                    View Details
-                    </Link>
-                )
-              }
+              ? research.hidden === 0
+                ? {
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    status:
+                      research.deleted === 0
+                        ? research.hidden === 0
+                          ? "Active"
+                          : "Hidden"
+                        : "Deleted",
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-info btn-sm"
+                      >
+                        View Details
+                      </Link>
+                    )
+                  }
+                : {
+                    title: null,
+                    college: null,
+                    course: null,
+                    status: null,
+                    view: null
+                  }
               : {
-                title: null,
-                college: null,
-                course: null,
-                view: null
-              }
+                  title: null,
+                  college: null,
+                  course: null,
+                  status: null,
+                  view: null
+                }
           );
           researchData.map((data, index) => {
             if (data.title === null) {
@@ -154,17 +183,23 @@ class Researches extends Component {
           info = "See all research and it's informations";
         }
 
-        researchData.map((data, index) => {
-          if (data.title === null) {
-            researchData.splice(index, 1);
-          }
-        });
+        for (let index = 0; index < researchData.length; index++) {
+          researchData.map((data, index) => {
+            if (data.title === null) {
+              researchData.splice(index, 1);
+            }
+          });
 
-        researchData.map((data, index) => {
-          if (data.title === null) {
-            researchData.splice(index, 1);
-          }
-        });
+          researchData.map((data, i, arr) => {
+            if (arr.length - 1 === i) {
+              if (data.title === null) {
+                researchData.splice(i, 1);
+              }
+            } else {
+              // not last one
+            }
+          });
+        }
 
         researchItems = (
           <MaterialTable
@@ -172,6 +207,7 @@ class Researches extends Component {
               { title: "Title", field: "title" },
               { title: "College", field: "college" },
               { title: "Course", field: "course" },
+              { title: "Status", field: "status" },
               { title: "View Details", field: "view" }
             ]}
             data={researchData}

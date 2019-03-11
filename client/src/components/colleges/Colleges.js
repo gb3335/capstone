@@ -123,8 +123,8 @@ class Colleges extends Component {
               {title}
               <p className="lead text-center">{info}</p>
               {action}
+              <br />
               <div id="showIfSmall">
-                <br />
                 <br />
               </div>
               {loadingItem}
