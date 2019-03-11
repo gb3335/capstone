@@ -11,7 +11,7 @@ class AddAuthor extends Component {
 
     this.state = {
       name: "",
-      role: "",
+      // role: "",
       errors: {}
     };
   }
@@ -27,7 +27,7 @@ class AddAuthor extends Component {
 
     const authorData = {
       name: this.state.name,
-      role: this.state.role,
+      // role: this.state.role,
       researchId: this.props.research.research._id
     };
 
@@ -64,13 +64,13 @@ class AddAuthor extends Component {
                   onChange={this.onChange}
                   error={errors.name}
                 />
-                <TextFieldGroup
+                {/* <TextFieldGroup
                   placeholder="* Role"
                   name="role"
                   value={this.state.role}
                   onChange={this.onChange}
                   error={errors.role}
-                />
+                /> */}
 
                 <input
                   ref="authorBtn"

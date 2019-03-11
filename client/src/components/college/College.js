@@ -77,7 +77,6 @@ class College extends Component {
     let colAction;
     let courseAction;
     let deletedAction;
-    let statusAction;
 
     try {
       if (this.props.auth.isAuthenticated) {

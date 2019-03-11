@@ -15,14 +15,14 @@ class CollegeItemGrid extends Component {
         style={{ width: "50%", display: "block", margin: "auto" }}
       />
     );
-    let colStatus;
+    // let colStatus;
     let colDeleted;
 
-    if (college.status === 0) {
-      colStatus = <span className="badge badge-success">Active</span>;
-    } else {
-      colStatus = <span className="badge badge-danger">Not Active</span>;
-    }
+    // if (college.status === 0) {
+    //   colStatus = <span className="badge badge-success">Active</span>;
+    // } else {
+    //   colStatus = <span className="badge badge-danger">Not Active</span>;
+    // }
 
     if (college.deleted === 1) {
       colDeleted = <span className="badge badge-danger">Deleted</span>;

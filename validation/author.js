@@ -5,15 +5,15 @@ module.exports = function validateAuthorInput(data) {
   let errors = {};
 
   data.name = !isEmpty(data.name) ? data.name : "";
-  data.role = !isEmpty(data.role) ? data.role : "";
+  // data.role = !isEmpty(data.role) ? data.role : "";
 
   if (Validator.isEmpty(data.name)) {
     errors.name = "Author Name is required";
   }
 
-  if (Validator.isEmpty(data.role)) {
-    errors.role = "Author Role is required";
-  }
+  // if (Validator.isEmpty(data.role)) {
+  //   errors.role = "Author Role is required";
+  // }
 
   return {
     errors,
