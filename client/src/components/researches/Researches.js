@@ -135,28 +135,36 @@ class Researches extends Component {
           // Research List not logged in
           researchData = researches.map(research =>
             research.deleted === 0
-              ? {
-                  title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
-                  status:
-                    research.deleted === 0
-                      ? research.hidden === 0
-                        ? "Active"
-                        : "Hidden"
-                      : "Deleted",
-                  view: (
-                    <Link
-                      to={/researches/ + research._id}
-                      className="btn btn-outline-info btn-sm"
-                    >
-                      View Details
-                    </Link>
-                  )
-                }
+              ? research.hidden === 0
+                ? {
+                    title:
+                      research.title.length > 30
+                        ? research.title.substring(0, 27) + "..."
+                        : research.title,
+                    college: research.college,
+                    course: research.course,
+                    status:
+                      research.deleted === 0
+                        ? research.hidden === 0
+                          ? "Active"
+                          : "Hidden"
+                        : "Deleted",
+                    view: (
+                      <Link
+                        to={/researches/ + research._id}
+                        className="btn btn-outline-info btn-sm"
+                      >
+                        View Details
+                      </Link>
+                    )
+                  }
+                : {
+                    title: null,
+                    college: null,
+                    course: null,
+                    status: null,
+                    view: null
+                  }
               : {
                   title: null,
                   college: null,

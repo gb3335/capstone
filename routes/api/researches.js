@@ -626,9 +626,19 @@ router.post(
   "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const newResearch = {
-      deleted: 1
-    };
+    let newResearch;
+    console.log(req.body.hidden);
+    if (req.body.hidden) {
+      console.log("hidden 1");
+      newResearch = {
+        hidden: 1
+      };
+    } else {
+      console.log("deleted 1");
+      newResearch = {
+        deleted: 1
+      };
+    }
 
     Research.findOneAndUpdate(
       { _id: req.params.id },
@@ -690,9 +700,21 @@ router.post(
   "/restore/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const newResearch = {
-      deleted: 0
-    };
+    let newResearch;
+    console.log(req.body.hidden);
+
+    if (req.body.hidden) {
+      console.log("hidden 0");
+
+      newResearch = {
+        hidden: 0
+      };
+    } else {
+      console.log("deleted 0");
+      newResearch = {
+        deleted: 0
+      };
+    }
 
     Research.findOneAndUpdate(
       { _id: req.params.id },

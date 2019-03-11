@@ -189,7 +189,7 @@ export const deleteResearch = (data, history) => dispatch => {
   if (window.confirm("Are you sure?")) {
     dispatch(setResearchLoading());
     axios
-      .post(`/api/researches/remove/${data.id}`)
+      .post(`/api/researches/remove/${data.id}`, data)
       .then(dispatch(getResearches()), history.push(`/researches`), res =>
         dispatch({
           type: GET_RESEARCH,
@@ -210,7 +210,7 @@ export const restoreResearch = (data, history) => dispatch => {
   if (window.confirm("Are you sure?")) {
     dispatch(setResearchLoading());
     axios
-      .post(`/api/researches/restore/${data.id}`)
+      .post(`/api/researches/restore/${data.id}`, data)
       .then(dispatch(getResearches()), history.push(`/researches`), res =>
         dispatch({
           type: GET_RESEARCH,

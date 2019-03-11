@@ -59,11 +59,25 @@ class Research extends Component {
   };
 
   onHideResearch = e => {
-    console.log("HIDE FUNCTION");
+    e.preventDefault();
+
+    const data = {
+      id: this.props.research.research._id,
+      hidden: true
+    };
+
+    this.props.deleteResearch(data, this.props.history);
   };
 
   onShowResearch = e => {
-    console.log("Show FUNCTION");
+    e.preventDefault();
+
+    const data = {
+      id: this.props.research.research._id,
+      hidden: true
+    };
+
+    this.props.restoreResearch(data, this.props.history);
   };
 
   render() {
@@ -133,7 +147,7 @@ class Research extends Component {
               onClick={this.onHideResearch}
             >
               <i className="fas fa-eye-slash mr-2" />
-              Hide
+              Hide Research
             </a>
           );
         }
@@ -149,7 +163,7 @@ class Research extends Component {
               onClick={this.onShowResearch}
             >
               <i className="fas fa-eye-slash mr-2" />
-              Show
+              Show Research
             </a>
           );
         }
