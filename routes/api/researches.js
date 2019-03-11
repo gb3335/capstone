@@ -135,7 +135,9 @@ router.post(
               { _id: req.body.id },
               { $set: newResearch },
               { new: true }
-            ).then(research => res.json(research));
+            )
+              .then(research => res.json(research))
+              .catch(err => console.log(err));
           }
         });
       } else {
@@ -195,7 +197,9 @@ router.post(
                       { "name.fullName": req.body.college },
                       { $set: newCollege },
                       { new: true }
-                    ).then(college => res.json(college));
+                    )
+                      .then(college => res.json(college))
+                      .catch(err => console.log(err));
                   }
                 }
               );
@@ -232,8 +236,7 @@ router.post(
 
       // add activity
       const newActivity = {
-        title:
-          req.body.name + " added as " + req.body.role + " in " + research.title
+        title: req.body.name + " added as Author in " + research.title
       };
       new Activity(newActivity).save();
 
@@ -638,6 +641,43 @@ router.post(
       };
       new Activity(newActivity).save();
 
+      // increase decrease research count in college and course
+      College.findOne({ "name.fullName": research.college }).then(college => {
+        let researchCount = parseInt(college.researchTotal, 10);
+        let newCourse;
+        let removeIndex;
+        const newCollege = {
+          researchTotal: --researchCount
+        };
+
+        college.course.map((cou, index) => {
+          if (cou.name === research.course) {
+            newCourse = {
+              name: cou.name,
+              initials: cou.initials,
+              status: cou.status,
+              deleted: cou.deleted,
+              researchTotal: --cou.researchTotal,
+              journalTotal: cou.journalTotal
+            };
+            removeIndex = index;
+          }
+        });
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+        // Add to exp array
+        college.course.unshift(newCourse);
+        // Save college for course
+        college.save();
+        // save college
+        College.findOneAndUpdate(
+          { "name.fullName": college.name.fullName },
+          { $set: newCollege },
+          { new: true }
+        ).then(research);
+      });
+
       res.json(research);
     });
   }
@@ -665,6 +705,42 @@ router.post(
       };
       new Activity(newActivity).save();
 
+      // increase research count in college and course
+      College.findOne({ "name.fullName": research.college }).then(college => {
+        let researchCount = parseInt(college.researchTotal, 10);
+        let newCourse;
+        let removeIndex;
+        const newCollege = {
+          researchTotal: ++researchCount
+        };
+
+        college.course.map((cou, index) => {
+          if (cou.name === research.course) {
+            newCourse = {
+              name: cou.name,
+              initials: cou.initials,
+              status: cou.status,
+              deleted: cou.deleted,
+              researchTotal: ++cou.researchTotal,
+              journalTotal: cou.journalTotal
+            };
+            removeIndex = index;
+          }
+        });
+
+        // Splice out of array
+        college.course.splice(removeIndex, 1);
+        // Add to exp array
+        college.course.unshift(newCourse);
+        // Save college for course
+        college.save();
+        // save college
+        College.findOneAndUpdate(
+          { "name.fullName": college.name.fullName },
+          { $set: newCollege },
+          { new: true }
+        ).then(research);
+      });
       res.json(research);
     });
   }

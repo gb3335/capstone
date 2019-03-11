@@ -92,7 +92,7 @@ class Research extends Component {
         if (deleted === 1) {
           deletedAction = (
             <a
-              className="list-group-item list-group-item-action"
+              className="list-group-item list-group-item-action btn btn-success"
               id="list-restore-list"
               data-toggle="list"
               href="#list-restore"
@@ -107,7 +107,7 @@ class Research extends Component {
         } else {
           deletedAction = (
             <a
-              className="list-group-item list-group-item-action"
+              className="list-group-item list-group-item-action btn btn-danger"
               id="list-delete-list"
               data-toggle="list"
               href="#list-delete"
@@ -255,8 +255,9 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-details-list"
                     >
-                      {researchAction}
                       <ResearchHeader research={research} />
+                      <br />
+                      {researchAction}
                     </div>
                     <div
                       className="tab-pane fade"
@@ -272,8 +273,9 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-authors-list"
                     >
-                      {authorAction}
                       <ResearchAuthors research={research} />
+                      <br />
+                      {authorAction}
                     </div>
 
                     <div
@@ -282,8 +284,9 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-pictures-list"
                     >
+                      {/* <ResearchImages research={research} /> */}
+                      <br />
                       {imageAction}
-                      <ResearchImages research={research} />
                     </div>
 
                     <div
@@ -292,8 +295,9 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-document-list"
                     >
-                      {docAction}
                       {doc}
+                      <br />
+                      {docAction}
                     </div>
                   </div>
                 </div>

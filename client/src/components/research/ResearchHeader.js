@@ -30,6 +30,10 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
+            <b>Research ID:</b> {research.researchID}
+          </span>
+          <br />
+          <span>
             <b>Pages:</b> {research.pages}
           </span>
           <br />
