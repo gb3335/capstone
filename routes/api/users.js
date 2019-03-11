@@ -11,7 +11,8 @@ const validateRegisterInput = require("../../validation/register");
 const validateProfileInput = require("../../validation/profile");
 const validateLoginInput = require("../../validation/login");
 const validatePasswordInput = require("../../validation/password");
-
+const validateuserNameInput = require("../../validation/profileusername");
+const validatepasswordInput = require("../../validation/profilepassword");
 // Load User Model
 const User = require("../../models/User");
 
@@ -108,12 +109,10 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateProfileInput(req.body);
-
     //Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
     }
-
     const password = req.body.password;
 
     const profileData = {
@@ -123,55 +122,171 @@ router.post(
         lastName: req.body.lastname
       },
       email: req.body.email,
-      userName: req.body.username,
       contact: req.body.contact,
-      college: req.body.college
+      college: req.body.college,
+      id: req.body.id,
+
     };
+    User.findOne({ email: profileData.email }).then(user => {
+      const errors = {}
+      if (user) {
+        if (user.email != req.user.email) {
+          errors.email = "Email Already Exists!";
+          return res.status(400).json(errors);
+        }
+        User.findByIdAndUpdate(
+          req.user._id,
+          { $set: profileData },
+          { new: true }
+        ).then(user => res.json(user));
 
-    if (profileData.userName.length > 0) {
-      User.findOne({ userName: profileData.userName })
-        .then(user => {
-          if (user) {
-            if (user.email != req.user.email) {
-              errors.username = "Username Already Exists!";
-              return res.status(400).json(errors);
-            }
+      }
+
+    });
+  }
+);
+// @routes  POST api/users/profile/updateusername
+// @desc    Edit User profile username
+// @access  private
+router.post(
+  "/profile/updateusername",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateuserNameInput(req.body);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const password = req.body.password;
+
+    const profileData = {
+      name: {
+        firstName: req.body.firstname,
+        middleName: req.body.middlename,
+        lastName: req.body.lastname
+      },
+      email: req.body.email,
+      userName: req.body.userName,
+      contact: req.body.contact,
+      college: req.body.college,
+      id: req.body.id,
+      password,
+    };
+    User.findOne({ email: profileData.email }).then(user => {
+      const errors = {}
+      if (user) {
+        if (user.email != req.user.email) {
+          errors.email = "Email Already Exists!";
+          return res.status(400).json(errors);
+        }
+      }
+      User.findOne({ userName: profileData.userName }).then(user => {
+
+        if (user) {
+          if (user.userName != req.user.userName) {
+            errors.userName = "Username Already Exists!";
+            return res.status(400).json(errors);
           }
+        }
 
-          User.findById(req.user._id).then(user => {
-            bcrypt.compare(password, user.password).then(isMatch => {
-              if (isMatch) {
-                User.findByIdAndUpdate(
-                  req.user._id,
-                  { $set: profileData },
-                  { new: true }
-                ).then(user => res.json(user));
-              } else {
-                errors.password = "Password do not match!";
-                return res.status(400).json(errors);
-              }
-            });
-          });
-        })
-        .catch(err => console.log(err));
-    } else {
-      User.findById(req.user._id).then(user => {
-        bcrypt.compare(password, user.password).then(isMatch => {
-          if (isMatch) {
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(profileData.password, salt, (err, hash) => {
+            if (err) throw err;
+            profileData.password = hash;
             User.findByIdAndUpdate(
               req.user._id,
               { $set: profileData },
               { new: true }
             ).then(user => res.json(user));
-          } else {
-            errors.password = "Password do not match!";
-            return res.status(400).json(errors);
-          }
+          });
         });
-      });
-    }
+      })
+    });
   }
 );
+// @routes  POST api/users/profile/updatepassword
+// @desc    Edit User profile
+// @access  private
+router.post(
+  "/profile/updatepassword",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatepasswordInput(req.body);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const password = req.body.password;
+    const password1 = req.body.password1;
+    const password2 = req.body.password2;
+    const profileData = {
+      id: req.body.id,
+      password,
+
+    };
+
+    User.findById(req.user._id).then(user => {
+      bcrypt.compare(req.body.password1, user.password).then(isMatch => {
+        if (isMatch) {
+          if (isMatch) {
+
+            bcrypt.genSalt(10, (err, salt) => {
+              bcrypt.hash(profileData.password, salt, (err, hash) => {
+                if (err) throw err;
+                profileData.password = hash;
+                User.findByIdAndUpdate(
+                  req.user._id,
+                  { $set: profileData },
+                  { new: true }
+                )
+                  .then(user => res.json(user))
+                  .catch(err => console.log(err));
+              });
+            });
+          }
+        }
+      });
+    });
+
+    // User.findOne({ email: profileData.email }).then(user => {
+    //   const errors = {}
+    //   if (user) {
+    //     if (user.email != req.user.email) {
+    //       errors.email = "Email Already Exists!";
+    //       return res.status(400).json(errors);
+    //     }
+    //   }
+    //   User.findOne({ userName: profileData.userName }).then(user => {
+
+    //     if (user) {
+    //       if (user.userName != req.user.userName) {
+    //         errors.userName = "Username Already Exists!";
+    //         return res.status(400).json(errors);
+    //       }
+    //     }
+
+
+    //     bcrypt.genSalt(10, (err, salt) => {
+    //       bcrypt.hash(profileData.password, salt, (err, hash) => {
+    //         if (err) throw err;
+    //         profileData.password = hash;
+    //         User.findByIdAndUpdate(
+    //           req.user._id,
+    //           { $set: profileData },
+    //           { new: true }
+    //         ).then(user => res.json(user));
+    //       });
+    //     });
+    //   })
+    // });
+
+
+
+  }
+);
+
+
 
 // @routes  POST api/users/register
 // @desc    Register/Edit a User

@@ -10,8 +10,8 @@ import { hideSideBar } from "../../actions/sidebarActions";
 import "./Navbar.css";
 
 class Navbar extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       aria: "false",
       forcol: "collapse minimenu"
@@ -89,17 +89,15 @@ class Navbar extends Component {
           >
             <ul className="account_submenus">
               <li>
-                <Link to="#">Account Setting</Link>
+                <Link to={/viewusers/ + this.props.auth.user.id}>Account Setting</Link>
               </li>
               <li>
                 <Link to="#" onClick={this.onLogoutClick.bind(this)}>
                   Logout
                 </Link>
               </li>
-              <li>
-                <Link to="/register">Register</Link>
-              </li>
-              <li>qwer</li>
+
+
             </ul>
           </div>
         </li>

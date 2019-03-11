@@ -17,7 +17,6 @@ class Authors extends Component {
         author = this.props.author.map(author => (
           <tr key={author._id}>
             <td>{author.name}</td>
-            <td>{author.role}</td>
             <td>
               <button
                 onClick={this.onDeleteClick.bind(
@@ -36,7 +35,6 @@ class Authors extends Component {
         author = this.props.author.map(author => (
           <tr key={author._id}>
             <td>{author.name}</td>
-            <td>{author.role}</td>
           </tr>
         ));
       }
@@ -44,7 +42,6 @@ class Authors extends Component {
       author = this.props.author.map(author => (
         <tr key={author._id}>
           <td>{author.name}</td>
-          <td>{author.role}</td>
         </tr>
       ));
     }
@@ -55,7 +52,6 @@ class Authors extends Component {
           <thead>
             <tr>
               <th>Name</th>
-              <th>Role</th>
               <th />
             </tr>
           </thead>

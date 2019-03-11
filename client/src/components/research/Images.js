@@ -1,10 +1,23 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import ImageGallery from "react-image-gallery";
-import "react-image-gallery/styles/css/image-gallery.css";
+import Viewer from "react-viewer";
+import "react-viewer/dist/index.css";
 
 class Images extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      visible: false,
+      activeIndex: 0
+    };
+  }
+
+  onShowImage = index => {
+    this.setState({ visible: true, activeIndex: --index });
+  };
+
   render() {
     const path =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchImages/";
@@ -12,24 +25,32 @@ class Images extends Component {
 
     this.props.images.map(image =>
       imageData.push({
-        original: path + image.name,
-        thumbnail: path + image.name,
-        sizes: "(max-width: 1em) 10vw"
+        src: path + image.name,
+        thumbnail: path + image.name
       })
     );
 
     return (
-      <div className="container">
-        <div
-          className="row"
-          style={{
-            textAlign: "center",
-            alignItems: "center",
-            alignContent: "center"
-          }}
-        >
-          <div className="col-lg-12">
-            <ImageGallery items={imageData} showFullscreenButton={false} />
+      <div className="row">
+        <div className="col-lg-12">
+          <Viewer
+            visible={this.state.visible}
+            activeIndex={this.state.activeIndex}
+            onClose={() => {
+              this.setState({ visible: false });
+            }}
+            images={imageData}
+          />
+          <div className="thumbnails">
+            {this.props.images.map((thum, index) => (
+              <img
+                key={thum._id}
+                src={path + thum.name}
+                alt={`research-image-${++index}`}
+                style={{ width: "auto", height: "130px", cursor: "pointer" }}
+                onClick={this.onShowImage.bind(this, index)}
+              />
+            ))}
           </div>
         </div>
       </div>

@@ -31,6 +31,7 @@ import EditResearch from "../edit-research/EditResearch";
 import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
 import ViewUser from "../view-user/ViewUser";
+import EditAccount from "../edit-account/EditAccount";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
@@ -98,6 +99,13 @@ class Main extends Component {
                   exact
                   path="/edit-course"
                   component={EditCourse}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/edit-account"
+                  component={EditAccount}
                 />
               </Switch>
               <Switch>

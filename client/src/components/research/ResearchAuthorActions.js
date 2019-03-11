@@ -7,6 +7,7 @@ const ResearchAuthorActions = () => {
       <Link to="/add-author" className="btn btn-light">
         <i className="fas fa-plus text-info mr-1" /> Add Author
       </Link>
+      <br />
     </div>
   );
 };
