@@ -112,6 +112,7 @@ router.post(
     //Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
+
     }
 
     const password = req.body.password;
@@ -123,53 +124,64 @@ router.post(
         lastName: req.body.lastname
       },
       email: req.body.email,
-      userName: req.body.username,
+      userName: req.body.userName,
       contact: req.body.contact,
-      college: req.body.college
+      college: req.body.college,
+      id: req.body.id,
+      password,
     };
 
-    if (profileData.userName.length > 0) {
-      User.findOne({ userName: profileData.userName })
-        .then(user => {
-          if (user) {
-            if (user.email != req.user.email) {
-              errors.username = "Username Already Exists!";
-              return res.status(400).json(errors);
-            }
-          }
 
-          User.findById(req.user._id).then(user => {
-            bcrypt.compare(password, user.password).then(isMatch => {
-              if (isMatch) {
-                User.findByIdAndUpdate(
-                  req.user._id,
-                  { $set: profileData },
-                  { new: true }
-                ).then(user => res.json(user));
-              } else {
-                errors.password = "Password do not match!";
-                return res.status(400).json(errors);
-              }
-            });
-          });
-        })
-        .catch(err => console.log(err));
-    } else {
-      User.findById(req.user._id).then(user => {
-        bcrypt.compare(password, user.password).then(isMatch => {
-          if (isMatch) {
+    //  errors.userName = "Username Already Exists!";
+
+
+
+    User.findOne({ email: profileData.email }).then(user => {
+      const errors = {}
+      if (user) {
+        if (user.email != req.user.email) {
+          errors.email = "Email Already Exists!";
+          return res.status(400).json(errors);
+        }
+      }
+      User.findOne({ userName: profileData.userName }).then(user => {
+
+        if (user) {
+          if (user.userName != req.user.userName) {
+            errors.userName = "Username Already Exists!";
+            return res.status(400).json(errors);
+          }
+        }
+
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(profileData.password, salt, (err, hash) => {
+            if (err) throw err;
+            profileData.password = hash;
             User.findByIdAndUpdate(
               req.user._id,
               { $set: profileData },
               { new: true }
             ).then(user => res.json(user));
-          } else {
-            errors.password = "Password do not match!";
-            return res.status(400).json(errors);
-          }
+          });
         });
-      });
-    }
+
+
+      })
+
+
+    })
+
+
+
+
+
+
+
+
+
+
+
   }
 );
 

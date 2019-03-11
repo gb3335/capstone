@@ -32,7 +32,7 @@ export const getUsers = () => dispatch => {
 };
 
 
-// Get research by id
+// Get users by id
 export const getUserById = id => dispatch => {
   dispatch(clearErrors());
   dispatch(setUserLoading());

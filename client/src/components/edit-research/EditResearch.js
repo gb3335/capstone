@@ -74,6 +74,7 @@ class EditResearch extends Component {
 
   render() {
     const { college, errors } = this.props;
+
     const path = "/researches/" + this.props.research.research._id;
     let collegeOptions = [{ label: "* Select College", value: "" }];
     let courseOptions = [{ label: "* Select Course", value: "" }];
@@ -81,9 +82,9 @@ class EditResearch extends Component {
     college.colleges.map(college =>
       college.deleted === 0
         ? collegeOptions.push({
-            label: college.name.fullName,
-            value: college.name.fullName
-          })
+          label: college.name.fullName,
+          value: college.name.fullName
+        })
         : ""
     );
 
@@ -91,9 +92,9 @@ class EditResearch extends Component {
       college.course.map(course =>
         college.deleted === 0
           ? courseOptions.push({
-              label: course.name,
-              value: course.name
-            })
+            label: course.name,
+            value: course.name
+          })
           : ""
       )
     );

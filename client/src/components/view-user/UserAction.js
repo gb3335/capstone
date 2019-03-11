@@ -30,22 +30,19 @@ class UserAction extends Component {
 
       if (user.email === auth.user.email) {
         editAction = (
+
           <Link to="/edit-account">
             <label htmlFor="imageUpload" className="btn btn-light">
               <i className="fas fa-pen text-info mr-1" />
               Edit User
            </label>
           </Link>
-        );
-      }
-      else {
 
-        editAction = (<label className="btn btn-light" onClick={() => this.alerts()}>
-          <i className="fas fa-pen text-info mr-1" />
-          Edit User
-           </label>
-        )
+
+        );
+
       }
+
     }
 
 
@@ -54,12 +51,12 @@ class UserAction extends Component {
         {editAction}
 
         <label to="#" htmlFor="imageUpload" className="btn btn-light">
-          <i className="fas fa-exchange-alt" />&nbsp;Change Status
+          <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
         </label>
         <label to="#" htmlFor="imageUpload" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" />
           Change Image
-</label>
+        </label>
 
       </div>
     );

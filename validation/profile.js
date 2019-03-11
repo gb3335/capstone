@@ -1,6 +1,6 @@
 const Validator = require('validator');
 const isEmpty = require('./is-empty');
-
+const passwordValidator = require('password-validator');
 module.exports = function validateProfileInput(data) {
     let errors = {};
 
@@ -9,8 +9,10 @@ module.exports = function validateProfileInput(data) {
     data.middlename = !isEmpty(data.middlename) ? data.middlename : '';
     data.email = !isEmpty(data.email) ? data.email : '';
     data.contact = !isEmpty(data.contact) ? data.contact : '';
-    data.username = !isEmpty(data.username) ? data.username : '';
+    data.userName = !isEmpty(data.userName) ? data.userName : '';
     data.password = !isEmpty(data.password) ? data.password : '';
+
+
 
 
     if (Validator.isEmpty(data.firstname)) {
@@ -30,7 +32,9 @@ module.exports = function validateProfileInput(data) {
     if (Validator.isEmpty(data.email)) {
         errors.email = "Email field is Required";
     }
-
+    if (Validator.isEmpty(data.userName)) {
+        errors.userName = "Username field is Required";
+    }
     if (!Validator.isNumeric(data.contact) || !Validator.isLength(data.contact, { min: 11, max: 11 })) {
         errors.contact = "Invalid Contact Number";
     }
@@ -39,15 +43,28 @@ module.exports = function validateProfileInput(data) {
         errors.contact = "Contact Number field is Required";
     }
 
-    if(data.username.length>0){
-        if (!Validator.isLength(data.username, { min: 5, max: 12 })) {
-            errors.username = "Username must between 5 to 12 characters";
-        }
-    }
-    
+
+
     if (Validator.isEmpty(data.password)) {
         errors.password = "Password field is Required";
     }
+
+    var schema = new passwordValidator();
+
+
+    if (schema.is().min(5).is().max(100).validate(data.userName) === false) {
+        errors.userName = "Username must atleast 5 characters."
+    }
+    if (schema.has().uppercase()
+        .has().lowercase()
+        .has().digits().validate(data.password) === false) {
+        errors.password = "Password must have uppercase and lowercase characters."
+    }
+    if (schema.is().min(8).is().max(100).validate(data.password) === false) {
+        errors.password = "Password must atleast 8 characters."
+    }
+
+
 
     // if (Validator.isEmpty(data.password2)) {
     //     errors.password2 = "Confirm Password field is Required";

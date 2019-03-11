@@ -15,9 +15,7 @@ module.exports = function validateRegisterInput(data) {
   data.college = !isEmpty(data.college) ? data.college : "";
   data.usertype = !isEmpty(data.usertype) ? data.usertype : "";
 
-  if (Validator.isEmpty(data.college)) {
-    errors.college = "Must select college.";
-  }
+
   if (Validator.isEmpty(data.usertype)) {
     errors.usertype = "Must select user type.";
   }
@@ -51,9 +49,7 @@ module.exports = function validateRegisterInput(data) {
     errors.contact = "Contact Number field is Required";
   }
 
-  // if (!Validator.isLength(data.username, { min: 5, max: 12 })) {
-  //     errors.username = "Username must between 5 to 12 characters";
-  // }
+
 
   // if (Validator.isEmpty(data.username)) {
   //     errors.username = "Password field is Required";
