@@ -162,7 +162,7 @@ class Research extends Component {
               aria-controls="hide"
               onClick={this.onShowResearch}
             >
-              <i className="fas fa-eye-slash mr-2" />
+              <i className="fas fa-eye mr-2" />
               Show Research
             </a>
           );
@@ -269,9 +269,8 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-details-list"
                     >
-                      <ResearchHeader research={research} />
-                      <br />
                       {researchAction}
+                      <ResearchHeader research={research} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -287,9 +286,8 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-authors-list"
                     >
-                      <ResearchAuthors research={research} />
-                      <br />
                       {authorAction}
+                      <ResearchAuthors research={research} />
                     </div>
 
                     <div
@@ -298,9 +296,8 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-pictures-list"
                     >
-                      {/* <ResearchImages research={research} /> */}
-                      <br />
                       {imageAction}
+                      <ResearchImages research={research} />
                     </div>
 
                     <div
@@ -309,9 +306,8 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-document-list"
                     >
-                      {doc}
-                      <br />
                       {docAction}
+                      {doc}
                     </div>
                   </div>
                 </div>

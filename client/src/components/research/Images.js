@@ -1,9 +1,23 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import Gallery from "react-grid-gallery";
+import Viewer from "react-viewer";
+import "react-viewer/dist/index.css";
 
 class Images extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      visible: false,
+      activeIndex: 0
+    };
+  }
+
+  onShowImage = index => {
+    this.setState({ visible: true, activeIndex: --index });
+  };
+
   render() {
     const path =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchImages/";
@@ -19,8 +33,25 @@ class Images extends Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <Gallery images={imageData} enableImageSelection={false} />
-          {/* <ImageGallery items={imageData} showFullscreenButton={false} /> */}
+          <Viewer
+            visible={this.state.visible}
+            activeIndex={this.state.activeIndex}
+            onClose={() => {
+              this.setState({ visible: false });
+            }}
+            images={imageData}
+          />
+          <div className="thumbnails">
+            {this.props.images.map((thum, index) => (
+              <img
+                key={thum._id}
+                src={path + thum.name}
+                alt={`research-image-${++index}`}
+                style={{ width: "auto", height: "130px", cursor: "pointer" }}
+                onClick={this.onShowImage.bind(this, index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     );

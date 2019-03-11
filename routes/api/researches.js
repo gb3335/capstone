@@ -627,14 +627,11 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let newResearch;
-    console.log(req.body.hidden);
     if (req.body.hidden) {
-      console.log("hidden 1");
       newResearch = {
         hidden: 1
       };
     } else {
-      console.log("deleted 1");
       newResearch = {
         deleted: 1
       };
@@ -701,16 +698,11 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let newResearch;
-    console.log(req.body.hidden);
-
     if (req.body.hidden) {
-      console.log("hidden 0");
-
       newResearch = {
         hidden: 0
       };
     } else {
-      console.log("deleted 0");
       newResearch = {
         deleted: 0
       };
