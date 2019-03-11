@@ -12,14 +12,14 @@ import {
 
 const customStyles = {
   content: {
-    top: "35%",
+    top: "40%",
     left: "50%",
     right: "auto",
     bottom: "auto",
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
     width: "350px",
-    height: "360px"
+    height: "380px"
   }
 };
 
@@ -36,7 +36,8 @@ class CollegesActions extends Component {
       journalTotal: false,
       coursesTotal: false,
       lastUpdate: false,
-      status: false
+      status: false,
+      deletedColleges: false
     };
   }
 
@@ -91,7 +92,8 @@ class CollegesActions extends Component {
         this.state.coursesTotal === false &&
         this.state.researchTotal === false &&
         this.state.journalTotal === false &&
-        this.state.lastUpdate === false
+        this.state.lastUpdate === false &&
+        this.state.deletedColleges === false
       ) {
         alert("Please check at least one");
       } else {
@@ -109,6 +111,7 @@ class CollegesActions extends Component {
           journalTotal: this.state.journalTotal,
           lastUpdate: this.state.lastUpdate,
           colleges: this.props.college.colleges,
+          deletedColleges: this.state.deletedColleges,
           typeOfReport: "Colleges Report",
           printedBy: name
         };
@@ -277,6 +280,20 @@ class CollegesActions extends Component {
                   />
                   <label className="form-check-label" htmlFor="lastUpdate">
                     Last Update
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="deletedColleges"
+                    id="deletedColleges"
+                    value={this.state.deletedColleges}
+                    onChange={this.onChange}
+                    checked={this.state.deletedColleges}
+                  />
+                  <label className="form-check-label" htmlFor="deletedColleges">
+                    Include Deleted Colleges
                   </label>
                 </div>
                 <br />

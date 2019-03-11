@@ -6,6 +6,7 @@ module.exports = ({
   journalTotal,
   lastUpdate,
   courses,
+  deletedCourses,
   typeOfReport,
   college
 }) => {
@@ -66,51 +67,117 @@ module.exports = ({
 
   // College course list and count
   if (courses === true) {
-    totalcourse = `<li>Total Courses: ${college.course.length}</li>`;
+    if (deletedCourses) {
+      // INCLUDE DELETED COURSES
+      totalcourse = `<li>Total Courses: ${college.course.length}</li>`;
 
-    if (college.course.length == 0) {
-      coursesListNoComma = "No Courses in this College";
-      coursesListHeader = "";
-    } else {
-      coursesList = college.course.map(
-        (indCourse, index) =>
+      if (college.course.length == 0) {
+        coursesListNoComma = "No Courses in this College";
+        coursesListHeader = "";
+      } else {
+        coursesList = college.course.map(
+          (indCourse, index) =>
+            "<tr>" +
+            `<td>${++index}</td>` +
+            `<td>${indCourse.name}</td>` +
+            `<td>${indCourse.initials}</td>` +
+            `<td>${
+              indCourse.deleted === 1
+                ? "Deleted"
+                : indCourse.status === 0
+                ? "Active"
+                : "Inactive"
+            }</td>` +
+            `${
+              researchTotal === true
+                ? `<td>${indCourse.researchTotal}</td>`
+                : ""
+            }` +
+            `${
+              journalTotal === true ? `<td>${indCourse.journalTotal}</td>` : ""
+            }` +
+            "</tr>"
+        );
+
+        coursesList.map(item => {
+          coursesListNoComma = coursesListNoComma + item;
+        });
+
+        coursesListNoComma =
+          coursesListNoComma +
+          `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
+
+        coursesListHeader =
           "<tr>" +
-          `<td>${++index}</td>` +
-          `<td>${indCourse.name}</td>` +
-          `<td>${indCourse.initials}</td>` +
-          `<td>${
-            indCourse.deleted === 1
-              ? "Deleted"
-              : indCourse.status === 0
-              ? "Active"
-              : "Inactive"
-          }</td>` +
-          `${
-            researchTotal === true ? `<td>${indCourse.researchTotal}</td>` : ""
-          }` +
-          `${
-            journalTotal === true ? `<td>${indCourse.journalTotal}</td>` : ""
-          }` +
-          "</tr>"
-      );
-
-      coursesList.map(item => {
-        coursesListNoComma = coursesListNoComma + item;
+          "<th>NO</th>" +
+          "<th>COURSE NAME</th>" +
+          "<th>INITIALS</th>" +
+          "<th>STATUS</th>" +
+          `${researchTotal === true ? `<th>RESEARCH TOTAL</th>` : ""}` +
+          `${journalTotal === true ? `<th>JOURNAL TOTAL</th>` : ""}` +
+          "</tr>";
+      }
+    } else {
+      // DOENST INCLUDE DELETED COURSES
+      let ctrNoDeleted = 0;
+      college.course.map(cou => {
+        if (cou.deleted === 0) {
+          ++ctrNoDeleted;
+        }
       });
 
-      coursesListNoComma =
-        coursesListNoComma +
-        `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
+      totalcourse = `<li>Total Courses: ${ctrNoDeleted}</li>`;
 
-      coursesListHeader =
-        "<tr>" +
-        "<th>NO</th>" +
-        "<th>COURSE NAME</th>" +
-        "<th>INITIALS</th>" +
-        "<th>STATUS</th>" +
-        `${researchTotal === true ? `<th>RESEARCH TOTAL</th>` : ""}` +
-        `${journalTotal === true ? `<th>JOURNAL TOTAL</th>` : ""}` +
-        "</tr>";
+      if (college.course.length == 0) {
+        coursesListNoComma = "No Courses in this College";
+        coursesListHeader = "";
+      } else {
+        let ind = 0;
+        coursesList = college.course.map((indCourse, index) =>
+          indCourse.deleted === 0
+            ? "<tr>" +
+              `<td>${++ind}</td>` +
+              `<td>${indCourse.name}</td>` +
+              `<td>${indCourse.initials}</td>` +
+              `<td>${
+                indCourse.deleted === 1
+                  ? "Deleted"
+                  : indCourse.status === 0
+                  ? "Active"
+                  : "Inactive"
+              }</td>` +
+              `${
+                researchTotal === true
+                  ? `<td>${indCourse.researchTotal}</td>`
+                  : ""
+              }` +
+              `${
+                journalTotal === true
+                  ? `<td>${indCourse.journalTotal}</td>`
+                  : ""
+              }` +
+              "</tr>"
+            : ""
+        );
+
+        coursesList.map(item => {
+          coursesListNoComma = coursesListNoComma + item;
+        });
+
+        coursesListNoComma =
+          coursesListNoComma +
+          `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
+
+        coursesListHeader =
+          "<tr>" +
+          "<th>NO</th>" +
+          "<th>COURSE NAME</th>" +
+          "<th>INITIALS</th>" +
+          "<th>STATUS</th>" +
+          `${researchTotal === true ? `<th>RESEARCH TOTAL</th>` : ""}` +
+          `${journalTotal === true ? `<th>JOURNAL TOTAL</th>` : ""}` +
+          "</tr>";
+      }
     }
 
     courseTitle = `<h4 style="font-size: 10px">Courses:</h4>`;

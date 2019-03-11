@@ -12,7 +12,8 @@ class Report extends Component {
       journalTotal: false,
       lastUpdate: false,
       status: false,
-      courses: false
+      courses: false,
+      deletedCourses: false
     };
   }
 
@@ -33,7 +34,8 @@ class Report extends Component {
         this.state.journalTotal === false &&
         this.state.status === false &&
         this.state.lastUpdate === false &&
-        this.state.courses === false
+        this.state.courses === false &&
+        this.state.deletedCourses === false
       ) {
         alert("Please Check at least one");
       } else {
@@ -56,6 +58,7 @@ class Report extends Component {
           status: this.state.status,
           lastUpdate: this.state.lastUpdate,
           courses: this.state.courses,
+          deletedCourses: this.state.deletedCourses,
           college: this.props.college.college,
           typeOfReport: "College Report",
           printedBy: name
@@ -135,6 +138,19 @@ class Report extends Component {
           />
           <label className="form-check-label" htmlFor="courses">
             Courses
+          </label>
+        </div>
+        <div className="form-check disabled">
+          <input
+            className="form-check-input"
+            type="checkbox"
+            name="deletedCourses"
+            id="deletedCourses"
+            value={this.state.deletedCourses}
+            onChange={this.onChange}
+          />
+          <label className="form-check-label" htmlFor="deletedCourses">
+            Include Deleted Courses
           </label>
         </div>
         <br />
