@@ -24,9 +24,9 @@ class Output extends Component {
 
       let output;
       output = this.props.output.map(out => (
-          <div>
+          <div key={out.DocumentScore.Document_2.Name}>
             {out.SimilarityScore < 30 ? 
-            <div key={out.DocumentScore.Document_2.Name} className="resultList little">
+            <div className="resultList little">
               <div className="row">
                   <div className="col-md-3">
                     <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
@@ -40,7 +40,7 @@ class Output extends Component {
               </div>
             </div> : 
             out.SimilarityScore >=30 && out.SimilarityScore<70 ? 
-            <div key={out.DocumentScore.Document_2.Name} className="resultList moderate">
+            <div className="resultList moderate">
               <div className="row">
                   <div className="col-md-3">
                     <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
@@ -53,7 +53,7 @@ class Output extends Component {
                   </div>
               </div>
             </div> : 
-            <div key={out.DocumentScore.Document_2.Name} className="resultList heavy">
+            <div className="resultList heavy">
             <div className="row">
                 <div className="col-md-3">
                   <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>

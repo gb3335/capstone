@@ -3,6 +3,7 @@ const router = express.Router();
 const request = require("request");
 const fs = require('fs');
 const extract = require('pdf-text-extract');
+const pdfUtil = require('pdf-to-text');
 
 const {gzip, ungzip} = require('node-gzip');
 const jsscompress = require("js-string-compression");
@@ -60,6 +61,47 @@ router.post("/online", (req, res) => {
     }
   );
 });
+
+// @routes  POST api/extract/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/get/pattern", (req,res) => {
+  let docuId = req.body.docuId;
+
+  //option to extract text from page 0 to 10
+  var option = {from: 0, to: 10};
+  
+  // pdfUtil.pdfToText(upload.path, option, function(err, data) {
+  //   if (err) throw(err);
+  //   console.log(data); //print text    
+  // });
+  
+  //Omit option to extract all text from the pdf file
+  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
+    if (err) throw(err);
+    //console.log(data); //print all text
+    res.json({ 
+      success: true,
+      data: data.toString()
+    })
+  });
+
+
+  // extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
+  //   if (err) {
+  //     console.dir(err)
+  //     return
+  //   }
+    
+  //   let extext = data;
+  //   // extext = processor.arrayProcess(extext.toString().toLowerCase());
+  //   plagiarism.initialize(extext);
+  //   res.json({ 
+  //     success: true
+  //   })
+  // })
+})
+
 
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
