@@ -644,7 +644,9 @@ router.post(
     ).then(research => {
       // add activity
       const newActivity = {
-        title: "Research: " + research.title + " moved to bin"
+        title: req.body.hidden
+          ? "Research: " + research.title + " hidden from list"
+          : "Research: " + research.title + " moved to bin"
       };
       new Activity(newActivity).save();
 
@@ -654,7 +656,7 @@ router.post(
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: --researchCount
+          researchTotal: req.body.hidden ? researchCount : --researchCount
         };
 
         college.course.map((cou, index) => {
@@ -664,7 +666,9 @@ router.post(
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: --cou.researchTotal,
+              researchTotal: req.body.hidden
+                ? cou.researchTotal
+                : --cou.researchTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
@@ -715,7 +719,9 @@ router.post(
     ).then(research => {
       // add activity
       const newActivity = {
-        title: "Research: " + research.title + " restored from bin"
+        title: req.body.hidden
+          ? "Research: " + research.title + " showed in list"
+          : "Research: " + research.title + " restored from bin"
       };
       new Activity(newActivity).save();
 
@@ -725,7 +731,7 @@ router.post(
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: ++researchCount
+          researchTotal: req.body.hidden ? researchCount : ++researchCount
         };
 
         college.course.map((cou, index) => {
@@ -735,7 +741,9 @@ router.post(
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: ++cou.researchTotal,
+              researchTotal: req.body.hidden
+                ? cou.researchTotal
+                : ++cou.researchTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
