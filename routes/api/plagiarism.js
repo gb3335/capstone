@@ -71,11 +71,6 @@ router.post("/get/pattern", (req,res) => {
   //option to extract text from page 0 to 10
   var option = {from: 0, to: 10};
   
-  // pdfUtil.pdfToText(upload.path, option, function(err, data) {
-  //   if (err) throw(err);
-  //   console.log(data); //print text    
-  // });
-  
   //Omit option to extract all text from the pdf file
   pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
     if (err) throw(err);
@@ -86,20 +81,6 @@ router.post("/get/pattern", (req,res) => {
     })
   });
 
-
-  // extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
-  //   if (err) {
-  //     console.dir(err)
-  //     return
-  //   }
-    
-  //   let extext = data;
-  //   // extext = processor.arrayProcess(extext.toString().toLowerCase());
-  //   plagiarism.initialize(extext);
-  //   res.json({ 
-  //     success: true
-  //   })
-  // })
 })
 
 
@@ -108,7 +89,7 @@ router.post("/get/pattern", (req,res) => {
 // @access  public
 router.post("/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
-  extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
+  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
     if (err) {
       console.dir(err)
       return
@@ -138,16 +119,36 @@ router.post("/local", (req, res) => {
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   
-  // console.log(`DocuID: ${docuId}, Title: ${title}, TextID: ${textId}, TextTitle: ${textTitle}`);
-  
-      extract(`./routes/downloadedDocu/${textId}.pdf`, { splitPages: false }, (err, data2) => {
+  pdfUtil.pdfToText(`./routes/downloadedDocu/${textId}.pdf`, function(err, data2) {
+        let result = {
+          SimilarityScore: 0,
+          DocumentScore: {
+            Document_1: {
+              Name: "",
+              Score: 0
+            },
+            Document_2: {
+              Name: "",
+              Score: 0
+            }
+          },
+          NumOfHits: 0,
+          NumOfPattern: 0,
+          NumOfText: 0,
+          Index: []
+        }
         if (err) {
           console.dir(err)
-          return
+          res.json({
+            localPlagiarism: {
+              success: false,
+              data: result
+            }
+          });
         }
         let text = processor.textProcess(data2.toString().toLowerCase());
-
-        let result = plagiarism.search(text, title, textTitle);
+        
+        result = plagiarism.search(text, title, textTitle);
         if(result.SimilarityScore == 100){
           delete result.Index;
         }
@@ -173,61 +174,6 @@ router.post("/local", (req, res) => {
           }
         });
       })
-  
-  
-
-
-  // extract(`./routes/downloadedDocu/${docuId}.pdf`, { splitPages: false }, (err, data) => {
-  //   if (err) {
-  //     console.dir(err)
-  //     return
-  //   }
-  //   extext = data;
-  //   let arr = processor.arrayProcess(extext.toString().toLowerCase());
-  //   let text = processor.textProcess(extext.toString().toLowerCase());
-    
-  //   let docu1 = req.body.docu1;
-  //   let docu2 = req.body.docu2;
-
-  //   let result = plagiarism.search(arr, text, true, "docu1", "docu2");
-  //   res.json({
-  //     localPlagiarism: {
-  //       success: true,
-  //       data: result
-  //     }
-  //   });
-    
-  // })
-
-  
-  
-
-  // let dataBuffer = fs.readFileSync(`./routes/downloadedDocu/${docuId}.pdf`);
- 
-  // pdf(dataBuffer).then(function(data) {
-  
-  //     // number of pages
-  //     console.log(data.numpages);
-  //     // number of rendered pages
-  //     console.log(data.numrender);
-  //     // PDF info
-  //     console.log(data.info);
-  //     // PDF metadata
-  //     console.log(data.metadata); 
-  //     // PDF.js version
-  //     // check https://mozilla.github.io/pdf.js/getting_started/
-  //     console.log(data.version);
-  //     // PDF text
-  //     console.log(data.text); 
-          
-  // })
-  // .catch(function(error){
-  //   // handle exceptions
-  //   console.log(error)
-  // })
-
-
-  
   
 });
 
