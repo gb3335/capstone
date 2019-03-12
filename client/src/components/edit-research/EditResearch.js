@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Tesseract } from "tesseract.ts";
 import ReactQuill from "react-quill";
+
 import "react-quill/dist/quill.snow.css";
 
 import { createResearch } from "../../actions/researchActions";
@@ -44,15 +46,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === this.props.research.research.college
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
   }
@@ -96,15 +98,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
   };
@@ -122,23 +124,42 @@ class EditResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
+  onOCR = e => {
+    let files = e.target.files;
+
+    Tesseract.recognize(files[0])
+      .progress(data => {
+        let dataProg = data.progress * 100;
+        dataProg = dataProg.toString();
+        dataProg = dataProg.substring(0, 5);
+
+        this.setState({
+          ocrProgress: data.status + " at " + dataProg + "%"
+        });
+      })
+      .then(data => {
+        this.setState({ abstract: data.text });
+      })
+      .catch(console.error);
+  };
+
   render() {
     const { college, errors } = this.props;
+    const progress = this.state.ocrProgress;
 
     const path = "/researches/" + this.props.research.research._id;
     let collegeOptions = [{ label: "* Select College", value: "" }];
-    let courseOptions = [{ label: "* Select Course", value: "" }];
 
     try {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-            label: college.name.fullName,
-            value: college.name.fullName
-          })
+              label: college.name.fullName,
+              value: college.name.fullName
+            })
           : ""
       );
-    } catch (error) { }
+    } catch (error) {}
 
     return (
       <div className="create-research">
@@ -224,6 +245,35 @@ class EditResearch extends Component {
                       info="Select your course"
                     />
                   </div>
+                </div>
+                <div>
+                  <label
+                    to="#"
+                    htmlFor="ocr"
+                    className="btn btn-light"
+                    style={{ fontSize: "12px" }}
+                    title="Use Image to Text"
+                  >
+                    <i className="fas fa-file-image mr-1" />
+                    Image to Text
+                  </label>
+
+                  <input
+                    type="file"
+                    style={{
+                      border: 0,
+                      opacity: 0,
+                      position: "absolute",
+                      pointerEvents: "none",
+                      width: "1px",
+                      height: "1px"
+                    }}
+                    onChange={this.onOCR}
+                    name="name"
+                    id="ocr"
+                    accept=".png, .jpg, .jpeg"
+                  />
+                  <p style={{ fontSize: "12px" }}>{progress}</p>
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}

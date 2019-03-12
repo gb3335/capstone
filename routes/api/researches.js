@@ -8,6 +8,11 @@ const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
+const path = require("path");
+const pdf = require("html-pdf");
+
+// report templates
+const pdfResearchesTemplate = require("../../document/researchesTemplate");
 
 // Research model
 const Research = require("../../models/Research");
@@ -616,6 +621,55 @@ router.delete(
       { $set: newDocument },
       { new: true }
     ).then(research => res.json(research));
+  }
+);
+
+// @route   POST api/researches/createReport/researches
+// @desc    Generate List of all researches Report
+// @access  Private
+router.post(
+  "/createReport/researches",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfResearchesTemplate(req.body), options)
+      .toFile("researchesPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/researches/fetchReport/researches
+// @desc    Send the generated pdf to client - list of researches
+// @access  Private
+router.get(
+  "/fetchReport/researches",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/researchesPdf.pdf`);
   }
 );
 

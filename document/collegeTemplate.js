@@ -280,7 +280,7 @@ module.exports = ({
           <br />
           City of Malolos
           <br />
-          College of Information and Communications Technology
+          ${collegeName}
           <br />
           <br />
           <br />
@@ -289,7 +289,9 @@ module.exports = ({
         </div>
           <div style="font-size: 10px;">
             <p style="float: left;">
-              <b>College Name: </b>${collegeName}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}
+              <b>College Name: </b>${collegeName}
+              <br />
+              <b>Date Printed: </b>${currentDate}
             </p>
           </div>
           <br />

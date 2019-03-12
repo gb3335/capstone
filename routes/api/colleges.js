@@ -8,6 +8,8 @@ const base64Img = require("base64-img");
 const fs = require("fs");
 const path = require("path");
 const pdf = require("html-pdf");
+
+// report templates
 const pdfCollegeTemplate = require("../../document/collegeTemplate");
 const pdfCollegesTemplate = require("../../document/collegesTemplate");
 
