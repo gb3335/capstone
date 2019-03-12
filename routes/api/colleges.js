@@ -383,8 +383,7 @@ router.post(
           errors.name = "Course Name already exists";
           mark = true;
           return res.status(400).json(errors);
-        }
-        if (
+        } else if (
           req.body.initials === cou.initials &&
           cou._id != req.body.courseId
         ) {
