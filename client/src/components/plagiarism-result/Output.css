@@ -1,0 +1,23 @@
+.little{
+    border: 2px solid #36A2EB;
+}
+
+.moderate{
+    border: 2px solid #f49e61;
+}
+
+.heavy{
+    border: 2px solid #FF6384;
+}
+
+.resultList{
+    margin-bottom: 5px;
+    margin-right: 5px;
+    padding: 10px 5px 5px 5px;
+    margin-top: 5px;
+}
+
+.resultList p{
+    font-size: 15px;
+    line-height: 80%;
+}
