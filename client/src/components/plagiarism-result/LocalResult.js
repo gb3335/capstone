@@ -55,7 +55,7 @@ class LocalResult extends Component {
     let outputItems;
 
     if (Object.keys(output).length > 0) {
-      outputItems = <Output output={output} research={this.props.research}/>;
+      outputItems = <Output output={output}/>;
     } else {
       outputItems = <span>No output</span>;
     }

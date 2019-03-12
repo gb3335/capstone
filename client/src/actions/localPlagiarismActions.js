@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN} from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID} from "./types";
 import axios from "axios";
 
 import jsscompress from "js-string-compression";
@@ -80,6 +80,13 @@ export const outputLocalPlagiarismPattern = output => {
 export const setDocumentId = (id) => {
   return {
     type: PLAGIARISM_LOCAL_ID,
+    payload: id
+  };
+};
+
+export const setTextDocumentId = (id) => {
+  return {
+    type: PLAGIARISM_LOCAL_TEXT_ID,
     payload: id
   };
 };
