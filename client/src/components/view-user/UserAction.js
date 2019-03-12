@@ -4,15 +4,32 @@ import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-
+import { changeStatus } from '../../actions/registerActions';
 
 class UserAction extends Component {
 
 
-  alerts() {
-    alert("Can only edit your own account.")
-  }
 
+  changeClick() {
+
+
+    const userData = {
+
+      id: this.props.users.user._id,
+      isBlock: this.props.users.user.isBlock
+
+    };
+
+    var answer = window.confirm("Save data?")
+    if (answer) {
+      this.props.changeStatus(userData, this.props.history);
+    }
+
+
+
+
+
+  }
 
   render() {
 
@@ -50,7 +67,7 @@ class UserAction extends Component {
       <div className="" role="group">
         {editAction}
         &nbsp;
-        <label to="#" htmlFor="imageUpload" className="btn btn-light">
+        <label to="#" htmlFor="imageUpload" className="btn btn-light" onClick={() => this.changeClick()}>
           <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
         </label>
         &nbsp;
@@ -75,5 +92,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {}
+  { changeStatus }
 )(withRouter(UserAction));

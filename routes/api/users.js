@@ -229,25 +229,124 @@ router.post(
     User.findById(req.user._id).then(user => {
       bcrypt.compare(req.body.password1, user.password).then(isMatch => {
         if (isMatch) {
-          if (isMatch) {
 
-            bcrypt.genSalt(10, (err, salt) => {
-              bcrypt.hash(profileData.password, salt, (err, hash) => {
-                if (err) throw err;
-                profileData.password = hash;
-                User.findByIdAndUpdate(
-                  req.user._id,
-                  { $set: profileData },
-                  { new: true }
-                )
-                  .then(user => res.json(user))
-                  .catch(err => console.log(err));
-              });
+
+          bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(profileData.password, salt, (err, hash) => {
+              if (err) throw err;
+              profileData.password = hash;
+              User.findByIdAndUpdate(
+                req.user._id,
+                { $set: profileData },
+                { new: true }
+              )
+                .then(user => res.json(user))
+                .catch(err => console.log(err));
             });
-          }
+          });
+
+        }
+        else {
+          errors.password1 = "Invalid password";
+          errors.password2 = "Invalid password";
+          return res.status(400).json(errors);
         }
       });
     });
+
+    // User.findOne({ email: profileData.email }).then(user => {
+    //   const errors = {}
+    //   if (user) {
+    //     if (user.email != req.user.email) {
+    //       errors.email = "Email Already Exists!";
+    //       return res.status(400).json(errors);
+    //     }
+    //   }
+    //   User.findOne({ userName: profileData.userName }).then(user => {
+
+    //     if (user) {
+    //       if (user.userName != req.user.userName) {
+    //         errors.userName = "Username Already Exists!";
+    //         return res.status(400).json(errors);
+    //       }
+    //     }
+
+
+    //     bcrypt.genSalt(10, (err, salt) => {
+    //       bcrypt.hash(profileData.password, salt, (err, hash) => {
+    //         if (err) throw err;
+    //         profileData.password = hash;
+    //         User.findByIdAndUpdate(
+    //           req.user._id,
+    //           { $set: profileData },
+    //           { new: true }
+    //         ).then(user => res.json(user));
+    //       });
+    //     });
+    //   })
+    // });
+
+
+
+  }
+);
+
+// @routes  POST api/users/profile/changestatus
+// @desc    Edit User profile
+// @access  private
+router.post(
+  "/profile/changestatus",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+
+
+    const isBlock = req.body.isBlock;
+
+    const profileData = {
+      id: req.body.id,
+
+      isBlock,
+
+    };
+    console.log(profileData.isBlock);
+
+
+    User.findById(req.user._id).then(user => {
+
+      if (profileData.isBlock == 0) {
+        profileData.isBlock = 1;
+        console.log(profileData.isBlock);
+        User.findByIdAndUpdate(
+          req.user._id,
+          { $set: profileData },
+          { new: true }
+        )
+          .then(user => res.json(user))
+          .catch(err => console.log(err));
+
+      }
+      else {
+        profileData.isBlock = 0;
+        console.log(profileData.isBlock);
+        User.findByIdAndUpdate(
+          req.user._id,
+          { $set: profileData },
+          { new: true }
+        )
+          .then(user => res.json(user))
+          .catch(err => console.log(err));
+      }
+
+
+    });
+
+
+
+
+
+
+
+
 
     // User.findOne({ email: profileData.email }).then(user => {
     //   const errors = {}

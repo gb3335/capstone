@@ -72,3 +72,21 @@ export const editPassword = (userData, history) => dispatch => {
       })
     );
 };
+
+export const changeStatus = (userData, history) => dispatch => {
+  axios
+    .post("/api/users/profile/changestatus", userData)
+    .then(res => {
+      if (userData.id) {
+        history.push(`/viewusers`);
+      } else {
+        history.push(`/viewusers`);
+      }
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
