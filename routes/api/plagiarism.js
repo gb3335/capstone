@@ -26,7 +26,14 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 // @desc    Test plagiarism route
 // @access  public
 router.get("/test", (req, res) => {
-  res.json({ msg: "Plagiarism Works!" });
+  let text = req.body.text;
+
+  res.json({
+    success: true,
+    data : processor.textProcess(text)
+  })
+
+  // res.json({ msg: "Plagiarism Works!" });
 });
 
 // @routes  POST api/plagiarism/online
