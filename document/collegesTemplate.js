@@ -6,6 +6,7 @@ module.exports = ({
   researchTotal,
   journalTotal,
   lastUpdate,
+  deletedColleges,
   colleges,
   typeOfReport
 }) => {
@@ -41,38 +42,87 @@ module.exports = ({
     collegesList = "No Researches in this College";
     collegesListHeader = "";
   } else {
-    collegesList = colleges.map(
-      (college, index) =>
-        "<tr>" +
-        `<td>${++index}</td>` +
-        `<td>${college.name.fullName}</td>` +
-        `<td>${college.name.initials}</td>` +
-        `<td>${college.librarian}</td>` +
-        `${
-          status === true
-            ? college.deleted === 0
-              ? "<td>Active</td>"
-              : "<td>Deleted</td>"
-            : ""
-        }` +
-        `${coursesTotal === true ? `<td>${college.course.length}</td>` : ""}` +
-        `${researchTotal === true ? `<td>${college.researchTotal}</td>` : ""}` +
-        `${journalTotal === true ? `<td>${college.journalTotal}</td>` : ""}` +
-        `${
-          lastUpdate === true
-            ? `<td>${moment(college.lastUpdate.date).format(
-                "MMMM Do YYYY, h:mm A"
-              )}</td>`
-            : ""
-        }` +
-        "</tr>"
-    );
+    if (deletedColleges) {
+      collegesList = colleges.map(
+        (college, index) =>
+          "<tr>" +
+          `<td>${++index}</td>` +
+          `<td>${college.name.fullName}</td>` +
+          `<td>${college.name.initials}</td>` +
+          `<td>${college.librarian}</td>` +
+          `${
+            status === true
+              ? college.deleted === 0
+                ? "<td>Active</td>"
+                : "<td>Deleted</td>"
+              : ""
+          }` +
+          `${
+            coursesTotal === true ? `<td>${college.course.length}</td>` : ""
+          }` +
+          `${
+            researchTotal === true ? `<td>${college.researchTotal}</td>` : ""
+          }` +
+          `${journalTotal === true ? `<td>${college.journalTotal}</td>` : ""}` +
+          `${
+            lastUpdate === true
+              ? `<td>${moment(college.lastUpdate.date).format(
+                  "MMMM Do YYYY, h:mm A"
+                )}</td>`
+              : ""
+          }` +
+          "</tr>"
+      );
+      totalNumOfColleges = collegesList.length;
+    } else {
+      let ind = 0;
+      collegesList = colleges.map((college, index) =>
+        college.deleted === 0
+          ? "<tr>" +
+            `<td>${++ind}</td>` +
+            `<td>${college.name.fullName}</td>` +
+            `<td>${college.name.initials}</td>` +
+            `<td>${college.librarian}</td>` +
+            `${
+              status === true
+                ? college.deleted === 0
+                  ? "<td>Active</td>"
+                  : "<td>Deleted</td>"
+                : ""
+            }` +
+            `${
+              coursesTotal === true ? `<td>${college.course.length}</td>` : ""
+            }` +
+            `${
+              researchTotal === true ? `<td>${college.researchTotal}</td>` : ""
+            }` +
+            `${
+              journalTotal === true ? `<td>${college.journalTotal}</td>` : ""
+            }` +
+            `${
+              lastUpdate === true
+                ? `<td>${moment(college.lastUpdate.date).format(
+                    "MMMM Do YYYY, h:mm A"
+                  )}</td>`
+                : ""
+            }` +
+            "</tr>"
+          : ""
+      );
+
+      let ctrNoDeleted = 0;
+      colleges.map(college => {
+        if (college.deleted === 0) {
+          ++ctrNoDeleted;
+        }
+      });
+
+      totalNumOfColleges = ctrNoDeleted;
+    }
 
     collegesList.map(item => {
       collegesListNoComma = collegesListNoComma + item;
     });
-
-    totalNumOfColleges = collegesList.length;
 
     collegesListNoComma =
       collegesListNoComma +

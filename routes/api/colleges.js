@@ -8,6 +8,8 @@ const base64Img = require("base64-img");
 const fs = require("fs");
 const path = require("path");
 const pdf = require("html-pdf");
+
+// report templates
 const pdfCollegeTemplate = require("../../document/collegeTemplate");
 const pdfCollegesTemplate = require("../../document/collegesTemplate");
 
@@ -321,8 +323,7 @@ router.post(
         if (req.body.name === cou.name) {
           errors.name = "Course Name already exists";
           res.status(400).json(errors);
-        }
-        if (req.body.initials === cou.initials) {
+        } else if (req.body.initials === cou.initials) {
           errors.initials = "Course Initials already exists";
           res.status(400).json(errors);
         }
@@ -381,8 +382,7 @@ router.post(
           errors.name = "Course Name already exists";
           mark = true;
           return res.status(400).json(errors);
-        }
-        if (
+        } else if (
           req.body.initials === cou.initials &&
           cou._id != req.body.courseId
         ) {
