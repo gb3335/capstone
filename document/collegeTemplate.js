@@ -222,11 +222,11 @@ module.exports = ({
               `<td>${research.college}</td>` +
               `<td>${research.course}</td>` +
               `${
-                research.hidden === 0
-                  ? research.deleted === 0
-                    ? "<td>Active</td>"
-                    : "<td>Hidden</td>"
-                  : "<td>Deleted</td>"
+                research.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : research.hidden === 0
+                  ? "<td>Active</td>"
+                  : "<td>Hidden</td>"
               }` +
               `<td>${research.type}</td>` +
               `<td>${research.researchID}</td>` +
@@ -264,7 +264,9 @@ module.exports = ({
       let resCtr = 0;
       researches.map(research => {
         if (research.college === college.name.fullName) {
-          ++resCtr;
+          if (research.deleted === 0) {
+            ++resCtr;
+          }
         }
       });
       // DOENST INCLUDE DELETED RESEARCHES
@@ -282,11 +284,11 @@ module.exports = ({
                 `<td>${research.college}</td>` +
                 `<td>${research.course}</td>` +
                 `${
-                  research.hidden === 0
-                    ? research.deleted === 0
-                      ? "<td>Active</td>"
-                      : "<td>Hidden</td>"
-                    : "<td>Deleted</td>"
+                  research.deleted === 1
+                    ? "<td>Deleted</td>"
+                    : research.hidden === 0
+                    ? "<td>Active</td>"
+                    : "<td>Hidden</td>"
                 }` +
                 `<td>${research.type}</td>` +
                 `<td>${research.researchID}</td>` +

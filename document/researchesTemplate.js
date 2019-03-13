@@ -65,11 +65,11 @@ module.exports = ({
           `${course === true ? `<td>${research.course}</td>` : ""}` +
           `${
             status === true
-              ? research.hidden === 0
-                ? research.deleted === 0
-                  ? "<td>Active</td>"
-                  : "<td>Hidden</td>"
-                : "<td>Deleted</td>"
+              ? research.deleted === 1
+                ? "<td>Deleted</td>"
+                : research.hidden === 0
+                ? "<td>Active</td>"
+                : "<td>Hidden</td>"
               : ""
           }` +
           `${type === true ? `<td>${research.type}</td>` : ""}` +
