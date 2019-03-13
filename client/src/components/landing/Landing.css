@@ -7,13 +7,13 @@ img {
   background: url("./bulsumaingate.png") no-repeat;
   background-size: cover;
   background-position: center;
-  height: 100vh;
+  height: 60vh;
   margin-top: -24px;
   margin-bottom: -20px;
 }
 
 .landing-inner {
-  padding-top: 80px;
+  padding-top: 5vh;
 }
 
 .dark-overlay {

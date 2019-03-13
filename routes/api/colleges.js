@@ -323,8 +323,7 @@ router.post(
         if (req.body.name === cou.name) {
           errors.name = "Course Name already exists";
           res.status(400).json(errors);
-        }
-        if (req.body.initials === cou.initials) {
+        } else if (req.body.initials === cou.initials) {
           errors.initials = "Course Initials already exists";
           res.status(400).json(errors);
         }
