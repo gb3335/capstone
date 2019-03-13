@@ -20,7 +20,7 @@ class UserAction extends Component {
 
     };
 
-    var answer = window.confirm("Save data?")
+    var answer = window.confirm("Change user status?")
     if (answer) {
       this.props.changeStatus(userData, this.props.history);
     }
@@ -48,12 +48,9 @@ class UserAction extends Component {
       if (user.email === auth.user.email) {
         editAction = (
 
-          <Link to="/edit-account">
-            <label htmlFor="imageUpload" className="btn btn-light">
-              <i className="fas fa-pen text-info mr-1" />
-              Edit User
-           </label>
-          </Link>
+          <Link to="/edit-account" className="btn btn-light"> <i className="fas fa-pen text-info mr-1" />Edit User</Link>
+
+
 
 
         );
@@ -64,17 +61,15 @@ class UserAction extends Component {
 
 
     return (
-      <div className="" role="group">
+      <div className="btn-group mb-3 btn-group-sm" >
         {editAction}
-        &nbsp;
-        <label to="#" htmlFor="imageUpload" className="btn btn-light" onClick={() => this.changeClick()}>
+        <Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={() => this.changeClick()}>
           <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
-        </label>
-        &nbsp;
-        <label to="#" htmlFor="imageUpload" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" />
+          </Link>
+        <Link to="#" htmlFor="imageUpload" className="btn btn-light">
+          <i className="fas fa-plus text-info mr-1 " />
           Change Image
-        </label>
+          </Link>
 
       </div>
     );
