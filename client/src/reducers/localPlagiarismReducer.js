@@ -1,8 +1,9 @@
-import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN,PLAGIARISM_LOCAL_PATTERN_LOADING } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_TEXT_ID } from "../actions/types";
 
 const initialState = {
   output: {},
   docuId: "",
+  textId: "",
   pattern: "",
   patternLoading: "",
   loading: false
@@ -26,6 +27,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         docuId: action.payload
+      };
+    case PLAGIARISM_LOCAL_TEXT_ID:
+      return {
+        ...state,
+        textId: action.payload
       };
     case PLAGIARISM_LOCAL_PATTERN:
       return {
