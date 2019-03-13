@@ -23,6 +23,7 @@ class AddResearch extends Component {
       course: "",
       abstract: "",
       researchId: "",
+      authorOne: "",
       pages: "",
       schoolYear: "",
       flagFromCollege: false,
@@ -76,7 +77,8 @@ class AddResearch extends Component {
       abstract: this.state.abstract,
       researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
-      pages: this.state.pages
+      pages: this.state.pages,
+      authorOne: this.state.authorOne
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -297,6 +299,14 @@ class AddResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
+                <TextFieldGroup
+                  placeholder="* Author One"
+                  name="authorOne"
+                  value={this.state.authorOne}
+                  onChange={this.onChange}
+                  error={errors.authorOne}
+                  info="Author One of the research"
+                />
                 <TextFieldGroup
                   placeholder="* Research ID"
                   name="researchId"

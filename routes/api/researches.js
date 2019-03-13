@@ -104,7 +104,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    const newResearch = {
+    let newResearch = {
       title: req.body.title,
       type: req.body.type,
       college: req.body.college,
@@ -113,6 +113,7 @@ router.post(
       researchID: req.body.researchId,
       pages: req.body.pages,
       schoolYear: req.body.schoolYear,
+      author: [],
       lastUpdate: Date.now()
     };
 
@@ -134,6 +135,21 @@ router.post(
               title: "Research " + req.body.title + " updated"
             };
             new Activity(newActivity).save();
+
+            // Add new Author One and existing
+            newResearch.author.push({
+              name: req.body.authorOne,
+              role: "Author One"
+            });
+
+            research.author.map(aut => {
+              aut.role === "Author"
+                ? newResearch.author.push({
+                    name: aut.name,
+                    role: "Author"
+                  })
+                : "";
+            });
 
             // update college
             Research.findOneAndUpdate(
@@ -179,12 +195,12 @@ router.post(
                       .map(item => item._id)
                       .indexOf(courseId);
 
-                    console.log(removeIndex);
+                    //console.log(removeIndex);
 
                     // Splice out of array
                     college.course.splice(removeIndex, 1);
 
-                    // Add to exp array
+                    // Add to course array
                     college.course.unshift(dupliCourse);
 
                     college.save();
@@ -194,6 +210,11 @@ router.post(
                     const newCollege = {
                       researchTotal: total
                     };
+
+                    newResearch.author.push({
+                      name: req.body.authorOne,
+                      role: "Author One"
+                    });
 
                     // Save Research
                     new Research(newResearch).save();

@@ -16,7 +16,9 @@ class Authors extends Component {
       if (research.deleted === 0) {
         author = this.props.author.map(author => (
           <tr key={author._id}>
-            <td>{author.name}</td>
+            <td>
+              {author.name} ({author.role})
+            </td>
             <td>
               <button
                 onClick={this.onDeleteClick.bind(
@@ -34,14 +36,18 @@ class Authors extends Component {
       } else {
         author = this.props.author.map(author => (
           <tr key={author._id}>
-            <td>{author.name}</td>
+            <td>
+              {author.name} ({author.role})
+            </td>
           </tr>
         ));
       }
     } else {
       author = this.props.author.map(author => (
         <tr key={author._id}>
-          <td>{author.name}</td>
+          <td>
+            {author.name} ({author.role})
+          </td>
         </tr>
       ));
     }
