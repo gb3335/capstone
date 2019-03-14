@@ -14,7 +14,7 @@ module.exports = function validateResearchInput(data) {
   data.pages = !isEmpty(data.pages) ? data.pages : "";
   data.researchId = !isEmpty(data.researchId) ? data.researchId : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
-  //data.author = !isEmpty(data.author) ? data.author : "";
+  data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
 
   if (Validator.isEmpty(data.title)) {
     errors.title = "Research title is required";
@@ -56,12 +56,11 @@ module.exports = function validateResearchInput(data) {
     errors.pages = "Research pages is invalid";
   }
 
+  if (Validator.isEmpty(data.authorOne)) {
+    errors.authorOne = "Author One is required";
+  }
   // if (Validator.isEmpty(data.images)) {
   //   errors.images = "Research image is required";
-  // }
-
-  // if (Validator.isEmpty(data.author)) {
-  //   errors.author = "Research author is required";
   // }
 
   return {

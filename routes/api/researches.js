@@ -104,24 +104,14 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    const newResearch = {
-      title: req.body.title,
-      type: req.body.type,
-      college: req.body.college,
-      course: req.body.course,
-      abstract: req.body.abstract,
-      researchID: req.body.researchId,
-      pages: req.body.pages,
-      schoolYear: req.body.schoolYear,
-      lastUpdate: Date.now()
-    };
-
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
         Research.findOne({ title: req.body.title }).then(research => {
           let title;
+          let copyAuthorArray = [];
           try {
             title = research.title;
+            copyAuthorArray = research.author;
           } catch (error) {
             title = "";
           }
@@ -134,6 +124,36 @@ router.post(
               title: "Research " + req.body.title + " updated"
             };
             new Activity(newActivity).save();
+
+            let authorArray = [];
+            authorArray.push({
+              name: req.body.authorOne,
+              role: "Author One"
+            });
+
+            copyAuthorArray.map(aut => {
+              aut.role === "Author"
+                ? authorArray.push({
+                    name: aut.name,
+                    role: "Author"
+                  })
+                : "";
+            });
+
+            let newResearch = {
+              title: req.body.title,
+              type: req.body.type,
+              college: req.body.college,
+              course: req.body.course,
+              abstract: req.body.abstract,
+              researchID: req.body.researchId,
+              pages: req.body.pages,
+              schoolYear: req.body.schoolYear,
+              author: authorArray,
+              lastUpdate: Date.now()
+            };
+
+            // Add new Author One and existing
 
             // update college
             Research.findOneAndUpdate(
@@ -179,12 +199,12 @@ router.post(
                       .map(item => item._id)
                       .indexOf(courseId);
 
-                    console.log(removeIndex);
+                    //console.log(removeIndex);
 
                     // Splice out of array
                     college.course.splice(removeIndex, 1);
 
-                    // Add to exp array
+                    // Add to course array
                     college.course.unshift(dupliCourse);
 
                     college.save();
@@ -193,6 +213,25 @@ router.post(
 
                     const newCollege = {
                       researchTotal: total
+                    };
+
+                    let authorArray = [];
+                    authorArray.push({
+                      name: req.body.authorOne,
+                      role: "Author One"
+                    });
+
+                    let newResearch = {
+                      title: req.body.title,
+                      type: req.body.type,
+                      college: req.body.college,
+                      course: req.body.course,
+                      abstract: req.body.abstract,
+                      researchID: req.body.researchId,
+                      pages: req.body.pages,
+                      schoolYear: req.body.schoolYear,
+                      author: authorArray,
+                      lastUpdate: Date.now()
                     };
 
                     // Save Research

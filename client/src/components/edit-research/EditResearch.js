@@ -29,6 +29,7 @@ class EditResearch extends Component {
       researchId: research.researchID,
       pages: research.pages,
       schoolYear: research.schoolYear,
+      authorOne: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
     };
@@ -57,6 +58,14 @@ class EditResearch extends Component {
           )
         : ""
     );
+
+    let ao = "";
+    this.props.research.research.author.map(au => {
+      if (au.role === "Author One") {
+        ao = au.name;
+      }
+    });
+    this.setState({ authorOne: ao });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,6 +87,7 @@ class EditResearch extends Component {
       pages: this.state.pages,
       researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
+      authorOne: this.state.authorOne,
       id: this.props.research.research._id
     };
 
@@ -86,6 +96,11 @@ class EditResearch extends Component {
   };
 
   onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
+  };
+
+  onChangeSelectCollege = e => {
     this.setState({ [e.target.name]: e.target.value });
     this.refs.resBtn.removeAttribute("disabled");
 
@@ -228,7 +243,7 @@ class EditResearch extends Component {
                       placeholder="College"
                       name="college"
                       value={this.state.college}
-                      onChange={this.onChange}
+                      onChange={this.onChangeSelectCollege}
                       options={collegeOptions}
                       error={errors.college}
                       info="Select your college"
@@ -290,15 +305,15 @@ class EditResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
-                {/* <TextAreaFieldGroup
-                  placeholder="* Abstract"
-                  name="abstract"
-                  value={this.state.abstract}
+
+                <TextFieldGroup
+                  placeholder="* Author One"
+                  name="authorOne"
+                  value={this.state.authorOne}
                   onChange={this.onChange}
-                  error={errors.abstract}
-                  info="Abstract of the research"
-                  rows="10"
-                /> */}
+                  error={errors.authorOne}
+                  info="Author One of the research"
+                />
                 <TextFieldGroup
                   placeholder="* Research ID"
                   name="researchId"
