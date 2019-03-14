@@ -271,7 +271,7 @@ module.exports = ({
       }
     }
 
-    courseTitle = `<h4 style="font-size: 10px">Courses:</h4>`;
+    courseTitle = `<h4 style="font-size: 7px">Courses:</h4>`;
   } else {
     totalcourse = "";
     courseTitle = "";
@@ -443,7 +443,7 @@ module.exports = ({
           "</tr>";
       }
     }
-    researchTitle = `<h4 style="font-size: 10px">Researches:</h4>`;
+    researchTitle = `<h4 style="font-size: 7px">Researches:</h4>`;
   } else {
     totalresearch = "";
     researchTitle = "";
@@ -549,7 +549,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-          <div style="font-size: 10px;">
+          <div style="font-size: 7px;">
             <p style="float: left;">
               <b>College Name: </b>${collegeName}
               <br />
@@ -559,8 +559,8 @@ module.exports = ({
           <br />
           <br />
           <hr />
-          <div class="details" style="font-size: 10px">
-            <h4 style="font-size: 10px">College Details:</h4>
+          <div class="details" style="font-size: 7px">
+            <h4 style="font-size: 7px">College Details:</h4>
             <div>
               <ul style="list-style-type:circle; text-align: left">
                 <li>Librarian: ${librarian}</li>

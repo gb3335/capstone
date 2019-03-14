@@ -229,8 +229,8 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-          <div class="courses" style="font-size: 7px">
-            <p style="font-size: 9px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <div class="courses" style="font-size: 5px">
+            <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
             <table>
               ${collegesListHeader}
               ${collegesListNoComma}
