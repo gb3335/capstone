@@ -65,11 +65,11 @@ module.exports = ({
           `${course === true ? `<td>${research.course}</td>` : ""}` +
           `${
             status === true
-              ? research.hidden === 0
-                ? research.deleted === 0
-                  ? "<td>Active</td>"
-                  : "<td>Hidden</td>"
-                : "<td>Deleted</td>"
+              ? research.deleted === 1
+                ? "<td>Deleted</td>"
+                : research.hidden === 0
+                ? "<td>Active</td>"
+                : "<td>Hidden</td>"
               : ""
           }` +
           `${type === true ? `<td>${research.type}</td>` : ""}` +
@@ -241,7 +241,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-        <div class="courses" style="font-size: 7px">
+        <div class="courses" style="font-size: 5px">
           <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
           <table>
           ${researchesListHeader}

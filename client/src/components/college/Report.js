@@ -8,13 +8,30 @@ class Report extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      researchTotal: false,
-      journalTotal: false,
-      lastUpdate: false,
-      status: false,
-      courses: false,
+      // Basic info
+      researchTotal: true,
+      journalTotal: true,
+      courseTotal: true,
+      lastUpdate: true,
+      status: true,
+
+      // courses
+      courses: true,
+      courseStatus: true,
+      courseResearch: true,
+      courseJournal: true,
       deletedCourses: false,
-      listOfResearches: false,
+
+      // researches
+      listOfResearches: true,
+      researchStatus: true,
+      researchResId: true,
+      researchCollege: true,
+      researchCourse: true,
+      researchType: true,
+      researchPages: true,
+      researchAcademicYear: true,
+      researchLastUpdate: true,
       deletedResearches: false
     };
   }
@@ -32,13 +49,28 @@ class Report extends Component {
   onGenerateReport = e => {
     if (!this.props.college.buttonDisable) {
       if (
+        // Basic info
         this.state.researchTotal === false &&
         this.state.journalTotal === false &&
+        this.state.courseTotal === false &&
         this.state.status === false &&
         this.state.lastUpdate === false &&
+        // Courses
         this.state.courses === false &&
+        this.state.courseStatus === false &&
+        this.state.courseResearch === false &&
+        this.state.courseJournal === false &&
         this.state.deletedCourses === false &&
+        // researches
         this.state.listOfResearches === false &&
+        this.state.researchStatus === false &&
+        this.state.researchResId === false &&
+        this.state.researchCollege === false &&
+        this.state.researchCourse === false &&
+        this.state.researchType === false &&
+        this.state.researchPages === false &&
+        this.state.researchAcademicYear === false &&
+        this.state.researchLastUpdate === false &&
         this.state.deletedResearches === false
       ) {
         alert("Please Check at least one");
@@ -57,15 +89,34 @@ class Report extends Component {
           " " +
           this.props.auth.user.lastName;
         const reportData = {
+          // basic info
           researchTotal: this.state.researchTotal,
           journalTotal: this.state.journalTotal,
+          courseTotal: this.state.courseTotal,
           status: this.state.status,
           lastUpdate: this.state.lastUpdate,
+
+          // courses
           courses: this.state.courses,
+          courseStatus: this.state.courseStatus,
+          courseResearch: this.state.courseResearch,
+          courseJournal: this.state.courseJournal,
           deletedCourses: this.state.deletedCourses,
-          college: this.props.college.college,
+
+          // researches
           listOfResearches: this.state.listOfResearches,
+          researchStatus: this.state.researchStatus,
+          researchResId: this.state.researchResId,
+          researchCollege: this.state.researchCollege,
+          researchCourse: this.state.researchCourse,
+          researchType: this.state.researchType,
+          researchPages: this.state.researchPages,
+          researchAcademicYear: this.state.researchAcademicYear,
+          researchLastUpdate: this.state.researchLastUpdate,
           deletedResearches: this.state.deletedResearches,
+
+          // other
+          college: this.props.college.college,
           researches: this.props.research.researches,
           typeOfReport: "College Report",
           printedBy: name
@@ -84,7 +135,7 @@ class Report extends Component {
         <p className="lead"> Filter</p>
         <div className="row">
           {/* COLLEGE BASIC INFO */}
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="card">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-info mr-2" />
@@ -98,6 +149,7 @@ class Report extends Component {
                     name="status"
                     id="status"
                     value={this.state.status}
+                    checked={this.state.status}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="status">
@@ -111,6 +163,7 @@ class Report extends Component {
                     name="researchTotal"
                     id="researchTotal"
                     value={this.state.researchTotal}
+                    checked={this.state.researchTotal}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="researchTotal">
@@ -124,10 +177,25 @@ class Report extends Component {
                     name="journalTotal"
                     id="journalTotal"
                     value={this.state.journalTotal}
+                    checked={this.state.journalTotal}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="journalTotal">
                     Total Number of Journal
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="courseTotal"
+                    id="courseTotal"
+                    value={this.state.courseTotal}
+                    checked={this.state.courseTotal}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="courseTotal">
+                    Total Number of Course
                   </label>
                 </div>
                 <div className="form-check disabled">
@@ -137,6 +205,7 @@ class Report extends Component {
                     name="lastUpdate"
                     id="lastUpdate"
                     value={this.state.lastUpdate}
+                    checked={this.state.lastUpdate}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="lastUpdate">
@@ -147,7 +216,7 @@ class Report extends Component {
             </div>
           </div>
           {/* COLLEGE COURSES */}
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="card">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-graduation-cap mr-2" />
@@ -161,6 +230,7 @@ class Report extends Component {
                     name="courses"
                     id="courses"
                     value={this.state.courses}
+                    checked={this.state.courses}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="courses">
@@ -171,9 +241,52 @@ class Report extends Component {
                   <input
                     className="form-check-input"
                     type="checkbox"
+                    name="courseStatus"
+                    id="courseStatus"
+                    value={this.state.courseStatus}
+                    checked={this.state.courseStatus}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="courseStatus">
+                    Course Status
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="courseResearch"
+                    id="courseResearch"
+                    value={this.state.courseResearch}
+                    checked={this.state.courseResearch}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="courseResearch">
+                    Course Researches
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="courseJournal"
+                    id="courseJournal"
+                    value={this.state.courseJournal}
+                    checked={this.state.courseJournal}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="courseJournal">
+                    Course Journals
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
                     name="deletedCourses"
                     id="deletedCourses"
                     value={this.state.deletedCourses}
+                    checked={this.state.deletedCourses}
                     onChange={this.onChange}
                   />
                   <label className="form-check-label" htmlFor="deletedCourses">
@@ -184,7 +297,7 @@ class Report extends Component {
             </div>
           </div>
           {/* COLLEGE RESEARCHES */}
-          <div className="col-4">
+          <div className="col-md-4">
             <div className="card">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-book mr-2" />
@@ -198,6 +311,7 @@ class Report extends Component {
                     name="listOfResearches"
                     id="listOfResearches"
                     value={this.state.listOfResearches}
+                    checked={this.state.listOfResearches}
                     onChange={this.onChange}
                   />
                   <label
@@ -211,9 +325,128 @@ class Report extends Component {
                   <input
                     className="form-check-input"
                     type="checkbox"
+                    name="researchStatus"
+                    id="researchStatus"
+                    value={this.state.researchStatus}
+                    checked={this.state.researchStatus}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchStatus">
+                    Status
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchResId"
+                    id="researchResId"
+                    value={this.state.researchResId}
+                    checked={this.state.researchResId}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchResId">
+                    Research ID
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchCollege"
+                    id="researchCollege"
+                    value={this.state.researchCollege}
+                    checked={this.state.researchCollege}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchCollege">
+                    College
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchCourse"
+                    id="researchCourse"
+                    value={this.state.researchCourse}
+                    checked={this.state.researchCourse}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchCourse">
+                    Course
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchType"
+                    id="researchType"
+                    value={this.state.researchType}
+                    checked={this.state.researchType}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchType">
+                    Type
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchPages"
+                    id="researchPages"
+                    value={this.state.researchPages}
+                    checked={this.state.researchPages}
+                    onChange={this.onChange}
+                  />
+                  <label className="form-check-label" htmlFor="researchPages">
+                    Pages
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchAcademicYear"
+                    id="researchAcademicYear"
+                    value={this.state.researchAcademicYear}
+                    checked={this.state.researchAcademicYear}
+                    onChange={this.onChange}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="researchAcademicYear"
+                  >
+                    Academic Year
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    name="researchLastUpdate"
+                    id="researchLastUpdate"
+                    value={this.state.researchLastUpdate}
+                    checked={this.state.researchLastUpdate}
+                    onChange={this.onChange}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="researchLastUpdate"
+                  >
+                    Last Update
+                  </label>
+                </div>
+                <div className="form-check disabled">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
                     name="deletedResearches"
                     id="deletedResearches"
                     value={this.state.deletedResearches}
+                    checked={this.state.deletedResearches}
                     onChange={this.onChange}
                   />
                   <label
