@@ -10,7 +10,7 @@ const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
 
 // Research model
-const Research = require("../../models/Research");
+const Research = require("../../models/Journal");
 const College = require("../../models/College");
 const Activity = require("../../models/Activity");
 

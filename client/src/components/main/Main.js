@@ -30,6 +30,8 @@ import EditResearch from "../edit-research/EditResearch";
 //Journal Import
 import Journals from "../journals/Researches";
 import Journal from "../journal/Research";
+import AddJournal from "../add-journal/AddResearch";
+
 
 //register and user
 import Register from "../register/Register";
@@ -101,6 +103,7 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
               </Switch>
+
               <Switch>
                 <PrivateRoute
                   exact
@@ -137,6 +140,13 @@ class Main extends Component {
                   exact
                   path="/add-research"
                   component={AddResearch}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/add-journal"
+                  component={AddJournal}
                 />
               </Switch>
               <Switch>

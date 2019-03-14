@@ -7,7 +7,7 @@ import { Tesseract } from "tesseract.ts";
 
 import "react-quill/dist/quill.snow.css";
 
-import { createResearch } from "../../actions/researchActions";
+import { createResearch } from "../../actions/journalActions";
 import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
@@ -180,7 +180,7 @@ class AddResearch extends Component {
               <br />
               <br />
               <br />
-              <h1 className="display-4 text-center">Add Research</h1>
+              <h1 className="display-4 text-center">Add Journal</h1>
               <p className="lead text-center">
                 Let's get some information for your research
               </p>
