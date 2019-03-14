@@ -104,25 +104,14 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    let newResearch = {
-      title: req.body.title,
-      type: req.body.type,
-      college: req.body.college,
-      course: req.body.course,
-      abstract: req.body.abstract,
-      researchID: req.body.researchId,
-      pages: req.body.pages,
-      schoolYear: req.body.schoolYear,
-      author: [],
-      lastUpdate: Date.now()
-    };
-
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
         Research.findOne({ title: req.body.title }).then(research => {
           let title;
+          let copyAuthorArray = [];
           try {
             title = research.title;
+            copyAuthorArray = research.author;
           } catch (error) {
             title = "";
           }
@@ -136,20 +125,35 @@ router.post(
             };
             new Activity(newActivity).save();
 
-            // Add new Author One and existing
-            newResearch.author.push({
+            let authorArray = [];
+            authorArray.push({
               name: req.body.authorOne,
               role: "Author One"
             });
 
-            research.author.map(aut => {
+            copyAuthorArray.map(aut => {
               aut.role === "Author"
-                ? newResearch.author.push({
+                ? authorArray.push({
                     name: aut.name,
                     role: "Author"
                   })
                 : "";
             });
+
+            let newResearch = {
+              title: req.body.title,
+              type: req.body.type,
+              college: req.body.college,
+              course: req.body.course,
+              abstract: req.body.abstract,
+              researchID: req.body.researchId,
+              pages: req.body.pages,
+              schoolYear: req.body.schoolYear,
+              author: authorArray,
+              lastUpdate: Date.now()
+            };
+
+            // Add new Author One and existing
 
             // update college
             Research.findOneAndUpdate(
@@ -211,10 +215,24 @@ router.post(
                       researchTotal: total
                     };
 
-                    newResearch.author.push({
+                    let authorArray = [];
+                    authorArray.push({
                       name: req.body.authorOne,
                       role: "Author One"
                     });
+
+                    let newResearch = {
+                      title: req.body.title,
+                      type: req.body.type,
+                      college: req.body.college,
+                      course: req.body.course,
+                      abstract: req.body.abstract,
+                      researchID: req.body.researchId,
+                      pages: req.body.pages,
+                      schoolYear: req.body.schoolYear,
+                      author: authorArray,
+                      lastUpdate: Date.now()
+                    };
 
                     // Save Research
                     new Research(newResearch).save();

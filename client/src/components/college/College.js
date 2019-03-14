@@ -10,6 +10,8 @@ import {
   restoreCollege
 } from "../../actions/collegeActions";
 
+import { getResearches } from "../../actions/researchActions";
+
 import CollegeHeader from "./CollegeHeader";
 import CollegeDetails from "./CollegeDetails";
 import CollegeCourses from "./CollegeCourses";
@@ -28,6 +30,7 @@ class College extends Component {
     if (this.props.match.params.initials) {
       this.props.getCollegeByInitials(this.props.match.params.initials);
     }
+    this.props.getResearches();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -252,6 +255,7 @@ College.propTypes = {
   deleteCollege: PropTypes.func.isRequired,
   restoreCollege: PropTypes.func.isRequired,
   getCollegeByInitials: PropTypes.func.isRequired,
+  getResearches: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -263,5 +267,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getCollegeByInitials, deleteCollege, restoreCollege }
+  { getCollegeByInitials, deleteCollege, restoreCollege, getResearches }
 )(College);

@@ -98,6 +98,11 @@ class EditResearch extends Component {
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
     this.refs.resBtn.removeAttribute("disabled");
+  };
+
+  onChangeSelectCollege = e => {
+    this.setState({ [e.target.name]: e.target.value });
+    this.refs.resBtn.removeAttribute("disabled");
 
     this.state.courseOptions.length = 0;
     this.state.courseOptions.push({
@@ -238,7 +243,7 @@ class EditResearch extends Component {
                       placeholder="College"
                       name="college"
                       value={this.state.college}
-                      onChange={this.onChange}
+                      onChange={this.onChangeSelectCollege}
                       options={collegeOptions}
                       error={errors.college}
                       info="Select your college"

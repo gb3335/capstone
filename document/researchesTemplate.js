@@ -241,7 +241,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-        <div class="courses" style="font-size: 7px">
+        <div class="courses" style="font-size: 5px">
           <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
           <table>
           ${researchesListHeader}
