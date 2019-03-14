@@ -20,24 +20,57 @@ const duplicateArray= (arr) => {
 //         return sw.removeStopwords(dupliremoved);
 // }
 
-const textProcess = (text) => {
-        text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
+const arrayProcess = (text) => {
+        text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
         text = text.replace(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/g, " ");
-        let words = text.split(' ');
-        words = sw.removeStopwords(words);
-        words = words.join(' ');
 
-        const textarr = words.split('.');
-        const textdupliremoved = duplicateArray(textarr);
-        textdupliremoved.forEach((t, index) => {
+
+
+        const textarr = text.split('.');
+        let arr = [];
+        textarr.forEach((t, index) => {
                 let newtext = t.split(' ');
+                newtext = sw.removeStopwords(newtext);
                 newtext = duplicateArray(newtext);
-                textdupliremoved[index] = newtext.join(' ');
+                newtext = newtext.filter(el =>{
+                        return el != "";
+                });
+                newtext[newtext.length-1] = newtext[newtext.length-1]+".";
+                
+                arr.push(newtext.join(' '));
+
         })
-        return textdupliremoved;
+        arr = duplicateArray(arr);
+        arr = arr.filter(el =>{
+                return el != "";
+        });
+        return arr;
+}
+
+const textProcess = (text) => {
+        text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        text = text.replace(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/g, " ");
+
+        const textarr = text.split('.');
+        let arr = [];
+        textarr.forEach((t, index) => {
+                let newtext = t.split(' ');
+                newtext = sw.removeStopwords(newtext);
+                newtext = duplicateArray(newtext);
+                
+                newtext = newtext.filter(el =>{
+                        return el != "";
+                });
+                if(newtext.length!=0){
+                        arr.push(newtext.join(' '));
+                }
+        })
+        arr = duplicateArray(arr);
+        let len = arr.length;
+        return {text: arr.join('. '), len};
 }
 
 module.exports = {
-        // arrayProcess,
+        arrayProcess,
         textProcess
 }

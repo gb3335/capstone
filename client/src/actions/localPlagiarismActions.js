@@ -42,9 +42,9 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
           return obj2.SimilarityScore - obj1.SimilarityScore;
         });
         console.log(newres)
-        console.timeEnd("Initialize")
-        dispatch(outputLocalPlagiarism(newres));
-        history.push(`/localResult`);
+        // console.timeEnd("Initialize")
+        // dispatch(outputLocalPlagiarism(newres));
+        // history.push(`/localResult`);
       })
       .catch(err => {
         dispatch({

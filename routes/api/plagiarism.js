@@ -27,10 +27,13 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 // @access  public
 router.get("/test", (req, res) => {
   let text = req.body.text;
-
+  let q= req.body.text
   res.json({
     success: true,
-    data : processor.textProcess(text)
+    data : {
+      text: processor.textProcess(text)+".",
+      pattern : processor.arrayProcess(q)
+    }
   })
 
   // res.json({ msg: "Plagiarism Works!" });
@@ -90,12 +93,12 @@ router.post("/get/pattern", (req,res) => {
 
 })
 
-
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
 // @access  public
 router.post("/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
+  let title = req.body.title;
   pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
     if (err) {
       console.dir(err)
@@ -104,7 +107,7 @@ router.post("/initialize/pattern", (req,res) => {
     
     let extext = data;
     extext = processor.arrayProcess(extext.toString().toLowerCase());
-    plagiarism.initialize(extext);
+    plagiarism.initialize(extext, extext.length, title, docuId);
     res.json({ 
       success: true
     })
@@ -121,27 +124,24 @@ router.post("/local", (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-  let docuId = req.body.docuId;
-  let title = req.body.title;
+  
+  
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   
   pdfUtil.pdfToText(`./routes/downloadedDocu/${textId}.pdf`, function(err, data2) {
         let result = {
           SimilarityScore: 0,
-          DocumentScore: {
-            Document_1: {
-              Name: "",
-              Score: 0
+          Document: {
+            Pattern: {
+              Name: '',
+              Id: ''
             },
-            Document_2: {
-              Name: "",
-              Score: 0
+            Text:{
+              Name: '',
+              Id: ''
             }
           },
-          NumOfHits: 0,
-          NumOfPattern: 0,
-          NumOfText: 0,
           Index: []
         }
         if (err) {
@@ -153,12 +153,9 @@ router.post("/local", (req, res) => {
             }
           });
         }
-        let text = processor.textProcess(data2.toString().toLowerCase());
-        
-        result = plagiarism.search(text, title, textTitle);
-        if(result.SimilarityScore == 100){
-          delete result.Index;
-        }
+        let {text, len} = processor.textProcess(data2.toString().toLowerCase());
+        text=text+"."
+        result = plagiarism.search(text, len,textTitle, title);
         const compressed = hm.compress(JSON.stringify(result));
         // gzip(JSON.stringify(result))
         // .then((compressed) => {
