@@ -22,8 +22,10 @@ import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
 
   componentWillMount(){
     if (this.props.match.params.id) {
+      const {output , textId} = this.props.localPlagiarism;
+      let newob = output.find(obj => obj.Document.Text.Id === this.props.match.params.id);
       const input = {
-        docuId : this.props.localPlagiarism.docuId,
+        docuId : newob.Document.Pattern.Id,
         textId: this.props.match.params.id
       }
       this.props.getTextPattern(input);
@@ -33,16 +35,16 @@ import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
   componentDidMount(){
     const {output , textId} = this.props.localPlagiarism;
 
-    let Index = output.find(obj => obj.DocumentScore.Document_2.Name === textId);
+    let Index = output.find(obj => obj.Document.Text.Id === this.props.match.params.id);
     
     let words = [];
     
-    Index.Index.forEach((index =>{
-      let obj = JSON.parse(index);
-      words.push(obj.Word)
-    }))
-    console.log(words)
-    this.setState({words})
+    // Index.Index.forEach((index =>{
+    //   let obj = JSON.parse(index);
+    //   words.push(obj.Word)
+    // }))
+    // console.log(words)
+    // this.setState({words})
   }
 
   // Complex example

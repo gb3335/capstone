@@ -381,12 +381,12 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         if(senttotal>80){
             
             ostringstream oss;
-            sort(patternOutputList.begin(), patternOutputList.end());
-            if (!binary_search(patternOutputList.begin(), patternOutputList.end(), patternStoredIndexes[x])) {
-                patternOutputList.push_back(patternStoredIndexes[x]);
-                sentenceDetected++;
-            }
-            
+            // sort(patternOutputList.begin(), patternOutputList.end());
+            // if (!binary_search(patternOutputList.begin(), patternOutputList.end(), patternStoredIndexes[x])) {
+            //     patternOutputList.push_back(patternStoredIndexes[x]);
+            //     sentenceDetected++;
+            // }
+            sentenceDetected++;
             oss <<"{ \"Pattern\": "<<patternStoredIndexes[x]<<",\"Text\": "<<textStoredIndexes[x]<<" }";
             string word = oss.str ();
             
@@ -396,7 +396,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         }
     }
 
-    double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence);
+    double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence+numoftextsentence);
     //double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
 
 

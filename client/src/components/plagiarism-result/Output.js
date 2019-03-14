@@ -5,8 +5,6 @@ import PropTypes from "prop-types";
 
 import ResultPie from './ResultPie';
 
-import {setTextDocumentId} from '../../actions/localPlagiarismActions';
-
 import './Output.css';
 
 class Output extends Component {
@@ -19,16 +17,6 @@ class Output extends Component {
     
   }
 
-  setTextDocuId = (id) =>{
-    this.props.setTextDocumentId(id);
-  }
-
-  componentDidMount(){
-
-
-    
-  }
-
   render() {
 
 
@@ -36,7 +24,7 @@ class Output extends Component {
 
       const {output} = this.props.localPlagiarism
       output2 = output.map(out => (
-          <div key={out.DocumentScore.Document_2.Name}>
+          <div key={out.Document.Text.Name}>
             {out.SimilarityScore < 30 ? 
             <div className="resultList little">
               <div className="row">
@@ -44,10 +32,10 @@ class Output extends Component {
                     <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
-                      <p><b>Title: </b>{out.DocumentScore.Document_2.Name}</p>
+                      <p><b>Title: </b>{out.Document.Text.Name}</p>
                       <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                       <p><b>Plagiarism Level: </b>Little Plagiarism</p>
-                      <Link to={`/localResult/${this.props.research.researches.find(x => x.title === out.DocumentScore.Document_2.Name)._id}`} onClick={() =>this.setTextDocuId(out.DocumentScore.Document_2.Name)}>Show Details</Link>
+                      <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
                   </div>
               </div>
             </div> : 
@@ -58,10 +46,10 @@ class Output extends Component {
                     <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
-                      <p><b>Title: </b>{out.DocumentScore.Document_2.Name}</p>
+                      <p><b>Title: </b>{out.Document.Text.Name}</p>
                       <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                       <p><b>Plagiarism Level: </b>Moderate Plagiarism</p>
-                      <Link to={`/localResult/${this.props.research.researches.find(x => x.title === out.DocumentScore.Document_2.Name)._id}`} onClick={() =>this.setTextDocuId(out.DocumentScore.Document_2.Name)}>Show Details</Link>
+                      <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
                   </div>
               </div>
             </div> : 
@@ -71,10 +59,10 @@ class Output extends Component {
                   <ResultPie similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                 </div>
                 <div className="col-md-9">
-                    <p><b>Title: </b>{out.DocumentScore.Document_2.Name}</p>
+                    <p><b>Title: </b>{out.Document.Text.Name}</p>
                     <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                     <p><b>Plagiarism Level: </b>Heavy Plagiarism</p>
-                    <Link to={`/localResult/${this.props.research.researches.find(x => x.title === out.DocumentScore.Document_2.Name)._id}`} onClick={() =>this.setTextDocuId(out.DocumentScore.Document_2.Name)}>Show Details</Link>
+                    <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
                 </div>
             </div>
           </div>}
@@ -92,7 +80,6 @@ class Output extends Component {
 }
 
 Output.propTypes = {
-  setTextDocumentId: PropTypes.func.isRequired,
   research: PropTypes.object.isRequired,
   localPlagiarism: PropTypes.object.isRequired
 };
@@ -103,4 +90,4 @@ const mapStateToProps = state => ({
 });
 
 
-export default connect(mapStateToProps,{setTextDocumentId})(Output);
+export default connect(mapStateToProps)(Output);

@@ -26,13 +26,17 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 // @desc    Test plagiarism route
 // @access  public
 router.get("/test", (req, res) => {
-  let text = req.body.text;
+  let texte = req.body.text;
   let q= req.body.text
+
+  let {text} = processor.textProcess(texte);
+  const {arr} = processor.arrayProcess(q);
+  text=text+"."
   res.json({
     success: true,
     data : {
-      text: processor.textProcess(text)+".",
-      pattern : processor.arrayProcess(q)
+      text: text,
+      pattern : arr
     }
   })
 
@@ -99,19 +103,30 @@ router.post("/get/pattern", (req,res) => {
 router.post("/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
-  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
-    if (err) {
-      console.dir(err)
-      return
-    }
-    
-    let extext = data;
-    extext = processor.arrayProcess(extext.toString().toLowerCase());
-    plagiarism.initialize(extext, extext.length, title, docuId);
-    res.json({ 
-      success: true
+  
+  try {
+    pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
+      if (err) {
+        console.log("ERROR NI KRISHIELD: "+err)
+        res.json({ 
+          success: false
+        })
+      }else{
+        let extext = data;
+        const {arr, len} = processor.arrayProcess(extext.toString().toLowerCase());
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({ 
+          success: true
+        })
+      }
+      
     })
-  })
+  } catch (error) {
+    res.json({ 
+      success: false
+    })
+  }
+  
 })
 
 
@@ -155,8 +170,8 @@ router.post("/local", (req, res) => {
         }
         let {text, len} = processor.textProcess(data2.toString().toLowerCase());
         text=text+"."
-        result = plagiarism.search(text, len,textTitle, title);
-        const compressed = hm.compress(JSON.stringify(result));
+        result = plagiarism.search(text, len, textTitle, textId);
+        //const compressed = hm.compress(JSON.stringify(result));
         // gzip(JSON.stringify(result))
         // .then((compressed) => {
         //   console.log(compressed);
