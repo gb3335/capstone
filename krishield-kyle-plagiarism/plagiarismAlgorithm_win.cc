@@ -396,7 +396,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         }
     }
 
-    double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence+numoftextsentence);
+    double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence);
     //double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
 
 

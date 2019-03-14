@@ -28,7 +28,7 @@ class LocalResult extends Component {
     let little= 0, moderate= 0, heavy=0;
     let score=[]
     output.forEach(out =>{
-      if(out.SimilarityScore<30){
+      if(out.SimilarityScore>0 && out.SimilarityScore<30){
         little++;
       }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
         moderate++;

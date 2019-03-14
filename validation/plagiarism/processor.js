@@ -25,7 +25,7 @@ const arrayProcess = (text) => {
         text = text.replace(/[^A-Za-z0-9. ]/g, " ");
 
         const textarr = text.split('.');
-        const len = textarr.length;
+       
         let arr = [];
         textarr.forEach((t, index) => {
                 let newtext = t.split(' ');
@@ -43,6 +43,7 @@ const arrayProcess = (text) => {
         arr = arr.filter(el =>{
                 return el != "";
         });
+        const len = textarr.length;
         arr = arr.join(' ').split(' ');
         return {arr, len};
 }
