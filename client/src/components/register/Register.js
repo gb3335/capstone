@@ -115,14 +115,7 @@ class Register extends Component {
                     error={errors.firstname}
                     info="Type your first name."
                   />
-                  <TextFieldGroup
-                    placeholder="* Last Name"
-                    name="lastName"
-                    value={this.state.lastName}
-                    onChange={this.onChange}
-                    error={errors.lastname}
-                    info="Type ypur last name."
-                  />
+
                   <TextFieldGroup
                     placeholder="* Middle Name"
                     name="middleName"
@@ -130,7 +123,15 @@ class Register extends Component {
                     onChange={this.onChange}
                     error={errors.middlename}
                     info="Type your middle name."
-                  />{' '}
+                  />
+                  <TextFieldGroup
+                    placeholder="* Last Name"
+                    name="lastName"
+                    value={this.state.lastName}
+                    onChange={this.onChange}
+                    error={errors.lastname}
+                    info="Type your last name."
+                  />
                   <TextFieldGroup
                     placeholder="* Contact Number"
                     name="contact"
