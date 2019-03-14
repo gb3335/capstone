@@ -202,7 +202,7 @@ class College extends Component {
                 role="tab"
                 aria-controls="courses"
               >
-                <i className="fas fa-university mr-2" />
+                <i className="fas fa-graduation-cap mr-2" />
                 Courses
               </a>
               {deletedAction}

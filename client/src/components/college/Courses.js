@@ -99,30 +99,7 @@ class Courses extends Component {
                         />
                       </button>
                     ) : (
-                      <button
-                        onClick={this.onRestoreClick.bind(
-                          this,
-                          (course = {
-                            courseName: cou.name,
-                            courseInitials: cou.initials,
-                            courseTotalRes: cou.researchTotal,
-                            courseTotalJour: cou.journalTotal,
-                            courseId: cou._id,
-                            collegeId: college._id,
-                            courseStatus: cou.status,
-                            courseDeleted: cou.deleted,
-                            collegeInit: college.name.initials
-                          })
-                        )}
-                        className="btn btn-success"
-                        title="Restore Course"
-                        disabled
-                      >
-                        <i
-                          className="fas fa-recycle text-light"
-                          style={{ fontSize: "12px" }}
-                        />
-                      </button>
+                      ""
                     )}
                   </div>
                 </td>
@@ -222,30 +199,29 @@ class Courses extends Component {
                         />
                       </button>
                     ) : (
-                      <button
-                        onClick={this.onDeleteClick.bind(
-                          this,
-                          (course = {
+                      ""
+                    )}
+                    {cou.status === 0 ? (
+                      <Link
+                        to={{
+                          pathname: "/add-research",
+                          courseData: {
                             courseName: cou.name,
-                            courseInitials: cou.initials,
-                            courseTotalRes: cou.researchTotal,
-                            courseTotalJour: cou.journalTotal,
-                            courseId: cou._id,
-                            collegeId: college._id,
-                            courseStatus: cou.status,
-                            courseDeleted: cou.deleted,
-                            collegeInit: college.name.initials
-                          })
-                        )}
-                        className="btn btn-danger"
-                        title="Delete Course"
-                        disabled
+                            collegeName: this.props.college.college.name
+                              .fullName,
+                            fromCollege: true
+                          }
+                        }}
+                        className="btn btn-primary"
+                        title="Add research to this course"
                       >
                         <i
-                          className="fas fa-trash text-light"
+                          className="fas fa-plus text-light"
                           style={{ fontSize: "12px" }}
                         />
-                      </button>
+                      </Link>
+                    ) : (
+                      ""
                     )}
                   </div>
                 </td>

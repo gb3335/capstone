@@ -25,6 +25,7 @@ class AddResearch extends Component {
       researchId: "",
       pages: "",
       schoolYear: "",
+      flagFromCollege: false,
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
       ocrProgress: ""
@@ -33,6 +34,29 @@ class AddResearch extends Component {
 
   componentDidMount() {
     this.props.getColleges();
+
+    try {
+      const { courseData } = this.props.location;
+
+      this.props.college.colleges.map(college =>
+        college.name.fullName === courseData.collegeName
+          ? college.course.map(course =>
+              course.deleted === 0
+                ? course.status === 0
+                  ? this.state.courseOptions.push({
+                      label: course.name,
+                      value: course.name
+                    })
+                  : ""
+                : ""
+            )
+          : ""
+      );
+
+      this.setState({ course: courseData.courseName });
+      this.setState({ college: courseData.collegeName });
+      this.setState({ flagFromCollege: courseData.fromCollege });
+    } catch (error) {}
   }
 
   componentWillReceiveProps(nextProps) {
@@ -140,8 +164,18 @@ class AddResearch extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <Link to="/researches" className="btn btn-light mb-3 float-left">
-                <i className="fas fa-angle-left" /> Back to Researches
+              <Link
+                to={
+                  this.state.flagFromCollege
+                    ? `/colleges/${college.college.name.initials}`
+                    : "/researches"
+                }
+                className="btn btn-light mb-3 float-left"
+              >
+                <i className="fas fa-angle-left" />{" "}
+                {this.state.flagFromCollege
+                  ? `Back to ${college.college.name.initials}`
+                  : "Back to Researches"}
               </Link>
               <br />
               <br />

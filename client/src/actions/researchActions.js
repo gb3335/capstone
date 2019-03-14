@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 import {
   GET_RESEARCH,
@@ -21,6 +22,43 @@ export const getResearches = () => dispatch => {
         type: GET_RESEARCHES,
         payload: res.data
       })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_RESEARCHES,
+        payload: null
+      })
+    );
+};
+
+// Create Report for all Researches
+export const createReportForResearches = reportData => dispatch => {
+  //dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/researches/createReport/researches", reportData)
+    .then(() =>
+      axios
+        .get("/api/researches/fetchReport/researches", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          //dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "ResearchesReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function() {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
     )
     .catch(err =>
       dispatch({

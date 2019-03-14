@@ -8,6 +8,7 @@ import collegeReducer from "./collegeReducer";
 import researchReducer from "./researchReducer";
 import activityReducer from "./activityReducer";
 import userReducer from "./userReducer";
+import journalReducer from "./journalReducer";
 
 export default combineReducers({
   sidebar: sidebarReducer,
@@ -18,5 +19,6 @@ export default combineReducers({
   college: collegeReducer,
   research: researchReducer,
   activity: activityReducer,
-  users: userReducer
+  users: userReducer,
+  journal: journalReducer
 });

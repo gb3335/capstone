@@ -27,6 +27,10 @@ import AddResearch from "../add-research/AddResearch";
 import AddAuthor from "../add-credentials/AddAuthor";
 import EditResearch from "../edit-research/EditResearch";
 
+//Journal Import
+import Journals from "../journals/Researches";
+import Journal from "../journal/Research";
+
 //register and user
 import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
@@ -86,6 +90,9 @@ class Main extends Component {
               <Route exact path="/colleges/:initials" component={College} />
               <Route exact path="/researches" component={Researches} />
               <Route exact path="/researches/:id" component={Research} />
+              <Route exact path="/journals" component={Journals} />
+              <Route exact path="/journals/:id" component={Journal} />
+
               <Route exact path="/not-found" component={NotFound} />
               <Route exact path="/register" component={Register} />
               <Route exact path="/viewusers" component={ViewUsers} />
