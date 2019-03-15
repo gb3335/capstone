@@ -201,7 +201,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
     Nan::Utf8String param1(info[0]->ToString());
     // convert it to string
-    string text = string(*param1);
+    char *text = *param1;
 
     int numoftextsentence = info[1]->IntegerValue();
 
@@ -215,145 +215,191 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
     // boolean flag = info[2]->BooleanValue();
 
-
-    
-
     // if(flag){
     //     initialize(arr,text);
     //     buildMachine();
     // }
     int state = 0;
 
-    // Stored Indexes
-    std::vector<int> textStoredIndexes;
+    /// bago
+    std::vector<int> patternStoredNumHits;
     std::vector<int> patternStoredIndexes;
-
     std::vector<int> storedPatternNumWords;
-    std::vector<int> storedTextNumWords;
 
-    std::vector<int> storedNumHits;
+    int numHitsCounter=0;
+    int patternNumWordsCounter=0;
+    int patternCurIndex=0;
 
     int textCurIndex=0;
 
-    int patternCurIndex=0;
-    int patternHitFlag=0;
-    int patternTotalWordFlag=0;
+    int sentenceDetected=0;
+
+    int myarraycounter=0;
+	Local<Array> myarray = Nan::New<v8::Array>();
+
+
+    int patternIndexFlag=0;
+    int textIndexFlag=0;
+    
+    // bago
+
 
     int textCurNumWords=0;
 
-    int patternCurNumWords=0;
 
-    int loopdone=0;
-
-    for(int i = 0; i<text.size(); i++)
-    {
-
-        if(text[i]=='.'){
-            textCurNumWords++;
-            storedTextNumWords.push_back(textCurNumWords);
-            textCurIndex++;
-            textCurNumWords=0;
-        }else if(text[i]==' ' && text[i-1]!='.'){
-            textCurNumWords++;
-        }
-        
-        state = nextState(state,text[i]); /// traverse the trie state/node for the text.
-        if(out[state].count() > 0) ///        if the state. has at least one output
+    char *token = strtok(text,".");
+    while(token != NULL){
+        string text = token;
+        text = text.substr(text.find_first_not_of(' '), (text.find_last_not_of(' ') - text.find_first_not_of(' ')) + 1);
+        for(int i = 0; i<text.size(); i++)
         {
-            for(int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
+            
+            state = nextState(state,text[i]); /// traverse the trie state/node for the text.
+            if(out[state].count() > 0) ///        if the state. has at least one output
             {
-                string newarr = arr2[j];
-                if(newarr[newarr.size()-1]=='.'){
-                    
-                    newarr.erase(std::remove(newarr.begin(), newarr.end(), '.'), newarr.end());
-                }
-                if(loopdone!=1){
+                for(int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
+                {
                     string newarr = arr2[j];
                     if(newarr[newarr.size()-1]=='.'){
-                        patternCurNumWords++;
-                        storedPatternNumWords.push_back(patternCurNumWords);
-                        patternCurNumWords=0;
-                    }else{
-                        patternCurNumWords++;
+                        
+                        newarr.erase(std::remove(newarr.begin(), newarr.end(), '.'), newarr.end());
                     }
-                }
+                    string newarr2 = arr2[j];
 
-                if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
-                {
-                    
-                    int hitFlag=0;
-                    int start = i -newarr.size()+1;
+                    if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
+                    {
+                        
+                        int hitFlag=0;
+                        int start = i -newarr.size()+1;
 
 
-                    if(start==0 && text[i+1]==' '){
-                        // Una and space
+                        if(start==0 && text[i+1]==' '){
+                            // Una and space
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }else if(text[start-1]==' ' && text[i+1]==' '){
-                        // Space and space
+                        }else if(text[start-1]==' ' && text[i+1]==' '){
+                            // Space and space
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }else if(text[start-1]==' ' && i==text.size()-1){
-                        // Space and huli
+                        }else if(text[start-1]==' ' && i==text.size()-1){
+                            // Space and huli
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }else if(text[start-1]==' ' && text[i+1]=='.'){
-                        // Space and tuldok
+                        }else if(text[start-1]==' ' && text[i+1]=='.'){
+                            // Space and tuldok
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }else if(start==0 && text[i+1]=='.'){
-                        // Una and tuldok
+                        }else if(start==0 && text[i+1]=='.'){
+                            // Una and tuldok
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }else if(start==0 && i==text.size()-1){
-                        // Una and huli
+                        }else if(start==0 && i==text.size()-1){
+                            // Una and huli
 
-                        hitFlag=1;
+                            hitFlag=1;
 
-                    }
+                        }
 
-                    if(hitFlag==1){
-                        int dupflag=0;
-                        // Saving to vector 
-                        if(textStoredIndexes.size()>0){
-                            for(int x=0; x<textStoredIndexes.size(); x++){
-                                if(textStoredIndexes[x]==textCurIndex && patternStoredIndexes[x]==patternCurIndex){
-                                    storedNumHits[x]++;
-                                    dupflag=1;
-                                    break;
-                                }
-                            }
-                            if(dupflag==0){
-                                textStoredIndexes.push_back(textCurIndex);
-                                patternStoredIndexes.push_back(patternCurIndex);
-                                storedNumHits.push_back(1);
-                            }
-                        }else{
-                            textStoredIndexes.push_back(textCurIndex);
-                            patternStoredIndexes.push_back(patternCurIndex);
-                            storedNumHits.push_back(1);
+                        if(hitFlag==1){
+                            numHitsCounter=1;
                         }
                     }
                     
+
+                    if(newarr2[newarr2.size()-1]=='.'){
+                        patternNumWordsCounter++;
+                        
+                        if(numHitsCounter>0){
+                            if(patternStoredNumHits.size()>0){
+                                // if(patternIndexFlag==patternCurIndex && textIndexFlag==textCurIndex){
+                                //     patternStoredNumHits[patternStoredNumHits.size()-1]++;
+                                // }else{
+                                    std::vector<int>::iterator it = std::find(patternStoredIndexes.begin(), patternStoredIndexes.end(), patternCurIndex);
+                                    if(it != patternStoredIndexes.end()){
+                                        patternStoredNumHits[it-patternStoredIndexes.begin()]++;
+                                    }else{
+                                        patternStoredNumHits.push_back(numHitsCounter);
+                                        storedPatternNumWords.push_back(patternNumWordsCounter);
+                                        patternStoredIndexes.push_back(patternCurIndex);
+                                
+                                        textIndexFlag=textCurIndex;
+                                        patternIndexFlag=patternCurIndex;
+                                        
+                                    }
+                                    // int pagwala=0;
+                                    // for(int x=0; x<patternStoredIndexes.size(); x++){
+                                    //     if(patternStoredIndexes[x]==patternCurIndex){
+                                    //         patternStoredNumHits[x]++;
+                                    //         break;
+                                    //     }else{
+                                    //         pagwala=1;
+                                    //     }
+                                    // }
+                                    // if(pagwala==1){
+                                        
+                                    // }
+                                    
+                                //}
+                            }else{
+                                patternStoredNumHits.push_back(numHitsCounter);
+                                storedPatternNumWords.push_back(patternNumWordsCounter);
+                                patternStoredIndexes.push_back(patternCurIndex);
+                                textIndexFlag=textCurIndex;
+                                patternIndexFlag=patternCurIndex;
+                        
+                            }
+                            numHitsCounter=0;
+                            
+                        }
+                        patternNumWordsCounter=0;
+                        patternCurIndex++;
+
+                    }else{
+                        patternNumWordsCounter++;
+                    }
+                    
                 }
-                string newarr2 = arr2[j];
-                if(newarr2[newarr2.size()-1]=='.'){
-                    patternCurIndex++;
-                }
-                
+            }
+            patternCurIndex=0;
+            
+            if(text[i]==' '){
+                textCurNumWords++;
                 
             }
-            loopdone=1;
         }
-        patternCurIndex=0;
 
-        
+        textCurNumWords++;
+        for(int x=0; x<patternStoredNumHits.size(); x++){
+            //cout<<"Hits: "<<patternStoredNumHits[x]<<" Num Of Words: "<<storedPatternNumWords[x]<<" "<<textCurNumWords<<" Indexes: "<<patternStoredIndexes[x]<<" "<<textCurIndex<<endl;
+            double total = calculateSentenceSimilarity(patternStoredNumHits[x], storedPatternNumWords[x],textCurNumWords);
+            //cout<<total<<endl;
+            if(total>80){
+
+                ostringstream oss;
+                
+                sentenceDetected++;
+                oss <<"{ \"Pattern\": "<<patternStoredIndexes[x]<<",\"Text\": "<<textCurIndex<<" }";
+                string word = oss.str ();
+                
+                v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
+                Nan::Set(myarray, myarraycounter, newword);
+                myarraycounter++;
+            }
+        }
+        patternStoredNumHits.clear();
+        storedPatternNumWords.clear();
+        patternStoredIndexes.clear();
+        textCurNumWords=0;
+        textCurIndex++;
+        token = strtok (NULL, ".");
     }
+
+    //cout<<sentenceDetected<<endl;
 
     // cout<<"---------------------Index------------------------"<<endl;
     // for(int x=0; x<textStoredIndexes.size(); x++){
@@ -371,31 +417,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     // for(int x=0; x<storedNumHits.size(); x++){
     //     cout<<"HIT "<<x<<": "<<storedNumHits[x]<<endl;
     // }
-    int myarraycounter=0;
-	Local<Array> myarray = Nan::New<v8::Array>();
-    std::vector<int> patternOutputList;
-    int sentenceDetected = 0;
-    for(int x=0; x<storedNumHits.size(); x++){// 1
-                                                        // 1                     // 3                                           // 3
-        double senttotal = calculateSentenceSimilarity(storedNumHits[x], storedPatternNumWords[patternStoredIndexes[x]], storedTextNumWords[textStoredIndexes[x]]);
-        if(senttotal>80){
-            
-            ostringstream oss;
-            // sort(patternOutputList.begin(), patternOutputList.end());
-            // if (!binary_search(patternOutputList.begin(), patternOutputList.end(), patternStoredIndexes[x])) {
-            //     patternOutputList.push_back(patternStoredIndexes[x]);
-            //     sentenceDetected++;
-            // }
-            sentenceDetected++;
-            oss <<"{ \"Pattern\": "<<patternStoredIndexes[x]<<",\"Text\": "<<textStoredIndexes[x]<<" }";
-            string word = oss.str ();
-            
-            v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
-            Nan::Set(myarray, myarraycounter, newword);
-            myarraycounter++;
-        }
-    }
-
+    
     double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence);
     //double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
 
