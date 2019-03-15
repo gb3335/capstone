@@ -26,19 +26,28 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 // @desc    Test plagiarism route
 // @access  public
 router.get("/test", (req, res) => {
-  let texte = req.body.text;
-  let q= req.body.text
+  
 
-  let {text} = processor.textProcess(texte);
-  const {arr} = processor.arrayProcess(q);
-  text=text+"."
-  res.json({
-    success: true,
-    data : {
-      text: text,
-      pattern : arr
+  pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
+    if (err) throw(err);
+    //console.log(data); //print all text
+    let text = processor.textProcess(data.toString().toLowerCase());
+    let arr = processor.arrayProcess(data.toString().toLowerCase());
+    console.log(text);
+    let arrlen = arr.len;
+    let textlen = text.len;
+
+
+    const lens = {
+      array: arrlen,
+      text: textlen
     }
-  })
+
+    res.json({ 
+      success: true,
+      data: lens
+    })
+  });
 
   // res.json({ msg: "Plagiarism Works!" });
 });
@@ -170,6 +179,7 @@ router.post("/local", (req, res) => {
         }
         let {text, len} = processor.textProcess(data2.toString().toLowerCase());
         text=text+"."
+        console.log(text);
         result = plagiarism.search(text, len, textTitle, textId);
         //const compressed = hm.compress(JSON.stringify(result));
         // gzip(JSON.stringify(result))

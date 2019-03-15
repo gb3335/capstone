@@ -34,16 +34,20 @@ const arrayProcess = (text) => {
                 newtext = newtext.filter(el =>{
                         return el != "";
                 });
-                newtext[newtext.length-1] = newtext[newtext.length-1]+".";
+
                 
-                arr.push(newtext.join(' '));
+                
+                if(newtext.length!=0){
+                        newtext[newtext.length-1] = newtext[newtext.length-1]+".";
+                        arr.push(newtext.join(' '));
+                }
 
         })
         arr = duplicateArray(arr);
         arr = arr.filter(el =>{
                 return el != "";
         });
-        const len = textarr.length;
+        const len = arr.length;
         arr = arr.join(' ').split(' ');
         return {arr, len};
 }
@@ -67,6 +71,9 @@ const textProcess = (text) => {
                 }
         })
         arr = duplicateArray(arr);
+        arr = arr.filter(el =>{
+                return el != "";
+        });
         let len = arr.length;
         return {text: arr.join('. '), len};
 }
