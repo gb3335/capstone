@@ -26,26 +26,40 @@ class ResearchHeader extends Component {
         <div className="card-body">
           <h5 className="card-title display-4">{research.title}</h5>
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>College:</b> {research.college}
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Course:</b> {research.course}
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Research ID:</b> {research.researchID}
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Pages:</b> {research.pages}
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Academic Year:</b> {research.schoolYear}
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
+            <b>Created:</b>{" "}
+            <Moment format="MMM. DD, YYYY">{research.dateCreated}</Moment>
+            {" at "}
+            <Moment format="h:mm A">{research.dateCreated}</Moment>
+          </span>
+          <br />
+          <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Updated:</b>{" "}
             <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
             {" at "}
@@ -53,6 +67,7 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
+            <i className="fas fa-caret-right mr-1" />
             <b>Type:</b> {type}
           </span>
           <br />

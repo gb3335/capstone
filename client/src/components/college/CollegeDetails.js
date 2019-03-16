@@ -15,13 +15,6 @@ class CollegeDetails extends Component {
       }
     });
 
-    const status =
-      college.status === 0 ? (
-        <span className="badge badge-success">Active</span>
-      ) : (
-        <span className="badge badge-danger">Not Active</span>
-      );
-
     const deleted =
       college.deleted === 1 ? (
         <span className="badge badge-danger">Deleted</span>
@@ -43,11 +36,26 @@ class CollegeDetails extends Component {
                   <span>Librarian: {college.librarian}</span>
                 </p>
                 <p className="infoText">
-                  <i className="fas fa-university" />{" "}
-                  <span>Total Courses: {activeCourseLenght}</span>
+                  <i className="fas fa-check-circle" />{" "}
+                  <span>Status: {deleted}</span>
+                </p>
+                <p className="infoText">
+                  <i className="fas fa-clock" />{" "}
+                  <span>
+                    Created:{" "}
+                    <Moment format="MMM. DD, YYYY">
+                      {college.dateCreated}
+                    </Moment>
+                    {" at "}
+                    <Moment format="h:mm A">{college.dateCreated}</Moment>
+                  </span>
                 </p>
               </div>
               <div className="col-md-4">
+                <p className="infoText">
+                  <i className="fas fa-graduation-cap" />{" "}
+                  <span>Total Courses: {activeCourseLenght}</span>
+                </p>
                 <p className="infoText">
                   <i className="fas fa-book" />{" "}
                   <span>Total Researches: {college.researchTotal}</span>
@@ -58,10 +66,6 @@ class CollegeDetails extends Component {
                 </p>
               </div>
               <div className="col md-4">
-                <p className="infoText">
-                  <i className="fas fa-check-circle" />{" "}
-                  <span>Status: {deleted}</span>
-                </p>
                 <p className="infoText">
                   <i className="fas fa-redo-alt" />{" "}
                   <span>

@@ -116,12 +116,17 @@ class Colleges extends Component {
     // }
     action = <CollegesActions />;
     return (
-      <div className="colleges">
-        <div className="container">
-          <div className="row">
-            <div className="col-md-12">
+      <div className="row bods">
+        <div className="col-md-12">
+          <div className="collegesBg">
+            <div className="light-overlay">
               {title}
               <p className="lead text-center">{info}</p>
+            </div>
+          </div>
+          <br />
+          <div className="container">
+            <div className="asd">
               {action}
               <br />
               <div id="showIfSmall">

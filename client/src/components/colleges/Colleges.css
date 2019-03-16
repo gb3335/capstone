@@ -3,3 +3,24 @@
     display: none;
   }
 }
+
+.bods {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-x: hidden;
+}
+
+.collegesBg {
+  background: url("./bulsu1.png") no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: whitesmoke;
+}
+
+.light-overlay {
+  background-color: rgba(82, 82, 82, 0.5);
+  width: 100%;
+  height: 100%;
+}

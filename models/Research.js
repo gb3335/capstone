@@ -67,6 +67,10 @@ const ResearchSchema = new Schema({
       }
     }
   ],
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  },
   lastUpdate: {
     type: Date,
     default: Date.now

@@ -550,8 +550,8 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: "${fontFooter}"><b>Printed By: </b>${printedBy}</p>
-          <p style="float: right; font-size: "${fontFooter}">Page {{page}} of {{pages}}</p>
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
       }

@@ -271,7 +271,7 @@ module.exports = ({
       }
     }
 
-    courseTitle = `<h4 style="font-size: 7px">Courses:</h4>`;
+    courseTitle = `<h4 style="font-size: 10px">Courses:</h4>`;
   } else {
     totalcourse = "";
     courseTitle = "";
@@ -443,7 +443,7 @@ module.exports = ({
           "</tr>";
       }
     }
-    researchTitle = `<h4 style="font-size: 7px">Researches:</h4>`;
+    researchTitle = `<h4 style="font-size: 10px">Researches:</h4>`;
   } else {
     totalresearch = "";
     researchTitle = "";
