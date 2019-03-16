@@ -33,7 +33,7 @@ class Research extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.research.research === null && this.props.journal.loading) {
+    if (nextProps.journal.journal === null && this.props.journal.loading) {
       this.props.history.push("/not-found");
     }
   }
@@ -100,7 +100,7 @@ class Research extends Component {
         if (deleted === 0) {
           authorAction = <ResearchAuthorActions />;
           imageAction = <ResearchImageActions />;
-          docAction = <ResearchDocumentActions journal={journal} />;
+          docAction = <ResearchDocumentActions research={journal} />;
         }
         // check if research is deleted
         if (deleted === 1) {
@@ -168,7 +168,7 @@ class Research extends Component {
           );
         }
         researchAction = <ResearchActions />;
-        doc = <ResearchDocument journal={journal} />;
+        doc = <ResearchDocument research={journal} />;
         docSideAction = (
           <a
             className="list-group-item list-group-item-action"
@@ -270,7 +270,7 @@ class Research extends Component {
                       aria-labelledby="list-details-list"
                     >
                       {researchAction}
-                      <ResearchHeader journal={journal} />
+                      <ResearchHeader research={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -278,7 +278,7 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-abstract-list"
                     >
-                      <ResearchAbstract journal={journal} />
+                      <ResearchAbstract research={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -287,7 +287,7 @@ class Research extends Component {
                       aria-labelledby="list-authors-list"
                     >
                       {authorAction}
-                      <ResearchAuthors journal={journal} />
+                      <ResearchAuthors research={journal} />
                     </div>
 
                     <div
@@ -297,7 +297,7 @@ class Research extends Component {
                       aria-labelledby="list-pictures-list"
                     >
                       {imageAction}
-                      <ResearchImages journal={journal} />
+                      <ResearchImages research={journal} />
                     </div>
 
                     <div
@@ -330,7 +330,7 @@ class Research extends Component {
 }
 
 Research.propTypes = {
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   getResearchById: PropTypes.func.isRequired,
   deleteResearch: PropTypes.func.isRequired,
   restoreResearch: PropTypes.func.isRequired,

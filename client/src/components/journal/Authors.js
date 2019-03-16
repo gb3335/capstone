@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import { deleteAuthor } from "../../actions/researchActions";
+import { deleteAuthor } from "../../actions/journalActions";
 
 class Authors extends Component {
   onDeleteClick = (research, id) => {
@@ -9,11 +9,11 @@ class Authors extends Component {
   };
 
   render() {
-    const { research } = this.props.research;
+    const { journal } = this.props.journal;
     let author;
 
     if (this.props.auth.isAuthenticated === true) {
-      if (research.deleted === 0) {
+      if (journal.deleted === 0) {
         author = this.props.author.map(author => (
           <tr key={author._id}>
             <td>{author.name}</td>
@@ -21,7 +21,7 @@ class Authors extends Component {
               <button
                 onClick={this.onDeleteClick.bind(
                   this,
-                  research._id,
+                  journal._id,
                   author._id
                 )}
                 className="btn btn-danger"
@@ -64,12 +64,12 @@ class Authors extends Component {
 
 Authors.propTypes = {
   deleteAuthor: PropTypes.func.isRequired,
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research,
+  journal: state.journal,
   auth: state.auth
 });
 

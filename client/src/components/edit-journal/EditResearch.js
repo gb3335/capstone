@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
 import { Tesseract } from "tesseract.ts";
+import ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -13,51 +13,58 @@ import { getColleges } from "../../actions/collegeActions";
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 
-class AddResearch extends Component {
+class EditResearch extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: "",
 
-      college: "",
-      course: "",
-      abstract: "",
-      researchId: "",
+    const research = this.props.journal.journal;
+
+    this.state = {
+      title: research.title,
+      oldTitle: research.title,
+      college: research.college,
+      course: research.course,
+      abstract: research.abstract,
+      researchId: research.researchID,
+      pages: research.pages,
+      schoolYear: research.schoolYear,
       authorOne: "",
-      pages: "",
-      schoolYear: "",
-      flagFromCollege: false,
       courseOptions: [{ label: "* Select Course", value: "" }],
-      errors: {},
-      ocrProgress: ""
+      errors: {}
     };
   }
 
   componentDidMount() {
     this.props.getColleges();
 
-    try {
-      const { courseData } = this.props.location;
+    this.state.courseOptions.length = 0;
+    this.state.courseOptions.push({
+      label: "* Select Course",
+      value: ""
+    });
 
-      this.props.college.colleges.map(college =>
-        college.name.fullName === courseData.collegeName
-          ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                  label: course.name,
-                  value: course.name
-                })
-                : ""
+    this.props.college.colleges.map(college =>
+      college.name.fullName === this.props.journal.journal.college
+        ? college.course.map(course =>
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
-          : ""
-      );
+            : ""
+        )
+        : ""
+    );
 
-      this.setState({ course: courseData.courseName });
-      this.setState({ college: courseData.collegeName });
-      this.setState({ flagFromCollege: courseData.fromCollege });
-    } catch (error) { }
+    let ao = "";
+    this.props.journal.journal.author.map(au => {
+      if (au.role === "Author One") {
+        ao = au.name;
+      }
+    });
+    this.setState({ authorOne: ao });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -71,14 +78,15 @@ class AddResearch extends Component {
 
     const researchData = {
       title: this.state.title,
-
+      oldTitle: this.state.oldTitle,
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
+      pages: this.state.pages,
       researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
-      pages: this.state.pages,
-      authorOne: this.state.authorOne
+      authorOne: this.state.authorOne,
+      id: this.props.research.research._id
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -90,7 +98,7 @@ class AddResearch extends Component {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
-  onChangeSelect = e => {
+  onChangeSelectCollege = e => {
     this.setState({ [e.target.name]: e.target.value });
     this.refs.resBtn.removeAttribute("disabled");
 
@@ -123,6 +131,9 @@ class AddResearch extends Component {
 
   handleChange = value => {
     this.setState({ abstract: value });
+  };
+
+  quillChange = () => {
     this.refs.resBtn.removeAttribute("disabled");
   };
 
@@ -148,6 +159,8 @@ class AddResearch extends Component {
   render() {
     const { college, errors } = this.props;
     const progress = this.state.ocrProgress;
+
+    const path = "/journals/" + this.props.journal.journal._id;
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
@@ -166,34 +179,18 @@ class AddResearch extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <Link
-                to={
-                  this.state.flagFromCollege
-                    ? `/colleges/${college.college.name.initials}`
-                    : "/journals"
-                }
-                className="btn btn-light mb-3 float-left"
-              >
-                <i className="fas fa-angle-left" />{" "}
-                {this.state.flagFromCollege
-                  ? `Back to ${college.college.name.initials}`
-                  : "Back to Journals"}
+              <Link to={path} className="btn btn-light mb-3 float-left">
+                <i className="fas fa-angle-left" /> Back to Journal
               </Link>
               <br />
               <br />
               <br />
-              <h1 className="display-4 text-center">Add Journal</h1>
+              <h1 className="display-4 text-center">Edit Journal</h1>
               <p className="lead text-center">
                 Let's get some information for your journal
               </p>
-              <small className="d-block pb-3">* = required fields</small>
+
               <form onSubmit={this.onSubmit}>
-                <div style={{ textAlign: "center" }}>
-                  <p style={{ color: "#d9534f", fontSize: 13 }}>
-                    {errors.type}
-                  </p>
-                </div>
-                <br />
                 <TextFieldGroup
                   placeholder="* Title"
                   name="title"
@@ -208,7 +205,7 @@ class AddResearch extends Component {
                       placeholder="College"
                       name="college"
                       value={this.state.college}
-                      onChange={this.onChangeSelect}
+                      onChange={this.onChangeSelectCollege}
                       options={collegeOptions}
                       error={errors.college}
                       info="Select your college"
@@ -226,7 +223,6 @@ class AddResearch extends Component {
                     />
                   </div>
                 </div>
-
                 <div>
                   <label
                     to="#"
@@ -261,8 +257,8 @@ class AddResearch extends Component {
                   placeholder="* Abstract"
                   value={this.state.abstract}
                   onChange={this.handleChange}
+                  onKeyPress={this.quillChange}
                 />
-
                 <br />
                 <br />
                 <br />
@@ -271,6 +267,7 @@ class AddResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
+
                 <TextFieldGroup
                   placeholder="* Author One"
                   name="authorOne"
@@ -296,12 +293,12 @@ class AddResearch extends Component {
                   info="Number of pages in your journal"
                 />
                 <TextFieldGroup
-                  placeholder="* Academic Year"
+                  placeholder="* School Year"
                   name="schoolYear"
                   value={this.state.schoolYear}
                   onChange={this.onChange}
                   error={errors.schoolYear}
-                  info="Academic Year you've finished the journal"
+                  info="School Year you've finished the journal"
                 />
                 <input
                   ref="resBtn"
@@ -317,17 +314,19 @@ class AddResearch extends Component {
     );
   }
 }
-AddResearch.propTypes = {
+EditResearch.propTypes = {
   getColleges: PropTypes.func.isRequired,
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
+  journal: state.journal,
   college: state.college,
   errors: state.errors
 });
 export default connect(
   mapStateToProps,
   { createResearch, getColleges }
-)(withRouter(AddResearch));
+)(withRouter(EditResearch));

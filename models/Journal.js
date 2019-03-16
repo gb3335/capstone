@@ -56,6 +56,10 @@ const ResearchSchema = new Schema({
       name: {
         type: String,
         required: true
+      },
+      role: {
+        type: String,
+        default: "Author"
       }
     }
   ],

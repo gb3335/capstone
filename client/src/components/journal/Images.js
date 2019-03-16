@@ -59,11 +59,11 @@ class Images extends Component {
 }
 
 Images.propTypes = {
-  research: PropTypes.object.isRequired
+  journal: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research
+  journal: state.research
 });
 
 export default connect(mapStateToProps)(Images);

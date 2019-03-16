@@ -12,7 +12,7 @@ class ResearchImages extends Component {
       } else {
         imageItems = <span>No image is added in this research</span>;
       }
-    } catch (error) {}
+    } catch (error) { }
 
     return (
       <div className="card">

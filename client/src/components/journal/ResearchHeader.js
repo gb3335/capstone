@@ -5,14 +5,10 @@ import "moment-timezone";
 class ResearchHeader extends Component {
   render() {
     const { research } = this.props;
-    let type;
+
     let deleted;
     let hidden;
-    if (research.type === "thesis") {
-      type = "Thesis";
-    } else {
-      type = "Undergrad Research";
-    }
+
 
     if (research.deleted === 1) {
       deleted = <span className="badge badge-danger">Deleted</span>;
@@ -34,7 +30,7 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
-            <b>Research ID:</b> {research.researchID}
+            <b>Journal ID:</b> {research.researchID}
           </span>
           <br />
           <span>
@@ -51,11 +47,7 @@ class ResearchHeader extends Component {
             {" at "}
             <Moment format="h:mm A">{research.lastUpdate}</Moment>
           </span>
-          <br />
-          <span>
-            <b>Type:</b> {type}
-          </span>
-          <br />
+
           {deleted} {hidden}
         </div>
       </div>

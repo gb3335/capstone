@@ -19,7 +19,7 @@ class ResearchAuthors extends Component {
           </div>
         );
       }
-    } catch (error) {}
+    } catch (error) { }
     return (
       <div className="card">
         <div className="card-body">
