@@ -2,106 +2,117 @@ const moment = require("moment");
 
 module.exports = ({
   status,
-  coursesTotal,
-  researchTotal,
-  journalTotal,
+  researchId,
+  college,
+  course,
+  type,
+  pages,
+  academicYear,
   lastUpdate,
-  deletedColleges,
-  colleges,
+  deletedResearches,
+  researches,
   typeOfReport
 }) => {
-  let collegesList;
-  let collegesListNoComma = "";
-  let collegesListHeader;
+  let researchesList;
+  let researchesListNoComma = "";
+  let researchesListHeader;
 
-  let totalNumOfColleges = 0;
+  let totalNumOfResearches = 0;
   let numberOfColForEndRow = 0;
 
-  let totalcol = colleges.length;
+  let totalcol = researches.length;
 
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  if (coursesTotal === true) {
+  if (researchId === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  if (researchTotal === true) {
+  if (college === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  if (journalTotal === true) {
+  if (course === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (type === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (pages === true) {
+    numberOfColForEndRow = ++numberOfColForEndRow;
+  }
+  if (academicYear === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
   if (lastUpdate === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  numberOfColForEndRow = 4 + numberOfColForEndRow;
+
+  numberOfColForEndRow = 2 + numberOfColForEndRow;
 
   if (totalcol == 0) {
-    collegesList = "No Researches in this College";
-    collegesListHeader = "";
+    researchesList = "No Researches in this College";
+    researchesListHeader = "";
   } else {
-    if (deletedColleges) {
-      collegesList = colleges.map(
-        (college, index) =>
+    if (deletedResearches) {
+      researchesList = researches.map(
+        (research, index) =>
           "<tr>" +
           `<td>${++index}</td>` +
-          `<td>${college.name.fullName}</td>` +
-          `<td>${college.name.initials}</td>` +
-          `<td>${college.librarian}</td>` +
+          `<td>${research.title}</td>` +
+          `${college === true ? `<td>${research.college}</td>` : ""}` +
+          `${course === true ? `<td>${research.course}</td>` : ""}` +
           `${
             status === true
-              ? college.deleted === 0
+              ? research.deleted === 1
+                ? "<td>Deleted</td>"
+                : research.hidden === 0
                 ? "<td>Active</td>"
-                : "<td>Deleted</td>"
+                : "<td>Hidden</td>"
               : ""
           }` +
-          `${
-            coursesTotal === true ? `<td>${college.course.length}</td>` : ""
-          }` +
-          `${
-            researchTotal === true ? `<td>${college.researchTotal}</td>` : ""
-          }` +
-          `${journalTotal === true ? `<td>${college.journalTotal}</td>` : ""}` +
+          `${type === true ? `<td>${research.type}</td>` : ""}` +
+          `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
+          `${pages === true ? `<td>${research.pages}</td>` : ""}` +
+          `${academicYear === true ? `<td>${research.schoolYear}</td>` : ""}` +
           `${
             lastUpdate === true
-              ? `<td>${moment(college.lastUpdate.date).format(
+              ? `<td>${moment(research.lastUpdate).format(
                   "MMMM Do YYYY, h:mm A"
                 )}</td>`
               : ""
           }` +
           "</tr>"
       );
-      totalNumOfColleges = collegesList.length;
+      totalNumOfResearches = researchesList.length;
     } else {
       let ind = 0;
-      collegesList = colleges.map((college, index) =>
-        college.deleted === 0
+      researchesList = researches.map((research, index) =>
+        research.deleted === 0
           ? "<tr>" +
             `<td>${++ind}</td>` +
-            `<td>${college.name.fullName}</td>` +
-            `<td>${college.name.initials}</td>` +
-            `<td>${college.librarian}</td>` +
+            `<td>${research.title}</td>` +
+            `${college === true ? `<td>${research.college}</td>` : ""}` +
+            `${course === true ? `<td>${research.course}</td>` : ""}` +
             `${
               status === true
-                ? college.deleted === 0
+                ? research.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : research.hidden === 0
                   ? "<td>Active</td>"
-                  : "<td>Deleted</td>"
+                  : "<td>Hidden</td>"
                 : ""
             }` +
+            `${type === true ? `<td>${research.type}</td>` : ""}` +
+            `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
+            `${pages === true ? `<td>${research.pages}</td>` : ""}` +
             `${
-              coursesTotal === true ? `<td>${college.course.length}</td>` : ""
-            }` +
-            `${
-              researchTotal === true ? `<td>${college.researchTotal}</td>` : ""
-            }` +
-            `${
-              journalTotal === true ? `<td>${college.journalTotal}</td>` : ""
+              academicYear === true ? `<td>${research.schoolYear}</td>` : ""
             }` +
             `${
               lastUpdate === true
-                ? `<td>${moment(college.lastUpdate.date).format(
+                ? `<td>${moment(research.lastUpdate).format(
                     "MMMM Do YYYY, h:mm A"
                   )}</td>`
                 : ""
@@ -111,33 +122,34 @@ module.exports = ({
       );
 
       let ctrNoDeleted = 0;
-      colleges.map(college => {
-        if (college.deleted === 0) {
+      researches.map(research => {
+        if (research.deleted === 0) {
           ++ctrNoDeleted;
         }
       });
 
-      totalNumOfColleges = ctrNoDeleted;
+      totalNumOfResearches = ctrNoDeleted;
     }
 
-    collegesList.map(item => {
-      collegesListNoComma = collegesListNoComma + item;
+    researchesList.map(item => {
+      researchesListNoComma = researchesListNoComma + item;
     });
 
-    collegesListNoComma =
-      collegesListNoComma +
+    researchesListNoComma =
+      researchesListNoComma +
       `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
 
-    collegesListHeader =
+    researchesListHeader =
       "<tr>" +
       "<th>NO</th>" +
-      "<th>NAME</th>" +
-      "<th>INITIALS</th>" +
-      "<th>LIBRARIAN</th>" +
+      "<th>TITLE</th>" +
+      `${college === true ? "<th>COLLEGE</th>" : ""}` +
+      `${course === true ? "<th>COURSE</th>" : ""}` +
       `${status === true ? "<th>STATUS</th>" : ""}` +
-      `${coursesTotal === true ? "<th>TOTAL COURSES</th>" : ""}` +
-      `${researchTotal === true ? "<th>TOTAL RESEARCHES</th>" : ""}` +
-      `${journalTotal === true ? "<th>TOTAL JOURNALS</th>" : ""}` +
+      `${type === true ? "<th>TYPE</th>" : ""}` +
+      `${researchId === true ? "<th>RESEARCH ID</th>" : ""}` +
+      `${pages === true ? "<th>PAGES</th>" : ""}` +
+      `${academicYear === true ? "<th>ACADEMIC YEAR</th>" : ""}` +
       `${lastUpdate === true ? "<th>UPDATED ON</th>" : ""}` +
       "</tr>";
   }
@@ -204,7 +216,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 9px">
+        <div class="item1 headerr" style="font-size: 12px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
@@ -229,13 +241,13 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-          <div class="courses" style="font-size: 5px">
-            <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
-            <table>
-              ${collegesListHeader}
-              ${collegesListNoComma}
-            </table>
-          </div>
+        <div class="courses" style="font-size: 8px">
+          <p style="font-size: 10px"><b>Total # of Colleges: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <table>
+          ${researchesListHeader}
+          ${researchesListNoComma}
+          </table>
+      </div>
       </div>
     </body>
   </html>

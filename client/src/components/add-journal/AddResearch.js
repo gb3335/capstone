@@ -7,7 +7,7 @@ import { Tesseract } from "tesseract.ts";
 
 import "react-quill/dist/quill.snow.css";
 
-import { createResearch } from "../../actions/researchActions";
+import { createResearch } from "../../actions/journalActions";
 import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
@@ -18,7 +18,7 @@ class AddResearch extends Component {
     super(props);
     this.state = {
       title: "",
-      type: "",
+
       college: "",
       course: "",
       abstract: "",
@@ -71,7 +71,7 @@ class AddResearch extends Component {
 
     const researchData = {
       title: this.state.title,
-      type: this.state.type,
+
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
@@ -188,34 +188,6 @@ class AddResearch extends Component {
               </p>
               <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
-                <div className="form-group" style={{ textAlign: "center" }}>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="type"
-                      id="inlineRadio1"
-                      value="thesis"
-                      onChange={this.onChange}
-                    />
-                    <label className="form-check-label" htmlFor="inlineRadio1">
-                      Thesis
-                    </label>
-                  </div>
-                  <div className="form-check form-check-inline">
-                    <input
-                      className="form-check-input"
-                      type="radio"
-                      name="type"
-                      id="inlineRadio2"
-                      value="undergrad"
-                      onChange={this.onChange}
-                    />
-                    <label className="form-check-label" htmlFor="inlineRadio2">
-                      Undergrad Research
-                    </label>
-                  </div>
-                </div>
                 <div style={{ textAlign: "center" }}>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
                     {errors.type}

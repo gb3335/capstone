@@ -19,6 +19,7 @@ import ResearchAuthorActions from "./ResearchAuthorActions";
 import ResearchImageActions from "./ResearchImageActions";
 import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
+import Report from "./Report";
 
 class Research extends Component {
   componentWillMount() {
@@ -91,6 +92,7 @@ class Research extends Component {
     let docAction;
     let doc;
     let docSideAction;
+    let reportSideAction;
 
     try {
       const deleted = research.deleted;
@@ -182,6 +184,19 @@ class Research extends Component {
             Document
           </a>
         );
+        reportSideAction = (
+          <a
+            className="list-group-item list-group-item-action"
+            id="list-report-list"
+            data-toggle="list"
+            href="#list-report"
+            role="tab"
+            aria-controls="report"
+          >
+            <i className="fas fa-poll-h mr-2" />
+            Report
+          </a>
+        );
       }
 
       if (research === null || loading) {
@@ -255,6 +270,7 @@ class Research extends Component {
                       Pictures
                     </a>
                     {docSideAction}
+                    {reportSideAction}
                     {hideAction}
                     {deletedAction}
                   </div>
@@ -309,14 +325,22 @@ class Research extends Component {
                       {docAction}
                       {doc}
                     </div>
+                    <div
+                      className="tab-pane fade"
+                      id="list-report"
+                      role="tabpanel"
+                      aria-labelledby="list-report-list"
+                    >
+                      <Report />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           );
-        } catch (error) {}
+        } catch (error) { }
       }
-    } catch (error) {}
+    } catch (error) { }
     return (
       <div className="research">
         <div style={{ padding: "1em" }}>

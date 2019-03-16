@@ -29,15 +29,15 @@ class CollegesActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      researchTotal: true,
+      journalTotal: true,
+      coursesTotal: true,
+      lastUpdate: true,
+      status: true,
+      deletedColleges: false,
       bin: false,
       list: false,
-      modalIsOpen: false,
-      researchTotal: false,
-      journalTotal: false,
-      coursesTotal: false,
-      lastUpdate: false,
-      status: false,
-      deletedColleges: false
+      modalIsOpen: false
     };
   }
 

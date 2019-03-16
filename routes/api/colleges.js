@@ -10,8 +10,19 @@ const path = require("path");
 const pdf = require("html-pdf");
 
 // report templates
-const pdfCollegeTemplate = require("../../document/collegeTemplate");
-const pdfCollegesTemplate = require("../../document/collegesTemplate");
+let pdfCollegeTemplate;
+let pdfCollegesTemplate;
+let fontFooter;
+
+if (process.env.NODE_ENV === "production") {
+  pdfCollegeTemplate = require("../../document/collegeTemplate");
+  pdfCollegesTemplate = require("../../document/collegesTemplate");
+  fontFooter = "7px";
+} else {
+  pdfCollegeTemplate = require("../../document/collegeTemplate_Dev");
+  pdfCollegesTemplate = require("../../document/collegesTemplate_Dev");
+  fontFooter = "10px";
+}
 
 // College model
 const College = require("../../models/College");
@@ -539,8 +550,8 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
-          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+          <p style="float: left; font-size: "${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: "${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
       }
@@ -589,8 +600,8 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
-          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
       }

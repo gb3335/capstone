@@ -30,12 +30,12 @@ class Researches extends Component {
   }
 
   render() {
-    const { journals, loading } = this.props.research;
+    const { journals, loading } = this.props.journal;
     let researchItems;
     let researchData;
     let action;
     let title = <h1 className="display-4 text-center">Journals</h1>;
-    let info = "See all journal and it's informations";
+    let info = "See all research and it's informations";
 
     if (journals === null || loading) {
       researchItems = <Spinner />;
@@ -215,7 +215,7 @@ class Researches extends Component {
           />
         );
       } else {
-        researchItems = <h4>No research found</h4>;
+        researchItems = <h4>No journal found</h4>;
       }
 
       if (this.props.auth.isAuthenticated) {
@@ -240,12 +240,12 @@ class Researches extends Component {
 
 Researches.propTypes = {
   getResearches: PropTypes.func.isRequired,
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.journal,
+  journal: state.journal,
   bin: state.journal.bin,
   auth: state.auth
 });

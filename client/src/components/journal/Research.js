@@ -33,7 +33,7 @@ class Research extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.research.research === null && this.props.research.loading) {
+    if (nextProps.research.research === null && this.props.journal.loading) {
       this.props.history.push("/not-found");
     }
   }
@@ -42,7 +42,7 @@ class Research extends Component {
     e.preventDefault();
 
     const data = {
-      id: this.props.research.research._id
+      id: this.props.journal.journal._id
     };
 
     this.props.deleteResearch(data, this.props.history);
@@ -52,7 +52,7 @@ class Research extends Component {
     e.preventDefault();
 
     const data = {
-      id: this.props.research.research._id
+      id: this.props.journal.journal._id
     };
 
     this.props.restoreResearch(data, this.props.history);
@@ -62,7 +62,7 @@ class Research extends Component {
     e.preventDefault();
 
     const data = {
-      id: this.props.research.research._id,
+      id: this.props.journal.journal._id,
       hidden: true
     };
 
@@ -73,7 +73,7 @@ class Research extends Component {
     e.preventDefault();
 
     const data = {
-      id: this.props.research.research._id,
+      id: this.props.journal.journal._id,
       hidden: true
     };
 
@@ -81,7 +81,7 @@ class Research extends Component {
   };
 
   render() {
-    const { research, loading } = this.props.research;
+    const { journal, loading } = this.props.journal;
     let deletedAction;
     let hideAction;
     let researchContent;
@@ -93,14 +93,14 @@ class Research extends Component {
     let docSideAction;
 
     try {
-      const deleted = research.deleted;
-      const hidden = research.hidden;
+      const deleted = journal.deleted;
+      const hidden = journal.hidden;
 
       if (this.props.auth.isAuthenticated) {
         if (deleted === 0) {
           authorAction = <ResearchAuthorActions />;
           imageAction = <ResearchImageActions />;
-          docAction = <ResearchDocumentActions research={research} />;
+          docAction = <ResearchDocumentActions journal={journal} />;
         }
         // check if research is deleted
         if (deleted === 1) {
@@ -147,7 +147,7 @@ class Research extends Component {
               onClick={this.onHideResearch}
             >
               <i className="fas fa-eye-slash mr-2" />
-              Hide Research
+              Hide Journal
             </a>
           );
         }
@@ -163,12 +163,12 @@ class Research extends Component {
               onClick={this.onShowResearch}
             >
               <i className="fas fa-eye mr-2" />
-              Show Research
+              Show Journal
             </a>
           );
         }
         researchAction = <ResearchActions />;
-        doc = <ResearchDocument research={research} />;
+        doc = <ResearchDocument journal={journal} />;
         docSideAction = (
           <a
             className="list-group-item list-group-item-action"
@@ -184,7 +184,7 @@ class Research extends Component {
         );
       }
 
-      if (research === null || loading) {
+      if (journal === null || loading) {
         researchContent = <Spinner />;
       } else {
         try {
@@ -196,10 +196,10 @@ class Research extends Component {
               <div className="row">
                 <div className="col-md-6">
                   <Link
-                    to="/researches"
+                    to="/journals"
                     className="btn btn-light mb-3 float-left"
                   >
-                    <i className="fas fa-angle-left" /> Back to Researches
+                    <i className="fas fa-angle-left" /> Back to Journal
                   </Link>
                 </div>
                 <div className="col-md-6" />
@@ -217,7 +217,7 @@ class Research extends Component {
                       aria-controls="details"
                     >
                       <i className="fas fa-info-circle mr-2" />
-                      Research Details
+                      Journal Details
                     </a>
                     <a
                       className="list-group-item list-group-item-action"
@@ -270,7 +270,7 @@ class Research extends Component {
                       aria-labelledby="list-details-list"
                     >
                       {researchAction}
-                      <ResearchHeader research={research} />
+                      <ResearchHeader journal={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -278,7 +278,7 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-abstract-list"
                     >
-                      <ResearchAbstract research={research} />
+                      <ResearchAbstract journal={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -287,7 +287,7 @@ class Research extends Component {
                       aria-labelledby="list-authors-list"
                     >
                       {authorAction}
-                      <ResearchAuthors research={research} />
+                      <ResearchAuthors journal={journal} />
                     </div>
 
                     <div
@@ -297,7 +297,7 @@ class Research extends Component {
                       aria-labelledby="list-pictures-list"
                     >
                       {imageAction}
-                      <ResearchImages research={research} />
+                      <ResearchImages journal={journal} />
                     </div>
 
                     <div
@@ -338,7 +338,7 @@ Research.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  research: state.research,
+  journal: state.journal,
   auth: state.auth
 });
 

@@ -204,7 +204,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 9px">
+        <div class="item1 headerr" style="font-size: 12px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
@@ -229,8 +229,8 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-          <div class="courses" style="font-size: 5px">
-            <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <div class="courses" style="font-size: 8px">
+            <p style="font-size: 10px"><b>Total # of Colleges: </b>${totalNumOfColleges}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
             <table>
               ${collegesListHeader}
               ${collegesListNoComma}

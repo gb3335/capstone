@@ -26,14 +26,14 @@ class ResearchesAction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: false,
-      researchId: false,
-      college: false,
-      course: false,
-      type: false,
-      pages: false,
-      academicYear: false,
-      lastUpdate: false,
+      status: true,
+      researchId: true,
+      college: true,
+      course: true,
+      type: true,
+      pages: true,
+      academicYear: true,
+      lastUpdate: true,
       deletedResearches: false,
       bin: false,
       modalIsOpen: false
@@ -76,49 +76,51 @@ class ResearchesAction extends Component {
   };
 
   onGenerateReport = () => {
-    if (
-      this.state.status === false &&
-      this.state.researchId === false &&
-      this.state.college === false &&
-      this.state.course === false &&
-      this.state.type === false &&
-      this.state.pages === false &&
-      this.state.academicYear === false &&
-      this.state.lastUpdate === false &&
-      this.state.deletedResearches === false
-    ) {
-      alert("Please check at least one");
-    } else {
-      const name =
-        this.props.auth.user.firstName +
-        " " +
-        this.props.auth.user.middleName +
-        " " +
-        this.props.auth.user.lastName;
+    if (!this.props.research.buttonDisable) {
+      if (
+        this.state.status === false &&
+        this.state.researchId === false &&
+        this.state.college === false &&
+        this.state.course === false &&
+        this.state.type === false &&
+        this.state.pages === false &&
+        this.state.academicYear === false &&
+        this.state.lastUpdate === false &&
+        this.state.deletedResearches === false
+      ) {
+        alert("Please check at least one");
+      } else {
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
 
-      const researchesReportData = {
-        status: this.state.status,
-        researchId: this.state.researchId,
-        college: this.state.college,
-        course: this.state.course,
-        type: this.state.type,
-        pages: this.state.pages,
-        academicYear: this.state.academicYear,
-        lastUpdate: this.state.lastUpdate,
-        deletedResearches: this.state.deletedResearches,
-        researches: this.props.research.researches,
-        typeOfReport: "Researches Report",
-        printedBy: name
-      };
+        const researchesReportData = {
+          status: this.state.status,
+          researchId: this.state.researchId,
+          college: this.state.college,
+          course: this.state.course,
+          type: this.state.type,
+          pages: this.state.pages,
+          academicYear: this.state.academicYear,
+          lastUpdate: this.state.lastUpdate,
+          deletedResearches: this.state.deletedResearches,
+          researches: this.props.research.researches,
+          typeOfReport: "Researches Report",
+          printedBy: name
+        };
 
-      this.props.createReportForResearches(researchesReportData);
-      alert("Please wait while your report is being generated");
+        this.props.createReportForResearches(researchesReportData);
+        alert("Please wait while your report is being generated");
+      }
     }
   };
 
   render() {
     let binAction;
-    const disableFlag = false;
+    const disableFlag = this.props.research.buttonDisable;
 
     if (this.state.bin) {
       binAction = (
@@ -307,13 +309,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                  <input
-                    type="button"
-                    value="Generate Report"
-                    onClick={this.onGenerateReport}
-                    className="btn btn-info"
-                  />
-                )}
+                    <input
+                      type="button"
+                      value="Generate Report"
+                      onClick={this.onGenerateReport}
+                      className="btn btn-info"
+                    />
+                  )}
               </form>
             </div>
           </div>
