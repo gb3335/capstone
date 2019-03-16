@@ -5,13 +5,13 @@ import { connect } from "react-redux";
 
 class ResearchAction extends Component {
   render() {
-    const deleted = this.props.research.research.deleted;
+    const deleted = this.props.journal.journal.deleted;
     let editAction;
 
     if (deleted === 0) {
       editAction = (
-        <Link to="/edit-research" className="btn btn-light">
-          <i className="fas fa-pen text-info mr-1" /> Edit Research
+        <Link to="/edit-journal" className="btn btn-light">
+          <i className="fas fa-pen text-info mr-1" /> Edit Journal
         </Link>
       );
     }
@@ -25,11 +25,11 @@ class ResearchAction extends Component {
 }
 
 ResearchAction.propTypes = {
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
-  research: state.research,
+  journal: state.journal,
   errors: state.errors
 });
 

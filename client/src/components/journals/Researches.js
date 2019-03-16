@@ -35,7 +35,7 @@ class Researches extends Component {
     let researchData;
     let action;
     let title = <h1 className="display-4 text-center">Journals</h1>;
-    let info = "See all research and it's informations";
+    let info = "See all journal and it's informations";
 
     if (journals === null || loading) {
       researchItems = <Spinner />;
@@ -211,7 +211,7 @@ class Researches extends Component {
               { title: "View Details", field: "view" }
             ]}
             data={researchData}
-            title="Researches"
+            title="Journals"
           />
         );
       } else {

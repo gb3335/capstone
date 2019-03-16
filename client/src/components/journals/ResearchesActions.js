@@ -137,7 +137,7 @@ class ResearchesAction extends Component {
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         <Link to="/add-journal" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" /> Add Research
+          <i className="fas fa-plus text-info mr-1" /> Add Journal
         </Link>
         <Link to="#" onClick={this.openModal} className="btn btn-light">
           <i className="fas fa-poll-h text-info mr-1" /> Create Report

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument } from "../../actions/researchActions";
+import { addDocument, deleteDocument } from "../../actions/journalActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
 import Spinner from "../common/Spinner";
 
@@ -33,8 +33,8 @@ class ResearchImageActions extends Component {
         });
 
         const docuData = {
-          researchId: this.props.research.research._id,
-          oldFile: this.props.research.research.document,
+          researchId: this.props.journal.journal._id,
+          oldFile: this.props.journal.journal.document,
           file: this.state.file
         };
 
@@ -46,17 +46,17 @@ class ResearchImageActions extends Component {
   };
 
   onDeleteDocument = e => {
-    const researchId = this.props.research.research._id;
-    const filename = this.props.research.research.document;
+    const researchId = this.props.journal.journal._id;
+    const filename = this.props.journal.journal.document;
 
     this.props.deleteDocument(researchId, filename);
   };
 
   onLocalCheck = e => {
     const input = {
-      docuId : this.props.research.research._id,
-      title: this.props.research.research.title,
-      researches: this.props.research.researches,
+      docuId: this.props.journal.journal._id,
+      title: this.props.journal.journal.title,
+      journals: this.props.journal.journals,
       flag: true
     };
 
@@ -64,10 +64,10 @@ class ResearchImageActions extends Component {
   };
 
   render() {
-    const { research } = this.props.research;
+    const { journal } = this.props.journal;
     let docuItem;
 
-    if (research.document) {
+    if (journal.document) {
       docuItem = (
         <div className="btn-group mb-3 btn-group-sm" role="group">
           <label to="#" htmlFor="docUpload" className="btn btn-light">
@@ -101,7 +101,7 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading ? <Spinner/> : docuItem}
+        {this.props.localPlagiarism.loading ? <Spinner /> : docuItem}
 
         <div hidden>
           <FileFieldGroup
@@ -122,13 +122,13 @@ ResearchImageActions.propTypes = {
   deleteDocument: PropTypes.func.isRequired,
   checkPlagiarismLocal: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   localPlagiarism: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  research:state.research,
+  journal: state.journal,
   localPlagiarism: state.localPlagiarism
 });
 

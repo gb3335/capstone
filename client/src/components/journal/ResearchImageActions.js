@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import ImageFieldGroup from "../common/ImageFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addImages } from "../../actions/researchActions";
+import { addImages } from "../../actions/journalActions";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -41,7 +41,7 @@ class ResearchImageActions extends Component {
         if (ctr === len) {
           const data = {
             images: upImages,
-            id: this.props.research.research._id
+            id: this.props.journal.journal._id
           };
 
           this.props.addImages(data, this.props.history);
@@ -72,13 +72,13 @@ class ResearchImageActions extends Component {
 }
 
 ResearchImageActions.propTypes = {
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   addImages: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  research: state.research,
+  journal: state.journal,
   errors: state.errors
 });
 
