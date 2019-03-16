@@ -45,7 +45,7 @@ class ResearchesAction extends Component {
   }
 
   onToggleBin = e => {
-    if (this.props.research.bin === false) {
+    if (this.props.journal.bin === false) {
       this.props.toggleResearchBin(1);
     } else {
       this.props.toggleResearchBin(0);
@@ -136,7 +136,7 @@ class ResearchesAction extends Component {
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
-        <Link to="/add-research" className="btn btn-light">
+        <Link to="/add-journal" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" /> Add Research
         </Link>
         <Link to="#" onClick={this.openModal} className="btn btn-light">
@@ -330,8 +330,8 @@ ResearchesAction.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  research: state.research,
-  bin: state.research.bin,
+  journal: state.journal,
+  bin: state.journal.bin,
   auth: state.auth
 });
 
