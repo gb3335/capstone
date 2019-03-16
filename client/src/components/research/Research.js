@@ -338,9 +338,9 @@ class Research extends Component {
               </div>
             </div>
           );
-        } catch (error) {}
+        } catch (error) { }
       }
-    } catch (error) {}
+    } catch (error) { }
     return (
       <div className="research">
         <div style={{ padding: "1em" }}>

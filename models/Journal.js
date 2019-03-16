@@ -7,10 +7,6 @@ const ResearchSchema = new Schema({
     type: String,
     require: true
   },
-  type: {
-    type: String,
-    required: true
-  },
   college: {
     type: String,
     required: true
