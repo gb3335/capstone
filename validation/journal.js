@@ -17,20 +17,20 @@ module.exports = function validateResearchInput(data) {
   data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
 
   if (Validator.isEmpty(data.title)) {
-    errors.title = "Research title is required";
+    errors.title = "Journal title is required";
   }
 
 
   if (Validator.isEmpty(data.college)) {
-    errors.college = "Research college is required";
+    errors.college = "Journal college is required";
   }
 
   if (Validator.isEmpty(data.course)) {
-    errors.course = "Research course is required";
+    errors.course = "Journal course is required";
   }
 
   if (Validator.isEmpty(data.abstract)) {
-    errors.abstract = "Research abstract is required";
+    errors.abstract = "Journal abstract is required";
   }
 
   if (!Validator.isLength(striptags(data.abstract), { min: 100 })) {
@@ -38,7 +38,7 @@ module.exports = function validateResearchInput(data) {
   }
 
   if (Validator.isEmpty(data.researchId)) {
-    errors.researchId = "Research ID is required";
+    errors.researchId = "Journal ID is required";
   }
 
   if (Validator.isEmpty(data.schoolYear)) {
@@ -46,11 +46,11 @@ module.exports = function validateResearchInput(data) {
   }
 
   if (Validator.isEmpty(data.pages)) {
-    errors.pages = "Research pages is required";
+    errors.pages = "Journal pages is required";
   }
 
   if (!Validator.isNumeric(data.pages)) {
-    errors.pages = "Research pages is invalid";
+    errors.pages = "Journal pages is invalid";
   }
 
   if (Validator.isEmpty(data.authorOne)) {

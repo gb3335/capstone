@@ -24,7 +24,7 @@ AWS.config.update({
 });
 
 //Validator
-const validateResearchInput = require("../../validation/research");
+const validateResearchInput = require("../../validation/journal");
 const validateAuthorInput = require("../../validation/author");
 
 router.get("/pdfText", (req, res) => {
@@ -101,7 +101,7 @@ router.post(
 
     const newResearch = {
       title: req.body.title,
-      type: req.body.type,
+
       college: req.body.college,
       course: req.body.course,
       abstract: req.body.abstract,
