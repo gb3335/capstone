@@ -3,6 +3,13 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
+import Spinner from "../common/Spinner";
+import Highlighter from "react-highlight-words";
+
+import { getTextPattern, setPlagiarismLocalHideDetails } from "../../actions/localPlagiarismActions";
+
+import LocalResultId from './LocalResultId';
+
 import "moment-timezone";
 
 import {Pie} from 'react-chartjs-2';
@@ -18,7 +25,9 @@ class LocalResult extends Component {
       little: 0,
       moderate: 0,
       heavy: 0,
-      score: []
+      score: [],
+      showDetails: false,
+      
     };
   }
 
@@ -42,20 +51,34 @@ class LocalResult extends Component {
     score.push(moderate);
     score.push(heavy);
 
-    this.setState({little})
-    this.setState({moderate})
-    this.setState({heavy})
-    this.setState({score});
+    this.setState({little, moderate,heavy,score})
+    
   }
+
+  onClickShowDetails = (id) =>{
+    const {output} = this.props.localPlagiarism;
+    let newob = output.find(obj => obj.Document.Text.Id === id);
+    const input = {
+        docuId : newob.Document.Pattern.Id,
+        textId: id
+      }
+      this.props.getTextPattern(input);
+    }
+
+    onClickHideDetails = () =>{
+      this.props.setPlagiarismLocalHideDetails();
+    }
+
+
 
   render() {
 
-    const {output} = this.props.localPlagiarism;
+    const {output, patternLoading, pattern, showDetails} = this.props.localPlagiarism;
     const {research} = this.props.research;
     let outputItems;
 
     if (Object.keys(output).length > 0) {
-      outputItems = <Output output={output}/>;
+      outputItems = <Output onClickShowDetails={this.onClickShowDetails} output={output}/>;
     } else {
       outputItems = <span>No output</span>;
     }
@@ -81,6 +104,88 @@ class LocalResult extends Component {
       }]
     };
 
+    let items;
+
+    if(showDetails){
+      if(patternLoading || pattern===""){
+        items = (
+          <div className="spinnerMainDiv">
+            <div className="spinner">
+              <Spinner />
+            </div>
+          </div>
+        )
+      }else{
+        items = (
+          <div>
+            <div className="sourceHeader">{research.title}
+              <div className="spacer"/>
+              <button onClick={this.onClickHideDetails} className="close">x</button>
+            </div>
+            <div className="sourceContent">
+              <LocalResultId />
+            </div>
+          </div>
+          
+        )
+      }
+    }else{
+      items = (
+        <div className="sourceResearch">
+            <div className="sourceHeader">Result Statistics</div>
+            <div className="sourceContent">
+              <div className="row">
+                  <div className="col-md-7">
+                    <Pie data={data} height={300} options={{ maintainAspectRatio: false}}/>
+                  </div>
+                  <div className="col-md-5">
+                      <div className="overview">Statistics Overview</div>
+                      <div className="overviewContent mb-2">Number Of Candidate Document: {this.state.little+this.state.moderate+this.state.heavy}</div>
+                      <div className="overviewContent heavy-text">Heavy Plagiarism: {this.state.heavy}</div>
+                      <div className="overviewContent moderate-text">Moderate Plagiarism: {this.state.moderate}</div>
+                      <div className="overviewContent little-text">Little Plagiarism: {this.state.little}</div>
+                      <div className="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
+                  </div>
+              </div>
+            </div>
+            <div className="sourceHeader">Research Title</div>
+            <div className="sourceContent">{research.title}</div>
+            <div className="sourceHeader">Research Details</div>
+            <div className="sourceContent researchDetails">
+                <div>
+                    <span>College: </span>
+                    {research.college}
+                </div>
+                <div>
+                    <span>Course: </span>
+                    {research.course}
+                </div>
+                <div>
+                    <span>Research Type: </span>
+                    {research.type==="thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
+                </div>
+                <div>
+                    <span>Pages: </span>
+                    {research.pages}
+                </div>
+                <div>
+                    <span>School Year: </span>
+                    {research.schoolYear}
+                </div>  
+                <div>
+                    <span>Last Update: </span>
+                    <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
+                    {" at "}
+                    <Moment format="h:mm A">{research.lastUpdate}</Moment>
+                </div>
+            </div>
+        </div>
+      )
+    }
+
+
+    
+
     return (
       <div className="research">
         <div className="container-fluid" style={{ padding: "1em" }}>
@@ -104,55 +209,7 @@ class LocalResult extends Component {
               <div className="container-fluid">
                   <div className="row">
                     <div className="col-md-8">
-                      <div className="sourceResearch">
-                          <div className="sourceHeader">Result Statistics</div>
-                          <div className="sourceContent">
-                            <div className="row">
-                                <div className="col-md-7">
-                                  <Pie data={data} height={300} options={{ maintainAspectRatio: false}}/>
-                                </div>
-                                <div className="col-md-5">
-                                    <div className="overview">Statistics Overview</div>
-                                    <div className="overviewContent mb-2">Number Of Candidate Document: {this.state.little+this.state.moderate+this.state.heavy}</div>
-                                    <div className="overviewContent heavy-text">Heavy Plagiarism: {this.state.heavy}</div>
-                                    <div className="overviewContent moderate-text">Moderate Plagiarism: {this.state.moderate}</div>
-                                    <div className="overviewContent little-text">Little Plagiarism: {this.state.little}</div>
-                                    <div className="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
-                                </div>
-                            </div>
-                          </div>
-                          <div className="sourceHeader">Research Title</div>
-                          <div className="sourceContent">{research.title}</div>
-                          <div className="sourceHeader">Research Details</div>
-                          <div className="sourceContent researchDetails">
-                              <div>
-                                  <span>College: </span>
-                                  {research.college}
-                              </div>
-                              <div>
-                                  <span>Course: </span>
-                                  {research.course}
-                              </div>
-                              <div>
-                                  <span>Research Type: </span>
-                                  {research.type==="thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
-                              </div>
-                              <div>
-                                  <span>Pages: </span>
-                                  {research.pages}
-                              </div>
-                              <div>
-                                  <span>School Year: </span>
-                                  {research.schoolYear}
-                              </div>  
-                              <div>
-                                  <span>Last Update: </span>
-                                  <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
-                                  {" at "}
-                                  <Moment format="h:mm A">{research.lastUpdate}</Moment>
-                              </div>
-                          </div>
-                      </div>
+                      {items}
                     </div>
                     <div className="col-md-4">
                       <div className="container-fluid">
@@ -171,7 +228,9 @@ class LocalResult extends Component {
 
 LocalResult.propTypes = {
   localPlagiarism: PropTypes.object.isRequired,
-  research: PropTypes.object.isRequired
+  research: PropTypes.object.isRequired,
+  setPlagiarismLocalHideDetails : PropTypes.func.isRequired,
+  getTextPattern : PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -179,4 +238,4 @@ const mapStateToProps = state => ({
   research: state.research
 });
 
-export default connect(mapStateToProps)(LocalResult);
+export default connect(mapStateToProps,{getTextPattern,setPlagiarismLocalHideDetails})(LocalResult);

@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID} from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS} from "./types";
 import axios from "axios";
 
 import jsscompress from "js-string-compression";
@@ -38,6 +38,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
             // Ascending: first age less than the previous
             return obj2.SimilarityScore - obj1.SimilarityScore;
           });
+          console.log(newres);
           
           console.timeEnd("Initialize")
           dispatch(outputLocalPlagiarism(newres));
@@ -63,11 +64,25 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
 export const getTextPattern = (input) => dispatch =>{
   dispatch(setPlagiarismLocalPatternLoading())
+  dispatch(setPlagiarismLocalShowDetails())
+  dispatch(setTextDocumentId(input.textId))
   axios.post('/api/plagiarism/get/pattern', input)
   .then(res =>{
     dispatch(outputLocalPlagiarismPattern(res.data));
   })
 }
+
+export const setPlagiarismLocalHideDetails = () => {
+  return {
+    type: PLAGIARISM_LOCAL_HIDE_DETAILS
+  };
+};
+
+export const setPlagiarismLocalShowDetails = () => {
+  return {
+    type: PLAGIARISM_LOCAL_SHOW_DETAILS
+  };
+};
 
 export const setPlagiarismLocalPatternLoading = () => {
   return {

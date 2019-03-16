@@ -203,7 +203,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     // convert it to string
     char *text = *param1;
 
-    int numoftextsentence = info[1]->IntegerValue();
+    numoftextsentence = info[1]->IntegerValue();
 
     Nan::Utf8String param3(info[2]->ToString());
     // convert it to string
@@ -233,14 +233,13 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     int textCurIndex=0;
 
     int sentenceDetected=0;
+    int gotHit=0;
+    std::vector<string> storedSentences;
+    string sentence="";
 
     int myarraycounter=0;
 	Local<Array> myarray = Nan::New<v8::Array>();
 
-
-    int patternIndexFlag=0;
-    int textIndexFlag=0;
-    
     // bago
 
 
@@ -313,8 +312,9 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
                     if(newarr2[newarr2.size()-1]=='.'){
                         patternNumWordsCounter++;
-                        
+                        sentence = sentence+newarr;
                         if(numHitsCounter>0){
+                            gotHit=1;
                             if(patternStoredNumHits.size()>0){
                                 // if(patternIndexFlag==patternCurIndex && textIndexFlag==textCurIndex){
                                 //     patternStoredNumHits[patternStoredNumHits.size()-1]++;
@@ -327,8 +327,6 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
                                         storedPatternNumWords.push_back(patternNumWordsCounter);
                                         patternStoredIndexes.push_back(patternCurIndex);
                                 
-                                        textIndexFlag=textCurIndex;
-                                        patternIndexFlag=patternCurIndex;
                                         
                                     }
                                     // int pagwala=0;
@@ -346,20 +344,27 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
                                     
                                 //}
                             }else{
+
                                 patternStoredNumHits.push_back(numHitsCounter);
                                 storedPatternNumWords.push_back(patternNumWordsCounter);
                                 patternStoredIndexes.push_back(patternCurIndex);
-                                textIndexFlag=textCurIndex;
-                                patternIndexFlag=patternCurIndex;
+                               
+                                
                         
                             }
                             numHitsCounter=0;
                             
                         }
+                        if(gotHit==1){
+                            storedSentences.push_back(sentence);
+                            gotHit=0;
+                        }
+                        sentence="";
                         patternNumWordsCounter=0;
                         patternCurIndex++;
 
                     }else{
+                        sentence = sentence+newarr+" ";
                         patternNumWordsCounter++;
                     }
                     
@@ -383,7 +388,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
                 ostringstream oss;
                 
                 sentenceDetected++;
-                oss <<"{ \"Pattern\": "<<patternStoredIndexes[x]<<",\"Text\": "<<textCurIndex<<" }";
+                oss <<"{ \"Pattern\": \""<<storedSentences[x]<<"\" }";
                 string word = oss.str ();
                 
                 v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
@@ -394,6 +399,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         patternStoredNumHits.clear();
         storedPatternNumWords.clear();
         patternStoredIndexes.clear();
+        storedSentences.clear();
         textCurNumWords=0;
         textCurIndex++;
         token = strtok (NULL, ".");

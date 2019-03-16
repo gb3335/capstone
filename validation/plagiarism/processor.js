@@ -1,81 +1,78 @@
-const sw = require('stopword');
-const stripchar = require('stripchar').StripChar;
+const sw = require('../../stopword');
 
 const duplicateArray= (arr) => {
         let new_array = [];
         for(let i=0;i<arr.length;i++){
-                arr[i] = arr[i].replace(/^\s+|\s+$/g, '');
-                if(arr.indexOf(arr[i])==i){
-                        new_array.push(arr[i])
+                // arr[i] = arr[i].replace(/^\s+|\s+$/g, '');
+                if(arr[i]==""){
+                        new_array.push('.')
+                }else{
+                        if(arr.indexOf(arr[i])==i){
+                                new_array.push(arr[i])
+                        }
                 }
+                
         }
-        return new_array;
-}
 
-// const arrayProcess = (arr) => {
-//         arr = arr.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ");
-//         arr = arr.replace(/[ !@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/g, " ");
-//         const newarr = arr.split('.');
-//         const dupliremoved = duplicateArray(newarr);
-//         return sw.removeStopwords(dupliremoved);
-// }
+        //return [...new Set(arr)];
+        return new_array
+}
 
 const arrayProcess = (text) => {
         text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
         text = text.replace(/[^A-Za-z0-9. ]/g, " ");
 
-        const textarr = text.split('.');
-       
-        let arr = [];
-        textarr.forEach((t, index) => {
-                let newtext = t.split(' ');
-                newtext = sw.removeStopwords(newtext);
-                newtext = duplicateArray(newtext);
-                newtext = newtext.filter(el =>{
-                        return el != "";
-                });
-
-                
-                
-                if(newtext.length!=0){
-                        newtext[newtext.length-1] = newtext[newtext.length-1]+".";
-                        arr.push(newtext.join(' '));
-                }
-
-        })
-        arr = duplicateArray(arr);
-        arr = arr.filter(el =>{
+        let words = text.split(' ');
+        words = sw.removeStopwords(words);
+        words = duplicateArray(words);
+        words = words.filter(el =>{
                 return el != "";
         });
-        const len = arr.length;
-        arr = arr.join(' ').split(' ');
-        return {arr, len};
+        words = words.join(' ').split('.');
+        words = words.join(' ').split(' ');
+        words = duplicateArray(words);
+        words = words.join(' ').split('.');
+        words = words.join(' ');
+        words = words.replace(/[ ]{2,}/g, '. ')
+
+        words = words.replace(/^[. ]/g, '');
+        words = words.replace(/[. ]{2,}$/g,'')
+        let forLen = words.split('.');
+        let len = forLen.length;
+
+        words = words.split(' ');
+
+        words[words.length-1] = words[words.length-1]+"."
+
+        return {arr: words, len};
 }
 
 const textProcess = (text) => {
         text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
         text = text.replace(/[^A-Za-z0-9. ]/g, " ");
 
-        const textarr = text.split('.');
-        let arr = [];
-        textarr.forEach((t, index) => {
-                let newtext = t.split(' ');
-                newtext = sw.removeStopwords(newtext);
-                newtext = duplicateArray(newtext);
-                
-                newtext = newtext.filter(el =>{
-                        return el != "";
-                });
-                if(newtext.length!=0){
-                        arr.push(newtext.join(' '));
-                }
-        })
-        arr = duplicateArray(arr);
-        arr = arr.filter(el =>{
+        let words = text.split(' ');
+        words = sw.removeStopwords(words);
+        words = duplicateArray(words);
+        words = words.filter(el =>{
                 return el != "";
         });
-        let len = arr.length;
-        return {text: arr.join('. '), len};
+        words = words.join(' ').split('.');
+        words = words.join(' ').split(' ');
+        words = duplicateArray(words);
+        words = words.join(' ').split('.');
+        
+        words = words.join(' ');
+        words = words.replace(/[ ]{2,}/g, '. ')
+        
+        
+        words = words.replace(/^[. ]/g, '');
+        words = words.replace(/[. ]{2,}$/g,'')
+        let forLen = words.split('.');
+        let len = forLen.length;
+        words=words+".";
+        
+        return {text: words, len};
 }
 
 module.exports = {

@@ -1,19 +1,23 @@
 #include <node.h>
 #include <v8.h>
 #include <string>
+#include <algorithm>
 #include <queue>
 #include <iostream>
 #include <nan.h>
 #include <bitset>
 #include <sstream>
-using namespace v8;
+using namespace v8; 
+using namespace std;
 #define MAXS 15000
 #define MAXC 93
 #define MAXW 1000000
 
-int numofhitss=0, numofpatterns=0, numoftexts=0;
+int numofpatternsentence=0, numoftextsentence=0;
 
-double calculateResult(int numOfHits, int patternLen, int textLen){
+string patternname="", patternid="";
+
+double calculateSentenceSimilarity(int numOfHits, int patternLen, int textLen){
     double patdiv = (double)numOfHits/(double)patternLen;
     double txtdiv = (double)numOfHits/(double)textLen;
     double patshared = patdiv*100;
@@ -22,37 +26,32 @@ double calculateResult(int numOfHits, int patternLen, int textLen){
     return total;
 }
 
-double calculateResultDoc1(int numOfHits, int patternLen){
-    double patdiv = (double)numOfHits/(double)patternLen;
+double calculateSimilarityScore(int numOfHits, int len){
+    double patdiv = (double)numOfHits/(double)len;
     double patshared = patdiv*100;
     double total = patshared;
     return total;
 }
 
-double calculateResultDoc2(int numOfHits, int textLen){
-    double txtdiv = (double)numOfHits/(double)textLen;
-    double txtshared = txtdiv*100;
-    double total = txtshared;
-    return total;
-}
 
-std::vector<std::string> arr2;
-std::string text2;
+vector<string> arr2;
+string text2;
 int g[MAXS][MAXC];
 int f[MAXS];
-std::bitset<MAXW> out[MAXS];
+bitset<MAXW> out[MAXS];
 void buildMachine()
 {
     int state = 0,currState = 0,index = 0;
-    std::string str;
+    string str;
     ///Building a trie, each new node gets the next number as node-name.
-    for(unsigned int i = 0; i<arr2.size(); i++)
+    for(unsigned  int i = 0; i<arr2.size(); i++)
     {
+        
         str = arr2[i];
-        numofpatterns+=str.size()+1;
+        str.erase(std::remove(str.begin(), str.end(), '.'), str.end());
         currState = 0;
 
-        for(unsigned int j = 0; j<str.size(); j++)
+        for(unsigned  int j = 0; j<str.size(); j++)
         {
             index = str[j] - 33;
             if(g[currState][index] == -1)
@@ -65,7 +64,7 @@ void buildMachine()
         ///stores whether i'th indexed string of arr, ends at state 'currState' or not. Thus adding the string to output by using 1 bit, hhh very memory efficient.
     }
     ///Failure function
-    std::queue<int>q;
+    queue<int>q;
     int s,fail;
     for(int i = 0; i<MAXC; i++)
     {
@@ -100,24 +99,49 @@ void buildMachine()
             }
         }
     }
-    numofpatterns--;
 }
-void initialize(const Nan::FunctionCallbackInfo<v8::Value>& info /*std::vector<std::string> arr, std::string text*/)
+void initialize(const Nan::FunctionCallbackInfo<v8::Value>& info /*vector<string> arr, string text*/)
 {
+
+    if(info.Length()!=4){
+        return Nan::ThrowError(Nan::New("Function expecting 5 arguments").ToLocalChecked());
+    }
+    if(!info[0]->IsArray()) {
+        return Nan::ThrowError(Nan::New("expected arg 0: Should be an Array of Strings").ToLocalChecked());
+    }
+    if(!info[1]->IsInt32()) {
+        return Nan::ThrowError(Nan::New("expected arg 1: Integer (Number of sentence in the document)").ToLocalChecked());
+    }
+    if(!info[2]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 2: Should be a String (Name of the document)").ToLocalChecked());
+    }
+    if(!info[3]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 3: Should be a String (Id of the document)").ToLocalChecked());
+    }
+
 
     v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);   
 
-    std::vector<std::string> arr;
+    std::vector<string> arr;
     for (unsigned int i = 0; i < jsArr->Length(); i++) {
         v8::Local<v8::Value> jsElement = jsArr->Get(i);
 
         Nan::Utf8String jselem(jsElement->ToString());
-        std::string number = std::string(*jselem);  
+        string number = string(*jselem);  
 
         arr.push_back(number);
     }
 
-    numofpatterns=0;
+    numofpatternsentence=info[1]->IntegerValue();
+
+    Nan::Utf8String param1(info[2]->ToString());
+    // convert it to string
+    patternname = string(*param1);
+
+    Nan::Utf8String param2(info[3]->ToString());
+    // convert it to string
+    patternid = string(*param2);
+
     arr2 = arr;
     for(int x=0; x<MAXS; x++){
         out[x].reset();
@@ -125,6 +149,7 @@ void initialize(const Nan::FunctionCallbackInfo<v8::Value>& info /*std::vector<s
     memset(g,-1,sizeof g);
     memset(f,0,sizeof f);
     buildMachine();
+    //info.GetReturnValue().Set("Initialize");
 }
 int nextState(int s, char ch)
 {
@@ -139,199 +164,328 @@ int nextState(int s, char ch)
 
 void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
-    if(info.Length()!=5){
+    if(info.Length()!=4){
         return Nan::ThrowError(Nan::New("Function expecting 5 arguments").ToLocalChecked());
     }
     // if(!info[0]->IsArray()) {
     //     return Nan::ThrowError(Nan::New("expected arg 0: Should be an Array of Strings").ToLocalChecked());
     // }
     if(!info[0]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 1: Should be a String").ToLocalChecked());
+        return Nan::ThrowError(Nan::New("expected arg 0: Should be a String").ToLocalChecked());
     }
     // if(!info[2]->IsBoolean()) {
     //     return Nan::ThrowError(Nan::New("expected arg 2: Should be a Boolean").ToLocalChecked());
     // }
-    if(!info[1]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 3: String (Document name)").ToLocalChecked());
+    if(!info[1]->IsInt32()) {
+        return Nan::ThrowError(Nan::New("expected arg 1: Integer (Number of sentence in the document)").ToLocalChecked());
     }
     if(!info[2]->IsString()) {
-        return Nan::ThrowError(Nan::New("expected arg 4: String (Document name)").ToLocalChecked());
+        return Nan::ThrowError(Nan::New("expected arg 2: Should be a String (Name of the document)").ToLocalChecked());
     }
-    numofhitss=0, numoftexts=0;
+    if(!info[3]->IsString()) {
+        return Nan::ThrowError(Nan::New("expected arg 3: Should be a String (Id of the document)").ToLocalChecked());
+    }
+
 
     // v8::Local<v8::Array> jsArr = v8::Local<v8::Array>::Cast(info[0]);   
 
-    // std::vector<std::string> arr;
+    // std::vector<string> arr;
     // for (unsigned int i = 0; i < jsArr->Length(); i++) {
     //     v8::Local<v8::Value> jsElement = jsArr->Get(i);
 
     //     Nan::Utf8String jselem(jsElement->ToString());
-    //     std::string number = std::string(*jselem);  
+    //     string number = string(*jselem);  
 
     //     arr.push_back(number);
     // }
 
     Nan::Utf8String param1(info[0]->ToString());
     // convert it to string
-    std::string text = std::string(*param1);
+    char *text = *param1;
 
-    // bool flag = info[2]->BooleanValue();
+    int numoftextsentence = info[1]->IntegerValue();
 
+    Nan::Utf8String param3(info[2]->ToString());
+    // convert it to string
+    string textname = string(*param3);
 
-    int myarraycounter=0;
-	Local<Array> myarray = Nan::New<v8::Array>();
+    Nan::Utf8String param2(info[3]->ToString());
+    // convert it to string
+    string textid = string(*param2);
+
+    // boolean flag = info[2]->BooleanValue();
 
     // if(flag){
     //     initialize(arr,text);
     //     buildMachine();
     // }
     int state = 0;
-    for(unsigned int i = 0; i<text.size(); i++)
-    {
-        state = nextState(state,text[i]); /// traverse the trie state/node for the text
-        if(out[state].count() > 0) /// if the state has at least one output
+
+    /// bago
+    std::vector<int> patternStoredNumHits;
+    std::vector<int> patternStoredIndexes;
+    std::vector<int> storedPatternNumWords;
+
+    int numHitsCounter=0;
+    int patternNumWordsCounter=0;
+    int patternCurIndex=0;
+
+    int textCurIndex=0;
+
+    int sentenceDetected=0;
+    int gotHit=0;
+    std::vector<string> storedSentences;
+    string sentence="";
+
+    int myarraycounter=0;
+	Local<Array> myarray = Nan::New<v8::Array>();
+
+    
+    // bago
+
+
+    int textCurNumWords=0;
+
+
+    char *token = strtok(text,".");
+    while(token != NULL){
+        string text = token;
+        text = text.substr(text.find_first_not_of(' '), (text.find_last_not_of(' ') - text.find_first_not_of(' ')) + 1);
+        for(unsigned int i = 0; i<text.size(); i++)
         {
-            for(unsigned int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
+            
+            state = nextState(state,text[i]); /// traverse the trie state/node for the text.
+            if(out[state].count() > 0) ///        if the state. has at least one output
             {
-                if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
+                for(unsigned int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
                 {
-                    int start = i -arr2[j].size()+1;
-                    if(start==0 && text[i+1]==' '){
-                        numofhitss+=arr2[j].size()+1;
-                        std::ostringstream oss;
-    
-                        oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
-                        std::string word = oss.str ();
+                    string newarr = arr2[j];
+                    if(newarr[newarr.size()-1]=='.'){
                         
-                        //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
-                        // Local<String> retval = String::NewFromUtf8(isolate, word.c_str());
-                        // Nan::Set(myarray, myarraycounter, retval);
-                        // myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
-                        v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
-                        Nan::Set(myarray, myarraycounter, newword);
-                        // cout << "Word " << arr[j] << " appears from "
-                        // 	<< i - arr[j].size() + 1 << " to " << i << endl;
-                        myarraycounter++;
-                    }else if(text[start-1]==' ' && i==text.size()-1){
-                        numofhitss+=arr2[j].size()+1;
-                        std::ostringstream oss;
-    
-                        oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
-                        std::string word = oss.str ();
-                        
-                        //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
-                        // Local<String> retval = String::NewFromUtf8(isolate, word.c_str());
-                        // Nan::Set(myarray, myarraycounter, retval);
-                        // myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
-                        v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
-                        Nan::Set(myarray, myarraycounter, newword);
-                        // cout << "Word " << arr[j] << " appears from "
-                        // 	<< i - arr[j].size() + 1 << " to " << i << endl;
-                        myarraycounter++;
-                    }else if(start==0 && i==text.size()-1){
-                        numofhitss+=arr2[j].size()+1;
-                        std::ostringstream oss;
-    
-                        oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
-                        std::string word = oss.str ();
-                        
-                        //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
-                        // Local<String> retval = String::NewFromUtf8(isolate, word.c_str());
-                        // Nan::Set(myarray, myarraycounter, retval);
-                        // myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
-                        v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
-                        Nan::Set(myarray, myarraycounter, newword);
-                        // cout << "Word " << arr[j] << " appears from "
-                        // 	<< i - arr[j].size() + 1 << " to " << i << endl;
-                        myarraycounter++;
+                        newarr.erase(std::remove(newarr.begin(), newarr.end(), '.'), newarr.end());
                     }
-                    else if(text[start-1]==' ' && text[i+1]==' '){
-                        numofhitss+=arr2[j].size()+1;
-                        std::ostringstream oss;
-    
-                        oss <<"{ \"Word\": \""<<arr2[j]<<"\",\"Start\": "<<start<<",\"End\": "<<i<<" }";
-                        std::string word = oss.str ();
+                    string newarr2 = arr2[j];
+
+                    if(out[state].test(j)) /// if j'th string is in the output of state, means a match is found.
+                    {
                         
-                        //string word = "{ \"Word\": \""+arr[j]+"\",\"Start\": "+to_string(start)+",\"End\": "+to_string(i)+" }";
-                        // Local<String> retval = String::NewFromUtf8(isolate, word.c_str());
-                        // Nan::Set(myarray, myarraycounter, retval);
-                        // myarray->Set(myarraycounter, String::NewFromUtf8(isolate, word.c_str()));
-                        v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
-                        Nan::Set(myarray, myarraycounter, newword);
-                        // cout << "Word " << arr[j] << " appears from "
-                        // 	<< i - arr[j].size() + 1 << " to " << i << endl;
-                        myarraycounter++;
+                        int hitFlag=0;
+                        int start = i -newarr.size()+1;
+
+
+                        if(start==0 && text[i+1]==' '){
+                            // Una and space
+
+                            hitFlag=1;
+
+                        }else if(text[start-1]==' ' && text[i+1]==' '){
+                            // Space and space
+
+                            hitFlag=1;
+
+                        }else if(text[start-1]==' ' && i==text.size()-1){
+                            // Space and huli
+
+                            hitFlag=1;
+
+                        }else if(text[start-1]==' ' && text[i+1]=='.'){
+                            // Space and tuldok
+
+                            hitFlag=1;
+
+                        }else if(start==0 && text[i+1]=='.'){
+                            // Una and tuldok
+
+                            hitFlag=1;
+
+                        }else if(start==0 && i==text.size()-1){
+                            // Una and huli
+
+                            hitFlag=1;
+
+                        }
+
+                        if(hitFlag==1){
+                            numHitsCounter=1;
+                        }
                     }
+                    
+
+                    if(newarr2[newarr2.size()-1]=='.'){
+                        patternNumWordsCounter++;
+                        sentence = sentence+newarr;
+                        if(numHitsCounter>0){
+                            gotHit=1;
+                            if(patternStoredNumHits.size()>0){
+                                // if(patternIndexFlag==patternCurIndex && textIndexFlag==textCurIndex){
+                                //     patternStoredNumHits[patternStoredNumHits.size()-1]++;
+                                // }else{
+                                    std::vector<int>::iterator it = std::find(patternStoredIndexes.begin(), patternStoredIndexes.end(), patternCurIndex);
+                                    if(it != patternStoredIndexes.end()){
+                                        patternStoredNumHits[it-patternStoredIndexes.begin()]++;
+                                    }else{
+                                        patternStoredNumHits.push_back(numHitsCounter);
+                                        storedPatternNumWords.push_back(patternNumWordsCounter);
+                                        patternStoredIndexes.push_back(patternCurIndex);
+                                
+                                        
+                                    }
+                                    // int pagwala=0;
+                                    // for(int x=0; x<patternStoredIndexes.size(); x++){
+                                    //     if(patternStoredIndexes[x]==patternCurIndex){
+                                    //         patternStoredNumHits[x]++;
+                                    //         break;
+                                    //     }else{
+                                    //         pagwala=1;
+                                    //     }
+                                    // }
+                                    // if(pagwala==1){
+                                        
+                                    // }
+                                    
+                                //}
+                            }else{
+
+                                patternStoredNumHits.push_back(numHitsCounter);
+                                storedPatternNumWords.push_back(patternNumWordsCounter);
+                                patternStoredIndexes.push_back(patternCurIndex);
+                        
+                            }
+                            numHitsCounter=0;
+                            
+                        }
+                        if(gotHit==1){
+                            storedSentences.push_back(sentence);
+                            gotHit=0;
+                        }
+                        sentence="";
+                        patternNumWordsCounter=0;
+                        patternCurIndex++;
+
+                    }else{
+                        sentence = sentence+newarr+" ";
+                        patternNumWordsCounter++;
+                    }
+                    
                 }
             }
+            patternCurIndex=0;
+            
+            if(text[i]==' '){
+                textCurNumWords++;
+                
+            }
         }
+
+        textCurNumWords++;
+        for(unsigned int x=0; x<patternStoredNumHits.size(); x++){
+            //cout<<"Hits: "<<patternStoredNumHits[x]<<" Num Of Words: "<<storedPatternNumWords[x]<<" "<<textCurNumWords<<" Indexes: "<<patternStoredIndexes[x]<<" "<<textCurIndex<<endl;
+            double total = calculateSentenceSimilarity(patternStoredNumHits[x], storedPatternNumWords[x],textCurNumWords);
+            //cout<<total<<endl;
+            if(total>80){
+
+                ostringstream oss;
+                
+                sentenceDetected++;
+                oss <<"{ \"Pattern\": \""<<storedSentences[x]<<"\" }";
+                string word = oss.str ();
+                
+                v8::Local<v8::Value> newword = Nan::New(word).ToLocalChecked();
+                Nan::Set(myarray, myarraycounter, newword);
+                myarraycounter++;
+            }
+        }
+        patternStoredNumHits.clear();
+        storedPatternNumWords.clear();
+        patternStoredIndexes.clear();
+        storedSentences.clear();
+        textCurNumWords=0;
+        textCurIndex++;
+        token = strtok (NULL, ".");
     }
+
+    //cout<<sentenceDetected<<endl;
+
+    // cout<<"---------------------Index------------------------"<<endl;
+    // for(int x=0; x<textStoredIndexes.size(); x++){
+    //     cout<<"Pattern at index "<<x<<": "<<patternStoredIndexes[x]<<endl;
+    //     cout<<"Text at index "<<x<<": "<<textStoredIndexes[x]<<endl;
+    // }
+
+    // cout<<"---------------------Words Count------------------------"<<endl;
+    // for(int x=0; x<storedTextNumWords.size(); x++){
+    //     cout<<"Pattern words "<<x<<": "<<storedPatternNumWords[x]<<endl;
+    //     cout<<"Text words "<<x<<": "<<storedTextNumWords[x]<<endl;
+    // }
+
+    // cout<<"---------------------HITS------------------------"<<endl;
+    // for(int x=0; x<storedNumHits.size(); x++){
+    //     cout<<"HIT "<<x<<": "<<storedNumHits[x]<<endl;
+    // }
+    
+    double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence);
+    //double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
+
+
+    v8::Local<v8::String> nameprop = Nan::New("Name").ToLocalChecked();
+	v8::Local<v8::String> idprop = Nan::New("Id").ToLocalChecked();
 
     ////
+    v8::Local<v8::Object> patternObject = Nan::New<v8::Object>();
 
-    numoftexts=text.size();
-    if(numofhitss!=0){
-        numofhitss--;
-    }
-    
-    double total = calculateResult(numofhitss, numofpatterns, numoftexts);
-    double totaldoc1 = calculateResultDoc1(numofhitss, numofpatterns);
-    double totaldoc2 = calculateResultDoc2(numofhitss, numoftexts);
+    v8::Local<v8::Value> patternnamevalue = Nan::New(patternname).ToLocalChecked();
+	v8::Local<v8::Value> patternidvalue = Nan::New(patternid).ToLocalChecked();
+
+    Nan::Set(patternObject, nameprop, patternnamevalue);
+    Nan::Set(patternObject, idprop, patternidvalue);
+    ///
+
+    ////
+    v8::Local<v8::Object> textObject = Nan::New<v8::Object>();
+
+    v8::Local<v8::Value> textnamevalue = Nan::New(textname).ToLocalChecked();
+	v8::Local<v8::Value> textidvalue = Nan::New(textid).ToLocalChecked();
+
+    Nan::Set(textObject, nameprop, textnamevalue);
+    Nan::Set(textObject, idprop, textidvalue);
+    ///
+
+    v8::Local<v8::Object> documentObject = Nan::New<v8::Object>();
+
+    v8::Local<v8::String> patterndocuprop = Nan::New("Pattern").ToLocalChecked();
+	v8::Local<v8::String> textdocuprop = Nan::New("Text").ToLocalChecked();
+
+    v8::Local<v8::Value> patterndocuvalue = patternObject;
+	v8::Local<v8::Value> textdocuvalue = textObject;
+
+    Nan::Set(documentObject, patterndocuprop, patterndocuvalue);
+    Nan::Set(documentObject, textdocuprop, textdocuvalue);
+
+    // v8::Local<v8::Object> similarityObject = Nan::New<v8::Object>();
+
+    // v8::Local<v8::String> patternprop = Nan::New("Pattern").ToLocalChecked();
+	// v8::Local<v8::String> textprop = Nan::New("Text").ToLocalChecked();
+
+    // v8::Local<v8::Value> patternvalue = Nan::New(patternSimilarityTotal);
+	// v8::Local<v8::Value> textvalue = Nan::New(textSimilarityTotal);
+
+    // Nan::Set(similarityObject, patternprop, patternvalue);
+    // Nan::Set(similarityObject, textprop, textvalue);
 
     //Whole Object to Return
     v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
 
-    v8::Local<v8::String> docunameprop = Nan::New("Name").ToLocalChecked();
-    v8::Local<v8::String> docuscoreprop = Nan::New("Score").ToLocalChecked();
-
-    // Object for Document1
-    v8::Local<v8::Object> docuObject1 = Nan::New<v8::Object>();
-
-    v8::Local<v8::Value> docuname1 = info[1]->ToString();
-    v8::Local<v8::Value> docuvalue1 = Nan::New(totaldoc1);
-    Nan::Set(docuObject1, docunameprop, docuname1);
-    Nan::Set(docuObject1, docuscoreprop, docuvalue1);
-
-    // Object for Document2
-    v8::Local<v8::Object> docuObject2 = Nan::New<v8::Object>();
-
-    v8::Local<v8::Value> docuname2 = info[2]->ToString();
-    v8::Local<v8::Value> docuvalue2 = Nan::New(totaldoc2);
-    Nan::Set(docuObject2, docunameprop, docuname2);
-    Nan::Set(docuObject2, docuscoreprop, docuvalue2);
-
-    // Object for Document1 and Document2
-    v8::Local<v8::Object> docuObject = Nan::New<v8::Object>();
-
-    v8::Local<v8::String> docuprop1 = Nan::New("Document_1").ToLocalChecked();
-    v8::Local<v8::String> docuprop2 = Nan::New("Document_2").ToLocalChecked();
-	v8::Local<v8::Value> docuvalue_1 = docuObject1;
-	v8::Local<v8::Value> docuvalue_2 = docuObject2;
-
-    Nan::Set(docuObject, docuprop1, docuvalue_1);
-    Nan::Set(docuObject, docuprop2, docuvalue_2);
-
 	v8::Local<v8::String> totalprop = Nan::New("SimilarityScore").ToLocalChecked();
-	v8::Local<v8::String> docuprop = Nan::New("DocumentScore").ToLocalChecked();
-	v8::Local<v8::String> numofhitsprop = Nan::New("NumOfHits").ToLocalChecked();
-	v8::Local<v8::String> numofpatternprop = Nan::New("NumOfPattern").ToLocalChecked();
-	v8::Local<v8::String> numoftextnprop = Nan::New("NumOfText").ToLocalChecked();
+    v8::Local<v8::String> documentprop = Nan::New("Document").ToLocalChecked();
 	v8::Local<v8::String> arrayprop = Nan::New("Index").ToLocalChecked();
 
-	v8::Local<v8::Value> totalvalue = Nan::New(total);
-	v8::Local<v8::Value> docuvalue = docuObject;
-	v8::Local<v8::Value> numofhitsvalue = Nan::New(numofhitss);
-	v8::Local<v8::Value> numofpatternvalue = Nan::New(numofpatterns);
-	v8::Local<v8::Value> numoftextnvalue = Nan::New(numoftexts);
+	v8::Local<v8::Value> totalvalue = Nan::New(patternSimilarityTotal);
+	v8::Local<v8::Value> documentvalue = documentObject;
 	v8::Local<v8::Value> arrayvalue = myarray;
 
 	Nan::Set(jsonObject, totalprop, totalvalue);
-	Nan::Set(jsonObject, docuprop, docuvalue);
-	Nan::Set(jsonObject, numofhitsprop, numofhitsvalue);
-	Nan::Set(jsonObject, numofpatternprop, numofpatternvalue);
-	Nan::Set(jsonObject, numoftextnprop, numoftextnvalue);
+	Nan::Set(jsonObject, documentprop, documentvalue);
 	Nan::Set(jsonObject, arrayprop, arrayvalue);
-
 	info.GetReturnValue().Set(jsonObject);
 }
 

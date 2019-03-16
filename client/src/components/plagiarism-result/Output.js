@@ -35,7 +35,8 @@ class Output extends Component {
                       <p><b>Title: </b>{out.Document.Text.Name}</p>
                       <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                       <p><b>Plagiarism Level: </b>Little Plagiarism</p>
-                      <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
+                      {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
+                      <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="btn btn-info">Show Details</button>
                   </div>
               </div>
             </div> : 
@@ -49,7 +50,8 @@ class Output extends Component {
                       <p><b>Title: </b>{out.Document.Text.Name}</p>
                       <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                       <p><b>Plagiarism Level: </b>Moderate Plagiarism</p>
-                      <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
+                      {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
+                      <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="btn btn-info">Show Details</button>
                   </div>
               </div>
             </div> : 
@@ -62,7 +64,8 @@ class Output extends Component {
                     <p><b>Title: </b>{out.Document.Text.Name}</p>
                     <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
                     <p><b>Plagiarism Level: </b>Heavy Plagiarism</p>
-                    <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link>
+                    {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
+                    <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="btn btn-info">Show Details</button>
                 </div>
             </div>
           </div>}
