@@ -12,7 +12,19 @@ const path = require("path");
 const pdf = require("html-pdf");
 
 // report templates
-const pdfResearchesTemplate = require("../../document/researchesTemplate");
+let pdfResearchesTemplate;
+let pdfResearchTemplate;
+let fontFooter;
+
+if (process.env.NODE_ENV === "production") {
+  pdfResearchesTemplate = require("../../document/researchesTemplate");
+  pdfResearchTemplate = require("../../document/researchTemplate");
+  fontFooter = "7px";
+} else {
+  pdfResearchesTemplate = require("../../document/researchesTemplate_Dev");
+  pdfResearchTemplate = require("../../document/researchTemplate_Dev");
+  fontFooter = "10px";
+}
 
 // Research model
 const Research = require("../../models/Research");
@@ -37,7 +49,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/researchDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -450,7 +462,7 @@ router.post(
         Key: `researchDocuments/${req.body.oldFile}`
       };
 
-      s3.deleteObject(params, function (err, data) {
+      s3.deleteObject(params, function(err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -489,7 +501,7 @@ router.post(
         directory: "./routes/downloadedDocu",
         filename: req.body.researchId + ".pdf"
       };
-      download(docPath, options, function (err) {
+      download(docPath, options, function(err) {
         if (err) console.log(err);
         console.log("Document successfully uploaded.");
       });
@@ -630,7 +642,7 @@ router.delete(
       Key: `researchDocuments/${req.params.filename}`
     };
 
-    s3.deleteObject(params, function (err, data) {
+    s3.deleteObject(params, function(err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
@@ -683,8 +695,8 @@ router.post(
         height: "28mm",
         contents: {
           default: `<div class="item5">
-          <p style="float: left; font-size: 9px"><b>Printed By: </b>${printedBy}</p>
-          <p style="float: right; font-size: 9px">Page {{page}} of {{pages}}</p>
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
         }
       }
@@ -709,6 +721,55 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/researchesPdf.pdf`);
+  }
+);
+
+// @route   POST api/researches/createReport/research
+// @desc    Generate individual research Report
+// @access  Private
+router.post(
+  "/createReport/research",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfResearchTemplate(req.body), options)
+      .toFile("researchPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/researches/fetchReport/research
+// @desc    Send the generated pdf to client - individual research
+// @access  Private
+router.get(
+  "/fetchReport/research",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/researchPdf.pdf`);
   }
 );
 

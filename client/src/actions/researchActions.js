@@ -8,11 +8,13 @@ import {
   GET_ERRORS,
   CLEAR_ERRORS,
   TOGGLE_RESEARCH_BIN,
-  TOGGLE_RESEARCH_LIST
+  TOGGLE_RESEARCH_LIST,
+  CHANGE_BUTTON_STATUS_RESEARCH
 } from "./types";
 
 // Get all researches
 export const getResearches = () => dispatch => {
+  dispatch(changeButtonStatus(false));
   dispatch(clearErrors());
   dispatch(setResearchLoading());
   axios
@@ -33,7 +35,7 @@ export const getResearches = () => dispatch => {
 
 // Create Report for all Researches
 export const createReportForResearches = reportData => dispatch => {
-  //dispatch(changeButtonStatus(true));
+  dispatch(changeButtonStatus(true));
   axios
     .post("/api/researches/createReport/researches", reportData)
     .then(() =>
@@ -41,7 +43,7 @@ export const createReportForResearches = reportData => dispatch => {
         .get("/api/researches/fetchReport/researches", { responseType: "blob" })
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-          //dispatch(changeButtonStatus(false));
+          dispatch(changeButtonStatus(false));
           saveAs(pdfBlob, "ResearchesReport.pdf");
 
           // send base64 to api for s3 upload -FOR ANDROID-
@@ -68,6 +70,52 @@ export const createReportForResearches = reportData => dispatch => {
     );
 };
 
+// Create Report for specific Research
+export const createReportForResearch = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/researches/createReport/research", reportData)
+    .then(() =>
+      axios
+        .get("/api/researches/fetchReport/research", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "ResearchReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function() {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_RESEARCHES,
+        payload: null
+      })
+    );
+};
+
+// Change Status of Generate Report Button
+// set loading state
+export const changeButtonStatus = flag => {
+  return {
+    type: CHANGE_BUTTON_STATUS_RESEARCH,
+    payload: flag
+  };
+};
+
 // Toggle Research Bin
 export const toggleResearchBin = toggle => {
   if (toggle === 1) {
@@ -85,6 +133,7 @@ export const toggleResearchBin = toggle => {
 export const getResearchById = id => dispatch => {
   dispatch(clearErrors());
   dispatch(setResearchLoading());
+  dispatch(changeButtonStatus(false));
   axios
     .get(`/api/researches/${id}`)
     .then(res =>

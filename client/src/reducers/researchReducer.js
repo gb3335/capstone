@@ -3,17 +3,19 @@ import {
   GET_RESEARCHES,
   RESEARCH_LOADING,
   TOGGLE_RESEARCH_BIN,
-  TOGGLE_RESEARCH_LIST
+  TOGGLE_RESEARCH_LIST,
+  CHANGE_BUTTON_STATUS_RESEARCH
 } from "../actions/types";
 
 const initialState = {
   research: {},
   researches: {},
   loading: false,
-  bin: false
+  bin: false,
+  buttonDisable: false
 };
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   switch (action.type) {
     case RESEARCH_LOADING:
       return {
@@ -41,6 +43,11 @@ export default function (state = initialState, action) {
         ...state,
         researches: action.payload,
         loading: false
+      };
+    case CHANGE_BUTTON_STATUS_RESEARCH:
+      return {
+        ...state,
+        buttonDisable: action.payload
       };
     default:
       return state;
