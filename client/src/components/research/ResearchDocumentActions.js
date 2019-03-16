@@ -31,11 +31,18 @@ class ResearchImageActions extends Component {
         this.setState({
           file: e.target.result
         });
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
 
         const docuData = {
           researchId: this.props.research.research._id,
           oldFile: this.props.research.research.document,
-          file: this.state.file
+          file: this.state.file,
+          username: name
         };
 
         this.props.addDocument(docuData, this.props.history);
@@ -46,15 +53,22 @@ class ResearchImageActions extends Component {
   };
 
   onDeleteDocument = e => {
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchId = this.props.research.research._id;
     const filename = this.props.research.research.document;
 
-    this.props.deleteDocument(researchId, filename);
+    this.props.deleteDocument(researchId, filename, name);
   };
 
   onLocalCheck = e => {
     const input = {
-      docuId : this.props.research.research._id,
+      docuId: this.props.research.research._id,
       title: this.props.research.research.title,
       researches: this.props.research.researches,
       flag: true
@@ -101,7 +115,7 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading ? <Spinner/> : docuItem}
+        {this.props.localPlagiarism.loading ? <Spinner /> : docuItem}
 
         <div hidden>
           <FileFieldGroup
@@ -123,13 +137,15 @@ ResearchImageActions.propTypes = {
   checkPlagiarismLocal: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   research: PropTypes.object.isRequired,
-  localPlagiarism: PropTypes.object.isRequired
+  localPlagiarism: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  research:state.research,
-  localPlagiarism: state.localPlagiarism
+  research: state.research,
+  localPlagiarism: state.localPlagiarism,
+  auth: state.auth
 });
 
 export default connect(

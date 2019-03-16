@@ -32,6 +32,12 @@ class CreateCollege extends Component {
 
   onSubmit = e => {
     e.preventDefault();
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const collegeData = {
       oldName: this.props.college.college.name.fullName,
@@ -45,7 +51,8 @@ class CreateCollege extends Component {
       color: this.state.background,
       researchTotal: this.state.researchTotal,
       journalTotal: this.state.journalTotal,
-      id: this.props.college.college._id
+      id: this.props.college.college._id,
+      username: name
     };
 
     this.refs.colBtn.setAttribute("disabled", "disabled");
@@ -126,12 +133,14 @@ class CreateCollege extends Component {
 
 CreateCollege.propTypes = {
   college: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 
 export default connect(

@@ -31,49 +31,23 @@ class CollegeActions extends Component {
 
     this.setState({ ext: fileExtension });
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const collegeData = {
       initials: this.state.initials,
       oldLogo: this.props.college.college.logo,
       ext: this.state.ext,
       id: this.props.college.college._id,
-      file: base64
+      file: base64,
+      username: name
     };
 
     this.props.changeCollegeLogo(collegeData, this.props.history);
-  };
-
-  onDeleteCollege = e => {
-    e.preventDefault();
-
-    const data = {
-      id: this.props.college.college._id,
-      logo: this.props.college.college.logo
-    };
-
-    const totalResAndJour =
-      parseInt(this.props.college.college.researchTotal, 10) +
-      parseInt(this.props.college.college.journalTotal, 10);
-
-    if (totalResAndJour === 0) {
-      this.props.deleteCollege(data, this.props.history);
-    } else {
-      alert("This College cannot be deleted as this College have researches.");
-    }
-  };
-
-  onRestoreCollege = e => {
-    e.preventDefault();
-
-    const data = {
-      id: this.props.college.college._id,
-      logo: this.props.college.college.logo
-    };
-
-    this.props.restoreCollege(data, this.props.history);
-  };
-
-  onCollegeStatus = e => {
-    console.log("COLLEGE DEACTIVATE");
   };
 
   render() {
@@ -123,11 +97,13 @@ CollegeActions.propTypes = {
   deleteCollege: PropTypes.func.isRequired,
   restoreCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 
 export default connect(

@@ -42,8 +42,16 @@ class Research extends Component {
   onDeleteResearch = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const data = {
-      id: this.props.research.research._id
+      id: this.props.research.research._id,
+      username: name
     };
 
     this.props.deleteResearch(data, this.props.history);
@@ -51,9 +59,16 @@ class Research extends Component {
 
   onRestoreResearch = e => {
     e.preventDefault();
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
-      id: this.props.research.research._id
+      id: this.props.research.research._id,
+      username: name
     };
 
     this.props.restoreResearch(data, this.props.history);
@@ -61,10 +76,17 @@ class Research extends Component {
 
   onHideResearch = e => {
     e.preventDefault();
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
       id: this.props.research.research._id,
-      hidden: true
+      hidden: true,
+      username: name
     };
 
     this.props.deleteResearch(data, this.props.history);
@@ -72,10 +94,17 @@ class Research extends Component {
 
   onShowResearch = e => {
     e.preventDefault();
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
       id: this.props.research.research._id,
-      hidden: true
+      hidden: true,
+      username: name
     };
 
     this.props.restoreResearch(data, this.props.history);
@@ -338,9 +367,9 @@ class Research extends Component {
               </div>
             </div>
           );
-        } catch (error) { }
+        } catch (error) {}
       }
-    } catch (error) { }
+    } catch (error) {}
     return (
       <div className="research">
         <div style={{ padding: "1em" }}>

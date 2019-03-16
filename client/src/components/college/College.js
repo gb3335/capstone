@@ -42,9 +42,17 @@ class College extends Component {
   onDeleteCollege = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const data = {
       id: this.props.college.college._id,
-      logo: this.props.college.college.logo
+      logo: this.props.college.college.logo,
+      username: name
     };
 
     const totalResAndJour =
@@ -61,9 +69,17 @@ class College extends Component {
   onRestoreCollege = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const data = {
       id: this.props.college.college._id,
-      logo: this.props.college.college.logo
+      logo: this.props.college.college.logo,
+      username: name
     };
 
     this.props.restoreCollege(data, this.props.history);

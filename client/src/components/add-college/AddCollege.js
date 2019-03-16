@@ -33,6 +33,12 @@ class CreateCollege extends Component {
     e.preventDefault();
     const logo = this.state.logo;
     const logoname = logo.replace(/^.*\\/, "");
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const collegeData = {
       fullName: this.state.fullName,
@@ -44,7 +50,8 @@ class CreateCollege extends Component {
           .join(".") + Date.now(),
       librarian: this.state.librarian,
       file: this.state.selectedFile,
-      color: this.state.background
+      color: this.state.background,
+      username: name
     };
 
     this.refs.colBtn.setAttribute("disabled", "disabled");
@@ -169,11 +176,13 @@ class CreateCollege extends Component {
 CreateCollege.propTypes = {
   createCollege: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

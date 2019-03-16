@@ -148,13 +148,13 @@ class CollegesActions extends Component {
     if (this.state.list) {
       listAction = (
         <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-list text-info mr-1" /> List
+          <i className="fas fa-list text-info" title="List View" />
         </Link>
       );
     } else {
       listAction = (
         <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-th-large text-info mr-1" /> Grid
+          <i className="fas fa-th-large text-info" title="Grid View" />
         </Link>
       );
     }

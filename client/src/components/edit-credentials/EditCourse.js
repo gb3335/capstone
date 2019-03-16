@@ -49,6 +49,13 @@ class EditCourse extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const courseData = {
       name: this.state.name,
       initials: this.state.initials,
@@ -58,7 +65,8 @@ class EditCourse extends Component {
       colId: this.state.collegeId,
       courseId: this.state.courseId,
       deactivate: this.state.deactivate,
-      colInit: this.props.college.college.name.initials
+      colInit: this.props.college.college.name.initials,
+      username: name
     };
 
     this.refs.courseBtn.setAttribute("disabled", "disabled");
@@ -141,12 +149,14 @@ class EditCourse extends Component {
 EditCourse.propTypes = {
   errors: PropTypes.object.isRequired,
   editCourse: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  college: state.college
+  college: state.college,
+  auth: state.auth
 });
 
 export default connect(

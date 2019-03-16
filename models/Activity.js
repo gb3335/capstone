@@ -10,6 +10,9 @@ const ActivitySchema = new Schema({
   date: {
     type: Date,
     default: Date.now
+  },
+  by: {
+    type: String
   }
 });
 

@@ -184,11 +184,11 @@ export const addAuthor = (authorData, history) => dispatch => {
 };
 
 // Delete Author
-export const deleteAuthor = (research, id) => dispatch => {
+export const deleteAuthor = (research, id, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/researches/author/${research}/${id}`)
+      .delete(`/api/researches/author/${research}/${id}/${name}`)
       .then(res =>
         dispatch({
           type: GET_RESEARCH,
@@ -251,11 +251,11 @@ export const addDocument = (docuData, history) => dispatch => {
 };
 
 // Delete Document
-export const deleteDocument = (researchId, filename) => dispatch => {
+export const deleteDocument = (researchId, filename, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/researches/document/${researchId}/${filename}`)
+      .delete(`/api/researches/document/${researchId}/${filename}/${name}`)
       .then(res =>
         dispatch({
           type: GET_RESEARCH,

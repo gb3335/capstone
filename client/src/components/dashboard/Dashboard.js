@@ -68,7 +68,10 @@ class Dashboard extends Component {
         activities.map(activity =>
           recentActivities.push(
             <p key={activity._id}>
-              <b>{activity.title}</b> <Moment fromNow>{activity.date}</Moment>
+              <b>
+                {activity.title} {`by ${activity.by}`}
+              </b>{" "}
+              <Moment fromNow>{activity.date}</Moment>
             </p>
           )
         );
