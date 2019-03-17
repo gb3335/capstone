@@ -1,0 +1,12 @@
+.researchesBg {
+  background: url("./library.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: whitesmoke;
+}
+
+.light-overlay {
+  background-color: rgba(66, 66, 66, 0.678);
+  width: 100%;
+  height: 100%;
+}

@@ -26,14 +26,14 @@ class ResearchesAction extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      status: false,
-      researchId: false,
-      college: false,
-      course: false,
-      type: false,
-      pages: false,
-      academicYear: false,
-      lastUpdate: false,
+      status: true,
+      researchId: true,
+      college: true,
+      course: true,
+      type: true,
+      pages: true,
+      academicYear: true,
+      lastUpdate: true,
       deletedResearches: false,
       bin: false,
       modalIsOpen: false
@@ -76,6 +76,7 @@ class ResearchesAction extends Component {
   };
 
   onGenerateReport = () => {
+
     if (
       this.state.status === false &&
       this.state.researchId === false &&
@@ -114,16 +115,18 @@ class ResearchesAction extends Component {
       this.props.createReportForResearches(researchesReportData);
       alert("Please wait while your report is being generated");
     }
+
   };
+
 
   render() {
     let binAction;
-    const disableFlag = false;
+
 
     if (this.state.bin) {
       binAction = (
         <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
-          <i className="fas fa-list-ul text-success mr-1" /> Researches
+          <i className="fas fa-list-ul text-success mr-1" /> Journals
         </Link>
       );
     } else {
@@ -264,7 +267,7 @@ class ResearchesAction extends Component {
                     checked={this.state.academicYear}
                   />
                   <label className="form-check-label" htmlFor="academicYear">
-                    Academic Year
+                    Published Year
                   </label>
                 </div>
                 <div className="form-check">
@@ -299,21 +302,12 @@ class ResearchesAction extends Component {
                   </label>
                 </div>
                 <br />
-                {disableFlag ? (
-                  <input
-                    type="button"
-                    value="Generate Report"
-                    onClick={this.onGenerateReport}
-                    className="btn btn-info disabled"
-                  />
-                ) : (
-                    <input
-                      type="button"
-                      value="Generate Report"
-                      onClick={this.onGenerateReport}
-                      className="btn btn-info"
-                    />
-                  )}
+                <input
+                  type="button"
+                  value="Generate Report"
+                  onClick={this.onGenerateReport}
+                  className="btn btn-info disabled"
+                />
               </form>
             </div>
           </div>
@@ -333,6 +327,7 @@ const mapStateToProps = state => ({
   journal: state.journal,
   bin: state.journal.bin,
   auth: state.auth
+
 });
 
 export default connect(
