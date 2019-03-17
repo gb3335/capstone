@@ -32,6 +32,7 @@ import Journals from "../journals/Researches";
 import Journal from "../journal/Research";
 import AddJournal from "../add-journal/AddResearch";
 import EditJournal from "../edit-journal/EditResearch";
+import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
 
 
 //register and user
@@ -97,7 +98,7 @@ class Main extends Component {
               <Route exact path="/journals/:id" component={Journal} />
 
               <Route exact path="/not-found" component={NotFound} />
-              <Route exact path="/register" component={Register} />
+
               <Route exact path="/viewusers" component={ViewUsers} />
               <Route exact path="/viewusers/:id" component={ViewUser} />
 
@@ -112,6 +113,14 @@ class Main extends Component {
                   component={EditCourse}
                 />
               </Switch>
+
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/register"
+                  component={Register}
+                />
+              </Switch>
               <Switch>
                 <PrivateRoute
                   exact
@@ -122,6 +131,10 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute exact path="/add-author" component={AddAuthor} />
               </Switch>
+              <Switch>
+                <PrivateRoute exact path="/add-journal-author" component={AddJournalAuthor} />
+              </Switch>
+              
               <Switch>
                 <PrivateRoute
                   exact

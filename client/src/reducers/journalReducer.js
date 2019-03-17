@@ -10,7 +10,14 @@ const initialState = {
   journal: {},
   journals: {},
   loading: false,
+  buttonDisable: false,
   bin: false
+  
+  //  research: {},
+  // researches: {},
+  // loading: false,
+  // bin: false,
+  // buttonDisable: false
 };
 
 export default function (state = initialState, action) {

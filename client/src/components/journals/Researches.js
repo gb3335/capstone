@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
 
+import "./Researches.css";
+
 import { getResearches } from "../../actions/journalActions";
 
 import ResearchesActions from "./ResearchesActions";
@@ -34,7 +36,7 @@ class Researches extends Component {
     let researchItems;
     let researchData;
     let action;
-    let title = <h1 className="display-4 text-center">Journals</h1>;
+    let title = <h1 className="display-4 text-center">Journal</h1>;
     let info = "See all journal and it's informations";
 
     if (journals === null || loading) {
@@ -84,10 +86,10 @@ class Researches extends Component {
 
             title = (
               <h1 className="display-4 text-danger text-center">
-                Research Bin
+                Journal Bin
               </h1>
             );
-            info = "List of Removed Researches";
+            info = "List of Removed Journals";
           } else {
             // Research List
             researchData = journals.map(research =>
@@ -128,7 +130,7 @@ class Researches extends Component {
               }
             });
 
-            title = <h1 className="display-4 text-center">Journals</h1>;
+            title = <h1 className="display-4 text-center">Journal</h1>;
             info = "See all journal and it's informations";
           }
         } else {
@@ -151,7 +153,7 @@ class Researches extends Component {
                       : "Deleted",
                   view: (
                     <Link
-                      to={/journals/ + research._id}
+                      to={/journal/ + research._id}
                       className="btn btn-outline-info btn-sm"
                     >
                       View Details
@@ -179,7 +181,7 @@ class Researches extends Component {
             }
           });
 
-          title = <h1 className="display-4 text-center">Journals</h1>;
+          title = <h1 className="display-4 text-center">Journal</h1>;
           info = "See all journal and it's informations";
         }
 
@@ -227,8 +229,13 @@ class Researches extends Component {
       <div className="researches">
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12">
-            {title}
-            <p className="lead text-center">{info}</p>
+            <div className="researchesBg">
+              <div className="light-overlay">
+                {title}
+                <p className="lead text-center">{info}</p>
+              </div>
+            </div>
+            <br />
             {action}
             {researchItems}
           </div>
