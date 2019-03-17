@@ -33,26 +33,30 @@ router.get("/test", (req, res) => {
   // console.log(newString.text);
   // console.log(newString.len);
   
-  pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
-    if (err) throw(err);
-    //console.log(data); //print all text
-    let text = processor.textProcess(data.toString().toLowerCase());
-    let arr = processor.arrayProcess(data.toString().toLowerCase());
-    console.log(text);
-    let arrlen = arr.len;
-    let textlen = text.len;
+  // pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
+  //   if (err) throw(err);
+  //   //console.log(data); //print all text
+  //   let text = processor.textProcess(data.toString().toLowerCase());
+  //   let arr = processor.arrayProcess(data.toString().toLowerCase());
+  //   console.log(text);
+  //   let arrlen = arr.len;
+  //   let textlen = text.len;
 
 
-    const lens = {
-      array: arrlen,
-      text: textlen
-    }
+  //   const lens = {
+  //     array: arrlen,
+  //     text: textlen
+  //   }
 
-    res.json({ 
-      success: true,
-      data: lens
-    })
-  });
+  //   res.json({ 
+  //     success: true,
+  //     data: lens
+  //   })
+  // });
+
+  request.get("https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm", function(error, response, body){
+      res.send(body);
+  })
 
   // res.json({ msg: "Plagiarism Works!" });
 });
