@@ -9,6 +9,7 @@ import "./Dashboard.css";
 
 import Spinner from "../common/Spinner";
 import DoughnutChart from "../common/DoughnutChart";
+import HorizontalBarChart from "../common/HorizontalBarChart";
 
 import { getColleges } from "../../actions/collegeActions";
 import { getResearches } from "../../actions/researchActions";
@@ -46,8 +47,11 @@ class Dashboard extends Component {
     let graphsDiv;
     let activityDiv = "col-md-12";
     let recactDiv;
+    let summaryDiv;
     let graphDiv = "row";
     let graphLegendDisplay;
+    let resTot = 0;
+    let jourTot = 0;
 
     let recentActivities = [];
 
@@ -77,7 +81,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "40vh", fontSize: "13px" }}>
+          <div style={{ overflow: "auto", height: "450px", fontSize: "13px" }}>
             {recentActivities}
           </div>
         );
@@ -101,6 +105,7 @@ class Dashboard extends Component {
           journalCtr += parseInt(college.journalTotal, 10);
         });
 
+        // RESEARCH CHART
         if (researchCtr > 0) {
           researchData = {
             labels: colleges.map(college =>
@@ -159,15 +164,13 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Researches
                 </h5>
-                <DoughnutChart
-                  data={researchDataFiltered}
-                  display={graphLegendDisplay}
-                />
+                <DoughnutChart data={researchDataFiltered} />
               </div>
             </div>
           );
         }
 
+        // JOURNAL CHART
         if (journalCtr > 0) {
           journalData = {
             labels: colleges.map(college =>
@@ -226,10 +229,7 @@ class Dashboard extends Component {
                 <h5 className="card-title" style={{ textAlign: "center" }}>
                   Journals
                 </h5>
-                <DoughnutChart
-                  data={journalDataFiltered}
-                  display={graphLegendDisplay}
-                />
+                <DoughnutChart data={journalDataFiltered} />
               </div>
             </div>
           );
@@ -246,6 +246,7 @@ class Dashboard extends Component {
                   {activityItems}
                 </div>
               </div>
+              <br />
             </div>
           );
         } else {
@@ -253,18 +254,88 @@ class Dashboard extends Component {
           graphsDiv = "col-md-12";
         }
 
-        dashboardItems = (
-          <div className={graphDiv}>
-            <div className={graphsDiv}>
-              <div className="card">
-                <div className="row">
-                  {researchDiv}
-                  {journalDiv}
-                </div>
+        // SUMMARY CHART
+        let summaryData = {
+          labels: colleges.map(college =>
+            college.deleted === 0 ? college.name.initials : null
+          ),
+          datasets: [
+            {
+              data: colleges.map(college =>
+                college.deleted === 0
+                  ? `${parseInt(college.journalTotal, 10) +
+                      parseInt(college.researchTotal, 10)}`
+                  : null
+              ),
+              backgroundColor: colleges.map(college =>
+                college.deleted === 0 ? college.color : null
+              )
+            }
+          ]
+        };
+
+        const sumlabelsFiltered1 = summaryData.labels.filter(function(el) {
+          return el != null;
+        });
+        const sumdatasetsDataFiltered1 = summaryData.datasets[0].data.filter(
+          function(el) {
+            return el != null;
+          }
+        );
+        const sumdatasetsColorFiltered1 = summaryData.datasets[0].backgroundColor.filter(
+          function(el) {
+            return el != null;
+          }
+        );
+
+        const journalDataFiltered = {
+          labels: sumlabelsFiltered1,
+          datasets: [
+            {
+              data: sumdatasetsDataFiltered1,
+              backgroundColor: sumdatasetsColorFiltered1
+            }
+          ]
+        };
+
+        summaryDiv = (
+          <div className="col-md-12">
+            <div className="card">
+              <div className="card-body pr-0">
+                <h5 className="card-title" style={{ textAlign: "center" }}>
+                  Summary of Research & Journals per College
+                </h5>
+                <HorizontalBarChart data={journalDataFiltered} />
               </div>
-              <br />
             </div>
-            {recactDiv}
+          </div>
+        );
+        // Research and Journal Total for top text
+        colleges.map(college => {
+          resTot += parseInt(college.researchTotal, 10);
+          jourTot += parseInt(college.journalTotal, 10);
+        });
+
+        dashboardItems = (
+          <div>
+            <b>Research Total: </b>
+            {resTot}
+            {"  "}
+            <b>Journal Total: </b>
+            {jourTot}
+            <div className={graphDiv}>
+              <div className={graphsDiv}>
+                <div className="card">
+                  <div className="row">
+                    {researchDiv}
+                    {journalDiv}
+                  </div>
+                </div>
+                <br />
+              </div>
+              {recactDiv}
+              {summaryDiv}
+            </div>
           </div>
         );
       } catch (error) {}

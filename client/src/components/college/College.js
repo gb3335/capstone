@@ -118,6 +118,36 @@ class College extends Component {
               Create Report
             </a>
           );
+
+          // delete / restore college action
+          if (college.deleted === 1) {
+            deletedAction = (
+              <a
+                className="list-group-item list-group-item-action btn btn-success"
+                href="#bin"
+                role="tab"
+                onClick={this.onRestoreCollege}
+              >
+                <i className="fas fa-recycle mr-2" />
+                Restore
+              </a>
+            );
+          } else {
+            deletedAction = (
+              <a
+                className="list-group-item list-group-item-action btn btn-danger"
+                href="#bin"
+                role="tab"
+                onClick={this.onDeleteCollege}
+              >
+                <i className="fas fa-trash mr-2" />
+                Move to Bin
+              </a>
+            );
+          }
+          if (college.course.length !== 0) {
+            deletedAction = "";
+          }
         } catch (error) {}
       }
 
@@ -155,36 +185,6 @@ class College extends Component {
           // );
         } catch (error) {}
       }
-      try {
-        if (college.deleted === 1) {
-          deletedAction = (
-            <a
-              className="list-group-item list-group-item-action btn btn-success"
-              href="#bin"
-              role="tab"
-              onClick={this.onRestoreCollege}
-            >
-              <i className="fas fa-recycle mr-2" />
-              Restore
-            </a>
-          );
-        } else {
-          deletedAction = (
-            <a
-              className="list-group-item list-group-item-action btn btn-danger"
-              href="#bin"
-              role="tab"
-              onClick={this.onDeleteCollege}
-            >
-              <i className="fas fa-trash mr-2" />
-              Move to Bin
-            </a>
-          );
-        }
-        if (college.course.length !== 0) {
-          deletedAction = "";
-        }
-      } catch (error) {}
     } catch (error) {}
     return (
       <div className="college">

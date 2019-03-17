@@ -55,7 +55,7 @@ class Landing extends Component {
 
     return (
       <div>
-        {/* <div className="landing">
+        <div className="landing">
           <div className="dark-overlay landing-inner text-light">
             <div className="row">
               <div className="col-12 text-center">
@@ -77,11 +77,7 @@ class Landing extends Component {
           </div>
         </div>
         <br />
-        <div>
-          <div className="container text-center">
-            <h1>Features</h1>
-          </div>
-        </div> */}
+        <div />
       </div>
     );
   }

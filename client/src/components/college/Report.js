@@ -214,6 +214,7 @@ class Report extends Component {
                 </div>
               </div>
             </div>
+            <br />
           </div>
           {/* COLLEGE COURSES */}
           <div className="col-md-4">
@@ -295,6 +296,7 @@ class Report extends Component {
                 </div>
               </div>
             </div>
+            <br />
           </div>
           {/* COLLEGE RESEARCHES */}
           <div className="col-md-4">
