@@ -19,7 +19,19 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  researchID: {
+  issn: {
+    type: String,
+    required: true
+  },
+  publisher: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+    }
+  ],
+  volume: {
     type: String,
     required: true
   },
@@ -63,10 +75,16 @@ const ResearchSchema = new Schema({
       }
     }
   ],
+
+  dateCreated: {
+    type: Date,
+    default: Date.now
+  },
   lastUpdate: {
     type: Date,
     default: Date.now
   }
 });
+
 
 module.exports = Journal = mongoose.model("journal", ResearchSchema);
