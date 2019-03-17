@@ -21,3 +21,32 @@
     font-size: 15px;
     line-height: 90%;
 }
+
+.button:focus{
+    outline: none; 
+}
+
+.button::-moz-focus-inner{
+    border: 0;
+}
+
+.button {
+    display: inline-block;
+    line-height: 2em;
+    padding: 0 0.5em;
+    background: #34343E;
+    border-radius: 0.125em;
+    background-clip: padding-box;
+    text-decoration: none;
+    margin-right: 1em;
+    cursor: pointer;
+  }
+
+.button--ghost {
+	border: 1px solid #EEE !important;
+	background: none
+}
+
+.button--ghost--green {
+	border-color: #7CBDBA !important
+}

@@ -4,6 +4,10 @@ const request = require("request");
 const fs = require('fs');
 const extract = require('pdf-text-extract');
 const pdfUtil = require('pdf-to-text');
+const download = require("download-pdf");
+
+const extractor = require('unfluff');
+const scraping = require('text-scraping');
 
 const {gzip, ungzip} = require('node-gzip');
 const jsscompress = require("js-string-compression");
@@ -54,11 +58,164 @@ router.get("/test", (req, res) => {
   //   })
   // });
 
-  request.get("https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm", function(error, response, body){
-      res.send(body);
-  })
+  // request.get("https://pypi.org/project/aca/", function(error, response, body){
+
+  // //console.log(body)
+  // let data = extractor(body)
+
+  // res.send(data)
+  //   // const docPath =
+  //   //   "https://media.neliti.com/media/publications/68539-EN-the-study-on-the-applicability-of-aho-co.pdf";
+  //   // const options = {
+  //   //   directory: "./routes/downloadedDocu",
+  //   //   filename: "test.pdf"
+  //   // };
+  //   // download(docPath, options, function(err) {
+  //   //   if (err) console.log(err);
+  //   //   console.log("Document successfully uploaded.");
+  //   //   pdfUtil.pdfToText(`./routes/downloadedDocu/test.pdf`, function(err, data) {
+  //   //     res.send(data)
+  //   //   });
+  //   // });
+  //     // data = extractor(body);
+  //     // // console.log(data.text);
+  //     // console.log(error)
+  //     // res.send(data.text);
+
+
+  // })
+
+  scraping("https://dl.acm.org/citation.cfm?id=2541228.2541232", function(response) {
+    let data = response.join(' ');
+    res.send(data);//Returns text
+  });
 
   // res.json({ msg: "Plagiarism Works!" });
+});
+
+// @routes  POST api/plagiarism/online/initialize/pattern
+// @desc    initialize online pattern
+// @access  public
+router.post("/online/initialize/pattern", (req, res) => {
+  let pattern = req.body.pattern;
+
+  const {arr, len} = processor.arrayProcess(pattern.toString().toLowerCase());
+  plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+  res.json({ 
+    success: true
+  })
+  
+  
+});
+
+
+// @routes  POST api/plagiarism/online/result
+// @desc    search online route
+// @access  public
+router.post("/online/result", (req, res) => {
+  let link = req.body.link;
+  let title = req.body.title;
+  let mime = req.body.mime;
+  let index = req.body.index;
+  
+  if(mime=="application/pdf"){
+    
+    const docPath = link;
+    const options = {
+      directory: "./routes/downloadedDocu/online",
+      filename: `${index}.pdf`
+    };
+    download(docPath, options, function(err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/online/${options.filename}`, function(err, data) {
+
+        
+        fs.unlink(`./routes/downloadedDocu/online/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        
+        let {text, len} = processor.textProcess(data.toString().toLowerCase());
+
+        let result = plagiarism.search(text, len, title, link);
+        
+        res.json({
+          onlinePlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      });
+    });
+  }else{
+    let result = {
+      SimilarityScore: 0,
+      Document: {
+        Pattern: {
+          Name: 'Not Applicable',
+          Id: 'Not Applicable'
+        },
+        Text:{
+          Name: title,
+          Id: link
+        }
+      },
+      Index: []
+    }
+    
+
+    scraping(link, function(response) {
+      let resp = response.join(' ');
+      // console.log(data.text);
+      
+      let newtext = resp
+      if(newtext==""){
+        res.json({
+          onlinePlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      }else{
+        let {text, len} = processor.textProcess(newtext.toString().toLowerCase());
+        result = plagiarism.search(text, len, title, link);
+        res.json({
+            onlinePlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+      }
+      
+      
+      // console.log(result);
+      // res.json({
+      //   onlinePlagiarism: {
+      //     success: true,
+      //     data: result
+      //   }
+      // });
+      
+    });
+      
+      
+      //console.log("KRISHIELD: "+ text);
+      
+      // let result = plagiarism.search(text, len, title, title);
+      // console.log(result);
+      //     // res.json({
+      //     //   onlinePlagiarism: {
+      //     //     success: true,
+      //     //     data: result
+      //     //   }
+      //     // });
+      //     //console.log(result);
+    
+  }
+  
+
 });
 
 // @routes  POST api/plagiarism/online
@@ -71,7 +228,10 @@ router.post("/online", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const q = req.body.q;
+  let q = req.body.q;
+
+  q = encodeURI(q);
+
   request.get(
     `https://www.googleapis.com/customsearch/v1?q=${q}&cx=${cx}&num=10&key=${ApiKey}`,
     (error, response, body) => {
@@ -115,10 +275,10 @@ router.post("/get/pattern", (req,res) => {
 
 })
 
-// @routes  POST api/extract/pattern
+// @routes  POST api/local/initialize/pattern
 // @desc    extract patter pdf
 // @access  public
-router.post("/initialize/pattern", (req,res) => {
+router.post("/local/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
   
@@ -151,7 +311,7 @@ router.post("/initialize/pattern", (req,res) => {
 // @routes  POST api/plagiarism/local
 // @desc    search local route
 // @access  public
-router.post("/local", (req, res) => {
+router.post("/local/result", (req, res) => {
   // const { errors, isValid } = validateLocalInput(req.body);
   // //Check Validation
   // if (!isValid) {

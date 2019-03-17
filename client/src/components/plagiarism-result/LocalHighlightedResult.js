@@ -5,9 +5,9 @@ import PropTypes from "prop-types";
 import Highlighter from "react-highlight-words";
 
 
-import "./LocalResultId.css"
+import "./LocalHighlightedResult.css"
 
- class LocalResultId extends Component {
+ class LocalHighlightedResult extends Component {
 
   constructor() {
     super();
@@ -108,7 +108,7 @@ import "./LocalResultId.css"
   }
 }
 
-LocalResultId.propTypes = {
+LocalHighlightedResult.propTypes = {
   localPlagiarism: PropTypes.object.isRequired
 };
 
@@ -116,4 +116,4 @@ const mapStateToProps = state => ({
   localPlagiarism: state.localPlagiarism,
 });
 
-export default connect(mapStateToProps)(LocalResultId)
+export default connect(mapStateToProps)(LocalHighlightedResult)
