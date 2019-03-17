@@ -26,7 +26,35 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 // @desc    Test plagiarism route
 // @access  public
 router.get("/test", (req, res) => {
-  res.json({ msg: "Plagiarism Works!" });
+
+  // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
+  // const newString = processor.textProcess(oldString);
+
+  // console.log(newString.text);
+  // console.log(newString.len);
+  
+  pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
+    if (err) throw(err);
+    //console.log(data); //print all text
+    let text = processor.textProcess(data.toString().toLowerCase());
+    let arr = processor.arrayProcess(data.toString().toLowerCase());
+    console.log(text);
+    let arrlen = arr.len;
+    let textlen = text.len;
+
+
+    const lens = {
+      array: arrlen,
+      text: textlen
+    }
+
+    res.json({ 
+      success: true,
+      data: lens
+    })
+  });
+
+  // res.json({ msg: "Plagiarism Works!" });
 });
 
 // @routes  POST api/plagiarism/online
@@ -74,7 +102,7 @@ router.post("/get/pattern", (req,res) => {
   //Omit option to extract all text from the pdf file
   pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
     if (err) throw(err);
-    //console.log(data); //print all text
+    // console.log(data); //print all text
     res.json({ 
       success: true,
       data: data.toString()
@@ -83,25 +111,36 @@ router.post("/get/pattern", (req,res) => {
 
 })
 
-
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
 // @access  public
 router.post("/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
-  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
-    if (err) {
-      console.dir(err)
-      return
-    }
-    
-    let extext = data;
-    extext = processor.arrayProcess(extext.toString().toLowerCase());
-    plagiarism.initialize(extext);
-    res.json({ 
-      success: true
+  let title = req.body.title;
+  
+  try {
+    pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
+      if (err) {
+        console.log("ERROR NI KRISHIELD: "+err)
+        res.json({ 
+          success: false
+        })
+      }else{
+        let extext = data;
+        const {arr, len} = processor.arrayProcess(extext.toString().toLowerCase());
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({ 
+          success: true
+        })
+      }
+      
     })
-  })
+  } catch (error) {
+    res.json({ 
+      success: false
+    })
+  }
+  
 })
 
 
@@ -114,27 +153,24 @@ router.post("/local", (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-  let docuId = req.body.docuId;
-  let title = req.body.title;
+  
+  
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   
   pdfUtil.pdfToText(`./routes/downloadedDocu/${textId}.pdf`, function(err, data2) {
         let result = {
           SimilarityScore: 0,
-          DocumentScore: {
-            Document_1: {
-              Name: "",
-              Score: 0
+          Document: {
+            Pattern: {
+              Name: '',
+              Id: ''
             },
-            Document_2: {
-              Name: "",
-              Score: 0
+            Text:{
+              Name: '',
+              Id: ''
             }
           },
-          NumOfHits: 0,
-          NumOfPattern: 0,
-          NumOfText: 0,
           Index: []
         }
         if (err) {
@@ -146,13 +182,10 @@ router.post("/local", (req, res) => {
             }
           });
         }
-        let text = processor.textProcess(data2.toString().toLowerCase());
-        
-        result = plagiarism.search(text, title, textTitle);
-        if(result.SimilarityScore == 100){
-          delete result.Index;
-        }
-        const compressed = hm.compress(JSON.stringify(result));
+        let {text, len} = processor.textProcess(data2.toString().toLowerCase());
+        //console.log(text);
+        result = plagiarism.search(text, len, textTitle, textId);
+        //const compressed = hm.compress(JSON.stringify(result));
         // gzip(JSON.stringify(result))
         // .then((compressed) => {
         //   console.log(compressed);
