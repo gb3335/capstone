@@ -142,7 +142,8 @@ router.post(
 
     // add activity
     const newActivity = {
-      title: "College " + req.body.initials + " updated"
+      title: "College " + req.body.initials + " updated",
+      by: req.body.username
     };
     new Activity(newActivity).save();
 
@@ -235,7 +236,8 @@ router.post(
                 } else {
                   // add activity
                   const newActivity = {
-                    title: "College " + req.body.initials + " updated"
+                    title: "College " + req.body.initials + " updated",
+                    by: req.body.username
                   };
                   new Activity(newActivity).save();
 
@@ -297,7 +299,8 @@ router.post(
 
                   // add activity
                   const newActivity = {
-                    title: "College " + req.body.initials + " created"
+                    title: "College " + req.body.initials + " created",
+                    by: req.body.username
                   };
                   new Activity(newActivity).save();
 
@@ -347,7 +350,8 @@ router.post(
       // add activity
       const newActivity = {
         title:
-          "Course " + req.body.initials + " added in " + college.name.initials
+          "Course " + req.body.initials + " added in " + college.name.initials,
+        by: req.body.username
       };
       new Activity(newActivity).save().then(college);
 
@@ -415,7 +419,11 @@ router.post(
         // add activity
         const newActivity = {
           title:
-            "Course " + req.body.initials + " added in " + college.name.initials
+            "Course " +
+            req.body.initials +
+            " edited in " +
+            college.name.initials,
+          by: req.body.username
         };
         new Activity(newActivity).save().then(college);
 
@@ -476,9 +484,17 @@ router.post(
           { $set: newCollege },
           { new: true }
         );
+
+        let act;
+        act =
+          req.body.courseDeleted === 0
+            ? "Course deleted in "
+            : "Course restored in ";
+
         // add activity
         const newActivity = {
-          title: "Course deleted in " + college.name.initials
+          title: act + college.name.initials,
+          by: req.body.username
         };
         new Activity(newActivity).save();
         // Get remove index
@@ -647,7 +663,8 @@ router.post(
     ).then(college => {
       // add activity
       const newActivity = {
-        title: "College " + college.name.initials + " deactivated"
+        title: "College " + college.name.initials + " deleted",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
@@ -674,7 +691,8 @@ router.post(
     ).then(college => {
       // add activity
       const newActivity = {
-        title: "College " + college.name.initials + " activated"
+        title: "College " + college.name.initials + " restored",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 

@@ -266,44 +266,40 @@ export const deleteCourse = (course, history) => dispatch => {
 
 // Delete College
 export const deleteCollege = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setCollegeLoading());
-    axios
-      .post(`/api/colleges/remove/${data.id}`, data)
-      .then(history.push(`/colleges`), res =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setCollegeLoading());
+  axios
+    .post(`/api/colleges/remove/${data.id}`, data)
+    .then(history.push(`/colleges`), res =>
+      dispatch({
+        type: GET_COLLEGE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 // Restore College
 export const restoreCollege = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setCollegeLoading());
-    axios
-      .post(`/api/colleges/restore/${data.id}`, data)
-      .then(history.push(`/colleges`), res =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setCollegeLoading());
+  axios
+    .post(`/api/colleges/restore/${data.id}`, data)
+    .then(history.push(`/colleges`), res =>
+      dispatch({
+        type: GET_COLLEGE,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 // set loading state

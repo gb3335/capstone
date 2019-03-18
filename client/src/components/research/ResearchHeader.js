@@ -26,32 +26,32 @@ class ResearchHeader extends Component {
         <div className="card-body">
           <h5 className="card-title display-4">{research.title}</h5>
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-university mr-1" /> */}
             <b>College:</b> {research.college}
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-graduation-cap mr-1" /> */}
             <b>Course:</b> {research.course}
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-book mr-1" /> */}
             <b>Research ID:</b> {research.researchID}
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-bookmark mr-1" /> */}
             <b>Pages:</b> {research.pages}
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="far fa-calendar-alt mr-1" /> */}
             <b>Academic Year:</b> {research.schoolYear}
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-clock mr-1" /> */}
             <b>Created:</b>{" "}
             <Moment format="MMM. DD, YYYY">{research.dateCreated}</Moment>
             {" at "}
@@ -59,7 +59,7 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-redo-alt mr-1" /> */}
             <b>Updated:</b>{" "}
             <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
             {" at "}
@@ -67,7 +67,7 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
-            <i className="fas fa-caret-right mr-1" />
+            {/* <i className="fas fa-scroll mr-1" /> */}
             <b>Type:</b> {type}
           </span>
           <br />

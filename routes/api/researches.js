@@ -133,7 +133,8 @@ router.post(
           } else {
             // add activity
             const newActivity = {
-              title: "Research " + req.body.title + " updated"
+              title: "Research " + req.body.title + " updated",
+              by: req.body.username
             };
             new Activity(newActivity).save();
 
@@ -190,7 +191,8 @@ router.post(
                   if (college) {
                     // add activity
                     const newActivity = {
-                      title: "Research " + req.body.title + " added"
+                      title: "Research " + req.body.title + " added",
+                      by: req.body.username
                     };
                     new Activity(newActivity).save();
 
@@ -286,13 +288,14 @@ router.post(
 
     Research.findOne({ _id: req.body.researchId }).then(research => {
       const newAuthor = {
-        name: req.body.name,
-        role: req.body.role
+        name: req.body.name
+        //role: req.body.role
       };
 
       // add activity
       const newActivity = {
-        title: req.body.name + " added as Author in " + research.title
+        title: req.body.name + " added as Author in " + research.title,
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
@@ -314,11 +317,11 @@ router.post(
   }
 );
 
-// @route   DELETE api/researches/author/:research_id/:author_id
+// @route   DELETE api/researches/author/:research_id/:author_id/:name
 // @desc    Delete author from research
 // @access  Private
 router.delete(
-  "/author/:research_id/:author_id",
+  "/author/:research_id/:author_id/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Research.findOne({ _id: req.params.research_id })
@@ -335,7 +338,8 @@ router.delete(
             " removed as " +
             research.author[removeIndex].role +
             " in " +
-            research.title
+            research.title,
+          by: req.params.name
         };
         new Activity(newActivity).save();
 
@@ -429,7 +433,8 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: "Image added to " + research.title
+        title: "Image/s added to " + research.title,
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
@@ -513,7 +518,8 @@ router.post(
       Research.findOne({ _id: req.body.researchId }).then(research => {
         // add activity
         const newActivity = {
-          title: "Document added to " + research.title
+          title: "Document added to " + research.title,
+          by: req.body.username
         };
         new Activity(newActivity).save();
       });
@@ -524,114 +530,14 @@ router.post(
         { new: true }
       ).then(research => res.json(research));
     });
-
-    // fs.writeFile(
-    //   `client/public/documents/researchDocuments/${req.body.researchId +
-    //     "-" +
-    //     rand}.pdf`,
-    //   base64Doc,
-    //   { encoding: "base64" },
-    //   function(err) {
-    //     console.log("file created");
-    //     let pdfString;
-    //     let documentsArray = [];
-    //     let pdfStringForAll;
-    //     fs.readFile(
-    //       `client/public/documents/researchDocuments/${req.body.researchId +
-    //         "-" +
-    //         rand}.pdf`,
-    //       (err, pdfBuffer) => {
-    //         try {
-    //           new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
-    //             if (err) {
-    //               console.log(err);
-    //             } else if (!item) {
-    //               // finished reading texts
-    //               const tokenizer = new Tokenizer("Chuck");
-    //               tokenizer.setEntry(pdfString);
-    //               // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
-    //               //console.log(tokenizer.getSentences());
-
-    //               // find each documents
-    //               try {
-    //                 Research.find()
-    //                   .sort({ title: 1 })
-    //                   .then(researches => {
-    //                     let ctr = 0;
-    //                     let ctr2 = 0;
-    //                     researches.map(research => {
-    //                       if (research._id != req.body.researchId) {
-    //                         if (research.document != "") {
-    //                           ctr++;
-    //                         }
-    //                       }
-    //                     });
-    //                     researches.map(research => {
-    //                       if (research._id != req.body.researchId) {
-    //                         if (research.document != "") {
-    //                           fs.readFile(
-    //                             `client/public/documents/researchDocuments/${
-    //                               research.document
-    //                             }`,
-    //                             (err, pdfBuffer) => {
-    //                               try {
-    //                                 new PdfReader().parseBuffer(
-    //                                   pdfBuffer,
-    //                                   function(err, item) {
-    //                                     if (err) {
-    //                                       console.log(err);
-    //                                     } else if (!item) {
-    //                                       const tokenizer = new Tokenizer(
-    //                                         "Chuck"
-    //                                       );
-    //                                       tokenizer.setEntry(pdfStringForAll);
-    //                                       documentsArray.push(
-    //                                         tokenizer.getSentences()
-    //                                       );
-    //                                       ctr2++;
-    //                                       if (ctr === ctr2) {
-    //                                         // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
-    //                                         // console.log(documentsArray);
-    //                                       }
-    //                                       pdfStringForAll = "";
-    //                                     } else if (item.text) {
-    //                                       let text = " " + item.text;
-    //                                       pdfStringForAll =
-    //                                         pdfStringForAll + text;
-    //                                     }
-    //                                   }
-    //                                 );
-    //                               } catch (error) {}
-    //                             }
-    //                           );
-    //                         }
-    //                       }
-    //                     });
-    //                   })
-    //                   .catch(err =>
-    //                     res
-    //                       .status(404)
-    //                       .json({ noresearchfound: "No Researches found" })
-    //                   );
-    //               } catch (error) {}
-    //             } else if (item.text) {
-    //               let text = " " + item.text;
-    //               pdfString = pdfString + text;
-    //             }
-    //           });
-    //         } catch (error) {}
-    //       }
-    //     );
-    //   }
-    // );
   }
 );
 
-// @route   DELETE api/researches/document/:research_id/:filename
+// @route   DELETE api/researches/document/:research_id/:filename/:name
 // @desc    Delete document from research
 // @access  Private
 router.delete(
-  "/document/:research_id/:filename",
+  "/document/:research_id/:filename/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     //delete research document from s3
@@ -662,7 +568,8 @@ router.delete(
     Research.findOne({ _id: req.params.research_id }).then(research => {
       // add activity
       const newActivity = {
-        title: "Document removed from " + research.title
+        title: "Document removed from " + research.title,
+        by: req.params.name
       };
       new Activity(newActivity).save();
     });
@@ -800,7 +707,8 @@ router.post(
       const newActivity = {
         title: req.body.hidden
           ? "Research: " + research.title + " hidden from list"
-          : "Research: " + research.title + " moved to bin"
+          : "Research: " + research.title + " moved to bin",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
@@ -875,7 +783,8 @@ router.post(
       const newActivity = {
         title: req.body.hidden
           ? "Research: " + research.title + " showed in list"
-          : "Research: " + research.title + " restored from bin"
+          : "Research: " + research.title + " restored from bin",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 

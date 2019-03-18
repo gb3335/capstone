@@ -77,6 +77,13 @@ class EditResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchData = {
       title: this.state.title,
       oldTitle: this.state.oldTitle,
@@ -88,7 +95,8 @@ class EditResearch extends Component {
       researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
       authorOne: this.state.authorOne,
-      id: this.props.research.research._id
+      id: this.props.research.research._id,
+      username: name
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -357,12 +365,14 @@ EditResearch.propTypes = {
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   research: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
   research: state.research,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

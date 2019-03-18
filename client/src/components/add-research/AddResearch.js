@@ -42,22 +42,22 @@ class AddResearch extends Component {
       this.props.college.colleges.map(college =>
         college.name.fullName === courseData.collegeName
           ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                  label: course.name,
-                  value: course.name
-                })
+              course.deleted === 0
+                ? course.status === 0
+                  ? this.state.courseOptions.push({
+                      label: course.name,
+                      value: course.name
+                    })
+                  : ""
                 : ""
-              : ""
-          )
+            )
           : ""
       );
 
       this.setState({ course: courseData.courseName });
       this.setState({ college: courseData.collegeName });
       this.setState({ flagFromCollege: courseData.fromCollege });
-    } catch (error) { }
+    } catch (error) {}
   }
 
   componentWillReceiveProps(nextProps) {
@@ -69,6 +69,13 @@ class AddResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchData = {
       title: this.state.title,
       type: this.state.type,
@@ -78,7 +85,8 @@ class AddResearch extends Component {
       researchId: this.state.researchId,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages,
-      authorOne: this.state.authorOne
+      authorOne: this.state.authorOne,
+      username: name
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -103,15 +111,15 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
   };
@@ -154,12 +162,12 @@ class AddResearch extends Component {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-            label: college.name.fullName,
-            value: college.name.fullName
-          })
+              label: college.name.fullName,
+              value: college.name.fullName
+            })
           : ""
       );
-    } catch (error) { }
+    } catch (error) {}
 
     return (
       <div className="create-research">
@@ -349,11 +357,13 @@ AddResearch.propTypes = {
   getColleges: PropTypes.func.isRequired,
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

@@ -4,14 +4,22 @@ import PropTypes from "prop-types";
 import { deleteAuthor } from "../../actions/researchActions";
 
 class Authors extends Component {
-  onDeleteClick = (research, id) => {
-    this.props.deleteAuthor(research, id);
+  onDeleteClick = (research, id, name) => {
+    this.props.deleteAuthor(research, id, name);
   };
 
   render() {
     const { research } = this.props.research;
     let author;
-
+    let name;
+    try {
+      name =
+        this.props.auth.user.firstName +
+        " " +
+        this.props.auth.user.middleName +
+        " " +
+        this.props.auth.user.lastName;
+    } catch (error) {}
     if (this.props.auth.isAuthenticated === true) {
       if (research.deleted === 0) {
         author = this.props.author.map(author => (
@@ -24,7 +32,8 @@ class Authors extends Component {
                 onClick={this.onDeleteClick.bind(
                   this,
                   research._id,
-                  author._id
+                  author._id,
+                  name
                 )}
                 className="btn btn-danger"
               >

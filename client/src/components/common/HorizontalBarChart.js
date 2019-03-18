@@ -1,21 +1,18 @@
 import React, { Component } from "react";
-import { Doughnut } from "react-chartjs-2";
+import { HorizontalBar } from "react-chartjs-2";
 
-class DoughnutChart extends Component {
+class HorizontalBarChart extends Component {
   render() {
     const { data } = this.props;
-
     const legend = {
-      position: "bottom",
-      fullWidth: false
+      display: false
     };
 
     return (
-      <div className="doughnutChart">
-        <Doughnut
+      <div className="barChart">
+        <HorizontalBar
           data={data}
           legend={legend}
-          width={450}
           height={450}
           options={{
             maintainAspectRatio: false
@@ -26,4 +23,4 @@ class DoughnutChart extends Component {
   }
 }
 
-export default DoughnutChart;
+export default HorizontalBarChart;

@@ -28,6 +28,15 @@ class Courses extends Component {
   render() {
     const { college } = this.props.college;
     let course;
+    let name;
+    try {
+      name =
+        this.props.auth.user.firstName +
+        " " +
+        this.props.auth.user.middleName +
+        " " +
+        this.props.auth.user.lastName;
+    } catch (error) {}
 
     if (this.props.auth.isAuthenticated === true) {
       if (this.state.coursebin) {
@@ -63,7 +72,8 @@ class Courses extends Component {
                           courseId: cou._id,
                           collegeId: college._id,
                           courseStatus: cou.status,
-                          courseDeleted: cou.deleted
+                          courseDeleted: cou.deleted,
+                          username: name
                         }
                       }}
                       className="btn btn-info"
@@ -87,7 +97,8 @@ class Courses extends Component {
                             collegeId: college._id,
                             courseStatus: cou.status,
                             courseDeleted: cou.deleted,
-                            collegeInit: college.name.initials
+                            collegeInit: college.name.initials,
+                            username: name
                           })
                         )}
                         className="btn btn-success"
@@ -163,7 +174,8 @@ class Courses extends Component {
                           courseId: cou._id,
                           collegeId: college._id,
                           courseStatus: cou.status,
-                          courseDeleted: cou.deleted
+                          courseDeleted: cou.deleted,
+                          username: name
                         }
                       }}
                       className="btn btn-info"
@@ -187,7 +199,8 @@ class Courses extends Component {
                             collegeId: college._id,
                             courseStatus: cou.status,
                             courseDeleted: cou.deleted,
-                            collegeInit: college.name.initials
+                            collegeInit: college.name.initials,
+                            username: name
                           })
                         )}
                         className="btn btn-danger"

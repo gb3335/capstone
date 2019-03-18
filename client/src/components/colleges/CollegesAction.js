@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
   toggleCollegeBin,
@@ -37,7 +38,11 @@ class CollegesActions extends Component {
       deletedColleges: false,
       bin: false,
       list: false,
-      modalIsOpen: false
+      modalIsOpen: false,
+
+      // for alerts
+      checkOneAlert: false,
+      generateAlert: false
     };
   }
 
@@ -95,7 +100,8 @@ class CollegesActions extends Component {
         this.state.lastUpdate === false &&
         this.state.deletedColleges === false
       ) {
-        alert("Please check at least one");
+        // show check one alert
+        this.setState({ checkOneAlert: true });
       } else {
         const name =
           this.props.auth.user.firstName +
@@ -117,9 +123,19 @@ class CollegesActions extends Component {
         };
 
         this.props.createReportForColleges(collegesReportData);
-        alert("Please wait while your report is being generated");
+        // show generate alert
+        this.setState({ generateAlert: true });
       }
     }
+  };
+
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
   };
 
   render() {
@@ -148,13 +164,13 @@ class CollegesActions extends Component {
     if (this.state.list) {
       listAction = (
         <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-list text-info mr-1" /> List
+          <i className="fas fa-list text-info" title="List View" />
         </Link>
       );
     } else {
       listAction = (
         <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-th-large text-info mr-1" /> Grid
+          <i className="fas fa-th-large text-info" title="Grid View" />
         </Link>
       );
     }
@@ -175,6 +191,27 @@ class CollegesActions extends Component {
 
     return (
       <div>
+        {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
+
         <div className="btn-group mb-3 btn-group-sm" role="group">
           {addAction}
           {reportAction}

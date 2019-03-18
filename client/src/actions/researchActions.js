@@ -184,11 +184,11 @@ export const addAuthor = (authorData, history) => dispatch => {
 };
 
 // Delete Author
-export const deleteAuthor = (research, id) => dispatch => {
+export const deleteAuthor = (research, id, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/researches/author/${research}/${id}`)
+      .delete(`/api/researches/author/${research}/${id}/${name}`)
       .then(res =>
         dispatch({
           type: GET_RESEARCH,
@@ -251,11 +251,11 @@ export const addDocument = (docuData, history) => dispatch => {
 };
 
 // Delete Document
-export const deleteDocument = (researchId, filename) => dispatch => {
+export const deleteDocument = (researchId, filename, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/researches/document/${researchId}/${filename}`)
+      .delete(`/api/researches/document/${researchId}/${filename}/${name}`)
       .then(res =>
         dispatch({
           type: GET_RESEARCH,
@@ -273,43 +273,39 @@ export const deleteDocument = (researchId, filename) => dispatch => {
 
 // Move to bin Research
 export const deleteResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/researches/remove/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/researches`), res =>
-        dispatch({
-          type: GET_RESEARCH,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/researches/remove/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/researches`), res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 // Restore Research
 export const restoreResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/researches/restore/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/researches`), res =>
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/researches/restore/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/researches`), res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      }).catch(err =>
         dispatch({
-          type: GET_RESEARCH,
-          payload: res.data
-        }).catch(err =>
-          dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-          })
-        )
-      );
-  }
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      )
+    );
 };
 
 // set loading state

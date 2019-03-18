@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import { createReportForResearch } from "../../actions/researchActions";
 
@@ -17,7 +18,10 @@ class Report extends Component {
       lastUpdate: true,
       type: true,
       abstract: true,
-      authors: true
+      authors: true,
+      // for alerts
+      checkOneAlert: false,
+      generateAlert: false
     };
   }
 
@@ -35,17 +39,18 @@ class Report extends Component {
     if (!this.props.research.buttonDisable) {
       if (
         // Basic info
-        (this.state.college === false,
-        this.state.course === false,
-        this.state.researchId === false,
-        this.state.pages === false,
-        this.state.academicYear === false,
-        this.state.lastUpdate === false,
-        this.state.type === false,
-        this.state.abstract === false,
-        this.state.authors === false)
+        this.state.college === false &&
+        this.state.course === false &&
+        this.state.researchId === false &&
+        this.state.pages === false &&
+        this.state.academicYear === false &&
+        this.state.lastUpdate === false &&
+        this.state.type === false &&
+        this.state.abstract === false &&
+        this.state.authors === false
       ) {
-        alert("Please Check at least one");
+        // show check one alert
+        this.setState({ checkOneAlert: true });
       } else {
         // let researchOfCol = [];
         // this.props.research.researches.map(research => {
@@ -77,14 +82,45 @@ class Report extends Component {
         };
 
         this.props.createReportForResearch(reportData);
-        alert("Please wait while your report is being generated");
+        // show generate alert
+        this.setState({ generateAlert: true });
       }
     }
+  };
+
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
   };
 
   render() {
     return (
       <div>
+        {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
+
         <h3>Create Report</h3>
         <p className="lead"> Filter</p>
         <div className="row">

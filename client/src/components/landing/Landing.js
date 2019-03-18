@@ -64,7 +64,7 @@ class Landing extends Component {
                   <hr />
                   <p style={{ fontSize: "30px" }}>
                     <i
-                      class={this.state.day}
+                      className={this.state.day}
                       style={{ color: this.state.color }}
                     />{" "}
                     {this.state.greet}
@@ -77,11 +77,7 @@ class Landing extends Component {
           </div>
         </div>
         <br />
-        <div>
-          <div className="container text-center">
-            <h1>Features</h1>
-          </div>
-        </div> */}
+        <div /> */}
       </div>
     );
   }

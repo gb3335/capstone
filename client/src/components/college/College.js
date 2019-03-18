@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
   getCollegeByInitials,
@@ -20,6 +21,20 @@ import Report from "./Report";
 import CollegeCourseActions from "./CollegeCourseActions";
 
 class College extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // Delete Alert
+      deleteAlert: false,
+      deleteAlertCancel: false,
+      deleteAlertOkay: false,
+      // Restore Alert
+      restoreAlert: false,
+      restoreAlertCancel: false,
+      restoreAlertOkay: false
+    };
+  }
+
   componentWillMount() {
     if (this.props.match.params.initials) {
       this.props.getCollegeByInitials(this.props.match.params.initials);
@@ -39,12 +54,29 @@ class College extends Component {
     }
   }
 
-  onDeleteCollege = e => {
-    e.preventDefault();
+  // Delete alerts
+  onDeleteAlert = () => {
+    this.setState({ deleteAlert: true });
+  };
+  onCancelDelete = () => {
+    this.setState({ deleteAlert: false, deleteAlertCancel: true });
+  };
+  onRemoveDeleteCancel = () => {
+    this.setState({ deleteAlertCancel: false });
+  };
+  onRemoveDeleteOkay = () => {
+    this.setState({ deleteAlertOkay: false });
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
       id: this.props.college.college._id,
-      logo: this.props.college.college.logo
+      logo: this.props.college.college.logo,
+      username: name
     };
 
     const totalResAndJour =
@@ -58,15 +90,39 @@ class College extends Component {
     }
   };
 
-  onRestoreCollege = e => {
-    e.preventDefault();
+  onDeleteCollege = () => {
+    this.setState({ deleteAlertOkay: true, deleteAlert: false });
+  };
+
+  // Restore Alerts
+  onRestoreAlert = () => {
+    this.setState({ restoreAlert: true });
+  };
+  onCancelRestore = () => {
+    this.setState({ restoreAlert: false, restoreAlertCancel: true });
+  };
+  onRemoveRestoreCancel = () => {
+    this.setState({ restoreAlertCancel: false });
+  };
+  onRemoveRestoreOkay = () => {
+    this.setState({ restoreAlertOkay: false });
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
       id: this.props.college.college._id,
-      logo: this.props.college.college.logo
+      logo: this.props.college.college.logo,
+      username: name
     };
 
     this.props.restoreCollege(data, this.props.history);
+  };
+  onRestoreCollege = () => {
+    this.setState({ restoreAlertOkay: true, restoreAlert: false });
   };
 
   render() {
@@ -102,6 +158,36 @@ class College extends Component {
               Create Report
             </a>
           );
+
+          // delete / restore college action
+          if (college.deleted === 1) {
+            deletedAction = (
+              <a
+                className="list-group-item list-group-item-action btn btn-success"
+                href="#bin"
+                role="tab"
+                onClick={this.onRestoreAlert}
+              >
+                <i className="fas fa-recycle mr-2" />
+                Restore
+              </a>
+            );
+          } else {
+            deletedAction = (
+              <a
+                className="list-group-item list-group-item-action btn btn-danger"
+                href="#bin"
+                role="tab"
+                onClick={this.onDeleteAlert}
+              >
+                <i className="fas fa-trash mr-2" />
+                Move to Bin
+              </a>
+            );
+          }
+          if (college.course.length !== 0) {
+            deletedAction = "";
+          }
         } catch (error) {}
       }
 
@@ -139,39 +225,80 @@ class College extends Component {
           // );
         } catch (error) {}
       }
-      try {
-        if (college.deleted === 1) {
-          deletedAction = (
-            <a
-              className="list-group-item list-group-item-action btn btn-success"
-              href="#bin"
-              role="tab"
-              onClick={this.onRestoreCollege}
-            >
-              <i className="fas fa-recycle mr-2" />
-              Restore
-            </a>
-          );
-        } else {
-          deletedAction = (
-            <a
-              className="list-group-item list-group-item-action btn btn-danger"
-              href="#bin"
-              role="tab"
-              onClick={this.onDeleteCollege}
-            >
-              <i className="fas fa-trash mr-2" />
-              Move to Bin
-            </a>
-          );
-        }
-        if (college.course.length !== 0) {
-          deletedAction = "";
-        }
-      } catch (error) {}
     } catch (error) {}
     return (
       <div className="college">
+        {/* ALERTS */}
+        {/* DELETE ALERT */}
+        <SweetAlert
+          show={this.state.deleteAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, delete it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onDeleteCollege}
+          onCancel={this.onCancelDelete}
+        >
+          Delete College?
+        </SweetAlert>
+
+        {/* CANCEL DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveDeleteCancel}
+        >
+          College is not deleted
+        </SweetAlert>
+
+        {/* COLLEGE DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertOkay}
+          success
+          title="Deleted"
+          onConfirm={this.onRemoveDeleteOkay}
+        >
+          College deleted
+        </SweetAlert>
+
+        {/* RESTORE ALERT */}
+        <SweetAlert
+          show={this.state.restoreAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, restore it!"
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onRestoreCollege}
+          onCancel={this.onCancelRestore}
+        >
+          Restore College?
+        </SweetAlert>
+
+        {/* CANCEL RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveRestoreCancel}
+        >
+          College is not restored
+        </SweetAlert>
+
+        {/* COLLEGE RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertOkay}
+          success
+          title="Restored"
+          onConfirm={this.onRemoveRestoreOkay}
+        >
+          College restored
+        </SweetAlert>
+
         {/* Back button */}
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-6">
@@ -208,8 +335,8 @@ class College extends Component {
                 <i className="fas fa-graduation-cap mr-2" />
                 Courses
               </a>
-              {deletedAction}
               {collegeReportButton}
+              {deletedAction}
             </div>
           </div>
 

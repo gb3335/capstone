@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import { createReportForCollege } from "../../actions/collegeActions";
 
@@ -32,7 +33,11 @@ class Report extends Component {
       researchPages: true,
       researchAcademicYear: true,
       researchLastUpdate: true,
-      deletedResearches: false
+      deletedResearches: false,
+
+      // for alerts
+      checkOneAlert: false,
+      generateAlert: false
     };
   }
 
@@ -73,7 +78,8 @@ class Report extends Component {
         this.state.researchLastUpdate === false &&
         this.state.deletedResearches === false
       ) {
-        alert("Please Check at least one");
+        // show check one alert
+        this.setState({ checkOneAlert: true });
       } else {
         // let researchOfCol = [];
         // this.props.research.researches.map(research => {
@@ -123,14 +129,45 @@ class Report extends Component {
         };
 
         this.props.createReportForCollege(reportData);
-        alert("Please wait while your report is being generated");
+        // show generate alert
+        this.setState({ generateAlert: true });
       }
     }
+  };
+
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
   };
 
   render() {
     return (
       <div>
+        {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
+
         <h3>Create Report</h3>
         <p className="lead"> Filter</p>
         <div className="row">
@@ -214,6 +251,7 @@ class Report extends Component {
                 </div>
               </div>
             </div>
+            <br />
           </div>
           {/* COLLEGE COURSES */}
           <div className="col-md-4">
@@ -295,6 +333,7 @@ class Report extends Component {
                 </div>
               </div>
             </div>
+            <br />
           </div>
           {/* COLLEGE RESEARCHES */}
           <div className="col-md-4">

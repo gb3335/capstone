@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
   getResearchById,
@@ -22,6 +23,28 @@ import ResearchDocumentActions from "./ResearchDocumentActions";
 import Report from "./Report";
 
 class Research extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // Delete Alert
+      deleteAlert: false,
+      deleteAlertCancel: false,
+      deleteAlertOkay: false,
+      // Restore Alert
+      restoreAlert: false,
+      restoreAlertCancel: false,
+      restoreAlertOkay: false,
+      // Hide Alert
+      hideAlert: false,
+      hideAlertCancel: false,
+      hideAlertOkay: false,
+      // Show Alert
+      showAlert: false,
+      showAlertCancel: false,
+      showAlertOkay: false
+    };
+  }
+
   componentWillMount() {
     if (this.props.match.params.id) {
       this.props.getResearchById(this.props.match.params.id);
@@ -38,47 +61,129 @@ class Research extends Component {
       this.props.history.push("/not-found");
     }
   }
-
-  onDeleteResearch = e => {
-    e.preventDefault();
+  // Delete alerts
+  onDeleteAlert = () => {
+    this.setState({ deleteAlert: true });
+  };
+  onCancelDelete = () => {
+    this.setState({ deleteAlert: false, deleteAlertCancel: true });
+  };
+  onRemoveDeleteCancel = () => {
+    this.setState({ deleteAlertCancel: false });
+  };
+  onRemoveDeleteOkay = () => {
+    this.setState({ deleteAlertOkay: false });
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
-      id: this.props.research.research._id
+      id: this.props.research.research._id,
+      username: name
     };
-
     this.props.deleteResearch(data, this.props.history);
   };
+  onDeleteResearch = () => {
+    this.setState({ deleteAlertOkay: true, deleteAlert: false });
+  };
 
-  onRestoreResearch = e => {
-    e.preventDefault();
+  // Restore alerts
+  onRestoreAlert = () => {
+    this.setState({ restoreAlert: true });
+  };
+  onCancelRestore = () => {
+    this.setState({ restoreAlert: false, restoreAlertCancel: true });
+  };
+  onRemoveRestoreCancel = () => {
+    this.setState({ restoreAlertCancel: false });
+  };
+  onRemoveRestoreOkay = () => {
+    this.setState({ restoreAlertOkay: false });
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
-      id: this.props.research.research._id
+      id: this.props.research.research._id,
+      username: name
     };
 
     this.props.restoreResearch(data, this.props.history);
+  };
+  onRestoreResearch = e => {
+    this.setState({ restoreAlertOkay: true, restoreAlert: false });
+  };
+
+  // Hide Alerts
+  onHideAlert = () => {
+    this.setState({ hideAlert: true });
+  };
+  onCancelHide = () => {
+    this.setState({ hideAlert: false, hideAlertCancel: true });
+  };
+  onRemoveHideCancel = () => {
+    this.setState({ hideAlertCancel: false });
+  };
+
+  onRemoveHideOkay = () => {
+    this.setState({ hideAlertOkay: false });
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
+    const data = {
+      id: this.props.research.research._id,
+      hidden: true,
+      username: name
+    };
+
+    this.props.deleteResearch(data, this.props.history);
   };
 
   onHideResearch = e => {
-    e.preventDefault();
-
-    const data = {
-      id: this.props.research.research._id,
-      hidden: true
-    };
-
-    this.props.deleteResearch(data, this.props.history);
+    this.setState({ hideAlertOkay: true, hideAlert: false });
   };
 
-  onShowResearch = e => {
-    e.preventDefault();
+  // show research alerts
+  onShowAlert = () => {
+    this.setState({ showAlert: true });
+  };
+  onCancelShow = () => {
+    this.setState({ showAlert: false, showAlertCancel: true });
+  };
+  onRemoveShowCancel = () => {
+    this.setState({ showAlertCancel: false });
+  };
+
+  onRemoveShowOkay = () => {
+    this.setState({ showAlertOkay: false });
+
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
 
     const data = {
       id: this.props.research.research._id,
-      hidden: true
+      hidden: true,
+      username: name
     };
 
     this.props.restoreResearch(data, this.props.history);
+  };
+  onShowResearch = e => {
+    this.setState({ showAlertOkay: true, showAlert: false });
   };
 
   render() {
@@ -114,7 +219,7 @@ class Research extends Component {
               href="#list-restore"
               role="tab"
               aria-controls="restore"
-              onClick={this.onRestoreResearch}
+              onClick={this.onRestoreAlert}
             >
               <i className="fas fa-recycle mr-2" />
               Restore
@@ -129,7 +234,7 @@ class Research extends Component {
               href="#list-delete"
               role="tab"
               aria-controls="delete"
-              onClick={this.onDeleteResearch}
+              onClick={this.onDeleteAlert}
             >
               <i className="fas fa-trash mr-2" />
               Move to Bin
@@ -146,7 +251,7 @@ class Research extends Component {
               href="#list-hide"
               role="tab"
               aria-controls="hide"
-              onClick={this.onHideResearch}
+              onClick={this.onHideAlert}
             >
               <i className="fas fa-eye-slash mr-2" />
               Hide Research
@@ -162,7 +267,7 @@ class Research extends Component {
               href="#list-hide"
               role="tab"
               aria-controls="hide"
-              onClick={this.onShowResearch}
+              onClick={this.onShowAlert}
             >
               <i className="fas fa-eye mr-2" />
               Show Research
@@ -338,11 +443,152 @@ class Research extends Component {
               </div>
             </div>
           );
-        } catch (error) { }
+        } catch (error) {}
       }
-    } catch (error) { }
+    } catch (error) {}
     return (
       <div className="research">
+        {/* ALERTS */}
+        {/* DELETE ALERT */}
+        <SweetAlert
+          show={this.state.deleteAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, delete it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onDeleteResearch}
+          onCancel={this.onCancelDelete}
+        >
+          Delete Research?
+        </SweetAlert>
+
+        {/* CANCEL DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveDeleteCancel}
+        >
+          Research is not deleted
+        </SweetAlert>
+
+        {/* RESEARCH DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertOkay}
+          success
+          title="Deleted"
+          onConfirm={this.onRemoveDeleteOkay}
+        >
+          Research deleted
+        </SweetAlert>
+        {/* ---------------------- */}
+        {/* RESTORE ALERT */}
+        <SweetAlert
+          show={this.state.restoreAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, restore it!"
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onRestoreResearch}
+          onCancel={this.onCancelRestore}
+        >
+          Restore Research?
+        </SweetAlert>
+
+        {/* CANCEL RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveRestoreCancel}
+        >
+          Research is not restored
+        </SweetAlert>
+
+        {/* RESEARCH RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertOkay}
+          success
+          title="Restored"
+          onConfirm={this.onRemoveRestoreOkay}
+        >
+          Research restored
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* HIDE ALERT */}
+        <SweetAlert
+          show={this.state.hideAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, hide it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onHideResearch}
+          onCancel={this.onCancelHide}
+        >
+          Hide Research?
+        </SweetAlert>
+
+        {/* CANCEL HIDE */}
+        <SweetAlert
+          show={this.state.hideAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveHideCancel}
+        >
+          Research is not hidden
+        </SweetAlert>
+
+        {/* RESEARCH HIDE */}
+        <SweetAlert
+          show={this.state.hideAlertOkay}
+          success
+          title="Hidden"
+          onConfirm={this.onRemoveHideOkay}
+        >
+          Research hidden
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* SHOW ALERT */}
+        <SweetAlert
+          show={this.state.showAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, show it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onShowResearch}
+          onCancel={this.onCancelShow}
+        >
+          Show Research?
+        </SweetAlert>
+
+        {/* CANCEL SHOW */}
+        <SweetAlert
+          show={this.state.showAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveShowCancel}
+        >
+          Research is not shown
+        </SweetAlert>
+
+        {/* RESEARCH SHOW */}
+        <SweetAlert
+          show={this.state.showAlertOkay}
+          success
+          title="Showed"
+          onConfirm={this.onRemoveShowOkay}
+        >
+          Research showed
+        </SweetAlert>
+
         <div style={{ padding: "1em" }}>
           <div className="row">
             <div className="col-md-12">{researchContent}</div>

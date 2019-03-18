@@ -39,9 +39,17 @@ class ResearchImageActions extends Component {
         ctr++;
 
         if (ctr === len) {
+          const name =
+            this.props.auth.user.firstName +
+            " " +
+            this.props.auth.user.middleName +
+            " " +
+            this.props.auth.user.lastName;
+
           const data = {
             images: upImages,
-            id: this.props.research.research._id
+            id: this.props.research.research._id,
+            username: name
           };
 
           this.props.addImages(data, this.props.history);
@@ -74,12 +82,14 @@ class ResearchImageActions extends Component {
 ResearchImageActions.propTypes = {
   research: PropTypes.object.isRequired,
   addImages: PropTypes.func.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   research: state.research,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 
 export default connect(
