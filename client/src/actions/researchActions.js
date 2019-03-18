@@ -273,43 +273,39 @@ export const deleteDocument = (researchId, filename, name) => dispatch => {
 
 // Move to bin Research
 export const deleteResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/researches/remove/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/researches`), res =>
-        dispatch({
-          type: GET_RESEARCH,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/researches/remove/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/researches`), res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
 };
 
 // Restore Research
 export const restoreResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/researches/restore/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/researches`), res =>
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/researches/restore/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/researches`), res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      }).catch(err =>
         dispatch({
-          type: GET_RESEARCH,
-          payload: res.data
-        }).catch(err =>
-          dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-          })
-        )
-      );
-  }
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      )
+    );
 };
 
 // set loading state

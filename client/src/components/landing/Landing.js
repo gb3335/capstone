@@ -55,7 +55,7 @@ class Landing extends Component {
 
     return (
       <div>
-        <div className="landing">
+        {/* <div className="landing">
           <div className="dark-overlay landing-inner text-light">
             <div className="row">
               <div className="col-12 text-center">
@@ -64,7 +64,7 @@ class Landing extends Component {
                   <hr />
                   <p style={{ fontSize: "30px" }}>
                     <i
-                      class={this.state.day}
+                      className={this.state.day}
                       style={{ color: this.state.color }}
                     />{" "}
                     {this.state.greet}
@@ -77,7 +77,7 @@ class Landing extends Component {
           </div>
         </div>
         <br />
-        <div />
+        <div /> */}
       </div>
     );
   }

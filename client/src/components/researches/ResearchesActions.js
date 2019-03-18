@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
   toggleResearchBin,
@@ -36,7 +37,10 @@ class ResearchesAction extends Component {
       lastUpdate: true,
       deletedResearches: false,
       bin: false,
-      modalIsOpen: false
+      modalIsOpen: false,
+      // for alerts
+      checkOneAlert: false,
+      generateAlert: false
     };
   }
 
@@ -88,7 +92,8 @@ class ResearchesAction extends Component {
         this.state.lastUpdate === false &&
         this.state.deletedResearches === false
       ) {
-        alert("Please check at least one");
+        // show check one alert
+        this.setState({ checkOneAlert: true });
       } else {
         const name =
           this.props.auth.user.firstName +
@@ -113,9 +118,19 @@ class ResearchesAction extends Component {
         };
 
         this.props.createReportForResearches(researchesReportData);
-        alert("Please wait while your report is being generated");
+        // show generate alert
+        this.setState({ generateAlert: true });
       }
     }
+  };
+
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
   };
 
   render() {
@@ -138,6 +153,27 @@ class ResearchesAction extends Component {
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
+        {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
+
         <Link to="/add-research" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" /> Add Research
         </Link>
@@ -309,13 +345,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                    <input
-                      type="button"
-                      value="Generate Report"
-                      onClick={this.onGenerateReport}
-                      className="btn btn-info"
-                    />
-                  )}
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info"
+                  />
+                )}
               </form>
             </div>
           </div>
