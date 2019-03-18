@@ -18,7 +18,7 @@ const customStyles = {
     bottom: "auto",
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
-    width: "410px",
+    width: "390px",
     height: "460px"
   }
 };

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
 import "moment-timezone";
-import windowSize from "react-window-size";
 
 import "./Dashboard.css";
 
@@ -49,15 +48,14 @@ class Dashboard extends Component {
     let recactDiv;
     let summaryDiv;
     let graphDiv = "row";
-    let graphLegendDisplay;
-    let resTot = 0;
-    let jourTot = 0;
+
+    // Summary
+    let collegeTot = 0;
+    let courseTot = 0;
+    let researchTot = 0;
+    let journalTot = 0;
 
     let recentActivities = [];
-
-    if (this.props.windowWidth <= 450) {
-      graphLegendDisplay = true;
-    }
 
     if (activities === null || actLoading || activities === undefined) {
       activityItems = (
@@ -238,7 +236,7 @@ class Dashboard extends Component {
         if (this.props.auth.isAuthenticated) {
           recactDiv = (
             <div className={activityDiv}>
-              <div className="card">
+              <div className="card border-left-primary shadow h-100 py-2">
                 <div className="card-body pr-0">
                   <h5 className="card-title" style={{ textAlign: "center" }}>
                     Recent Activities
@@ -310,31 +308,160 @@ class Dashboard extends Component {
             </div>
           </div>
         );
+
         // Research and Journal Total for top text
         colleges.map(college => {
-          resTot += parseInt(college.researchTotal, 10);
-          jourTot += parseInt(college.journalTotal, 10);
+          researchTot += parseInt(college.researchTotal, 10);
+          journalTot += parseInt(college.journalTotal, 10);
         });
 
+        for (let index = 0; index < colleges.length; index++) {
+          if (colleges[index].deleted === 0) {
+            ++collegeTot;
+          }
+        }
+
+        for (let index = 0; index < colleges.length; index++) {
+          if (colleges[index].deleted === 0) {
+            for (
+              let index2 = 0;
+              index2 < colleges[index].course.length;
+              index2++
+            ) {
+              if (colleges[index].course[index2].status === 0) {
+                if (colleges[index].course[index2].deleted === 0) {
+                  ++courseTot;
+                }
+              }
+            }
+          }
+        }
+
         dashboardItems = (
-          <div>
-            <b>Research Total: </b>
-            {resTot}
-            {"  "}
-            <b>Journal Total: </b>
-            {jourTot}
-            <div className={graphDiv}>
-              <div className={graphsDiv}>
-                <div className="card">
-                  <div className="row">
-                    {researchDiv}
-                    {journalDiv}
+          <div className="row">
+            <div className="col-12">
+              <div className="row">
+                {/* Colleges */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div
+                            className="text-xs font-weight-bold text-uppercase mb-1"
+                            style={{ color: "#2E86C1" }}
+                          >
+                            Colleges
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold">
+                            {collegeTot}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i
+                            className="fas fa-university fa-2x"
+                            style={{ color: "#5DADE2" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <br />
+                {/* Courses */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div
+                            className="text-xs font-weight-bold text-uppercase mb-1"
+                            style={{ color: "#1E8449" }}
+                          >
+                            Courses
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold">
+                            {courseTot}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i
+                            className="fas fa-graduation-cap fa-2x"
+                            style={{ color: "#58D68D" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Researches */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div
+                            className="text-xs font-weight-bold text-uppercase mb-1"
+                            style={{ color: "#BA4A00" }}
+                          >
+                            Researches
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold">
+                            {researchTot}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i
+                            className="fas fa-book fa-2x"
+                            style={{ color: "#E59866" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* Journals */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div
+                            className="text-xs font-weight-bold text-uppercase mb-1"
+                            style={{ color: "#D4AC0D" }}
+                          >
+                            Journals
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold">
+                            {journalTot}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i
+                            className="fas fa-book-open fa-2x"
+                            style={{ color: "#F4D03F" }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              {recactDiv}
-              {summaryDiv}
+              {/* Graphs */}
+              <div>
+                <div className={graphDiv}>
+                  <div className={graphsDiv}>
+                    <div className="card border-left-primary shadow h-100 py-2">
+                      <div className="row">
+                        {researchDiv}
+                        {journalDiv}
+                      </div>
+                    </div>
+                    <br />
+                  </div>
+                  {recactDiv}
+                  {/* {summaryDiv} */}
+                </div>
+              </div>
             </div>
           </div>
         );
@@ -372,4 +499,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { changePageTitle, getColleges, getActivities, getResearches }
-)(windowSize(Dashboard));
+)(Dashboard);
