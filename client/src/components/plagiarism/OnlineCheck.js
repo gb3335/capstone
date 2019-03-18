@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 import {removeStopwords} from 'stopword';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
 
+import {Spring, Transition, animated} from 'react-spring/renderprops';
+
 import ResultStatistics from '../plagiarism-result/ResultStatistics'
 
 import OnlineHighlightedResult from './OnlineHighlightedResult'
@@ -91,23 +93,13 @@ class OnlineCheck extends Component {
         let resultItems;
         let highlightItems;
 
-        if(loading || output===[]){
-            resultItems = (<div className="row">
-            <div className="col-md-12">
-              <Spinner />
-            </div>
-          </div>)
-
+        if(loading){
             outputItems = (<div className="spinnerMainDiv">
             <div className="spinner">
-              <Spinner />
+            <Spinner />
             </div>
-          </div>)
+        </div>)
         }else{
-            resultItems=<ResultStatistics output={output}/>
-            
-            
-
             if (Object.keys(output).length > 0) {
                 outputItems = (
                     <div className="outputdiv results">
@@ -119,43 +111,103 @@ class OnlineCheck extends Component {
             }
         }
 
-        if(showDetails){
-            highlightItems = (
+            if(showDetails){
+                highlightItems = (
+                    <Transition native 
+                                items={!loading}
+                                from={{opacity:0}}
+                                enter={{opacity:1}}
+                                leave={{opacity:0}}
+                    >
+                    {show => show && (props => (
+                        <animated.div style={props}>
+                            <Spring from={{ opacity: 0}}
+                                to={{ opacity: 1}}
+                                config={{delay:100, duration:800}}
+                                >{props => (
+                                    <div style={props}>
+                                        <div className="sourceResearch">
+                                            <div className="sourceHeader">Results
+                                                <div className="spacer"/>
+                                                <button onClick={this.onClickHideDetails} className="close">x</button>
+                                            </div>
+                                            <div className="sourceContent">
+                                                <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </Spring>
+                        </animated.div>
+                    ))}
+                    </Transition>
+                    
+                )
+            }else{
+                highlightItems = (<div className="sourceResearch">
+                {Object.entries(this.props.onlinePlagiarism.output).length !== 0 && this.props.onlinePlagiarism.output.constructor !== Object ? 
+                <Transition native 
+                            items={!loading}
+                            from={{opacity:0}}
+                            enter={{opacity:1}}
+                            leave={{opacity:0}}
+                            >
+                        {show => show && (props =>(
+                            <animated.div style={props}>
+                                <Spring from={{ opacity: 0}}
+                                to={{ opacity: 1}}
+                                config={{delay:100, duration:800}}
+                                >{props => (
+                                    <div style={props}>
+                                        <div className="sourceHeader">Online Result Statistics</div>
+                                        <div className="sourceContent">
+                                            <Spring from={{ opacity: 0}}
+                                                    to={{  opacity: 1}}
+                                                    config={{delay:500, duration:800}}>
+                                                    {props2 =>(
+                                                        <div style={props2}>
+                                                            <ResultStatistics output={output}/>
+                                                        </div>
+                                                    )}
+                                            </Spring>
+                                        </div>
+                                    </div>)
+                                }
+                                </Spring>
+                            </animated.div>
+                        )
 
-                <div className="sourceResearch">
-                    <div className="sourceHeader">Results
-                        <div className="spacer"/>
-                        <button onClick={this.onClickHideDetails} className="close">x</button>
-                    </div>
-                    <div className="sourceContent">
-                        <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
-                    </div>
-                </div>
-                
-            )
-        }
-        else{
-            highlightItems = (<div className="sourceResearch">
-            <div className="sourceHeader">Result Statistics</div>
-            <div className="sourceContent">
-                {resultItems}
-            </div>
-            <div className="sourceHeader">Check Plagiarism Online</div>
-            <form onSubmit={this.onSubmit}>
-                <TextAreaFieldGroup 
-                    placeholder="Search Something here"
-                    name="q"
-                    onChange={this.onChange}
-                    rows="10"
-                    value={this.state.q}
-                    error={errors.q}
-                    extraClass="onlineTextarea"
-                />
-                {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
-                <button type="submit" className={this.props.onlinePlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.onlinePlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>
-            </form>
-        </div>)
-        }
+                        )}
+
+                </Transition>
+                : ""}
+                    <Spring from={{ opacity: 0}}
+                            to={{ opacity: 1}}
+                            config={{delay:100, duration:800}}>
+                            {props => (
+                                <div style={props}>
+                                    <div className="sourceHeader">Check Plagiarism Online</div>
+                                    <form onSubmit={this.onSubmit}>
+                                        <TextAreaFieldGroup 
+                                            placeholder="Search Something here"
+                                            name="q"
+                                            onChange={this.onChange}
+                                            rows="10"
+                                            value={this.state.q}
+                                            maxLength="2500"
+                                            minLength="100"
+                                            error={errors.q}
+                                            extraClass="onlineTextarea"
+                                        />
+                                        {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
+                                        <button type="submit" className={this.props.onlinePlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.onlinePlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>
+                                    </form>
+                                </div>
+                            )}
+                    </Spring>
+                </div>)
+            }
+            
 
         
         
@@ -178,7 +230,16 @@ class OnlineCheck extends Component {
                     <div className="col-md-4">
                     <div className="container-fluid">
                         <div className="sourceHeader">Result List</div>
-                            {outputItems}
+                            <Spring
+                                    from={{ opacity: 0}}
+                                    to={{  opacity: 1}}
+                                    config={{delay:1000, duration:1000}}
+                                >{props =>(
+                                    <div style={props}>
+                                        {outputItems}
+                                    </div>
+                                )}
+                            </Spring>
                     </div>
                     </div>
                 </div>

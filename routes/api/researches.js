@@ -499,17 +499,17 @@ router.post(
       if (err) {
         return console.log(err);
       }
-      const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        filename;
-      const options = {
-        directory: "./routes/downloadedDocu",
-        filename: req.body.researchId + ".pdf"
-      };
-      download(docPath, options, function (err) {
-        if (err) console.log(err);
-        console.log("Document successfully uploaded.");
-      });
+      // const docPath =
+      //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      //   filename;
+      // const options = {
+      //   directory: "./routes/downloadedDocu",
+      //   filename: req.body.researchId + ".pdf"
+      // };
+      // download(docPath, options, function (err) {
+      //   if (err) console.log(err);
+      //   console.log("Document successfully uploaded.");
+      // });
 
       const newDocument = {
         document: filename,

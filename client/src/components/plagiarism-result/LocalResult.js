@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
 
+import {Spring, Transition, animated} from 'react-spring/renderprops';
+
 import { getTextPattern, setPlagiarismLocalHideDetails } from "../../actions/localPlagiarismActions";
 
 import LocalHighlightedResult from './LocalHighlightedResult';
@@ -59,6 +61,7 @@ class LocalResult extends Component {
     let newob = output.find(obj => obj.Document.Text.Id === id);
     const input = {
         docuId : newob.Document.Pattern.Id,
+        docuFile : this.props.research.research.document,
         textId: id
       }
       this.props.getTextPattern(input);
@@ -116,57 +119,94 @@ class LocalResult extends Component {
         )
       }else{
         items = (
-          <div>
-            <div className="sourceHeader">{research.title}
-              <div className="spacer"/>
-              <button onClick={this.onClickHideDetails} className="close">x</button>
-            </div>
-            <div className="sourceContent">
-              <LocalHighlightedResult />
-            </div>
-          </div>
+          
+            <Transition
+                items={showDetails}
+                from={{opacity:0}}
+                enter={{opacity:1}}
+                leave={{opacity:0}}
+            >
+            {show => show && (props =>(
+              <animated.div style={props}>
+                <Spring from={{ opacity: 0}}
+                        to={{ opacity: 1}}
+                        config={{delay:100, duration:800}}
+                        >{props => (
+                            <div style={props}>
+                                    <div className="sourceHeader">{research.title}
+                                <div className="spacer"/>
+                                <button onClick={this.onClickHideDetails} className="close">x</button>
+                              </div>
+                              <div className="sourceContent">
+                                <LocalHighlightedResult />
+                              </div>
+                            </div>   
+                        )}
+                    </Spring>
+              
+              </animated.div>
+            ))}
+
+            </Transition>
+            
           
         )
       }
     }else{
       items = (
-        <div className="sourceResearch">
-            <div className="sourceHeader">Result Statistics</div>
-            <div className="sourceContent">
-              <ResultStatistics output={output}/>
-            </div>
-            <div className="sourceHeader">Research Title</div>
-            <div className="sourceContent">{research.title}</div>
-            <div className="sourceHeader">Research Details</div>
-            <div className="sourceContent researchDetails">
-                <div>
-                    <span>College: </span>
-                    {research.college}
-                </div>
-                <div>
-                    <span>Course: </span>
-                    {research.course}
-                </div>
-                <div>
-                    <span>Research Type: </span>
-                    {research.type==="thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
-                </div>
-                <div>
-                    <span>Pages: </span>
-                    {research.pages}
-                </div>
-                <div>
-                    <span>School Year: </span>
-                    {research.schoolYear}
-                </div>  
-                <div>
-                    <span>Last Update: </span>
-                    <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
-                    {" at "}
-                    <Moment format="h:mm A">{research.lastUpdate}</Moment>
-                </div>
-            </div>
-        </div>
+        <Transition items={!showDetails}
+                    from={{opacity:0}}
+                    enter={{opacity:1}}
+                    leave={{opacity:0}}>
+                    {show => show && (props => (
+                      <Spring from={{ opacity: 0}}
+                              to={{ opacity: 1}}
+                              config={{delay:100, duration:800}}>
+                              {props => (
+                                <div style={props}>
+                                    <div className="sourceResearch">
+                                      <div className="sourceHeader">Local Result Statistics</div>
+                                      <div className="sourceContent">
+                                        <ResultStatistics output={output}/>
+                                      </div>
+                                      <div className="sourceHeader">Research Title</div>
+                                      <div className="sourceContent">{research.title}</div>
+                                      <div className="sourceHeader">Research Details</div>
+                                      <div className="sourceContent researchDetails">
+                                          <div>
+                                              <span>College: </span>
+                                              {research.college}
+                                          </div>
+                                          <div>
+                                              <span>Course: </span>
+                                              {research.course}
+                                          </div>
+                                          <div>
+                                              <span>Research Type: </span>
+                                              {research.type==="thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
+                                          </div>
+                                          <div>
+                                              <span>Pages: </span>
+                                              {research.pages}
+                                          </div>
+                                          <div>
+                                              <span>School Year: </span>
+                                              {research.schoolYear}
+                                          </div>  
+                                          <div>
+                                              <span>Last Update: </span>
+                                              <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
+                                              {" at "}
+                                              <Moment format="h:mm A">{research.lastUpdate}</Moment>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                              )}
+                      </Spring>
+                    ))}
+        </Transition>
+        
       )
     }
 
