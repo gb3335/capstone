@@ -17,17 +17,21 @@ class EditResearch extends Component {
   constructor(props) {
     super(props);
 
-    const research = this.props.journal.journal;
+    const journal = this.props.journal.journal;
 
     this.state = {
-      title: research.title,
-      oldTitle: research.title,
-      college: research.college,
-      course: research.course,
-      abstract: research.abstract,
-      researchId: research.researchID,
-      pages: research.pages,
-      schoolYear: research.schoolYear,
+      title: journal.title,
+      oldTitle: journal.title,
+      college: journal.college,
+      course: journal.course,
+      volume: journal.volume,
+      publisher: journal.publisher,
+      abstract: journal.abstract,
+      issn: journal.issn,
+      volume: journal.volume,
+      publisher: journal.publisher,
+      pages: journal.pages,
+      schoolYear: journal.schoolYear,
       authorOne: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
@@ -59,11 +63,13 @@ class EditResearch extends Component {
     );
 
     let ao = "";
+
     this.props.journal.journal.author.map(au => {
       if (au.role === "Author One") {
         ao = au.name;
       }
     });
+
     this.setState({ authorOne: ao });
   }
 
@@ -83,10 +89,24 @@ class EditResearch extends Component {
       course: this.state.course,
       abstract: this.state.abstract,
       pages: this.state.pages,
-      researchId: this.state.researchId,
+      issn: this.state.issn,
+      volume: this.state.volume,
+      publisher: this.state.publisher,
       schoolYear: this.state.schoolYear,
       authorOne: this.state.authorOne,
-      id: this.props.research.research._id
+      id: this.props.journal.journal._id
+
+      // title: journal.title,
+      // oldTitle: journal.title,
+      // college: journal.college,
+      // course: journal.course,
+      // volume:journal.volume,
+      // publisher:journal.publisher,
+      // abstract: journal.abstract,
+      // issn: journal.issn,
+      // pages: journal.pages,
+      // schoolYear: journal.schoolYear,
+      // authorOne: "",
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -267,7 +287,14 @@ class EditResearch extends Component {
                     {errors.abstract}
                   </p>
                 </div>
-
+                <TextFieldGroup
+                  placeholder="* Volume"
+                  name="volume"
+                  value={this.state.volume}
+                  onChange={this.onChange}
+                  error={errors.volume}
+                  info="Volume of the journal"
+                />
                 <TextFieldGroup
                   placeholder="* Author One"
                   name="authorOne"
@@ -277,12 +304,20 @@ class EditResearch extends Component {
                   info="Author One of the journal"
                 />
                 <TextFieldGroup
-                  placeholder="* Journal ID"
-                  name="researchId"
-                  value={this.state.researchId}
+                  placeholder="* Publisher"
+                  name="publisher"
+                  value={this.state.publisher}
                   onChange={this.onChange}
-                  error={errors.researchId}
-                  info="Journal ID given by the college library"
+                  error={errors.publisher}
+                  info="Publisher of the journal"
+                />
+                <TextFieldGroup
+                  placeholder="* Journal ID"
+                  name="issn"
+                  value={this.state.issn}
+                  onChange={this.onChange}
+                  error={errors.issn}
+                  info="ISSN given by the college library"
                 />
                 <TextFieldGroup
                   placeholder="* Pages"

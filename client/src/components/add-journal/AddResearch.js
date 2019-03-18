@@ -18,11 +18,12 @@ class AddResearch extends Component {
     super(props);
     this.state = {
       title: "",
-
+      publisher: "",
+      volume: "",
       college: "",
       course: "",
       abstract: "",
-      researchId: "",
+      issn: "",
       authorOne: "",
       pages: "",
       schoolYear: "",
@@ -71,11 +72,12 @@ class AddResearch extends Component {
 
     const researchData = {
       title: this.state.title,
-
+      volume: this.state.volume,
+      publisher: this.state.publisher,
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
-      researchId: this.state.researchId,
+      issn: this.state.issn,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages,
       authorOne: this.state.authorOne
@@ -177,7 +179,7 @@ class AddResearch extends Component {
                 <i className="fas fa-angle-left" />{" "}
                 {this.state.flagFromCollege
                   ? `Back to ${college.college.name.initials}`
-                  : "Back to Journals"}
+                  : "Back to Journal"}
               </Link>
               <br />
               <br />
@@ -188,12 +190,8 @@ class AddResearch extends Component {
               </p>
               <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
-                <div style={{ textAlign: "center" }}>
-                  <p style={{ color: "#d9534f", fontSize: 13 }}>
-                    {errors.type}
-                  </p>
-                </div>
-                <br />
+
+
                 <TextFieldGroup
                   placeholder="* Title"
                   name="title"
@@ -272,6 +270,14 @@ class AddResearch extends Component {
                   </p>
                 </div>
                 <TextFieldGroup
+                  placeholder="* Volume"
+                  name="volume"
+                  value={this.state.volume}
+                  onChange={this.onChange}
+                  error={errors.volume}
+                  info="Volume the journal"
+                />
+                <TextFieldGroup
                   placeholder="* Author One"
                   name="authorOne"
                   value={this.state.authorOne}
@@ -280,12 +286,20 @@ class AddResearch extends Component {
                   info="Author One of the journal"
                 />
                 <TextFieldGroup
-                  placeholder="* Journal ID"
-                  name="researchId"
-                  value={this.state.researchId}
+                  placeholder="* Publisher"
+                  name="publisher"
+                  value={this.state.publisher}
                   onChange={this.onChange}
-                  error={errors.researchId}
-                  info="Journal ID given by the college library"
+                  error={errors.publisher}
+                  info="Publisher of the journal"
+                />
+                <TextFieldGroup
+                  placeholder="* ISSN"
+                  name="issn"
+                  value={this.state.issn}
+                  onChange={this.onChange}
+                  error={errors.issn}
+                  info="ISNN given by the college library"
                 />
                 <TextFieldGroup
                   placeholder="* Pages"
@@ -296,12 +310,12 @@ class AddResearch extends Component {
                   info="Number of pages in your journal"
                 />
                 <TextFieldGroup
-                  placeholder="* Academic Year"
+                  placeholder="* Published year"
                   name="schoolYear"
                   value={this.state.schoolYear}
                   onChange={this.onChange}
                   error={errors.schoolYear}
-                  info="Academic Year you've finished the journal"
+                  info="Year you've published the journal"
                 />
                 <input
                   ref="resBtn"

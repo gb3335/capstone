@@ -11,7 +11,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
   dispatch(setDocumentId(input.docuId));
   console.time("Initialize")
   axios
-  .post("/api/plagiarism/initialize/pattern", input)
+  .post("/api/plagiarism/local/initialize/pattern", input)
   .then(res => {
     console.log(res.data);
     if(res.data.success){
@@ -19,7 +19,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       input.researches.forEach(function(research){
         if(research._id !== input.docuId){
           if(research.document){
-            promises.push(axios.post("/api/plagiarism/local", {docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title}))
+            promises.push(axios.post("/api/plagiarism/local/result", {docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title}))
           }
         }
         

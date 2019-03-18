@@ -1,12 +1,19 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import ReactHtmlParser from 'react-html-parser';
+import Spinner from "../common/Spinner";
+import { Link } from "react-router-dom";
 import {removeStopwords} from 'stopword';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
+
+import ResultStatistics from '../plagiarism-result/ResultStatistics'
+
+import OnlineHighlightedResult from './OnlineHighlightedResult'
+
+import Output from '../plagiarism-result/Output';
 import './OnlineCheck.css'
 
-import {checkPlagiarismOnline} from '../../actions/onlinePlagiarismAction'
+import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails} from '../../actions/onlinePlagiarismAction'
 
  
 class OnlineCheck extends Component {
@@ -15,11 +22,16 @@ class OnlineCheck extends Component {
         this.state = {
             q: "",
             output: "",
+            disableClassname: "btn btn-primary btn-block btn-flat disabled",
+            index: 0,
+            words: [],
             errors: {}
         }
 
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.onClickShowDetails = this.onClickShowDetails.bind(this);
+        this.onClickHideDetails = this.onClickHideDetails.bind(this);
     }
 
     onChange(e) {
@@ -28,76 +40,146 @@ class OnlineCheck extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-        let old = this.state.q.toString().split(' ');
-        old = removeStopwords(old)
-        const q = old.join(' ');
-        const input = {
-            q,
-            original: this.state.q
+        if(!this.props.onlinePlagiarism.buttonDisable){
+            
+            let old = this.state.q.toString().split(' ');
+            old = removeStopwords(old)
+            const q = old.join(' ');
+            const input = {
+                q,
+                original: this.state.q
+            }
+            // console.log(input)
+            
+            this.props.checkPlagiarismOnline(input);
         }
-        // console.log(input)
-        this.props.checkPlagiarismOnline(input);
     }
 
-    componentWillReceiveProps(nextProps){
-        this.setState({q: nextProps.onlinePlagiarism.original})
-        let output="";
-        if(nextProps.onlinePlagiarism.output.onlinePlagiarism && nextProps.onlinePlagiarism.output.onlinePlagiarism.data && nextProps.onlinePlagiarism.output.onlinePlagiarism.data.items){
-            const items = nextProps.onlinePlagiarism.output.onlinePlagiarism.data.items;
-            items.forEach(function(item, index){
-                output+=`<p>Link ${index+1}: <a target="_blank" href="${item.link}">${item.link}</a></p>`
-                output+=`<p>${item.htmlSnippet}</p>`
-            })
-        }else{
-            output="Nothing to show!"   
-        }
-        
-        this.setState({output})
-        
+    onClickShowDetails(index){
+        const {output} = this.props.onlinePlagiarism;
+        let words=[];
+        output[index].Index.forEach(word => {
+            let obj = JSON.parse(word);
+
+            words.push.apply(words,obj.Pattern.split(' '))
+        })
+
+        this.setState({index, words})
+        this.props.setPlagiarismOnlineShowDetails();
     }
 
+    onClickHideDetails = () =>{
+        console.log("wer")
+        this.props.setPlagiarismOnlineHideDetails();
+      }
+
+    
     componentDidMount(){
-        this.setState({q: this.props.onlinePlagiarism.original})
-        let output="";
-        if(this.props.onlinePlagiarism.output.onlinePlagiarism && this.props.onlinePlagiarism.output.onlinePlagiarism.data && this.props.onlinePlagiarism.output.onlinePlagiarism.data.items){
-            const items = this.props.onlinePlagiarism.output.onlinePlagiarism.data.items;
-            items.forEach(function(item, index){
-                output+=`<p>Link ${index+1}: <a target="_blank" href="${item.link}">${item.link}</a></p>`
-                output+=`<p>${item.htmlSnippet}</p>`
-            })
-        }else{
-            output="Nothing to show!"   
+        if(this.props.onlinePlagiarism.original){
+            this.setState({q: this.props.onlinePlagiarism.original})
         }
-        
-        this.setState({output})
-        
     }
+
+    
+
 
     render() { 
         const { errors } = this.props;
-        return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-8 p-2">
-                        <form onSubmit={this.onSubmit}>
-                            <TextAreaFieldGroup 
-                                placeholder="Search Something here"
-                                name="q"
-                                onChange={this.onChange}
-                                rows="25"
-                                value={this.state.q}
-                                error={errors.q}
-                                extraClass="onlineTextarea"
-                            />
-                            {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
-                            <button type="submit" className="btn btn-primary btn-block btn-flat">Check</button>
-                        </form>
-                        
+        const {output, loading , showDetails} = this.props.onlinePlagiarism;
+
+        let outputItems;
+        let resultItems;
+        let highlightItems;
+
+        if(loading || output===[]){
+            resultItems = (<div className="row">
+            <div className="col-md-12">
+              <Spinner />
+            </div>
+          </div>)
+
+            outputItems = (<div className="spinnerMainDiv">
+            <div className="spinner">
+              <Spinner />
+            </div>
+          </div>)
+        }else{
+            resultItems=<ResultStatistics output={output}/>
+            
+            
+
+            if (Object.keys(output).length > 0) {
+                outputItems = (
+                    <div className="outputdiv results">
+                        <Output onClickShowDetails={this.onClickShowDetails} output={output} plagType="online"/>
                     </div>
-                    <div className="col-md-4 p-2">
-                        <div className="outputdiv">
-                            <span>{ReactHtmlParser(this.state.output)}</span>
-                        </div> 
+                );
+            } else {
+                outputItems = <span>No output</span>;
+            }
+        }
+
+        if(showDetails){
+            highlightItems = (
+
+                <div className="sourceResearch">
+                    <div className="sourceHeader">Results
+                        <div className="spacer"/>
+                        <button onClick={this.onClickHideDetails} className="close">x</button>
+                    </div>
+                    <div className="sourceContent">
+                        <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
+                    </div>
+                </div>
+                
+            )
+        }
+        else{
+            highlightItems = (<div className="sourceResearch">
+            <div className="sourceHeader">Result Statistics</div>
+            <div className="sourceContent">
+                {resultItems}
+            </div>
+            <div className="sourceHeader">Check Plagiarism Online</div>
+            <form onSubmit={this.onSubmit}>
+                <TextAreaFieldGroup 
+                    placeholder="Search Something here"
+                    name="q"
+                    onChange={this.onChange}
+                    rows="10"
+                    value={this.state.q}
+                    error={errors.q}
+                    extraClass="onlineTextarea"
+                />
+                {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
+                <button type="submit" className={this.props.onlinePlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.onlinePlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>
+            </form>
+        </div>)
+        }
+
+        
+        
+        return (
+            <div className="container-fluid">
+            <div className="row">
+              <div className="col-md-8">
+                <Link
+                  to={``}
+                  className="btn btn-light mb-3 float-right"
+                >
+                  <i className="fas fa-flag text-danger" /> Generate Report
+                </Link>
+              </div>
+            </div>
+                <div className="row">
+                    <div className="col-md-8">
+                        {highlightItems}
+                    </div>
+                    <div className="col-md-4">
+                    <div className="container-fluid">
+                        <div className="sourceHeader">Result List</div>
+                            {outputItems}
+                    </div>
                     </div>
                 </div>
             </div>
@@ -107,7 +189,9 @@ class OnlineCheck extends Component {
 
 OnlineCheck.propTypes = {
     checkPlagiarismOnline: PropTypes.func.isRequired,
-    errors: PropTypes.object.isRequired
+    errors: PropTypes.object.isRequired,
+    setPlagiarismOnlineShowDetails : PropTypes.func.isRequired,
+    setPlagiarismOnlineHideDetails : PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) =>({
@@ -115,4 +199,4 @@ const mapStateToProps = (state) =>({
     onlinePlagiarism: state.onlinePlagiarism
 })
  
-export default connect(mapStateToProps,{checkPlagiarismOnline})(OnlineCheck);
+export default connect(mapStateToProps,{checkPlagiarismOnline,setPlagiarismOnlineShowDetails,setPlagiarismOnlineHideDetails})(OnlineCheck);

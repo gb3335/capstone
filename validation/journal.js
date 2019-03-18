@@ -8,18 +8,25 @@ module.exports = function validateResearchInput(data) {
   data.title = !isEmpty(data.title) ? data.title : "";
 
   data.college = !isEmpty(data.college) ? data.college : "";
+  data.volume = !isEmpty(data.volume) ? data.volume : "";
+  data.publisher = !isEmpty(data.publisher) ? data.publisher : "";
   data.course = !isEmpty(data.course) ? data.course : "";
   data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
   data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
-  data.researchId = !isEmpty(data.researchId) ? data.researchId : "";
+  data.issn = !isEmpty(data.issn) ? data.issn : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
 
   if (Validator.isEmpty(data.title)) {
     errors.title = "Journal title is required";
   }
-
+  if (Validator.isEmpty(data.volume)) {
+    errors.volume = "Journal volume is required";
+  }
+  if (Validator.isEmpty(data.publisher)) {
+    errors.publisher = "Journal publisher is required";
+  }
 
   if (Validator.isEmpty(data.college)) {
     errors.college = "Journal college is required";
@@ -37,8 +44,8 @@ module.exports = function validateResearchInput(data) {
     errors.abstract = "Abstract must be at least 100 characters";
   }
 
-  if (Validator.isEmpty(data.researchId)) {
-    errors.researchId = "Journal ID is required";
+  if (Validator.isEmpty(data.issn)) {
+    errors.issn = "ISSN is required";
   }
 
   if (Validator.isEmpty(data.schoolYear)) {

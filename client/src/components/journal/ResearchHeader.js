@@ -30,7 +30,15 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
-            <b>Journal ID:</b> {research.researchID}
+            <b>ISSN :</b> {research.issn}
+          </span>
+          <br />
+          <span>
+            <b>Publisher :</b> {research.publisher}
+          </span>
+          <br />
+          <span>
+            <b>Volume :</b> {research.volume}
           </span>
           <br />
           <span>

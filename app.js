@@ -35,6 +35,12 @@ app.use(passport.initialize());
 // Passport Config
 require("./config/passport.js")(passport);
 
+app.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
+
 //Use Routes
 app.use("/api/plagiarism", plagiarism);
 app.use("/api/users", users);

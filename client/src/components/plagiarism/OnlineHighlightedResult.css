@@ -1,0 +1,23 @@
+.hightlight{
+    background-color: rgba(250, 159, 179, 0.589);
+}
+
+.highlightSpan span{
+    font-size: 15px;
+    /* white-space:  pre-wrap; */
+    white-space: pre;
+
+}
+
+.hightlightSpanDivs{
+    height: 650px;
+    overflow-x: auto;
+    /* -webkit-box-shadow: 1px 1px 7px 1px rgba(0,0,0,1);
+    -moz-box-shadow: 1px 1px 7px 1px rgba(0,0,0,1);
+    box-shadow: 1px 1px 7px 1px rgba(0,0,0,1); */
+}
+
+.highlightComponentDivs{
+    padding:20px;
+    
+}

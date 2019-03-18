@@ -4,15 +4,14 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
-import Highlighter from "react-highlight-words";
 
 import { getTextPattern, setPlagiarismLocalHideDetails } from "../../actions/localPlagiarismActions";
 
-import LocalResultId from './LocalResultId';
+import LocalHighlightedResult from './LocalHighlightedResult';
+import ResultStatistics from './ResultStatistics';
+
 
 import "moment-timezone";
-
-import {Pie} from 'react-chartjs-2';
 
 import Output from './Output';
 
@@ -78,7 +77,7 @@ class LocalResult extends Component {
     let outputItems;
 
     if (Object.keys(output).length > 0) {
-      outputItems = <Output onClickShowDetails={this.onClickShowDetails} output={output}/>;
+      outputItems = <Output onClickShowDetails={this.onClickShowDetails} output={output} plagType="local"/>;
     } else {
       outputItems = <span>No output</span>;
     }
@@ -123,7 +122,7 @@ class LocalResult extends Component {
               <button onClick={this.onClickHideDetails} className="close">x</button>
             </div>
             <div className="sourceContent">
-              <LocalResultId />
+              <LocalHighlightedResult />
             </div>
           </div>
           
@@ -134,19 +133,7 @@ class LocalResult extends Component {
         <div className="sourceResearch">
             <div className="sourceHeader">Result Statistics</div>
             <div className="sourceContent">
-              <div className="row">
-                  <div className="col-md-7">
-                    <Pie data={data} height={300} options={{ maintainAspectRatio: false}}/>
-                  </div>
-                  <div className="col-md-5">
-                      <div className="overview">Statistics Overview</div>
-                      <div className="overviewContent mb-2">Number Of Candidate Document: {this.state.little+this.state.moderate+this.state.heavy}</div>
-                      <div className="overviewContent heavy-text">Heavy Plagiarism: {this.state.heavy}</div>
-                      <div className="overviewContent moderate-text">Moderate Plagiarism: {this.state.moderate}</div>
-                      <div className="overviewContent little-text">Little Plagiarism: {this.state.little}</div>
-                      <div className="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
-                  </div>
-              </div>
+              <ResultStatistics output={output}/>
             </div>
             <div className="sourceHeader">Research Title</div>
             <div className="sourceContent">{research.title}</div>
@@ -213,7 +200,7 @@ class LocalResult extends Component {
                     </div>
                     <div className="col-md-4">
                       <div className="container-fluid">
-                        <div className="sourceHeader">Result List</div>
+                        <div className="sourceHeader">Result List ({this.state.little+this.state.moderate+this.state.heavy})</div>
                         <div className="results">{outputItems}</div>
                       </div>
                     </div>

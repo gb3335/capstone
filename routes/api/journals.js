@@ -8,6 +8,23 @@ const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
+const path = require("path");
+const pdf = require("html-pdf");
+
+// report templates
+let pdfResearchesTemplate;
+let pdfResearchTemplate;
+let fontFooter;
+
+if (process.env.NODE_ENV === "production") {
+  pdfResearchesTemplate = require("../../document/researchesTemplate");
+  pdfResearchTemplate = require("../../document/researchTemplate");
+  fontFooter = "7px";
+} else {
+  pdfResearchesTemplate = require("../../document/researchesTemplate_Dev");
+  pdfResearchTemplate = require("../../document/researchTemplate_Dev");
+  fontFooter = "10px";
+}
 
 // Research model
 const Research = require("../../models/Journal");
@@ -125,6 +142,7 @@ router.post(
               name: req.body.authorOne,
               role: "Author One"
             });
+           
 
             copyAuthorArray.map(aut => {
               aut.role === "Author"
@@ -140,8 +158,10 @@ router.post(
               college: req.body.college,
               course: req.body.course,
               abstract: req.body.abstract,
-              researchID: req.body.researchId,
+              issn: req.body.issn,
               pages: req.body.pages,
+              publisher: req.body.publisher,
+              volume: req.body.volume,
               schoolYear: req.body.schoolYear,
               author: authorArray,
               lastUpdate: Date.now()
@@ -214,14 +234,17 @@ router.post(
                       name: req.body.authorOne,
                       role: "Author One"
                     });
+                   
 
                     let newResearch = {
                       title: req.body.title,
                       college: req.body.college,
                       course: req.body.course,
                       abstract: req.body.abstract,
-                      researchID: req.body.researchId,
+                      issn: req.body.issn,
                       pages: req.body.pages,
+                      publisher: req.body.pages,
+                      volume: req.body.volume,
                       schoolYear: req.body.schoolYear,
                       author: authorArray,
                       lastUpdate: Date.now()
@@ -255,6 +278,48 @@ router.post(
 // @access  Private
 router.post(
   "/author",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateAuthorInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    Research.findOne({ _id: req.body.researchId }).then(research => {
+      const newAuthor = {
+        name: req.body.name,
+        role: req.body.role
+      };
+
+      // add activity
+      const newActivity = {
+        title: req.body.name + " added as Author in " + research.title
+      };
+      new Activity(newActivity).save();
+
+      const newResearch = {
+        lastUpdate: Date.now()
+      };
+
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newResearch },
+        { new: true }
+      ).then(research);
+
+      // Add to exp array
+      research.author.unshift(newAuthor);
+
+      research.save().then(research => res.json(research));
+    });
+  }
+);
+
+router.post(
+  "/publisher",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateAuthorInput(req.body);
@@ -653,6 +718,104 @@ router.delete(
       { $set: newDocument },
       { new: true }
     ).then(research => res.json(research));
+  }
+);
+
+// @route   POST api/researches/createReport/researches
+// @desc    Generate List of all researches Report
+// @access  Private
+router.post(
+  "/createReport/researches",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfResearchesTemplate(req.body), options)
+      .toFile("researchesPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/researches/fetchReport/researches
+// @desc    Send the generated pdf to client - list of researches
+// @access  Private
+router.get(
+  "/fetchReport/researches",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/researchesPdf.pdf`);
+  }
+);
+
+// @route   POST api/researches/createReport/research
+// @desc    Generate individual research Report
+// @access  Private
+router.post(
+  "/createReport/research",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfResearchTemplate(req.body), options)
+      .toFile("researchPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/researches/fetchReport/research
+// @desc    Send the generated pdf to client - individual research
+// @access  Private
+router.get(
+  "/fetchReport/research",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/researchPdf.pdf`);
   }
 );
 
