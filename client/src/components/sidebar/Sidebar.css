@@ -90,10 +90,10 @@
   transition: 1s;
 }
 
-.active{
+/* .active{
   border-top: 1px solid rgb(255, 150, 118);
   border-bottom: 1px solid rgb(255, 150, 118);
-}
+} */
 
 .sidebar_navigation_items a {
   height: 55px;
