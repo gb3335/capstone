@@ -85,8 +85,10 @@ router.get("/test", (req, res) => {
 
   // })
 
-  scraping("https://dl.acm.org/citation.cfm?id=2541228.2541232", function(response) {
-    let data = response.join(' ');
+  scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function(response) {
+    console.log(response)
+    let data = response.join('');
+    console.log(data.length)
     res.send(data);//Returns text
   });
 
@@ -168,10 +170,11 @@ router.post("/online/result", (req, res) => {
 
     scraping(link, function(response) {
       let resp = response.join(' ');
+      let fortest = response.join('');
       // console.log(data.text);
       
       let newtext = resp
-      if(newtext==""){
+      if(newtext=="" || fortest.length==0){
         res.json({
           onlinePlagiarism: {
             success: true,

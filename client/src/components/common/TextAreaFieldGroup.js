@@ -10,7 +10,9 @@ const TextAreaFieldGroup = ({
   info,
   onChange,
   extraClass,
-  rows
+  rows,
+  maxLength,
+  minLength
 }) => {
   return (
     <div className="form-group">
@@ -22,6 +24,8 @@ const TextAreaFieldGroup = ({
         name={name}
         value={value}
         rows={rows}
+        maxLength={maxLength}
+        minLength={minLength}
         onChange={onChange}
       />
       {info && <small className="form-text text-muted">{info}</small>}
