@@ -61,6 +61,7 @@ class LocalResult extends Component {
     let newob = output.find(obj => obj.Document.Text.Id === id);
     const input = {
         docuId : newob.Document.Pattern.Id,
+        docuFile : this.props.research.research.document,
         textId: id
       }
       this.props.getTextPattern(input);

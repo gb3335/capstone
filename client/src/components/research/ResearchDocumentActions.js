@@ -56,6 +56,7 @@ class ResearchImageActions extends Component {
     const input = {
       docuId : this.props.research.research._id,
       title: this.props.research.research.title,
+      docuFile: this.props.research.research.document,
       researches: this.props.research.researches,
       flag: true
     };

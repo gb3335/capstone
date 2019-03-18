@@ -265,15 +265,34 @@ router.post("/get/pattern", (req,res) => {
 
   //option to extract text from page 0 to 10
   var option = {from: 0, to: 10};
-  
-  //Omit option to extract all text from the pdf file
-  pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
-    if (err) throw(err);
-    // console.log(data); //print all text
-    res.json({ 
-      success: true,
-      data: data.toString()
-    })
+
+  let docuFile = req.body.docuFile;
+  const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function(err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
+        
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({ 
+          success: true,
+          data: data.toString(),
+          docuId
+        })
+    });
   });
 
 })
@@ -284,29 +303,36 @@ router.post("/get/pattern", (req,res) => {
 router.post("/local/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
-  
-  try {
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${docuId}.pdf`, function(err, data) {
-      if (err) {
-        console.log("ERROR NI KRISHIELD: "+err)
-        res.json({ 
-          success: false
-        })
-      }else{
+  let docuFile = req.body.docuFile;
+  const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function(err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
+        
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
         let extext = data;
         const {arr, len} = processor.arrayProcess(extext.toString().toLowerCase());
         plagiarism.initialize(arr, len, title, docuId);
         res.json({ 
           success: true
         })
-      }
-      
-    })
-  } catch (error) {
-    res.json({ 
-      success: false
-    })
-  }
+      });
+    });
+
   
 })
 
@@ -324,56 +350,78 @@ router.post("/local/result", (req, res) => {
   
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
-  
-  pdfUtil.pdfToText(`./routes/downloadedDocu/${textId}.pdf`, function(err, data2) {
-        let result = {
-          SimilarityScore: 0,
-          Document: {
-            Pattern: {
-              Name: '',
-              Id: ''
-            },
-            Text:{
-              Name: '',
-              Id: ''
-            }
+  let textFile = req.body.textFile;
+
+  const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        textFile;
+
+
+  const options = {
+    directory: "./routes/downloadedDocu/",
+    filename: textFile
+  };
+
+  download(docPath, options, function(err) {
+    if (err) console.log(err);
+    console.log("Document successfully downloaded.");
+    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
+      
+      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+        if (err) throw err;
+        console.log('successfully deleted');
+      });
+      let result = {
+        SimilarityScore: 0,
+        Document: {
+          Pattern: {
+            Name: '',
+            Id: ''
           },
-          Index: []
-        }
-        if (err) {
-          console.dir(err)
-          res.json({
-            localPlagiarism: {
-              success: false,
-              data: result
-            }
-          });
-        }
-        let {text, len} = processor.textProcess(data2.toString().toLowerCase());
-        //console.log(text);
-        result = plagiarism.search(text, len, textTitle, textId);
-        //const compressed = hm.compress(JSON.stringify(result));
-        // gzip(JSON.stringify(result))
-        // .then((compressed) => {
-        //   console.log(compressed);
-        //   //return ungzip(compressed);
-        //   res.json({
-        //     localPlagiarism: {
-        //       success: true,
-        //       data: compressed
-        //     }
-        //   });
-        // })
-        // .then((decompressed) => {
-        //   console.log(JSON.parse(decompressed)); 
-        // });
+          Text:{
+            Name: '',
+            Id: ''
+          }
+        },
+        Index: []
+      }
+      if (err) {
+        console.dir(err)
         res.json({
           localPlagiarism: {
-            success: true,
+            success: false,
             data: result
           }
         });
-      })
+      }
+      let {text, len} = processor.textProcess(data.toString().toLowerCase());
+      //console.log(text);
+      result = plagiarism.search(text, len, textTitle, textId);
+      //const compressed = hm.compress(JSON.stringify(result));
+      // gzip(JSON.stringify(result))
+      // .then((compressed) => {
+      //   console.log(compressed);
+      //   //return ungzip(compressed);
+      //   res.json({
+      //     localPlagiarism: {
+      //       success: true,
+      //       data: compressed
+      //     }
+      //   });
+      // })
+      // .then((decompressed) => {
+      //   console.log(JSON.parse(decompressed)); 
+      // });
+      res.json({
+        localPlagiarism: {
+          success: true,
+          data: result
+        }
+      });
+      
+    });
+  });
   
 });
 
