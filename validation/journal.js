@@ -14,7 +14,7 @@ module.exports = function validateResearchInput(data) {
   data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
   data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
-  data.researchId = !isEmpty(data.researchId) ? data.researchId : "";
+  data.issn = !isEmpty(data.issn) ? data.issn : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
 
@@ -44,8 +44,8 @@ module.exports = function validateResearchInput(data) {
     errors.abstract = "Abstract must be at least 100 characters";
   }
 
-  if (Validator.isEmpty(data.researchId)) {
-    errors.researchId = "ISSN is required";
+  if (Validator.isEmpty(data.issn)) {
+    errors.issn = "ISSN is required";
   }
 
   if (Validator.isEmpty(data.schoolYear)) {

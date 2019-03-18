@@ -23,7 +23,7 @@ class AddResearch extends Component {
       college: "",
       course: "",
       abstract: "",
-      researchId: "",
+      issn: "",
       authorOne: "",
       pages: "",
       schoolYear: "",
@@ -77,7 +77,7 @@ class AddResearch extends Component {
       college: this.state.college,
       course: this.state.course,
       abstract: this.state.abstract,
-      researchId: this.state.researchId,
+      issn: this.state.issn,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages,
       authorOne: this.state.authorOne
@@ -295,10 +295,10 @@ class AddResearch extends Component {
                 />
                 <TextFieldGroup
                   placeholder="* ISSN"
-                  name="researchId"
-                  value={this.state.researchId}
+                  name="issn"
+                  value={this.state.issn}
                   onChange={this.onChange}
-                  error={errors.researchId}
+                  error={errors.issn}
                   info="ISNN given by the college library"
                 />
                 <TextFieldGroup

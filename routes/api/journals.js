@@ -142,11 +142,7 @@ router.post(
               name: req.body.authorOne,
               role: "Author One"
             });
-            let publisherArray = [];
-            publisherArray.push({
-              name: req.body.publisher,
-
-            });
+           
 
             copyAuthorArray.map(aut => {
               aut.role === "Author"
@@ -162,9 +158,9 @@ router.post(
               college: req.body.college,
               course: req.body.course,
               abstract: req.body.abstract,
-              issn: req.body.researchId,
+              issn: req.body.issn,
               pages: req.body.pages,
-              publisher: publisherArray,
+              publisher: req.body.publisher,
               volume: req.body.volume,
               schoolYear: req.body.schoolYear,
               author: authorArray,
@@ -238,20 +234,16 @@ router.post(
                       name: req.body.authorOne,
                       role: "Author One"
                     });
-                    let publisherArray = [];
-                    publisherArray.push({
-                      name: req.body.publisher,
-
-                    });
+                   
 
                     let newResearch = {
                       title: req.body.title,
                       college: req.body.college,
                       course: req.body.course,
                       abstract: req.body.abstract,
-                      issn: req.body.researchId,
+                      issn: req.body.issn,
                       pages: req.body.pages,
-                      publisher: publisherArray,
+                      publisher: req.body.pages,
                       volume: req.body.volume,
                       schoolYear: req.body.schoolYear,
                       author: authorArray,
@@ -286,6 +278,48 @@ router.post(
 // @access  Private
 router.post(
   "/author",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateAuthorInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
+    Research.findOne({ _id: req.body.researchId }).then(research => {
+      const newAuthor = {
+        name: req.body.name,
+        role: req.body.role
+      };
+
+      // add activity
+      const newActivity = {
+        title: req.body.name + " added as Author in " + research.title
+      };
+      new Activity(newActivity).save();
+
+      const newResearch = {
+        lastUpdate: Date.now()
+      };
+
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newResearch },
+        { new: true }
+      ).then(research);
+
+      // Add to exp array
+      research.author.unshift(newAuthor);
+
+      research.save().then(research => res.json(research));
+    });
+  }
+);
+
+router.post(
+  "/publisher",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateAuthorInput(req.body);

@@ -23,14 +23,10 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  publisher: [
-    {
-      name: {
-        type: String,
-        required: true
-      },
-    }
-  ],
+  publisher: {
+    type: String,
+    required: true
+  },
   volume: {
     type: String,
     required: true
