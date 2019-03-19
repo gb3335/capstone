@@ -28,7 +28,8 @@ export default function (state = initialState, action) {
         case PLAGIARISM_ONLINE_INPUT:
             return {
                 ...state,
-                original: action.payload
+                original: action.payload,
+                buttonDisable: false
             }
         case PLAGIARISM_ONLINE_LOADING:
             return {
