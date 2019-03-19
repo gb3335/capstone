@@ -18,7 +18,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       promises = []
       input.researches.forEach(function(research){
         if(research._id !== input.docuId){
-          if(research.document){
+          if(research.document && research.deleted!==1){
             promises.push(axios.post("/api/plagiarism/local/result", {docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document}))
           }
         }
