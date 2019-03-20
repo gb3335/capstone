@@ -41,7 +41,8 @@ class UserAction extends Component {
 
 
     let editAction;
-
+    let imageAction;
+    let blockAction;
 
     if (auth.isAuthenticated) {
 
@@ -54,7 +55,18 @@ class UserAction extends Component {
 
 
         );
+        imageAction = (
+          <Link to="#" htmlFor="imageUpload" className="btn btn-light">
+            <i className="fas fa-plus text-info mr-1 " />
+            Change Image
+        </Link>
+        )
 
+      }
+      if (user.userType == 'ADMINISTRATOR') {
+        blockAction = (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={() => this.changeClick()}>
+          <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
+        </Link>)
       }
 
     }
@@ -63,13 +75,8 @@ class UserAction extends Component {
     return (
       <div className="btn-group mb-3 btn-group-sm" >
         {editAction}
-        <Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={() => this.changeClick()}>
-          <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
-          </Link>
-        <Link to="#" htmlFor="imageUpload" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1 " />
-          Change Image
-          </Link>
+        {blockAction}
+        {imageAction}
 
       </div>
     );

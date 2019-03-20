@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
 
-import "./Researches.css";
+import "./Journals.css";
 
 import { getResearches } from "../../actions/journalActions";
 
@@ -229,7 +229,7 @@ class Researches extends Component {
       <div className="researches">
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12">
-            <div className="researchesBg">
+            <div className="journalBg">
               <div className="light-overlay">
                 {title}
                 <p className="lead text-center">{info}</p>

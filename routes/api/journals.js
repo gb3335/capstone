@@ -142,7 +142,7 @@ router.post(
               name: req.body.authorOne,
               role: "Author One"
             });
-           
+
 
             copyAuthorArray.map(aut => {
               aut.role === "Author"
@@ -234,7 +234,7 @@ router.post(
                       name: req.body.authorOne,
                       role: "Author One"
                     });
-                   
+
 
                     let newResearch = {
                       title: req.body.title,
@@ -487,8 +487,8 @@ router.post(
   }
 );
 
-// @route   POST api/researches/document
-// @desc    Add document to research
+// @route   POST api/journals/document
+// @desc    Add document to journal
 // @access  Private
 router.post(
   "/document",

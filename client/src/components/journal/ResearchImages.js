@@ -10,10 +10,10 @@ class ResearchImages extends Component {
       if (Object.keys(research.images).length > 0) {
         imageItems = <Images images={research.images} />;
       } else {
-        imageItems = <span>No image is added in this research</span>;
+        imageItems = <span>No image is added in this journal.</span>;
       }
     } catch (error) { }
-
+    console.log(research.images)
     return (
       <div className="card">
         <div className="card-body">

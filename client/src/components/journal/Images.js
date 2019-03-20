@@ -20,7 +20,7 @@ class Images extends Component {
 
   render() {
     const path =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchImages/";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalImages/";
     let imageData = [];
 
     this.props.images.map(image =>
