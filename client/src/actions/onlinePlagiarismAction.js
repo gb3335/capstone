@@ -35,6 +35,7 @@ let promises = [];
 
 export const getOnlinePlagiarismResult = input => dispatch =>{
   console.time("Initialize")
+  dispatch(setPlagiarismOnlineDisableButton());
   axios
   .post("/api/plagiarism/online/initialize/pattern", input)
   .then(res => {
