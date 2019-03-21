@@ -50,7 +50,7 @@ export const createReportForResearches = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -87,7 +87,7 @@ export const createReportForResearch = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };

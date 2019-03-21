@@ -15,9 +15,8 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  abstract: {
+  description: {
     type: String,
-    required: true
   },
   issn: {
     type: String,

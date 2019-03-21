@@ -47,11 +47,11 @@ class Users extends Component {
       <div className="researches">
         <div className="container">
           <div className="row">
-            <div className="col-md-12">
-              <h1 className="display-4 text-center">Researches</h1>
-              <p className="lead text-center">
-                See all research and it's informations
-              </p>
+            <div className="usersBg">
+              <div className="light-overlay">
+                Users
+                <p className="lead text-center">User list of accounts</p>
+              </div>
             </div>
           </div>
         </div>

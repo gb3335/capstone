@@ -618,5 +618,88 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
+router.post(
+  "/image",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const rand = uuid();
+    let base64String = req.body.file;
+    let base64Doc = base64String.split(";base64,").pop();
+    const filename = req.body.researchId + "-" + rand + ".pdf";
+
+    if (req.body.oldFile) {
+      // delete research document from s3
+      let s3 = new AWS.S3();
+
+      let params = {
+        Bucket: "bulsu-capstone",
+        Key: `researchDocuments/${req.body.oldFile}`
+      };
+
+      s3.deleteObject(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else console.log(data);
+      });
+    }
+    // S3 upload
+    s3 = new AWS.S3();
+
+    const base64Data = new Buffer(
+      base64Doc.replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    );
+
+    const type = base64String.split(";")[0].split("/")[1];
+
+    const userId = 1;
+
+    let researchObject = {};
+
+    params = {
+      Bucket: "bulsu-capstone",
+      Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
+      Body: base64Data,
+      ACL: "public-read",
+      ContentEncoding: "base64", // required
+      ContentType: `application/pdf` // required. Notice the back ticks
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+      const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        filename;
+      const options = {
+        directory: "./routes/downloadedDocu",
+        filename: req.body.researchId + ".pdf"
+      };
+      download(docPath, options, function (err) {
+        if (err) console.log(err);
+        console.log("Document successfully uploaded.");
+      });
+
+      const newDocument = {
+        document: filename,
+        lastUpdate: Date.now()
+      };
+      Research.findOne({ _id: req.body.researchId }).then(research => {
+        // add activity
+        const newActivity = {
+          title: "Document added to " + research.title
+        };
+        new Activity(newActivity).save();
+      });
+
+      Research.findOneAndUpdate(
+        { _id: req.body.researchId },
+        { $set: newDocument },
+        { new: true }
+      ).then(research => res.json(research));
+    });
+
+  }
+);
 
 module.exports = router;

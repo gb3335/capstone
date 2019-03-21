@@ -11,7 +11,9 @@ module.exports = function validateResearchInput(data) {
   data.volume = !isEmpty(data.volume) ? data.volume : "";
   data.publisher = !isEmpty(data.publisher) ? data.publisher : "";
   data.course = !isEmpty(data.course) ? data.course : "";
-  data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
+
+
+
   data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
   data.issn = !isEmpty(data.issn) ? data.issn : "";
@@ -36,13 +38,7 @@ module.exports = function validateResearchInput(data) {
     errors.course = "Journal course is required";
   }
 
-  if (Validator.isEmpty(data.abstract)) {
-    errors.abstract = "Journal abstract is required";
-  }
 
-  if (!Validator.isLength(striptags(data.abstract), { min: 100 })) {
-    errors.abstract = "Abstract must be at least 100 characters";
-  }
 
   if (Validator.isEmpty(data.issn)) {
     errors.issn = "ISSN is required";
