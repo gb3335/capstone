@@ -482,7 +482,7 @@ class Research extends Component {
               </div>
             </div>
           );
-        } catch (error) {}
+        } catch (error) { }
       }
     } catch (error) {}
 

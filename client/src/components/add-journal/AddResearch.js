@@ -22,7 +22,7 @@ class AddResearch extends Component {
       volume: "",
       college: "",
       course: "",
-      abstract: "",
+      description: "",
       issn: "",
       authorOne: "",
       pages: "",
@@ -76,7 +76,7 @@ class AddResearch extends Component {
       publisher: this.state.publisher,
       college: this.state.college,
       course: this.state.course,
-      abstract: this.state.abstract,
+      description: this.state.description,
       issn: this.state.issn,
       schoolYear: this.state.schoolYear,
       pages: this.state.pages,
@@ -124,7 +124,7 @@ class AddResearch extends Component {
   };
 
   handleChange = value => {
-    this.setState({ abstract: value });
+    this.setState({ description: value });
     this.refs.resBtn.removeAttribute("disabled");
   };
 
@@ -142,7 +142,7 @@ class AddResearch extends Component {
         });
       })
       .then(data => {
-        this.setState({ abstract: data.text });
+        this.setState({ description: data.text });
       })
       .catch(console.error);
   };
@@ -256,8 +256,8 @@ class AddResearch extends Component {
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
-                  placeholder="* Abstract"
-                  value={this.state.abstract}
+                  placeholder="* Description"
+                  value={this.state.description}
                   onChange={this.handleChange}
                 />
 
@@ -266,7 +266,7 @@ class AddResearch extends Component {
                 <br />
                 <div>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
-                    {errors.abstract}
+                    {errors.description}
                   </p>
                 </div>
                 <TextFieldGroup

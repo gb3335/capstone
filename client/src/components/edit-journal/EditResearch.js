@@ -26,7 +26,7 @@ class EditResearch extends Component {
       course: journal.course,
       volume: journal.volume,
       publisher: journal.publisher,
-      abstract: journal.abstract,
+      description: journal.description,
       issn: journal.issn,
       volume: journal.volume,
       publisher: journal.publisher,
@@ -87,7 +87,7 @@ class EditResearch extends Component {
       oldTitle: this.state.oldTitle,
       college: this.state.college,
       course: this.state.course,
-      abstract: this.state.abstract,
+      description: this.state.description,
       pages: this.state.pages,
       issn: this.state.issn,
       volume: this.state.volume,
@@ -102,7 +102,7 @@ class EditResearch extends Component {
       // course: journal.course,
       // volume:journal.volume,
       // publisher:journal.publisher,
-      // abstract: journal.abstract,
+      // description: journal.description,
       // issn: journal.issn,
       // pages: journal.pages,
       // schoolYear: journal.schoolYear,
@@ -150,7 +150,7 @@ class EditResearch extends Component {
   };
 
   handleChange = value => {
-    this.setState({ abstract: value });
+    this.setState({ description: value });
   };
 
   quillChange = () => {
@@ -171,7 +171,7 @@ class EditResearch extends Component {
         });
       })
       .then(data => {
-        this.setState({ abstract: data.text });
+        this.setState({ description: data.text });
       })
       .catch(console.error);
   };
@@ -274,8 +274,8 @@ class EditResearch extends Component {
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
-                  placeholder="* Abstract"
-                  value={this.state.abstract}
+                  placeholder="* Description"
+                  value={this.state.description}
                   onChange={this.handleChange}
                   onKeyPress={this.quillChange}
                 />
@@ -284,7 +284,7 @@ class EditResearch extends Component {
                 <br />
                 <div>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
-                    {errors.abstract}
+                    {errors.description}
                   </p>
                 </div>
                 <TextFieldGroup
