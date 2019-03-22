@@ -110,13 +110,13 @@ const {typeOfReport, subTypeOfReport , output} = input;
         }
 
 .overview{
-    font-size: 12px;
+    font-size: 8px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .overviewContent{
-    font-size: 12px;
+    font-size: 8px;
     
 }
 
@@ -134,7 +134,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
 
 .note{
     margin-top:10px;
-    font-size: 12px;
+    font-size: 8px;
     font-style: italic;
 }
 
