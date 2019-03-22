@@ -164,9 +164,9 @@ const {typeOfReport, subTypeOfReport , output} = input;
           <br />
           <br />
           <br />
-          <h4>${typeOfReport}</h4>
-          <h5>${subTypeOfReport}</h5>
-          <h4>University Research Office</h4>
+          <h5>${typeOfReport}</h5>
+          <h6>${subTypeOfReport}</h6>
+          <h5>University Research Office</h5>
         </div>
         <br/>
             <br/>
