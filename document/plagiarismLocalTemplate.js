@@ -22,7 +22,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
       docuFound+=`<tr>
                     <td>${index+1}</td>
                     <td>${out.Document.Text.Name}</td>
-                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}</td>
+                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
                   </tr>`
   })
 
@@ -86,7 +86,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
         }
   
         tr:nth-child(even) {
-          background-color: #000000;
+          background-color: #3d3d3d;
           color: white;
         }
 

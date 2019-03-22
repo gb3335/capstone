@@ -506,7 +506,12 @@ router.post('/create/report/local', (req,res) => {
 
 router.get('/get/report/local', (req,res) => {
   let reqPath = path.join(__dirname, "../../");
-  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`) 
+  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
   
 });// end of post
 
@@ -541,7 +546,13 @@ router.post('/create/report/local/side', (req,res) => {
 
 router.get('/get/report/local/side', (req,res) => {
   let reqPath = path.join(__dirname, "../../");
-  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`) 
+  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
+  
   
 });// end of post
 
@@ -577,7 +588,13 @@ router.post('/create/report/online', (req,res) => {
 
 router.get('/get/report/online', (req,res) => {
   let reqPath = path.join(__dirname, "../../");
-  res.sendFile(`${reqPath}/PlagiarismOnlineResult.pdf`) 
+  res.sendFile(`${reqPath}/PlagiarismOnlineResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismOnlineResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
+  
   
 });// end of Get
 
