@@ -118,8 +118,6 @@ class UserAction extends Component {
       }
 
     }
-
-
     return (
       <div className="btn-group mb-3 btn-group-sm" >
         <SweetAlert
