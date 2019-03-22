@@ -103,7 +103,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
 
         .over-container{
             padding-top: 50px;
-            padding-bottom: 20px;
+            
             width: 450px;
             margin: auto;
         }
