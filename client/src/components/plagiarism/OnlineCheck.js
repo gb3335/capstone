@@ -15,7 +15,7 @@ import OnlineHighlightedResult from './OnlineHighlightedResult'
 import Output from '../plagiarism-result/Output';
 import './OnlineCheck.css'
 
-import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails} from '../../actions/onlinePlagiarismAction'
+import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails ,createOnlinePlagiarismReport} from '../../actions/onlinePlagiarismAction'
 
  
 class OnlineCheck extends Component {
@@ -81,6 +81,23 @@ class OnlineCheck extends Component {
             this.setState({q: this.props.onlinePlagiarism.original})
         }
     }
+
+    onClickGenerateReport = () => {
+        const name =
+            this.props.auth.user.firstName +
+            " " +
+            this.props.auth.user.middleName +
+            " " +
+            this.props.auth.user.lastName;
+  
+        const input = {
+          printedBy: name,
+          typeOfReport: "Check Plagiarism Report",
+          subTypeOfReport: "Checked in the System World Wide Web",
+          output : this.props.onlinePlagiarism.output
+        }
+        this.props.createOnlinePlagiarismReport(input);
+      }
 
     
 
@@ -215,12 +232,12 @@ class OnlineCheck extends Component {
             <div className="container-fluid">
             <div className="row">
               <div className="col-md-8">
-                <Link
-                  to={``}
+                <button
+                onClick={this.onClickGenerateReport}
                   className="btn btn-light mb-3 float-right"
                 >
                   <i className="fas fa-flag text-danger" /> Generate Report
-                </Link>
+                </button>
               </div>
             </div>
                 <div className="row">
@@ -251,13 +268,15 @@ class OnlineCheck extends Component {
 OnlineCheck.propTypes = {
     checkPlagiarismOnline: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
     setPlagiarismOnlineShowDetails : PropTypes.func.isRequired,
     setPlagiarismOnlineHideDetails : PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) =>({
     errors : state.errors,
-    onlinePlagiarism: state.onlinePlagiarism
+    onlinePlagiarism: state.onlinePlagiarism,
+    auth: state.auth
 })
  
-export default connect(mapStateToProps,{checkPlagiarismOnline,setPlagiarismOnlineShowDetails,setPlagiarismOnlineHideDetails})(OnlineCheck);
+export default connect(mapStateToProps,{checkPlagiarismOnline,setPlagiarismOnlineShowDetails,setPlagiarismOnlineHideDetails, createOnlinePlagiarismReport})(OnlineCheck);

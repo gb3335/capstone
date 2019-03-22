@@ -10,6 +10,7 @@ import {
 } from "./types";
 import axios from "axios";
 
+import { saveAs } from "file-saver";
 // Check Plagiarism Online
 export const checkPlagiarismOnline = input => dispatch => {
   dispatch(setPlagiarismOnlineDisableButton());
@@ -71,6 +72,17 @@ export const getOnlinePlagiarismResult = input => dispatch =>{
           });
         });
     }
+  })
+}
+
+
+export const createOnlinePlagiarismReport = (input) => dispatch => {
+  axios.post('/api/plagiarism/create/report/online', input)
+  .then(() => axios.get('/api/plagiarism/get/report/online', {responseType: 'blob'}))
+  .then((res) =>{
+    const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
+
+    saveAs(pdfBlob, 'PlagiarismOnlineResult.pdf');
   })
 }
 
