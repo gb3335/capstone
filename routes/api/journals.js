@@ -101,7 +101,7 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
-// @route   POST api/researches
+// @route   POST api/journals
 // @desc    Create / Update research
 // @access  Private
 router.post(
@@ -133,7 +133,7 @@ router.post(
           } else {
             // add activity
             const newActivity = {
-              title: "Research " + req.body.title + " updated"
+              title: "Journal " + req.body.title + " updated"
             };
             new Activity(newActivity).save();
 
@@ -192,7 +192,7 @@ router.post(
                   if (college) {
                     // add activity
                     const newActivity = {
-                      title: "Research " + req.body.title + " added"
+                      title: "Journal " + req.body.title + " added"
                     };
                     new Activity(newActivity).save();
 
@@ -203,8 +203,8 @@ router.post(
                       if (cou.name === req.body.course) {
                         courseId = cou._id;
                         dupliCourse = cou;
-                        courseResTotal = ++dupliCourse.researchTotal;
-                        dupliCourse.researchTotal = courseResTotal;
+                        courseResTotal = ++dupliCourse.journalTotal;
+                        dupliCourse.journalTotal = courseResTotal;
                       }
                     });
 
@@ -223,10 +223,10 @@ router.post(
 
                     college.save();
 
-                    const total = ++college.researchTotal;
+                    const total = ++college.journalTotal;
 
                     const newCollege = {
-                      researchTotal: total
+                      journalTotal: total
                     };
 
                     let authorArray = [];
@@ -852,11 +852,11 @@ router.post(
 
       // increase decrease research count in college and course
       College.findOne({ "name.fullName": research.college }).then(college => {
-        let researchCount = parseInt(college.researchTotal, 10);
+        let researchCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: req.body.hidden ? researchCount : --researchCount
+          journalTotal: req.body.hidden ? researchCount : --researchCount
         };
 
         college.course.map((cou, index) => {
@@ -866,9 +866,9 @@ router.post(
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : --cou.researchTotal,
+              journalTotal: req.body.hidden
+                ? cou.journalTotal
+                : --cou.journalTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
@@ -927,11 +927,11 @@ router.post(
 
       // increase research count in college and course
       College.findOne({ "name.fullName": research.college }).then(college => {
-        let researchCount = parseInt(college.researchTotal, 10);
+        let researchCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: req.body.hidden ? researchCount : ++researchCount
+          journalTotal: req.body.hidden ? researchCount : ++researchCount
         };
 
         college.course.map((cou, index) => {
@@ -941,9 +941,9 @@ router.post(
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : ++cou.researchTotal,
+              journalTotal: req.body.hidden
+                ? cou.journalTotal
+                : ++cou.journalTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
