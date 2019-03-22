@@ -110,13 +110,13 @@ const {typeOfReport, subTypeOfReport , output} = input;
         }
 
 .overview{
-    font-size: 8px;
+    font-size: 7px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .overviewContent{
-    font-size: 8px;
+    font-size: 7px;
     
 }
 
@@ -134,7 +134,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
 
 .note{
     margin-top:10px;
-    font-size: 8px;
+    font-size: 7px;
     font-style: italic;
 }
 
@@ -184,7 +184,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
             </div>
             <br/>
             <br/>
-            <div class="courses" style="font-size: 9px">
+            <div class="courses" style="font-size: 7px">
                 <h4 style="font-size: 10px">Websites Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
                 <table>
                     <tr>
@@ -203,7 +203,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
 
     <script>
 
-        Chart.defaults.global.defaultFontSize = 9;
+        Chart.defaults.global.defaultFontSize = 7;
         const canvas = document.getElementById('pie');
 
         const data = {
