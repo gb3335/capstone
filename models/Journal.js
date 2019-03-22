@@ -34,7 +34,7 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  schoolYear: {
+  yearPublished: {
     type: String,
     required: true
   },

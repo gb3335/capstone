@@ -26,7 +26,7 @@ class AddResearch extends Component {
       issn: "",
       authorOne: "",
       pages: "",
-      schoolYear: "",
+      yearPublished: "",
       flagFromCollege: false,
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
@@ -70,6 +70,14 @@ class AddResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchData = {
       title: this.state.title,
       volume: this.state.volume,
@@ -78,9 +86,10 @@ class AddResearch extends Component {
       course: this.state.course,
       description: this.state.description,
       issn: this.state.issn,
-      schoolYear: this.state.schoolYear,
+      yearPublished: this.state.yearPublished,
       pages: this.state.pages,
-      authorOne: this.state.authorOne
+      authorOne: this.state.authorOne,
+      username: name
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -311,10 +320,10 @@ class AddResearch extends Component {
                 />
                 <TextFieldGroup
                   placeholder="* Published year"
-                  name="schoolYear"
-                  value={this.state.schoolYear}
+                  name="yearPublished"
+                  value={this.state.yearPublished}
                   onChange={this.onChange}
-                  error={errors.schoolYear}
+                  error={errors.yearPublished}
                   info="Year you've published the journal"
                 />
                 <input
@@ -335,11 +344,13 @@ AddResearch.propTypes = {
   getColleges: PropTypes.func.isRequired,
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

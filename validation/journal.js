@@ -14,7 +14,7 @@ module.exports = function validateResearchInput(data) {
 
 
 
-  data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
+  data.yearPublished = !isEmpty(data.yearPublished) ? data.yearPublished : "";
   data.pages = !isEmpty(data.pages) ? data.pages : "";
   data.issn = !isEmpty(data.issn) ? data.issn : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
@@ -44,8 +44,8 @@ module.exports = function validateResearchInput(data) {
     errors.issn = "ISSN is required";
   }
 
-  if (Validator.isEmpty(data.schoolYear)) {
-    errors.schoolYear = "School year is required";
+  if (Validator.isEmpty(data.yearPublished)) {
+    errors.yearPublished = "Year published is required";
   }
 
   if (Validator.isEmpty(data.pages)) {

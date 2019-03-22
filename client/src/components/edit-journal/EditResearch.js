@@ -31,7 +31,7 @@ class EditResearch extends Component {
       volume: journal.volume,
       publisher: journal.publisher,
       pages: journal.pages,
-      schoolYear: journal.schoolYear,
+      yearPublished: journal.yearPublished,
       authorOne: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
@@ -82,6 +82,13 @@ class EditResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchData = {
       title: this.state.title,
       oldTitle: this.state.oldTitle,
@@ -92,9 +99,10 @@ class EditResearch extends Component {
       issn: this.state.issn,
       volume: this.state.volume,
       publisher: this.state.publisher,
-      schoolYear: this.state.schoolYear,
+      yearPublished: this.state.yearPublished,
       authorOne: this.state.authorOne,
-      id: this.props.journal.journal._id
+      id: this.props.journal.journal._id,
+      username: name
 
       // title: journal.title,
       // oldTitle: journal.title,
@@ -105,7 +113,7 @@ class EditResearch extends Component {
       // description: journal.description,
       // issn: journal.issn,
       // pages: journal.pages,
-      // schoolYear: journal.schoolYear,
+      // yearPublished: journal.yearPublished,
       // authorOne: "",
     };
 
@@ -329,11 +337,11 @@ class EditResearch extends Component {
                 />
                 <TextFieldGroup
                   placeholder="* School Year"
-                  name="schoolYear"
-                  value={this.state.schoolYear}
+                  name="yearPublished"
+                  value={this.state.yearPublished}
                   onChange={this.onChange}
-                  error={errors.schoolYear}
-                  info="School Year you've finished the journal"
+                  error={errors.yearPublished}
+                  info="Year you've published the journal"
                 />
                 <input
                   ref="resBtn"
@@ -354,12 +362,14 @@ EditResearch.propTypes = {
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   journal: state.journal,
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

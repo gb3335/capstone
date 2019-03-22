@@ -19,7 +19,7 @@ class Authors extends Component {
         this.props.auth.user.middleName +
         " " +
         this.props.auth.user.lastName;
-    } catch (error) {}
+    } catch (error) { }
     if (this.props.auth.isAuthenticated === true) {
       if (research.deleted === 0) {
         author = this.props.author.map(author => (

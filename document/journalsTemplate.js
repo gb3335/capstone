@@ -2,41 +2,37 @@ const moment = require("moment");
 
 module.exports = ({
   status,
-  researchId,
+  issn,
   college,
   course,
-  type,
   pages,
   academicYear,
   lastUpdate,
-  deletedResearches,
+  deletedJournals,
   researches,
   typeOfReport
 }) => {
-  let researchesList;
-  let researchesListNoComma = "";
-  let researchesListHeader;
-
-  let totalNumOfResearches = 0;
+  let journalsList;
+  let journalsListNoComma = "";
+  let journalsListHeader;
+  let journals = researches;
+  let totalNumberOfJournals = 0;
   let numberOfColForEndRow = 0;
 
-  let totalcol = researches.length;
+  let totalcol = journals.length;
 
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  if (researchId === true) {
+  if (issn === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
   if (college === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
   if (course === true) {
-    numberOfColForEndRow = ++numberOfColForEndRow;
-  }
-  if (type === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
   if (pages === true) {
@@ -52,67 +48,63 @@ module.exports = ({
   numberOfColForEndRow = 2 + numberOfColForEndRow;
 
   if (totalcol == 0) {
-    researchesList = "No Researches in this College";
-    researchesListHeader = "";
+    journalsList = "No Journals in this College";
+    journalsListHeader = "";
   } else {
-    if (deletedResearches) {
-      researchesList = researches.map(
-        (research, index) =>
+    if (deletedJournals) {
+      journalsList = journals.map(
+        (journal, index) =>
           "<tr>" +
           `<td>${++index}</td>` +
-          `<td>${research.title}</td>` +
-          `${college === true ? `<td>${research.college}</td>` : ""}` +
-          `${course === true ? `<td>${research.course}</td>` : ""}` +
+          `<td>${journal.title}</td>` +
+          `${college === true ? `<td>${journal.college}</td>` : ""}` +
+          `${course === true ? `<td>${journal.course}</td>` : ""}` +
           `${
           status === true
-            ? research.deleted === 1
+            ? journal.deleted === 1
               ? "<td>Deleted</td>"
-              : research.hidden === 0
+              : journal.hidden === 0
                 ? "<td>Active</td>"
                 : "<td>Hidden</td>"
             : ""
           }` +
-          `${type === true ? `<td>${research.type}</td>` : ""}` +
-          `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
-          `${pages === true ? `<td>${research.pages}</td>` : ""}` +
-          `${academicYear === true ? `<td>${research.schoolYear}</td>` : ""}` +
+          `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
+          `${academicYear === true ? `<td>${journal.schoolYear}</td>` : ""}` +
           `${
           lastUpdate === true
-            ? `<td>${moment(research.lastUpdate).format(
+            ? `<td>${moment(journal.lastUpdate).format(
               "MMMM Do YYYY, h:mm A"
             )}</td>`
             : ""
           }` +
           "</tr>"
       );
-      totalNumOfResearches = researchesList.length;
+      totalNumberOfJournals = journalsList.length;
     } else {
       let ind = 0;
-      researchesList = researches.map((research, index) =>
-        research.deleted === 0
+      journalsList = journals.map((journal, index) =>
+        journal.deleted === 0
           ? "<tr>" +
           `<td>${++ind}</td>` +
-          `<td>${research.title}</td>` +
-          `${college === true ? `<td>${research.college}</td>` : ""}` +
-          `${course === true ? `<td>${research.course}</td>` : ""}` +
+          `<td>${journal.title}</td>` +
+          `${college === true ? `<td>${journal.college}</td>` : ""}` +
+          `${course === true ? `<td>${journal.course}</td>` : ""}` +
           `${
           status === true
-            ? research.deleted === 1
+            ? journal.deleted === 1
               ? "<td>Deleted</td>"
-              : research.hidden === 0
+              : journal.hidden === 0
                 ? "<td>Active</td>"
                 : "<td>Hidden</td>"
             : ""
           }` +
-          `${type === true ? `<td>${research.type}</td>` : ""}` +
-          `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
-          `${pages === true ? `<td>${research.pages}</td>` : ""}` +
+          `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
           `${
-          academicYear === true ? `<td>${research.schoolYear}</td>` : ""
+          academicYear === true ? `<td>${journal.schoolYear}</td>` : ""
           }` +
           `${
           lastUpdate === true
-            ? `<td>${moment(research.lastUpdate).format(
+            ? `<td>${moment(journal.lastUpdate).format(
               "MMMM Do YYYY, h:mm A"
             )}</td>`
             : ""
@@ -122,24 +114,24 @@ module.exports = ({
       );
 
       let ctrNoDeleted = 0;
-      researches.map(research => {
-        if (research.deleted === 0) {
+      journals.map(journal => {
+        if (journal.deleted === 0) {
           ++ctrNoDeleted;
         }
       });
 
-      totalNumOfResearches = ctrNoDeleted;
+      totalNumberOfJournals = ctrNoDeleted;
     }
 
-    researchesList.map(item => {
-      researchesListNoComma = researchesListNoComma + item;
+    journalsList.map(item => {
+      journalsListNoComma = journalsListNoComma + item;
     });
 
-    researchesListNoComma =
-      researchesListNoComma +
+    journalsListNoComma =
+      journalsListNoComma +
       `<tr class="blank_row"><td colspan="${numberOfColForEndRow}" style="text-align:center;">- Nothing Follows -</td></tr>`;
 
-    researchesListHeader =
+    journalsListHeader =
       "<tr>" +
       "<th>NO</th>" +
       "<th>TITLE</th>" +
@@ -147,7 +139,7 @@ module.exports = ({
       `${course === true ? "<th>COURSE</th>" : ""}` +
       `${status === true ? "<th>STATUS</th>" : ""}` +
       `${type === true ? "<th>TYPE</th>" : ""}` +
-      `${researchId === true ? "<th>RESEARCH ID</th>" : ""}` +
+      `${issn === true ? "<th>ISSN</th>" : ""}` +
       `${pages === true ? "<th>PAGES</th>" : ""}` +
       `${academicYear === true ? "<th>ACADEMIC YEAR</th>" : ""}` +
       `${lastUpdate === true ? "<th>UPDATED ON</th>" : ""}` +
@@ -242,10 +234,10 @@ module.exports = ({
           <h4>University Research Office</h4>
         </div>
         <div class="courses" style="font-size: 5px">
-          <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumberOfJournals}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
           <table>
-          ${researchesListHeader}
-          ${researchesListNoComma}
+          ${journalsListHeader}
+          ${journalsListNoComma}
           </table>
       </div>
       </div>

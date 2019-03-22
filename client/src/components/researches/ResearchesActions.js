@@ -345,13 +345,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                  <input
-                    type="button"
-                    value="Generate Report"
-                    onClick={this.onGenerateReport}
-                    className="btn btn-info"
-                  />
-                )}
+                    <input
+                      type="button"
+                      value="Generate Report"
+                      onClick={this.onGenerateReport}
+                      className="btn btn-info"
+                    />
+                  )}
               </form>
             </div>
           </div>

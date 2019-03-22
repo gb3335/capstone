@@ -38,16 +38,16 @@ export const getResearches = () => dispatch => {
 
 // Create Report for all Researches
 export const createReportForResearches = reportData => dispatch => {
-  //dispatch(changeButtonStatus(true));
+  dispatch(changeButtonStatus(true));
   axios
-    .post("/api/researches/createReport/researches", reportData)
+    .post("/api/journals/createReport/journals", reportData)
     .then(() =>
       axios
-        .get("/api/researches/fetchReport/researches", { responseType: "blob" })
+        .get("/api/journals/fetchReport/journals", { responseType: "blob" })
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-          //dispatch(changeButtonStatus(false));
-          saveAs(pdfBlob, "ResearchesReport.pdf");
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "JournalsReport.pdf");
 
           // send base64 to api for s3 upload -FOR ANDROID-
           if (reportData.android) {

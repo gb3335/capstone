@@ -46,7 +46,7 @@ class ResearchHeader extends Component {
           </span>
           <br />
           <span>
-            <b>School Year:</b> {research.schoolYear}
+            <b>Year Published:</b> {research.yearPublished}
           </span>
           <br />
           <span>
