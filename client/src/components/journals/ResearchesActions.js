@@ -107,7 +107,7 @@ class ResearchesAction extends Component {
         academicYear: this.state.academicYear,
         lastUpdate: this.state.lastUpdate,
         deletedResearches: this.state.deletedResearches,
-        researches: this.props.research.researches,
+        researches: this.props.journal.journals,
         typeOfReport: "Researches Report",
         printedBy: name
       };
@@ -121,7 +121,7 @@ class ResearchesAction extends Component {
 
   render() {
     let binAction;
-
+    const disableFlag = this.props.journal.buttonDisable;
 
     if (this.state.bin) {
       binAction = (
@@ -267,7 +267,7 @@ class ResearchesAction extends Component {
                     checked={this.state.academicYear}
                   />
                   <label className="form-check-label" htmlFor="academicYear">
-                    Published Year
+                    Academic Year
                   </label>
                 </div>
                 <div className="form-check">
@@ -302,12 +302,21 @@ class ResearchesAction extends Component {
                   </label>
                 </div>
                 <br />
-                <input
-                  type="button"
-                  value="Generate Report"
-                  onClick={this.onGenerateReport}
-                  className="btn btn-info disabled"
-                />
+                {disableFlag ? (
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info disabled"
+                  />
+                ) : (
+                    <input
+                      type="button"
+                      value="Generate Report"
+                      onClick={this.onGenerateReport}
+                      className="btn btn-info"
+                    />
+                  )}
               </form>
             </div>
           </div>

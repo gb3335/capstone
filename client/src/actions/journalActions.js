@@ -8,8 +8,12 @@ import {
   GET_ERRORS,
   CLEAR_ERRORS,
   TOGGLE_JOURNAL_BIN,
-  TOGGLE_JOURNAL_LIST
+  TOGGLE_JOURNAL_LIST,
+  CHANGE_BUTTON_STATUS_JOURNAL
 } from "./types";
+
+
+
 
 // Get all researches
 export const getResearches = () => dispatch => {
@@ -265,6 +269,13 @@ export const restoreResearch = (data, history) => dispatch => {
 
 };
 
+export const changeButtonStatus = flag => {
+  return {
+    type: CHANGE_BUTTON_STATUS_JOURNAL,
+    payload: flag
+  };
+};
+
 // set loading state
 export const setResearchLoading = () => {
   return {
@@ -278,3 +289,4 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   };
 };
+
