@@ -10,6 +10,7 @@ import { getUsers } from "../../actions/userActions";
 import RegisterActions from "./RegisterActions";
 import './ViewUsers.css';
 
+
 class ViewUsers extends Component {
 
   constructor() {

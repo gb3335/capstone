@@ -435,7 +435,7 @@ router.post(
 
       params = {
         Bucket: "bulsu-capstone",
-        Key: `researchImages/${req.body.id + "-" + rand}.png`, // type is not required
+        Key: `journalImages/${req.body.id + "-" + rand}.png`, // type is not required
         Body: base64Data,
         ACL: "public-read",
         ContentEncoding: "base64", // required
@@ -505,7 +505,7 @@ router.post(
 
       let params = {
         Bucket: "bulsu-capstone",
-        Key: `researchDocuments/${req.body.oldFile}`
+        Key: `journalDocuments/${req.body.oldFile}`
       };
 
       s3.deleteObject(params, function (err, data) {
@@ -529,7 +529,7 @@ router.post(
 
     params = {
       Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
+      Key: `journalDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
       Body: base64Data,
       ACL: "public-read",
       ContentEncoding: "base64", // required
@@ -541,7 +541,7 @@ router.post(
         return console.log(err);
       }
       const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
         filename;
       const options = {
         directory: "./routes/downloadedDocu",
@@ -685,7 +685,7 @@ router.delete(
 
     let params = {
       Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.params.filename}`
+      Key: `journalDocuments/${req.params.filename}`
     };
 
     s3.deleteObject(params, function (err, data) {

@@ -20,6 +20,12 @@ class ViewUser extends Component {
       this.props.getUserById(this.props.match.params.id);
     }
   }
+
+  componentWillMount() {
+    if (this.props.match.params.id) {
+      this.props.getUserById(this.props.match.params.id);
+    }
+  }
   editcontent(authuser, user) {
     console.log(user)
   }

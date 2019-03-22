@@ -18,7 +18,8 @@ export default combineReducers({
   localPlagiarism: localPlagiarismReducer,
   college: collegeReducer,
   research: researchReducer,
+  journal: journalReducer,
   activity: activityReducer,
-  users: userReducer,
-  journal: journalReducer
+  users: userReducer
+
 });
