@@ -1,6 +1,6 @@
 {
   "name": "krishield-kyle-plagiarism",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "description": "Plagiarism Checker Module Addon",
   "gypfile": true,
   "main": "./index.js",

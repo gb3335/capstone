@@ -48,7 +48,7 @@ export default class ResultPie extends Component {
 
     return (
       <div>
-        <Pie data={data} height={100} options={{ maintainAspectRatio: false, legend: {display: false}}}/>
+        <Pie data={data} height={this.props.height} options={{ maintainAspectRatio: false, legend: {display: false}}}/>
       </div>
     )
   }

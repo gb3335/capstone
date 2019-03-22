@@ -23,12 +23,15 @@ import "./LocalHighlightedResult.css"
     let Index = output.find(obj => obj.Document.Text.Id === textId);
     
     let words = [];
+    console.log(Index)
+    if(Index.Index.length > 0){
+      Index.Index.forEach((index =>{
+        let obj = JSON.parse(index);
+  
+        words.push.apply(words,obj.Pattern.split(' '))
+      }))
+    }
     
-    Index.Index.forEach((index =>{
-      let obj = JSON.parse(index);
-
-      words.push.apply(words,obj.Pattern.split(' '))
-    }))
     
     this.setState({words})
   }
@@ -86,7 +89,7 @@ import "./LocalHighlightedResult.css"
   };
 
   render() {
-    const { pattern} = this.props.localPlagiarism;
+    const {pattern} = this.props.localPlagiarism;
 
     return (
      

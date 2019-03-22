@@ -4,7 +4,8 @@ import {
   RESEARCH_LOADING,
   TOGGLE_RESEARCH_BIN,
   TOGGLE_RESEARCH_LIST,
-  CHANGE_BUTTON_STATUS_RESEARCH
+  CHANGE_BUTTON_STATUS_RESEARCH,
+  TOGGLE_SIDE_BY_SIDE
 } from "../actions/types";
 
 const initialState = {
@@ -12,7 +13,8 @@ const initialState = {
   researches: {},
   loading: false,
   bin: false,
-  buttonDisable: false
+  buttonDisable: false,
+  onSideBySide: false
 };
 
 export default function (state = initialState, action) {
@@ -48,6 +50,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         buttonDisable: action.payload
+      };
+    case TOGGLE_SIDE_BY_SIDE:
+      return {
+        ...state,
+        onSideBySide: action.payload
       };
     default:
       return state;

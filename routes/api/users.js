@@ -432,7 +432,7 @@ router.post(
           },
           email: req.body.email,
           password,
-          avatar: "../../images/user.png",
+          avatar: "/images/user.png",
           contact: req.body.contact,
           userType: req.body.usertype,
           college: req.body.college,

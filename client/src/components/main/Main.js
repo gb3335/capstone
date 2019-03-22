@@ -43,6 +43,7 @@ import EditAccount from "../edit-account/EditAccount";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
+import LocalResultSideBySide from "../plagiarism-result/LocalResultSideBySide";
 
 
 import PrivateRoute from "../common/PrivateRoute";
@@ -182,6 +183,13 @@ class Main extends Component {
                   exact
                   path="/localResult"
                   component={LocalResult}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/localResultSideBySide"
+                  component={LocalResultSideBySide}
                 />
               </Switch>
             </div>
