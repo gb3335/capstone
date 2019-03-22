@@ -16,15 +16,15 @@ let pdfResearchesTemplate;
 let pdfResearchTemplate;
 let fontFooter;
 
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
   pdfResearchesTemplate = require("../../document/researchesTemplate");
   pdfResearchTemplate = require("../../document/researchTemplate");
   fontFooter = "7px";
-} else {
-  pdfResearchesTemplate = require("../../document/researchesTemplate_Dev");
-  pdfResearchTemplate = require("../../document/researchTemplate_Dev");
-  fontFooter = "10px";
-}
+// } else {
+//   pdfResearchesTemplate = require("../../document/researchesTemplate_Dev");
+//   pdfResearchTemplate = require("../../document/researchTemplate_Dev");
+//   fontFooter = "10px";
+// }
 
 // Research model
 const Research = require("../../models/Research");

@@ -14,15 +14,15 @@ let pdfCollegeTemplate;
 let pdfCollegesTemplate;
 let fontFooter;
 
-if (process.env.NODE_ENV === "production") {
+// if (process.env.NODE_ENV === "production") {
   pdfCollegeTemplate = require("../../document/collegeTemplate");
   pdfCollegesTemplate = require("../../document/collegesTemplate");
   fontFooter = "7px";
-} else {
-  pdfCollegeTemplate = require("../../document/collegeTemplate_Dev");
-  pdfCollegesTemplate = require("../../document/collegesTemplate_Dev");
-  fontFooter = "10px";
-}
+// } else {
+//   pdfCollegeTemplate = require("../../document/collegeTemplate_Dev");
+//   pdfCollegesTemplate = require("../../document/collegesTemplate_Dev");
+//   fontFooter = "10px";
+// }
 
 // College model
 const College = require("../../models/College");

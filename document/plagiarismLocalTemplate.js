@@ -102,20 +102,20 @@ const {typeOfReport, subTypeOfReport , output} = input;
         }
 
         .over-container{
-            padding-top: 50px;
-            padding-bottom: 130px;
+            padding-top: 20px;
+            
             width: 450px;
             margin: auto;
         }
 
 .overview{
-    font-size: 12px;
+    font-size: 7px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .overviewContent{
-    font-size: 12px;
+    font-size: 7px;
     
 }
 
@@ -133,7 +133,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
 
 .note{
     margin-top:10px;
-    font-size: 12px;
+    font-size: 7px;
     font-style: italic;
 }
 
@@ -163,12 +163,12 @@ const {typeOfReport, subTypeOfReport , output} = input;
           <br />
           <br />
           <br />
-          <h4>${typeOfReport}</h4>
-          <h5>${subTypeOfReport}</h5>
-          <h4>University Research Office</h4>
+          <h5>${typeOfReport}</h5>
+          <h6>${subTypeOfReport}</h6>
+          <h5>University Research Office</h5>
         </div>
-        <h4>Research Title: ${title}</h4>
-        <div class="courses" style="font-size: 8px">
+        <h6>Research Title: ${title}</h6>
+        <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
@@ -182,7 +182,7 @@ const {typeOfReport, subTypeOfReport , output} = input;
                 <div class="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
             </div>
             
-            <div class="courses" style="font-size: 9px">
+            <div class="courses" style="font-size: 7px">
                 <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
                 <table>
                     <tr>

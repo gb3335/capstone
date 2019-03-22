@@ -93,7 +93,7 @@ class OnlineCheck extends Component {
         const input = {
           printedBy: name,
           typeOfReport: "Check Plagiarism Report",
-          subTypeOfReport: "Checked in the System World Wide Web",
+          subTypeOfReport: "Checked in the World Wide Web",
           output : this.props.onlinePlagiarism.output
         }
         this.props.createOnlinePlagiarismReport(input);
