@@ -221,6 +221,7 @@ class LocalResultSideBySide extends Component {
       )
     }
 
+    const {generateReport} = this.props.localPlagiarism
     return (
       <div className="research">
         <div className="container-fluid" style={{ padding: "1em" }}>
@@ -275,12 +276,18 @@ class LocalResultSideBySide extends Component {
                     <div className="col-md-6">
                     <div className="sourceResearch">
                           <div className="sourceHeader forRelative">{output[0].Document.Text.Name}</div>
+                          {generateReport ? <button
+                            className="btn btn-light mb-1 genButtonSideBySide disabled"
+                          >
+                            <i className="fas fa-flag text-danger" /> Generating Report...
+                          </button>: 
                           <button
                             onClick={this.onClickGenerateReport}
                             className="btn btn-light mb-1 genButtonSideBySide"
                           >
                             <i className="fas fa-flag text-danger" /> Generate Report
-                          </button>
+                          </button>}
+                          
                           <div className="sourceContent">
                             {textItem}
                           </div>
