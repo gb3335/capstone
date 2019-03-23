@@ -32,7 +32,7 @@ class ResearchesAction extends Component {
       college: true,
       course: true,
       pages: true,
-      academicYear: true,
+      yearPublished: true,
       lastUpdate: true,
       deletedJournals: false,
       bin: false,
@@ -87,7 +87,7 @@ class ResearchesAction extends Component {
         this.state.course === false &&
         this.state.type === false &&
         this.state.pages === false &&
-        this.state.academicYear === false &&
+        this.state.yearPublished === false &&
         this.state.lastUpdate === false &&
         this.state.deletedJournals === false
       ) {
@@ -108,10 +108,10 @@ class ResearchesAction extends Component {
           course: this.state.course,
           type: this.state.type,
           pages: this.state.pages,
-          academicYear: this.state.academicYear,
+          yearPublished: this.state.yearPublished,
           lastUpdate: this.state.lastUpdate,
           deletedJournals: this.state.deletedJournals,
-          researches: this.props.journal.journals,
+          journals: this.props.journal.journals,
           typeOfReport: "Journals Report",
           printedBy: name
         };
@@ -280,13 +280,13 @@ class ResearchesAction extends Component {
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
-                    name="academicYear"
-                    id="academicYear"
-                    value={this.state.academicYear}
+                    name="yearPublished"
+                    id="yearPublished"
+                    value={this.state.yearPublished}
                     onChange={this.onChange}
-                    checked={this.state.academicYear}
+                    checked={this.state.yearPublished}
                   />
-                  <label className="form-check-label" htmlFor="academicYear">
+                  <label className="form-check-label" htmlFor="yearPublished">
                     Published Year
                   </label>
                 </div>

@@ -1,23 +1,26 @@
 const moment = require("moment");
 
 module.exports = ({
+
   college,
   course,
-  researchId,
+  issn,
   pages,
-  academicYear,
+  yearPublished,
   lastUpdate,
   type,
-  abstract,
+  description,
   authors,
-  research,
-  typeOfReport
+  journal,
+  typeOfReport,
+  volume
 }) => {
+
   let collegeString = "";
   let courseString = "";
-  let researchIdString = "";
+  let issnString = "";
   let pagesString = "";
-  let academicYearString = "";
+  let yearPublishedString = "";
   let lastUpdateString = "";
   let typeString = "";
   let abstractString = "";
@@ -25,47 +28,51 @@ module.exports = ({
   let authorsListNoComma = "";
   let authorsHeader = "";
   let authorsTitle = "";
+  let volumeString = "";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
-
+  if (volume) {
+    volumeString = `<li>Volume: ${journal.volume}</li>`;
+  }
   if (college) {
-    collegeString = `<li>College: ${research.college}</li>`;
+    collegeString = `<li>College: ${journal.college}</li>`;
   }
   if (course) {
-    courseString = `<li>Course: ${research.course}</li>`;
+    courseString = `<li>Course: ${journal.course}</li>`;
   }
-  if (researchId) {
-    researchIdString = `<li>Research ID: ${research.researchID}</li>`;
+  if (issn) {
+    issnString = `<li>Research ID: ${journal.researchID}</li>`;
   }
   if (pages) {
-    pagesString = `<li>Pages: ${research.pages}</li>`;
+    pagesString = `<li>Pages: ${journal.pages}</li>`;
   }
-  if (academicYear) {
-    academicYearString = `<li>Academic Year: ${research.schoolYear}</li>`;
+  if (yearPublished) {
+    yearPublishedString = `<li>Academic Year: ${journal.schoolYear}</li>`;
   }
   if (lastUpdate) {
-    lastUpdateString = `<li>Last Update: ${moment(research.lastUpdate).format(
+    lastUpdateString = `<li>Last Update: ${moment(journal.lastUpdate).format(
       "MMMM Do YYYY, h:mm A"
     )}</li>`;
   }
   if (type) {
-    typeString = `<li>Type: ${research.type}</li>`;
+    typeString = `<li>Type: ${journal.type}</li>`;
   }
-  if (abstract) {
+  let journalDescriptionString = journal.description ? journal.description : "No description";
+  if (description) {
     abstractString = `<div class="details" style="font-size: 10px">
-                        <h4 style="font-size: 10px">College Abstract:</h4>
+                        <h4 style="font-size: 10px">Journal description:</h4>
                         <div>
-                          <p>${research.abstract}</p>
+                          <p>${journalDescriptionString}</p>
                         </div>
                       </div>`;
   }
 
   if (authors) {
-    authorsList = research.author.map(
+    authorsList = journal.author.map(
       (auth, index) =>
         `<tr><td>${++index}</td><td>${
-          auth.role === "Author One"
-            ? `${auth.name} (Author One)`
-            : `${auth.name}`
+        auth.role === "Author One"
+          ? `${auth.name} (Author One)`
+          : `${auth.name}`
         }</td></tr>`
     );
     authorsHeader = "<tr><th>NO</th><th>NAME</th></tr>";
@@ -174,7 +181,7 @@ module.exports = ({
         </div>
         <div style="font-size: 10px;">
             <p style="float: left;">
-              <b>Research Title: </b>${research.title}
+              <b>Research Title: </b>${journal.title}
               <br />
               <b>Date Printed: </b>${currentDate}
             </p>
@@ -183,14 +190,15 @@ module.exports = ({
           <br />
           <hr />
         <div class="details" style="font-size: 10px">
-          <h4 style="font-size: 10px">College Details:</h4>
+          <h4 style="font-size: 10px">Journal Details:</h4>
           <div>
             <ul style="list-style-type:circle; text-align: left">
               ${collegeString}
               ${courseString}
-              ${researchIdString}
+              ${issnString}
+              ${volumeString}
               ${pagesString}
-              ${academicYearString}
+              ${yearPublishedString}
               ${lastUpdateString}
               ${typeString}
             </ul>
