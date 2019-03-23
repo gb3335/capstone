@@ -6,7 +6,8 @@ import {
   PLAGIARISM_ONLINE_DISABLE_BUTTON,
   PLAGIARISM_ONLINE_SHOW_DETAILS,
   PLAGIARISM_ONLINE_HIDE_DETAILS,
-  PLAGIARISM_ONLINE_GOOGLE
+  PLAGIARISM_ONLINE_GOOGLE,
+  PLAGIARISM_ONLINE_GENERATE_REPORT
 } from "./types";
 import axios from "axios";
 
@@ -75,6 +76,13 @@ export const getOnlinePlagiarismResult = input => dispatch =>{
   })
 }
 
+export const setPlagiarismGenerateReportLoading = (input) =>{
+  return {
+    type: PLAGIARISM_ONLINE_GENERATE_REPORT,
+    payload: input
+  };
+}
+
 
 export const createOnlinePlagiarismReport = (input) => dispatch => {
   axios.post('/api/plagiarism/create/report/online', input)
@@ -83,6 +91,7 @@ export const createOnlinePlagiarismReport = (input) => dispatch => {
     const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
 
     saveAs(pdfBlob, 'PlagiarismOnlineResult.pdf');
+    dispatch(setPlagiarismGenerateReportLoading(false));
   })
 }
 

@@ -2,11 +2,12 @@ const moment = require("moment");
 
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output} = input;
+const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
 
   let little= 0, moderate= 0, heavy=0;
   let docuFound="";
   let title = "";
+  let words = "\""+word+"\"";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
   let score="["
   output.forEach((out, index)=>{
@@ -138,6 +139,12 @@ const {typeOfReport, subTypeOfReport , output} = input;
     font-style: italic;
 }
 
+mark {
+  background: rgba(250, 159, 179, 0.589);
+  color: inherit;
+  padding: 0;
+}
+
       </style>
     </head>
     <body>
@@ -184,6 +191,10 @@ const {typeOfReport, subTypeOfReport , output} = input;
             </div>
             <br/>
             <br/>
+            <h4 style="font-size: 10px">Text Checked for Plagiarism: </h4>
+            <div class="context">
+                <p>${pattern}</p>
+            </div>
             <div class="courses" style="font-size: 7px">
                 <h4 style="font-size: 10px">Websites Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
                 <table>
@@ -199,11 +210,11 @@ const {typeOfReport, subTypeOfReport , output} = input;
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
-        Chart.defaults.global.defaultFontSize = 7;
+        Chart.defaults.global.defaultFontSize = 9;
         const canvas = document.getElementById('pie');
 
         const data = {
@@ -225,6 +236,18 @@ const {typeOfReport, subTypeOfReport , output} = input;
             options: {}
         })
         
+    </script>
+    <script>
+    var options = {
+      "accuracy": {
+          "value": "exactly",
+          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
+      }
+    };
+       
+        var context = document.querySelector(".context");
+        var instance = new Mark(context);
+        instance.mark(${words}, options);
     </script>
     </body>
 

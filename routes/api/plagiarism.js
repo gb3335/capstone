@@ -571,6 +571,7 @@ router.post('/create/report/online', (req,res) => {
         bottom: "0.5in",
         left: "0.5in"
       },
+      timeout: '100000',
       paginationOffset: 1, // Override the initial pagination number
       footer: {
         height: "28mm",

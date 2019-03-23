@@ -251,13 +251,7 @@ class LocalResult extends Component {
                 >
                   <i className="fas fa-angle-left" /> Back
                 </Link>
-                <button
-                  onClick={this.onClickGenerateReport}
-                  className="btn btn-light mb-3 float-right"
-                >
-                  <i className="fas fa-flag text-danger" /> Generate Report
-                </button>
-                {/* { generateReport===true ? <button
+                { generateReport ? <button
                   className="btn btn-light mb-3 float-right disabled"
                 >
                   <i className="fas fa-flag text-danger" /> Generating Report...
@@ -268,7 +262,7 @@ class LocalResult extends Component {
                   className="btn btn-light mb-3 float-right"
                 >
                   <i className="fas fa-flag text-danger" /> Generate Report
-                </button>} */}
+                </button>}
               </div>
             </div>
           <div className="row">
