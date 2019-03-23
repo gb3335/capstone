@@ -150,7 +150,7 @@ export const createReportForResearch = reportData => dispatch => {
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
           dispatch(changeButtonStatus(false));
-          saveAs(pdfBlob, "ResearchReport.pdf");
+          saveAs(pdfBlob, "JournalReport.pdf");
 
           // send base64 to api for s3 upload -FOR ANDROID-
           if (reportData.android) {
