@@ -2,18 +2,33 @@ const moment = require("moment");
 
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output, highlight} = input;
+const {typeOfReport, subTypeOfReport , output, pattern, word, text} = input;
 
-  let little= 0, heavy=0;
-  
+  let docuFound="";
   let title = "";
   let score="[";
+
+  let words = "\""+word+"\"";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  let level="";
 
-  heavy=output[0].SimilarityScore
-  little = 100 - heavy;
+      if(output[0].SimilarityScore>0 && output[0].SimilarityScore<30){
+        level="<span class='little-text'>Little Plagiarism</span";
+      }else if(output[0].SimilarityScore>=30 && output[0].SimilarityScore<=70){
+        level="<span class='moderate-text'>Moderate Plagiarism</span";
+      }
+      else if(output[0].SimilarityScore>70){
+        level="<span class='heavy-text'>Heavy Plagiarism</span";
+      }else{
+        level="<span>Clean</span";
+      }
+let plagiarised = output[0].SimilarityScore;
 
-  score+=little+','+heavy+']'
+let clean = 100 - plagiarised;
+
+
+
+  score+=clean+','+plagiarised+']'
   
 
 
@@ -71,7 +86,7 @@ const {typeOfReport, subTypeOfReport , output, highlight} = input;
         }
   
         tr:nth-child(even) {
-          background-color: #000000;
+          background-color: #3d3d3d;
           color: white;
         }
 
@@ -87,20 +102,20 @@ const {typeOfReport, subTypeOfReport , output, highlight} = input;
         }
 
         .over-container{
-            padding-top: 50px;
-            padding-bottom: 130px;
+            padding-top: 20px;
+            padding-bottom: 20px;
             width: 450px;
             margin: auto;
         }
 
 .overview{
-    font-size: 12px;
+    font-size: 7px;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
 .overviewContent{
-    font-size: 12px;
+    font-size: 7px;
     
 }
 
@@ -118,8 +133,14 @@ const {typeOfReport, subTypeOfReport , output, highlight} = input;
 
 .note{
     margin-top:10px;
-    font-size: 12px;
+    font-size: 7px;
     font-style: italic;
+}
+
+mark {
+  background: rgba(250, 159, 179, 0.589);
+  color: inherit;
+  padding: 0;
 }
 
       </style>
@@ -148,48 +169,44 @@ const {typeOfReport, subTypeOfReport , output, highlight} = input;
           <br />
           <br />
           <br />
-          <h4>${typeOfReport}</h4>
-          <h5>${subTypeOfReport}</h5>
-          <h4>University Research Office</h4>
+          <h5>${typeOfReport}</h5>
+          <h6>${subTypeOfReport}</h6>
+          <h5>University Research Office</h5>
         </div>
-        <h4>Research Title: ${title}</h4>
-        <div class="courses" style="font-size: 8px">
+        
+        <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
-            <div class="over-container">
-                <div class="overview">Statistics Overview</div>
-                <div class="overviewContent mb-2">Similarity Score: ${output[0].SimilarityScore}</div>
-                <div class="overviewContent heavy-text">Heavy Plagiarism: ${heavy}</div>
-                <div class="overviewContent moderate-text">Moderate Plagiarism: ${moderate}</div>
-                <div class="overviewContent little-text">Little Plagiarism: ${little}</div>
-                
-                <div class="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
+            <div className="col-md-8 overviewContent pt-2">
+                <p><b>Similarity Score: </b> ${parseFloat(output[0].SimilarityScore).toFixed(2)}%</p>
+                <p className="pt-3"><b>Source Document: </b> ${output[0].Document.Pattern.Name}</p>
+                <p><b>Target Document: </b> ${output[0].Document.Text.Name}</p>
+                <p><b>Plagiarism Level: </b> ${level}</p>
             </div>
-            
-            <div class="courses" style="font-size: 9px">
-                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
-                <table>
-                    <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Similarity Score</th>
-                    </tr>
-                   ${docuFound}
-                </table>
+            <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
+            <div class="context">
+                <p>${pattern}</p>
+            </div>
+            <br />
+            <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Text.Name}</h4>
+            <div class="context2">
+                <p>${text}</p>
             </div>
         </div>
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
+        
         Chart.defaults.global.defaultFontSize = 9;
         const canvas = document.getElementById('pie');
 
         const data = {
+            labels : ["Clean", "Plagiarised"],
             datasets : [
                 {
                     data : ${score},
@@ -206,6 +223,24 @@ const {typeOfReport, subTypeOfReport , output, highlight} = input;
             options: {}
         })
         
+        
+    </script>
+    <script>
+    var options = {
+      "accuracy": {
+          "value": "exactly",
+          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
+      }
+    };
+       
+        var context = document.querySelector(".context");
+        var instance = new Mark(context);
+        instance.mark(${words}, options);
+
+
+        var context2 = document.querySelector(".context2");
+        var instance2 = new Mark(context2);
+        instance2.mark(${words}, options);
     </script>
     </body>
 

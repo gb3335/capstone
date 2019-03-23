@@ -30,7 +30,7 @@ class Output extends Component {
             <div className="resultList">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Title: </b>{out.Document.Text.Name}</p>
@@ -45,7 +45,7 @@ class Output extends Component {
             <div className="resultList little">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Title: </b>{out.Document.Text.Name}</p>
@@ -60,7 +60,7 @@ class Output extends Component {
             <div className="resultList moderate">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Title: </b>{out.Document.Text.Name}</p>
@@ -74,7 +74,7 @@ class Output extends Component {
             <div className="resultList heavy">
             <div className="row">
                 <div className="col-md-3">
-                  <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                  <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                 </div>
                 <div className="col-md-9">
                     <p><b>Title: </b>{out.Document.Text.Name}</p>
@@ -96,7 +96,7 @@ class Output extends Component {
             <div className="resultList">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>
@@ -111,7 +111,7 @@ class Output extends Component {
             <div className="resultList little">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>
@@ -126,7 +126,7 @@ class Output extends Component {
             <div className="resultList moderate">
               <div className="row">
                   <div className="col-md-3">
-                    <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                   </div>
                   <div className="col-md-9">
                       <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>
@@ -140,7 +140,7 @@ class Output extends Component {
             <div className="resultList heavy">
             <div className="row">
                 <div className="col-md-3">
-                  <ResultPie height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+                  <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
                 </div>
                 <div className="col-md-9">
                     <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>

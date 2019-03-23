@@ -79,13 +79,17 @@ export const setPlagiarismGenerateReportLoading = (input) =>{
 
 export const createLocalSideBySidePlagiarismReport = (input) => dispatch => {
   axios.post('/api/plagiarism/create/report/local/side', input)
-  .then(() => axios.get('/api/plagiarism/get/report/local/side', {responseType: 'blob'}))
-  .then((res) =>{
-    const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
-
-    saveAs(pdfBlob, 'PlagiarismLocalResult.pdf');
-    dispatch(setPlagiarismGenerateReportLoading(false))
+  .then(() => {
+    console.log("request")
+    axios.get('/api/plagiarism/get/report/local/side', {responseType: 'blob'})
+    .then((res) =>{
+      const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
+  
+      saveAs(pdfBlob, 'PlagiarismLocalResult.pdf');
+      dispatch(setPlagiarismGenerateReportLoading(false))
+    })
   })
+  
 }
 
 export const createLocalPlagiarismReport = (input) => dispatch => {

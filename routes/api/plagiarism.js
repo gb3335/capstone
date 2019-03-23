@@ -31,6 +31,7 @@ const validateLocalInput = require("../../validation/plagiarism/local");
 
 // Templates
 const plagiarismLocalTemplate = require('../../document/plagiarismLocalTemplate');
+const plagiarismLocalSideBySideTemplate = require('../../document/plagiarismLocalSideBySideTemplate');
 const plagiarismOnlineTemplate = require('../../document/plagiarismOnlineTemplate');
 
 
@@ -521,6 +522,7 @@ router.get('/get/report/local', (req,res) => {
 });// end of post
 
 router.post('/create/report/local/side', (req,res) => {
+  console.log("clicked")
   const printedBy = req.body.printedBy;
     const options = {
       border: {
@@ -529,6 +531,7 @@ router.post('/create/report/local/side', (req,res) => {
         bottom: "0.5in",
         left: "0.5in"
       },
+      timeout: '1000000',
       paginationOffset: 1, // Override the initial pagination number
       footer: {
         height: "28mm",
@@ -540,16 +543,19 @@ router.post('/create/report/local/side', (req,res) => {
         }
       }
     };
-  pdf.create(plagiarismLocalTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
+  pdf.create(plagiarismLocalSideBySideTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
     if(err){
+      console.log(err);
       res.send(Promise.reject())
     }
     res.send(Promise.resolve())
+    console.log("done")
   });
 
 });// end of post
 
 router.get('/get/report/local/side', (req,res) => {
+  console.log("get")
   let reqPath = path.join(__dirname, "../../");
   res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
     fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {

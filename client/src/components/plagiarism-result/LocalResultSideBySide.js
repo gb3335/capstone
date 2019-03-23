@@ -9,11 +9,9 @@ import './LocalResultSideBySide.css'
 
 import ResultPie from './ResultPie';
 
-import { getSourcePattern, getTargetText,createLocalSideBySidePlagiarismReport } from "../../actions/localPlagiarismActions";
+import { getSourcePattern, getTargetText,createLocalSideBySidePlagiarismReport,setPlagiarismGenerateReportLoading } from "../../actions/localPlagiarismActions";
 
 import Highlighter from "react-highlight-words";
-
-import {Spring, Transition, animated} from 'react-spring/renderprops';
 
 class LocalResultSideBySide extends Component {
   constructor() {
@@ -129,40 +127,37 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-  //   const {output} = this.props.localPlagiarism
-  //   let patHtml;
-  //   let textHtml;
-  //   const node = ReactDOM.findDOMNode(this);
-
-  //   if (node instanceof HTMLElement) {
-  //     patHtml = node.querySelector('#highlightPat').innerHTML; 
-  //     textHtml = node.querySelector('#highlightText').innerHTML; 
-      
-  // }
-  //   const name =
-  //       this.props.auth.user.firstName +
-  //       " " +
-  //       this.props.auth.user.middleName +
-  //       " " +
-  //       this.props.auth.user.lastName;
-      
-  //     const high = {
-  //       pattern: patHtml,
-  //       text: textHtml
-  //     }
-
-  //   const input = {
-  //     printedBy: name,
-  //     typeOfReport: "Check Plagiarism Report",
-  //     subTypeOfReport: "Side By Side",
-  //     output ,
-  //     highlight: high
-  //   }
-  //   this.props.createLocalSideBySidePlagiarismReport(input);
+    const {output, text, pattern} = this.props.localPlagiarism
     
+    this.props.setPlagiarismGenerateReportLoading(true);
+      const words = [];
+        output[0].Index.forEach((index) => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
 
-    // Get child nodes
-    
+      
+      var uniqueItems = [...new Set(words)]
+
+      const word = uniqueItems.join(' ');
+
+      const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
+
+      const input = {
+        printedBy: name,
+        pattern : pattern.data,
+        text: text.data,
+        word,
+        typeOfReport: "Check Plagiarism Report",
+        subTypeOfReport: "Checked in the System Database Side by Side",
+        output
+      }
+      this.props.createLocalSideBySidePlagiarismReport(input);
   }
 
   render() {
@@ -238,7 +233,7 @@ class LocalResultSideBySide extends Component {
                         <div className="sourceContent">
                           <div className="row">
                               <div className="col-md-4">
-                                <ResultPie height={200} similarity={parseFloat(output[0].SimilarityScore).toFixed(2)} />
+                                <ResultPie legend={true} height={200} similarity={parseFloat(output[0].SimilarityScore).toFixed(2)} />
                               </div>
                               <div className="col-md-8 overviewContent pt-2">
                                   <p><b>Similarity Score: </b> {parseFloat(output[0].SimilarityScore).toFixed(2)}%</p>
@@ -305,12 +300,14 @@ LocalResultSideBySide.propTypes = {
   research: PropTypes.object.isRequired,
   getSourcePattern: PropTypes.func.isRequired,
   createLocalSideBySidePlagiarismReport: PropTypes.func.isRequired,
-  getTargetText: PropTypes.func.isRequired
+  getTargetText: PropTypes.func.isRequired,
+  setPlagiarismGenerateReportLoading: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
   localPlagiarism: state.localPlagiarism,
-  research: state.research
+  research: state.research,
+  auth: state.auth
 });
 
-export default connect(mapStateToProps,{ getSourcePattern, getTargetText,createLocalSideBySidePlagiarismReport })(LocalResultSideBySide)
+export default connect(mapStateToProps,{ getSourcePattern, getTargetText,createLocalSideBySidePlagiarismReport,setPlagiarismGenerateReportLoading })(LocalResultSideBySide)

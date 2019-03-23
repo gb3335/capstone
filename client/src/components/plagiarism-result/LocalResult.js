@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
-import ReactDOM from 'react-dom'
 
 import {Spring, Transition, animated} from 'react-spring/renderprops';
 

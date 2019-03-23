@@ -26,8 +26,30 @@ export default class ResultPie extends Component {
 
   render() {
 
+    const {legend} = this.props;
 
-    const data = {
+    let data;
+
+    if(legend){
+      data = {
+        labels: [
+          'Clean',
+          'Plagiarised'
+        ],
+        datasets: [{
+          data: this.state.data,
+          backgroundColor: [
+          '#36A2EB',
+          '#FF6384'
+          ],
+          hoverBackgroundColor: [
+            '#36A2EB',
+            '#FF6384'
+          ]
+        }]
+      };
+    }else{
+      data = {
         labels: [
           ' ',
           ' '
@@ -44,11 +66,13 @@ export default class ResultPie extends Component {
           ]
         }]
       };
+    }
+    
 
 
     return (
       <div>
-        <Pie data={data} height={this.props.height} options={{ maintainAspectRatio: false, legend: {display: false}}}/>
+        <Pie data={data} height={this.props.height} options={{ maintainAspectRatio: false, legend: {display: legend}}}/>
       </div>
     )
   }
