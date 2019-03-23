@@ -22,7 +22,7 @@ class LocalResultSideBySide extends Component {
     };
   }
 
-  componentDidMount(){
+  componentWillMount(){
 
     const {output, docuId} = this.props.localPlagiarism;
     const {researches} = this.props.research
