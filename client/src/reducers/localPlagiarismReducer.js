@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS,PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS,PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT } from "../actions/types";
 
 const initialState = {
   output: {},
@@ -10,7 +10,8 @@ const initialState = {
   patternLoading: false,
   textLoading: false,
   loading: false,
-  fromFlag: false
+  fromFlag: false,
+  generateReport: false
 };
 
 export default function(state = initialState, action) {
@@ -74,6 +75,11 @@ export default function(state = initialState, action) {
       return {
         ...state,
         fromFlag: action.payload
+      };
+    case PLAGIARISM_LOCAL_GENERATE_REPORT:
+      return {
+        ...state,
+        generateReport: action.payload
       };
     default:
       return state;

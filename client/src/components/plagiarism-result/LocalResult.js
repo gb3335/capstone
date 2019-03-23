@@ -4,10 +4,11 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
+import ReactDOM from 'react-dom'
 
 import {Spring, Transition, animated} from 'react-spring/renderprops';
 
-import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport } from "../../actions/localPlagiarismActions";
+import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading,getPattern } from "../../actions/localPlagiarismActions";
 
 import LocalHighlightedResult from './LocalHighlightedResult';
 import ResultStatistics from './ResultStatistics';
@@ -34,6 +35,15 @@ class LocalResult extends Component {
 
   componentWillMount(){
     this.props.setPlagiarismLocalHideDetails();
+    const {docuId} = this.props.localPlagiarism;
+    const {researches} = this.props.research;
+   
+    let newob = researches.find(obj => obj._id === docuId);
+    const input = {
+      docuId : docuId,
+      docuFile : newob.document
+    }
+    this.props.getPattern(input);
   }
 
   componentDidMount(){
@@ -75,6 +85,20 @@ class LocalResult extends Component {
     }
 
     onClickGenerateReport = () => {
+      const {output, pattern} = this.props.localPlagiarism;
+      this.props.setPlagiarismGenerateReportLoading(true);
+      const words = [];
+
+      output.forEach((out) => {
+        out.Index.forEach((index) => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+      })
+      var uniqueItems = [...new Set(words)]
+
+      const word = uniqueItems.join(' ');
+
       const name =
           this.props.auth.user.firstName +
           " " +
@@ -84,11 +108,15 @@ class LocalResult extends Component {
 
       const input = {
         printedBy: name,
+        pattern : pattern.data,
+        word,
         typeOfReport: "Check Plagiarism Report",
         subTypeOfReport: "Checked in the System Database",
-        output : this.props.localPlagiarism.output
+        output
       }
       this.props.createLocalPlagiarismReport(input);
+      
+      
     }
 
 
@@ -210,7 +238,7 @@ class LocalResult extends Component {
     }
 
 
-    
+    const {generateReport} = this.props.localPlagiarism;
 
     return (
       <div className="research">
@@ -229,6 +257,18 @@ class LocalResult extends Component {
                 >
                   <i className="fas fa-flag text-danger" /> Generate Report
                 </button>
+                {/* { generateReport===true ? <button
+                  className="btn btn-light mb-3 float-right disabled"
+                >
+                  <i className="fas fa-flag text-danger" /> Generating Report...
+                </button>
+
+                : <button
+                  onClick={this.onClickGenerateReport}
+                  className="btn btn-light mb-3 float-right"
+                >
+                  <i className="fas fa-flag text-danger" /> Generate Report
+                </button>} */}
               </div>
             </div>
           <div className="row">
@@ -257,7 +297,9 @@ LocalResult.propTypes = {
   research: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
   setPlagiarismLocalHideDetails : PropTypes.func.isRequired,
+  setPlagiarismGenerateReportLoading : PropTypes.func.isRequired,
   getTextPattern : PropTypes.func.isRequired,
+  getPattern : PropTypes.func.isRequired,
   createLocalPlagiarismReport : PropTypes.func.isRequired
 };
 
@@ -267,4 +309,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps,{getTextPattern,setPlagiarismLocalHideDetails,createLocalPlagiarismReport})(LocalResult);
+export default connect(mapStateToProps,{getTextPattern,setPlagiarismLocalHideDetails,createLocalPlagiarismReport,setPlagiarismGenerateReportLoading,getPattern})(LocalResult);

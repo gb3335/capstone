@@ -23,7 +23,6 @@ import "./LocalHighlightedResult.css"
     let Index = output.find(obj => obj.Document.Text.Id === textId);
     
     let words = [];
-    console.log(Index)
     if(Index.Index.length > 0){
       Index.Index.forEach((index =>{
         let obj = JSON.parse(index);

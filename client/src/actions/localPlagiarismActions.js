@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT} from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID,PLAGIARISM_LOCAL_PATTERN_LOADING,PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT} from "./types";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
@@ -70,6 +70,13 @@ export const checkPlagiarismLocal = (input ,history) => dispatch => {
 
 };
 
+export const setPlagiarismGenerateReportLoading = (input) =>{
+  return {
+    type: PLAGIARISM_LOCAL_GENERATE_REPORT,
+    payload: input
+  };
+}
+
 export const createLocalSideBySidePlagiarismReport = (input) => dispatch => {
   axios.post('/api/plagiarism/create/report/local/side', input)
   .then(() => axios.get('/api/plagiarism/get/report/local/side', {responseType: 'blob'}))
@@ -77,6 +84,7 @@ export const createLocalSideBySidePlagiarismReport = (input) => dispatch => {
     const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
 
     saveAs(pdfBlob, 'PlagiarismLocalResult.pdf');
+    dispatch(setPlagiarismGenerateReportLoading(false))
   })
 }
 
@@ -87,6 +95,7 @@ export const createLocalPlagiarismReport = (input) => dispatch => {
     const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
 
     saveAs(pdfBlob, 'PlagiarismLocalResult.pdf');
+    dispatch(setPlagiarismGenerateReportLoading(false))
   })
 }
 
@@ -100,6 +109,13 @@ export const getTextPattern = (input) => dispatch =>{
   dispatch(setPlagiarismLocalPatternLoading())
   dispatch(setPlagiarismLocalShowDetails())
   dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/pattern', input)
+  .then(res =>{
+    dispatch(outputLocalPlagiarismPattern(res.data));
+  })
+}
+
+export const getPattern = (input) => dispatch =>{
   axios.post('/api/plagiarism/get/pattern', input)
   .then(res =>{
     dispatch(outputLocalPlagiarismPattern(res.data));

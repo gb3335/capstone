@@ -484,6 +484,7 @@ router.post('/create/report/local', (req,res) => {
         bottom: "0.5in",
         left: "0.5in"
       },
+      timeout: '100000',
       paginationOffset: 1, // Override the initial pagination number
       footer: {
         height: "28mm",
@@ -497,9 +498,13 @@ router.post('/create/report/local', (req,res) => {
     };
   pdf.create(plagiarismLocalTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
     if(err){
+      console.log(err);
       res.send(Promise.reject())
+      
+    }else{
+      res.send(Promise.resolve())
     }
-    res.send(Promise.resolve())
+    
   });
 
 });// end of post
