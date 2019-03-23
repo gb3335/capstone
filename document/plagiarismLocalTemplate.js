@@ -105,7 +105,7 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
 
         .over-container{
             padding-top: 20px;
-            
+            padding-bottom: 20px;
             width: 450px;
             margin: auto;
         }
