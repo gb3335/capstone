@@ -178,12 +178,16 @@ mark {
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
+            <br />
+            <br />
+            <br />
             <div className="col-md-8 overviewContent pt-2">
                 <p><b>Similarity Score: </b> ${parseFloat(output[0].SimilarityScore).toFixed(2)}%</p>
                 <p className="pt-3"><b>Source Document: </b> ${output[0].Document.Pattern.Name}</p>
                 <p><b>Target Document: </b> ${output[0].Document.Text.Name}</p>
                 <p><b>Plagiarism Level: </b> ${level}</p>
             </div>
+            <br />
             <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
             <div class="context">
                 <p>${pattern}</p>
