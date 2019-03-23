@@ -189,7 +189,7 @@ mark {
                 
                 <div class="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
             </div>
-            <h3>Text Checked for Plagiarism: </h3>
+            <h4 style="font-size: 10px">Text Checked for Plagiarism: </h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
