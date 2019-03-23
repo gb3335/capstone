@@ -190,6 +190,8 @@ mark {
                 <p><b>Plagiarism Level: </b> ${level}</p>
             </div>
             <br />
+            <br />
+            <br />
             <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
             <div class="context">
                 <p>${pattern}</p>
