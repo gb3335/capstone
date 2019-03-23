@@ -139,6 +139,42 @@ export const addAuthor = (authorData, history) => dispatch => {
       })
     );
 };
+// Create Report for specific Research
+export const createReportForResearch = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/journals/createReport/journal", reportData)
+    .then(() =>
+      axios
+        .get("/api/journals/fetchReport/journal", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "ResearchReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function () {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_JOURNALS,
+        payload: null
+      })
+    );
+};
 
 // Delete Author
 export const deleteAuthor = (research, id) => dispatch => {

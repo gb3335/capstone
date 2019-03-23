@@ -6,16 +6,16 @@ module.exports = ({
   college,
   course,
   pages,
-  academicYear,
+  yearPublished,
   lastUpdate,
   deletedJournals,
-  researches,
+  journals,
   typeOfReport
 }) => {
   let journalsList;
   let journalsListNoComma = "";
   let journalListHeaders;
-  let journals = researches;
+
   let totalNumOfJournals = 0;
   let numberOfColForEndRow = 0;
 
@@ -38,7 +38,7 @@ module.exports = ({
   if (pages === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
-  if (academicYear === true) {
+  if (yearPublished === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
   }
   if (lastUpdate === true) {
@@ -69,7 +69,7 @@ module.exports = ({
 
           `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
           `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
-          `${academicYear === true ? `<td>${journal.schoolYear}</td>` : ""}` +
+          `${yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""}` +
           `${
           lastUpdate === true
             ? `<td>${moment(journal.lastUpdate).format(
@@ -102,7 +102,7 @@ module.exports = ({
           `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
           `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
           `${
-          academicYear === true ? `<td>${journal.schoolYear}</td>` : ""
+          yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
           }` +
           `${
           lastUpdate === true
@@ -140,10 +140,9 @@ module.exports = ({
       `${college === true ? "<th>COLLEGE</th>" : ""}` +
       `${course === true ? "<th>COURSE</th>" : ""}` +
       `${status === true ? "<th>STATUS</th>" : ""}` +
-
       `${issn === true ? "<th>ISSN</th>" : ""}` +
       `${pages === true ? "<th>PAGES</th>" : ""}` +
-      `${academicYear === true ? "<th>ACADEMIC YEAR</th>" : ""}` +
+      `${yearPublished === true ? "<th>YEAR PUBLISHED</th>" : ""}` +
       `${lastUpdate === true ? "<th>UPDATED ON</th>" : ""}` +
       "</tr>";
   }

@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import SweetAlert from "react-bootstrap-sweetalert";
-import {Spring, Transition, animated} from 'react-spring/renderprops';
+import { Spring, Transition, animated } from 'react-spring/renderprops';
 
 import {
   getResearchById,
@@ -308,42 +308,42 @@ class Research extends Component {
 
       let docuOrSideItems;
 
-      if(this.props.research.onSideBySide){
-        docuOrSideItems= (<Transition
-                            items={this.props.research.onSideBySide}
-                            from={{opacity:0}}
-                            enter={{opacity:1}}
-                            leave={{opacity:0}}
-                        >
-                        {show => show && (props => (
-                          <animated.div style={props}>
-                            <Spring from={{opacity:0}}
-                                    to={{ opacity: 1}}
-                                    config={{delay:100, duration:800}}>
-                                    {props => (
-                                      <div style={props}>
-                                        <ResearchSideBySide />  
-                                      </div>
-                                    )}
-                            </Spring>
-                            
-                          
-                          </animated.div>
-                        ))}
+      if (this.props.research.onSideBySide) {
+        docuOrSideItems = (<Transition
+          items={this.props.research.onSideBySide}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+        >
+          {show => show && (props => (
+            <animated.div style={props}>
+              <Spring from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                config={{ delay: 100, duration: 800 }}>
+                {props => (
+                  <div style={props}>
+                    <ResearchSideBySide />
+                  </div>
+                )}
+              </Spring>
 
-                        </Transition>)
-      }else{
-        docuOrSideItems = (<Spring from={{opacity:0}}
-          to={{ opacity: 1}}
-          config={{delay:100, duration:800}}>
+
+            </animated.div>
+          ))}
+
+        </Transition>)
+      } else {
+        docuOrSideItems = (<Spring from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+          config={{ delay: 100, duration: 800 }}>
           {props => (
             <div style={props}>
-              {docAction}{doc}  
+              {docAction}{doc}
             </div>
           )}
-  </Spring>)
+        </Spring>)
       }
-    
+
       if (research === null || loading) {
         researchContent = <Spinner />;
       } else {
@@ -484,7 +484,7 @@ class Research extends Component {
           );
         } catch (error) { }
       }
-    } catch (error) {}
+    } catch (error) { }
 
 
     return (

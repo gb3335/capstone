@@ -13,16 +13,16 @@ const pdf = require("html-pdf");
 
 // report templates
 let pdfJournalsTemplate;
-let pdfResearchTemplate;
+let pdfJournalTemplate;
 let fontFooter;
 
 if (process.env.NODE_ENV === "production") {
   pdfJournalsTemplate = require("../../document/journalsTemplate");
-  pdfResearchTemplate = require("../../document/researchTemplate");
+  pdfJournalTemplate = require("../../document/journalTemplate");
   fontFooter = "7px";
 } else {
   pdfJournalsTemplate = require("../../document/journalsTemplate_Dev");
-  pdfResearchTemplate = require("../../document/researchTemplate_Dev");
+  pdfJournalTemplate = require("../../document/journalTemplate_Dev");
   fontFooter = "10px";
 }
 
@@ -41,12 +41,12 @@ AWS.config.update({
 });
 
 //Validator
-const validateResearchInput = require("../../validation/journal");
+const validateJournalInput = require("../../validation/journal");
 const validateAuthorInput = require("../../validation/author");
 
 router.get("/pdfText", (req, res) => {
   let dataBuffer = fs.readFileSync(
-    "client/public/documents/researchDocuments/sample.pdf"
+    "client/public/documents/journalDocuments/sample.pdf"
   );
 
   pdf(dataBuffer).then(function (data) {
@@ -92,7 +92,7 @@ router.get("/:id", (req, res) => {
   Journal.findOne({ _id: req.params.id })
     .then(journal => {
       if (!journal) {
-        errors.noresearch = "There is no data for this journal";
+        errors.nojournal = "There is no data for this journal";
         res.status(404).json(errors);
       }
 
@@ -109,7 +109,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
 
-    const { errors, isValid } = validateResearchInput(req.body);
+    const { errors, isValid } = validateJournalInput(req.body);
 
     // Check Validation
     if (!isValid) {
@@ -155,7 +155,7 @@ router.post(
                 : "";
             });
 
-            let newResearch = {
+            let newJournal = {
               title: req.body.title,
               college: req.body.college,
               course: req.body.course,
@@ -174,7 +174,7 @@ router.post(
             // update college
             Journal.findOneAndUpdate(
               { _id: req.body.id },
-              { $set: newResearch },
+              { $set: newJournal },
               { new: true }
             )
               .then(journal => res.json(journal))
@@ -239,7 +239,7 @@ router.post(
                     });
 
 
-                    let newResearch = {
+                    let newJournal = {
                       title: req.body.title,
                       college: req.body.college,
                       course: req.body.course,
@@ -254,7 +254,7 @@ router.post(
                     };
 
                     // Save Journal
-                    new Journal(newResearch).save();
+                    new Journal(newJournal).save();
 
                     College.findOneAndUpdate(
                       { "name.fullName": req.body.college },
@@ -304,13 +304,13 @@ router.post(
       };
       new Activity(newActivity).save();
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
       Journal.findOneAndUpdate(
         { _id: req.body.researchId },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
       ).then(journal);
 
@@ -347,13 +347,13 @@ router.post(
       };
       new Activity(newActivity).save();
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
       Journal.findOneAndUpdate(
         { _id: req.body.researchId },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
       ).then(journal);
 
@@ -365,14 +365,14 @@ router.post(
   }
 );
 
-// @route   DELETE api/journals/author/:research_id/:author_id
+// @route   DELETE api/journals/author/:journal_id/:author_id
 // @desc    Delete author from journal
 // @access  Private
 router.delete(
-  "/author/:research_id/:author_id",
+  "/author/:journal_id/:author_id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Journal.findOne({ _id: req.params.research_id })
+    Journal.findOne({ _id: req.params.journal_id })
       .then(journal => {
         // Get remove index
         const removeIndex = journal.author
@@ -391,13 +391,13 @@ router.delete(
         };
         new Activity(newActivity).save();
 
-        const newResearch = {
+        const newJournal = {
           lastUpdate: Date.now()
         };
 
         Journal.findOneAndUpdate(
-          { _id: req.params.research_id },
-          { $set: newResearch },
+          { _id: req.params.journal_id },
+          { $set: newJournal },
           { new: true }
         ).then(journal);
 
@@ -469,13 +469,13 @@ router.post(
         journal.images.unshift(newImage);
       }
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
       Journal.findOneAndUpdate(
         { _id: req.body.id },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
       ).then(journal);
 
@@ -579,113 +579,14 @@ router.post(
       ).then(journal => res.json(journal));
     });
 
-    // fs.writeFile(
-    //   `client/public/documents/researchDocuments/${req.body.researchId +
-    //     "-" +
-    //     rand}.pdf`,
-    //   base64Doc,
-    //   { encoding: "base64" },
-    //   function(err) {
-    //     console.log("file created");
-    //     let pdfString;
-    //     let documentsArray = [];
-    //     let pdfStringForAll;
-    //     fs.readFile(
-    //       `client/public/documents/researchDocuments/${req.body.researchId +
-    //         "-" +
-    //         rand}.pdf`,
-    //       (err, pdfBuffer) => {
-    //         try {
-    //           new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
-    //             if (err) {
-    //               console.log(err);
-    //             } else if (!item) {
-    //               // finished reading texts
-    //               const tokenizer = new Tokenizer("Chuck");
-    //               tokenizer.setEntry(pdfString);
-    //               // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
-    //               //console.log(tokenizer.getSentences());
-
-    //               // find each documents
-    //               try {
-    //                 Journal.find()
-    //                   .sort({ title: 1 })
-    //                   .then(journals => {
-    //                     let ctr = 0;
-    //                     let ctr2 = 0;
-    //                     journals.map(journal => {
-    //                       if (journal._id != req.body.researchId) {
-    //                         if (journal.document != "") {
-    //                           ctr++;
-    //                         }
-    //                       }
-    //                     });
-    //                     journals.map(journal => {
-    //                       if (journal._id != req.body.researchId) {
-    //                         if (journal.document != "") {
-    //                           fs.readFile(
-    //                             `client/public/documents/researchDocuments/${
-    //                               journal.document
-    //                             }`,
-    //                             (err, pdfBuffer) => {
-    //                               try {
-    //                                 new PdfReader().parseBuffer(
-    //                                   pdfBuffer,
-    //                                   function(err, item) {
-    //                                     if (err) {
-    //                                       console.log(err);
-    //                                     } else if (!item) {
-    //                                       const tokenizer = new Tokenizer(
-    //                                         "Chuck"
-    //                                       );
-    //                                       tokenizer.setEntry(pdfStringForAll);
-    //                                       documentsArray.push(
-    //                                         tokenizer.getSentences()
-    //                                       );
-    //                                       ctr2++;
-    //                                       if (ctr === ctr2) {
-    //                                         // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
-    //                                         // console.log(documentsArray);
-    //                                       }
-    //                                       pdfStringForAll = "";
-    //                                     } else if (item.text) {
-    //                                       let text = " " + item.text;
-    //                                       pdfStringForAll =
-    //                                         pdfStringForAll + text;
-    //                                     }
-    //                                   }
-    //                                 );
-    //                               } catch (error) {}
-    //                             }
-    //                           );
-    //                         }
-    //                       }
-    //                     });
-    //                   })
-    //                   .catch(err =>
-    //                     res
-    //                       .status(404)
-    //                       .json({ nojournalfound: "No Researches found" })
-    //                   );
-    //               } catch (error) {}
-    //             } else if (item.text) {
-    //               let text = " " + item.text;
-    //               pdfString = pdfString + text;
-    //             }
-    //           });
-    //         } catch (error) {}
-    //       }
-    //     );
-    //   }
-    // );
   }
 );
 
-// @route   DELETE api/journals/document/:research_id/:filename
+// @route   DELETE api/journals/document/:journal_id/:filename
 // @desc    Delete document from journal
 // @access  Private
 router.delete(
-  "/document/:research_id/:filename",
+  "/document/:journal_id/:filename",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     //delete journal document from s3
@@ -700,20 +601,14 @@ router.delete(
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
-    // try {
-    //   fs.unlinkSync(
-    //     `client/public/documents/researchDocuments/${req.params.filename}`
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+
 
     const newDocument = {
       document: "",
       lastUpdate: Date.now()
     };
 
-    Journal.findOne({ _id: req.params.research_id }).then(journal => {
+    Journal.findOne({ _id: req.params.journal_id }).then(journal => {
       // add activity
       const newActivity = {
         title: "Document removed from " + journal.title,
@@ -723,7 +618,7 @@ router.delete(
     });
 
     Journal.findOneAndUpdate(
-      { _id: req.params.research_id },
+      { _id: req.params.journal_id },
       { $set: newDocument },
       { new: true }
     ).then(journal => res.json(journal));
@@ -807,8 +702,8 @@ router.post(
       }
     };
     pdf
-      .create(pdfResearchTemplate(req.body), options)
-      .toFile("researchPdf.pdf", err => {
+      .create(pdfJournalTemplate(req.body), options)
+      .toFile("journalPdf.pdf", err => {
         if (err) {
           res.send(Promise.reject());
         }
@@ -825,7 +720,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/researchPdf.pdf`);
+    res.sendFile(`${reqPath}/journalPdf.pdf`);
   }
 );
 
@@ -836,20 +731,20 @@ router.post(
   "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let newResearch;
+    let newJournal;
     if (req.body.hidden) {
-      newResearch = {
+      newJournal = {
         hidden: 1
       };
     } else {
-      newResearch = {
+      newJournal = {
         deleted: 1
       };
     }
 
     Journal.findOneAndUpdate(
       { _id: req.params.id },
-      { $set: newResearch },
+      { $set: newJournal },
       { new: true }
     ).then(journal => {
       // add activity
@@ -863,11 +758,11 @@ router.post(
 
       // increase decrease journal count in college and course
       College.findOne({ "name.fullName": journal.college }).then(college => {
-        let researchCount = parseInt(college.journalTotal, 10);
+        let journalCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          journalTotal: req.body.hidden ? researchCount : --researchCount
+          journalTotal: req.body.hidden ? journalCount : --journalCount
         };
 
         college.course.map((cou, index) => {
@@ -912,20 +807,20 @@ router.post(
   "/restore/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let newResearch;
+    let newJournal;
     if (req.body.hidden) {
-      newResearch = {
+      newJournal = {
         hidden: 0
       };
     } else {
-      newResearch = {
+      newJournal = {
         deleted: 0
       };
     }
 
     Journal.findOneAndUpdate(
       { _id: req.params.id },
-      { $set: newResearch },
+      { $set: newJournal },
       { new: true }
     ).then(journal => {
       // add activity
@@ -939,11 +834,11 @@ router.post(
 
       // increase journal count in college and course
       College.findOne({ "name.fullName": journal.college }).then(college => {
-        let researchCount = parseInt(college.journalTotal, 10);
+        let journalCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          journalTotal: req.body.hidden ? researchCount : ++researchCount
+          journalTotal: req.body.hidden ? journalCount : ++journalCount
         };
 
         college.course.map((cou, index) => {
