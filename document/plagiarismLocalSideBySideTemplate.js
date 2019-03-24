@@ -56,6 +56,10 @@ let clean = 100 - plagiarised;
           text-align: center;
           padding-top: 20px 0;
         }
+
+        .headerr {
+          position: relative;
+        }
   
         .bulsu-logo {
           position: absolute;
