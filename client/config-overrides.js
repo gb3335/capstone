@@ -5,8 +5,8 @@ const cspConfigPolicy = {
     'default-src': "*  data: blob: 'unsafe-inline' 'unsafe-eval'",
     'base-uri': "'self'",
     'object-src': "'none'",
-    'script-src': ["* data: blob:  'unsafe-eval'"],
-    'style-src': ["* data: blob: "]
+    'script-src': ["*"],
+    'style-src': ["*"]
 };
 
 function addCspHtmlWebpackPlugin(config) {
