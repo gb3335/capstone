@@ -153,8 +153,8 @@ class LocalResultSideBySide extends Component {
         pattern : pattern.data,
         text: text.data,
         word,
-        typeOfReport: "Check Plagiarism Report",
-        subTypeOfReport: "Checked in the System Database Side by Side",
+        typeOfReport: "Plagiarism Check Result",
+        subTypeOfReport: "Side by Side Comparison",
         output
       }
       this.props.createLocalSideBySidePlagiarismReport(input);

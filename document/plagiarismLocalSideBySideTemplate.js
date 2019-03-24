@@ -58,6 +58,7 @@ let clean = 100 - plagiarised;
         .bulsu-logo {
           width: 5rem;
           height: 5rem;
+          margin-left: 40px;
           float: left;
         }
         .blank_row {
@@ -168,9 +169,8 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <br />
           <h5>${typeOfReport}</h5>
-          <h6>${subTypeOfReport}</h6>
+          <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
         
@@ -180,15 +180,6 @@ mark {
             </div>
             <br />
             <br />
-            <br />
-            <br />
-            <br />
-            <div className="col-md-8 overviewContent pt-2" style="font-size: 9px">
-                <p><b>Similarity Score: </b> ${parseFloat(output[0].SimilarityScore).toFixed(2)}%</p>
-                <p className="pt-3"><b>Source Document: </b> ${output[0].Document.Pattern.Name}</p>
-                <p><b>Target Document: </b> ${output[0].Document.Text.Name}</p>
-                <p><b>Plagiarism Level: </b> ${level}</p>
-            </div>
             <br />
             <br />
             <br />
@@ -214,7 +205,7 @@ mark {
         const canvas = document.getElementById('pie');
 
         const data = {
-            labels : ["Clean", "Plagiarised"],
+            labels : ["Uniqueness Percentage ${clean}", "Similarity Percentage ${plagiarised}"],
             datasets : [
                 {
                     data : ${score},
