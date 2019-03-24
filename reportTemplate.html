@@ -31,6 +31,7 @@
         width: 5rem;
         height: 5rem;
         float: right;
+        visibility: hidden;
       }
 
       table {
@@ -47,7 +48,13 @@
       }
 
       tr:nth-child(even) {
-        background-color: #dddddd;
+        background-color: #000000;
+        color: white;
+      }
+
+      .blank_row {
+        height: 10px !important; /* overwrites any other rules */
+        background-color: #ffffff;
       }
     </style>
   </head>
@@ -59,43 +66,48 @@
           alt="bulsu-logo"
           class="bulsu-logo"
         />
+
         <img
-          src="http://www.bulsu.edu.ph/resources/colleges-logo/CICT.png"
-          alt="cict-logo"
+          src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+          alt="bulsu-logo"
           class="cict-logo"
         />
+
+        <br />
+        Republic of the Philippines
         <br />
         Bulacan State University
         <br />
-        City of Malolos
-        <br />
-        College of Information and Communications Technology
+        City of Malolos, Bulacan
         <br />
         <br />
         <br />
-        <h4>"List of Colleges"</h4>
+        <h4>${typeOfReport}</h4>
+        <h4>University Research Office</h4>
       </div>
-      <div class="reportBody" style="padding: 7px; border: 1px solid gray">
-        <div class="courses" style="font-size: 9px">
-          <h4 style="font-size: 10px">Courses:</h4>
-          <table>
-            <tr>
-              <th>Firstname</th>
-              <th>Lastname</th>
-              <th>Age</th>
-            </tr>
-            <tr>
-              <td>Jill</td>
-              <td>Smith</td>
-              <td>50</td>
-            </tr>
-            <tr>
-              <td>Eve</td>
-              <td>Jackson</td>
-              <td>94</td>
-            </tr>
-          </table>
-        </div>
+      <p style="font-size: 7px">
+        <b>Total # of Researches: </b
+        >${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b
+        >${currentDate}
+      </p>
+
+      <div class="courses" style="font-size: 4px">
+        <table>
+          <colgroup>
+            <col span="1" style="width: 5%;" />
+            <col span="1" style="width: 20%;" />
+            <col span="1" style="width: 10%;" />
+            <col span="1" style="width: 10%;" />
+            <col span="1" style="width: 5%;" />
+            <col span="1" style="width: 5%;" />
+            <col span="1" style="width: 10%;" />
+            <col span="1" style="width: 10%;" />
+            <col span="1" style="width: 10%;" />
+            <col span="1" style="width: 15%;" />
+          </colgroup>
+
+          ${researchesListHeader} ${researchesListNoComma}
+        </table>
       </div>
     </div>
   </body>

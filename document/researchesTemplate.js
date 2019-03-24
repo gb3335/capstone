@@ -55,6 +55,7 @@ module.exports = ({
     researchesList = "No Researches in this College";
     researchesListHeader = "";
   } else {
+    // include deleted researches
     if (deletedResearches) {
       researchesList = researches.map(
         (research, index) =>
@@ -87,6 +88,7 @@ module.exports = ({
       );
       totalNumOfResearches = researchesList.length;
     } else {
+      // dont include deleted researches
       let ind = 0;
       researchesList = researches.map((research, index) =>
         research.deleted === 0
@@ -243,7 +245,7 @@ module.exports = ({
         </div>
         <p style="font-size: 7px"><b>Total # of Researches: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
 
-        <div class="courses" style="font-size: 5px">
+        <div class="courses" style="font-size: 4px">
           <table>
           <colgroup>
           <col span="1" style="width: 5%;">
