@@ -185,7 +185,7 @@ mark {
             <br />
             <br />
             <br />
-            <div class="over-container">
+            <div class="over-container" style="font-size: 10px">
                 <div class="overview">Statistics Overview</div>
                 <div class="overviewContent mb-2">Number Of Candidate Document: ${little+moderate+heavy}</div>
                 <div class="overviewContent heavy-text">Heavy Plagiarism: ${heavy}</div>
