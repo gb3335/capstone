@@ -243,8 +243,21 @@ module.exports = ({
         </div>
         <p style="font-size: 7px"><b>Total # of Researches: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
 
-        <div class="courses" style="font-size: 3px">
+        <div class="courses" style="font-size: 5px">
           <table>
+          <colgroup>
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 20%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 15%;">
+          </colgroup>
+
           ${researchesListHeader}
           ${researchesListNoComma}
           </table>
