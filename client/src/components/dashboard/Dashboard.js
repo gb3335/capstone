@@ -236,7 +236,7 @@ class Dashboard extends Component {
         if (this.props.auth.isAuthenticated) {
           recactDiv = (
             <div className={activityDiv}>
-              <div className="card border-left-primary shadow h-100 py-2">
+              <div className="card">
                 <div className="card-body pr-0">
                   <h5 className="card-title" style={{ textAlign: "center" }}>
                     Recent Activities
@@ -343,7 +343,7 @@ class Dashboard extends Component {
               <div className="row">
                 {/* Colleges */}
                 <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card border-left-primary shadow h-100 py-2">
+                  <div className="card">
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
@@ -369,7 +369,7 @@ class Dashboard extends Component {
                 </div>
                 {/* Courses */}
                 <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card border-left-primary shadow h-100 py-2">
+                  <div className="card">
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
@@ -395,7 +395,7 @@ class Dashboard extends Component {
                 </div>
                 {/* Researches */}
                 <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card border-left-primary shadow h-100 py-2">
+                  <div className="card">
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
@@ -421,7 +421,7 @@ class Dashboard extends Component {
                 </div>
                 {/* Journals */}
                 <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card border-left-primary shadow h-100 py-2">
+                  <div className="card">
                     <div className="card-body">
                       <div className="row no-gutters align-items-center">
                         <div className="col mr-2">
@@ -450,7 +450,7 @@ class Dashboard extends Component {
               <div>
                 <div className={graphDiv}>
                   <div className={graphsDiv}>
-                    <div className="card border-left-primary shadow h-100 py-2">
+                    <div className="card">
                       <div className="row">
                         {researchDiv}
                         {journalDiv}

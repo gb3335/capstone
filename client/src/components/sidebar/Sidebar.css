@@ -90,7 +90,7 @@
   transition: 1s;
 }
 
-.active{
+.active {
   border-top: 1px solid rgb(255, 150, 118);
   border-bottom: 1px solid rgb(255, 150, 118);
 }
@@ -99,7 +99,7 @@
   height: 55px;
   padding-top: 14px;
   padding-left: 10px;
-  
+
   /* background-color: rgba(248, 235, 231, 0.808); */
   /* border-radius: 5px; */
   transition: 1s;

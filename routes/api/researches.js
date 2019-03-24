@@ -49,7 +49,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/researchDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -147,9 +147,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                  name: aut.name,
-                  role: "Author"
-                })
+                    name: aut.name,
+                    role: "Author"
+                  })
                 : "";
             });
 
@@ -467,7 +467,7 @@ router.post(
         Key: `researchDocuments/${req.body.oldFile}`
       };
 
-      s3.deleteObject(params, function (err, data) {
+      s3.deleteObject(params, function(err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -548,7 +548,7 @@ router.delete(
       Key: `researchDocuments/${req.params.filename}`
     };
 
-    s3.deleteObject(params, function (err, data) {
+    s3.deleteObject(params, function(err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
