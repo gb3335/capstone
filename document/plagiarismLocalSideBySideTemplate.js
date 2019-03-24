@@ -63,6 +63,12 @@ let clean = 100 - plagiarised;
           float: left;
           position: absolute;
         }
+        .bulsu-logo2 {
+          width: 5rem;
+          height: 5rem;
+          float: left;
+          visibility:hidden;
+        }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
           background-color: #FFFFFF;
@@ -156,7 +162,11 @@ mark {
           />
       <div class="grid-container">
         <div class="item1 headerr" style="font-size: 12px">
-          
+          <img
+            src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+            alt="bulsu-logo"
+            class="bulsu-logo2"
+          />
 
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
