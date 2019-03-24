@@ -34,6 +34,9 @@ const plagiarismLocalTemplate = require('../../document/plagiarismLocalTemplate'
 const plagiarismLocalSideBySideTemplate = require('../../document/plagiarismLocalSideBySideTemplate');
 const plagiarismOnlineTemplate = require('../../document/plagiarismOnlineTemplate');
 
+// Models
+const Research = require("../../models/Research");
+
 
 // FOnt
 let fontFooter ="7px";
@@ -355,34 +358,56 @@ router.post("/local/initialize/pattern", (req,res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
   let docuFile = req.body.docuFile;
-  const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+  Research.findOne({ _id: docuId })
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
+      }
 
-    download(docPath, options, function(err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+      let newtext = research.content.text;
+      const len = research.content.sentenceLength;
+      let arr = newtext.split(' ')
+
+      plagiarism.initialize(arr, len, title, docuId);
+      res.json({ 
+        success: true
+      })
+
+      
+    })
+    .catch(err => res.status(404).json(err));
+
+
+  // const docPath =
+  //       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+  //       docuFile;
+
+  //   const options = {
+  //     directory: "./routes/downloadedDocu/",
+  //     filename: docuFile
+  //   };
+
+  //   download(docPath, options, function(err) {
+  //     if (err) console.log(err);
+  //     console.log("Document successfully downloaded.");
+  //     pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
 
         
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
+  //       fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+  //         if (err) throw err;
+  //         console.log('successfully deleted');
+  //       });
 
-        let extext = data;
-        const {arr, len} = processor.arrayProcess(extext.toString().toLowerCase());
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({ 
-          success: true
-        })
-      });
-    });
+  //       let extext = data;
+  //       const {arr, len} = processor.arrayProcess(extext.toString().toLowerCase());
+  //       plagiarism.initialize(arr, len, title, docuId);
+  //       res.json({ 
+  //         success: true
+  //       })
+  //     });
+  //   });
 
   
 })
@@ -403,76 +428,96 @@ router.post("/local/result", (req, res) => {
   let textTitle = req.body.textTitle;
   let textFile = req.body.textFile;
 
-  const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        textFile;
-
-
-  const options = {
-    directory: "./routes/downloadedDocu/",
-    filename: textFile
-  };
-
-  download(docPath, options, function(err) {
-    if (err) console.log(err);
-    console.log("Document successfully downloaded.");
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
-
-      
-      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-        if (err) throw err;
-        console.log('successfully deleted');
-      });
-      let result = {
-        SimilarityScore: 0,
-        Document: {
-          Pattern: {
-            Name: '',
-            Id: ''
-          },
-          Text:{
-            Name: '',
-            Id: ''
-          }
-        },
-        Index: []
+  Research.findOne({ _id: textId })
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
       }
-      if (err) {
-        console.dir(err)
-        res.json({
-          localPlagiarism: {
-            success: false,
-            data: result
-          }
-        });
-      }
-      let {text, len} = processor.textProcess(data.toString().toLowerCase());
-      //console.log(text);
-      result = plagiarism.search(text, len, textTitle, textId);
-      //const compressed = hm.compress(JSON.stringify(result));
-      // gzip(JSON.stringify(result))
-      // .then((compressed) => {
-      //   console.log(compressed);
-      //   //return ungzip(compressed);
-      //   res.json({
-      //     localPlagiarism: {
-      //       success: true,
-      //       data: compressed
-      //     }
-      //   });
-      // })
-      // .then((decompressed) => {
-      //   console.log(JSON.parse(decompressed)); 
-      // });
+
+      let text = research.content.text;
+      const len = research.content.sentenceLength;
+
+      let result = plagiarism.search(text, len, textTitle, textId);
       res.json({
         localPlagiarism: {
           success: true,
           data: result
         }
       });
+    })
+    .catch(err => res.status(404).json(err));
+
+  // const docPath =
+  //       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+  //       textFile;
+
+
+  // const options = {
+  //   directory: "./routes/downloadedDocu/",
+  //   filename: textFile
+  // };
+
+  // download(docPath, options, function(err) {
+  //   if (err) console.log(err);
+  //   console.log("Document successfully downloaded.");
+  //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
       
-    });
-  });
+  //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+  //       if (err) throw err;
+  //       console.log('successfully deleted');
+  //     });
+  //     let result = {
+  //       SimilarityScore: 0,
+  //       Document: {
+  //         Pattern: {
+  //           Name: '',
+  //           Id: ''
+  //         },
+  //         Text:{
+  //           Name: '',
+  //           Id: ''
+  //         }
+  //       },
+  //       Index: []
+  //     }
+  //     if (err) {
+  //       console.dir(err)
+  //       res.json({
+  //         localPlagiarism: {
+  //           success: false,
+  //           data: result
+  //         }
+  //       });
+  //     }
+  //     let {text, len} = processor.textProcess(data.toString().toLowerCase());
+  //     //console.log(text);
+  //     result = plagiarism.search(text, len, textTitle, textId);
+  //     //const compressed = hm.compress(JSON.stringify(result));
+  //     // gzip(JSON.stringify(result))
+  //     // .then((compressed) => {
+  //     //   console.log(compressed);
+  //     //   //return ungzip(compressed);
+  //     //   res.json({
+  //     //     localPlagiarism: {
+  //     //       success: true,
+  //     //       data: compressed
+  //     //     }
+  //     //   });
+  //     // })
+  //     // .then((decompressed) => {
+  //     //   console.log(JSON.parse(decompressed)); 
+  //     // });
+  //     res.json({
+  //       localPlagiarism: {
+  //         success: true,
+  //         data: result
+  //       }
+  //     });
+      
+  //   });
+  // });
   
 });
 
