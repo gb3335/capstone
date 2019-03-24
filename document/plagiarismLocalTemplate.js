@@ -221,6 +221,7 @@ mark {
 
         
         Chart.defaults.global.defaultFontSize = 9;
+        Chart.defaults.global.animation = 0;
         const canvas = document.getElementById('pie');
 
         const data = {
