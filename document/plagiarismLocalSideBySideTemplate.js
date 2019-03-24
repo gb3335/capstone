@@ -60,9 +60,8 @@ let clean = 100 - plagiarised;
         .bulsu-logo {
           width: 5rem;
           height: 5rem;
-          padding-left: 30px;
-          padding-right: 0px;
           float: left;
+          position: absolute;
         }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
@@ -150,13 +149,14 @@ mark {
       </style>
     </head>
     <body>
-      <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 12px">
-          <img
+    <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
             class="bulsu-logo"
           />
+      <div class="grid-container">
+        <div class="item1 headerr" style="font-size: 12px">
+          
 
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
