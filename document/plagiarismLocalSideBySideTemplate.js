@@ -60,6 +60,8 @@ let clean = 100 - plagiarised;
         .bulsu-logo {
           width: 5rem;
           height: 5rem;
+          padding-left: 30px;
+          padding-right: 0px;
           float: left;
         }
         .blank_row {
