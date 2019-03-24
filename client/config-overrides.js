@@ -5,8 +5,8 @@ const cspConfigPolicy = {
     'default-src': "'none'",
     'base-uri': "'self'",
     'object-src': "'none'",
-    'script-src': "'unsafe-inline'",
-    'style-src': "'unsafe-inline'"
+    'script-src': ["'self' 'https://code.jquery.com' 'https://cdnjs.cloudflare.com' 'https://stackpath.bootstrapcdn.com' 'https://cdn.jsdelivr.net' "],
+    'style-src': ["'self' 'https://stackpath.bootstrapcdn.com' 'https://use.fontawesome.com' 'https://fonts.googleapis.com' 'https://npmcdn.com' '//cdn.quilljs.com'"]
 };
 
 function addCspHtmlWebpackPlugin(config) {
