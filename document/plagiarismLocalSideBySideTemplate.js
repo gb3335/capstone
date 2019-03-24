@@ -1,5 +1,7 @@
 const moment = require("moment");
 
+const moment_timezone = require('moment-timezone');
+
 module.exports = (input) => {
   
 const {typeOfReport, subTypeOfReport , output, pattern, word, text} = input;
@@ -9,7 +11,7 @@ const {typeOfReport, subTypeOfReport , output, pattern, word, text} = input;
   let score="[";
 
   let words = "\""+word+"\"";
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
   let level="";
 
       if(output[0].SimilarityScore>0 && output[0].SimilarityScore<30){
@@ -52,7 +54,7 @@ let clean = 100 - plagiarised;
         .grid-container > .headerr {
           background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
-          padding: 20px 0;
+          
         }
   
         .bulsu-logo {
