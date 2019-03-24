@@ -109,7 +109,7 @@ class LocalResult extends Component {
         printedBy: name,
         pattern : pattern.data,
         word,
-        typeOfReport: "Check Plagiarism Report",
+        typeOfReport: "Plagiarism Check Result",
         subTypeOfReport: "Checked in the System Database",
         output
       }

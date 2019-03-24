@@ -107,7 +107,7 @@ class OnlineCheck extends Component {
           printedBy: name,
           pattern: original,
           word,
-          typeOfReport: "Check Plagiarism Report",
+          typeOfReport: "Plagiarism Check Result",
           subTypeOfReport: "Checked in the World Wide Web",
           output : this.props.onlinePlagiarism.output
         }
