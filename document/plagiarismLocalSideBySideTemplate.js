@@ -220,7 +220,7 @@ mark {
         const canvas = document.getElementById('pie');
 
         const data = {
-            labels : ["Uniqueness Percentage ${clean}", "Similarity Percentage ${plagiarised}"],
+            labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(2)}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
             datasets : [
                 {
                     data : ${score},
