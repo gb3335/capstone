@@ -105,6 +105,7 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
         .over-container{
             padding-top: 20px;
             padding-bottom: 20px;
+            font-size: 9;
             width: 450px;
             margin: auto;
         }
@@ -179,6 +180,11 @@ mark {
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             <div class="over-container">
                 <div class="overview">Statistics Overview</div>
                 <div class="overviewContent mb-2">Number Of Candidate Document: ${little+moderate+heavy}</div>
