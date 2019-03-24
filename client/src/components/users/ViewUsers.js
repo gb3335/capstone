@@ -84,19 +84,44 @@ class ViewUsers extends Component {
 
         })
 
-        const userData = users.map((user, index) => ({
-          avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
-          username: user.name.firstName + " " + user.name.lastName,
-          type: user.userType,
-          view: (
-            <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
-
-          ),
-          blocked: whenBlock[index],
-          college: user.college ? user.college : <div>None</div>
 
 
-        }));
+
+        // const userData = users.map((user, index) => ({
+        //   avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
+        //   username: user.name.firstName + " " + user.name.lastName,
+        //   type: user.userType,
+        //   view: (
+        //     <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
+
+        //   ),
+        //   blocked: whenBlock[index],
+        //   college: user.college ? user.college : <div>None</div>
+
+
+        // }));
+
+        const usersData = [];
+
+        users.map((user, index) => {
+          if (user._id !== this.props.auth.user.id) {
+            usersData.push({
+              avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
+              username: user.name.firstName + " " + user.name.lastName,
+              type: user.userType,
+              view: (
+                <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
+
+              ),
+              blocked: whenBlock[index],
+              college: user.college ? user.college : <div>None</div>
+
+            })
+          }
+
+        })
+
+
 
 
 
@@ -113,7 +138,7 @@ class ViewUsers extends Component {
               { title: "Status", field: "blocked" },
               { title: "View Details", field: "view" }
             ]}
-            data={userData}
+            data={usersData}
             title="User Data"
           />
         );
