@@ -241,7 +241,7 @@ class OnlineCheck extends Component {
             }
             
 
-        const {generateReport} = this.props.onlinePlagiarism;
+        const {generateReport, original} = this.props.onlinePlagiarism;
         
         return (
             <div className="container-fluid">
@@ -253,7 +253,14 @@ class OnlineCheck extends Component {
                   <i className="fas fa-flag text-danger" /> Generating Report...
                 </button>
 
-                : <button
+                : original==="" || (Object.entries(output).length === 0 && output.constructor === Object) ? 
+                <button
+                    className="btn btn-light mb-3 float-right disabled"
+                >
+                    <i className="fas fa-flag text-danger" /> Generating Report
+                </button> 
+                :
+                <button
                   onClick={this.onClickGenerateReport}
                   className="btn btn-light mb-3 float-right"
                 >
