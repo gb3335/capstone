@@ -56,7 +56,7 @@ let clean = 100 - plagiarised;
           background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
           padding-top: 20px;
-          margin: auto;
+          padding-left: 40px;
         }
   
         .bulsu-logo {
