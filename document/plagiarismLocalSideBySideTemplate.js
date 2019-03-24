@@ -59,6 +59,7 @@ let clean = 100 - plagiarised;
   
         .bulsu-logo {
           position: absolute;
+          left: 50;
           width: 5rem;
           height: 5rem;
         }
