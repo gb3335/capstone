@@ -176,7 +176,7 @@ mark {
           <h5>University Research Office</h5>
         </div>
         <h6>Research Title: ${title}</h6>
-        <div class="courses" style="font-size: 7px">
+        <div class="courses">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
