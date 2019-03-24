@@ -105,7 +105,7 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
         .over-container{
             padding-top: 20px;
             padding-bottom: 20px;
-            font-size: 9;
+            font-size: 15;
             width: 450px;
             margin: auto;
         }
@@ -176,7 +176,7 @@ mark {
           <h5>University Research Office</h5>
         </div>
         
-        <div class="courses">
+        <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
@@ -185,7 +185,7 @@ mark {
             <br />
             <br />
             <br />
-            <div class="over-container" style="font-size: 10px">
+            <div class="over-container" style="font-size: 15px">
                 <div class="overview">Statistics Overview</div>
                 <div class="overviewContent mb-2">Number Of Candidate Document: ${little+moderate+heavy}</div>
                 <div class="overviewContent heavy-text">Heavy Plagiarism: ${heavy}</div>
