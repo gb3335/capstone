@@ -54,18 +54,13 @@ let clean = 100 - plagiarised;
         .grid-container > .headerr {
           background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
-          padding-top: 20px 0;
-        }
-
-        .headerr {
-          position: relative;
+          padding: 20px 0;
         }
   
         .bulsu-logo {
-          position: absolute;
-          left: 50;
           width: 5rem;
           height: 5rem;
+          float: left;
         }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
