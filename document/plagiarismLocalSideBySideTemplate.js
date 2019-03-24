@@ -52,16 +52,16 @@ let clean = 100 - plagiarised;
         }
   
         .grid-container > .headerr {
+          position: relative;
           background-color: rgba(255, 255, 255, 0.8);
           text-align: center;
-          
+          padding: 20px 0;
         }
   
         .bulsu-logo {
+          position: absolute;
           width: 5rem;
           height: 5rem;
-          margin-left: 40px;
-          float: left;
         }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
