@@ -19,7 +19,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
     width: "390px",
-    height: "460px"
+    height: "410px"
   }
 };
 
@@ -189,15 +189,6 @@ class ResearchesAction extends Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <button
-            className="btn btn-danger"
-            style={{ float: "right", fontSize: "15px" }}
-            onClick={this.closeModal}
-          >
-            <i className="fas fa-times" />
-          </button>
-          <br />
-          <br />
           <div className="row">
             <div className="col-12">
               <h2 ref={subtitle => (this.subtitle = subtitle)}>
@@ -337,6 +328,12 @@ class ResearchesAction extends Component {
                   </label>
                 </div>
                 <br />
+                <input
+                  type="button"
+                  value="Cancel"
+                  onClick={this.closeModal}
+                  className="btn btn-danger"
+                />{" "}
                 {disableFlag ? (
                   <input
                     type="button"
@@ -345,13 +342,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                    <input
-                      type="button"
-                      value="Generate Report"
-                      onClick={this.onGenerateReport}
-                      className="btn btn-info"
-                    />
-                  )}
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info"
+                  />
+                )}
               </form>
             </div>
           </div>

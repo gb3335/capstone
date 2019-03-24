@@ -10,11 +10,14 @@ class ResearchDocument extends Component {
 
     if (research.document) {
       fileItems = (
-        <div>
-        <a href={docPath} target="_blank" rel="noopener noreferrer">
-          View Document
-        </a>
+        <div style={{ height: "100vh" }}>
+          <iframe src={docPath} height="100%" width="100%" />
         </div>
+        // <div>
+        //   <a href={docPath} target="_blank" rel="noopener noreferrer">
+        //     View Document
+        //   </a>
+        // </div>
       );
     } else {
       fileItems = <span>No document is added for this research</span>;

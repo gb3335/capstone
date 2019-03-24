@@ -20,7 +20,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
     width: "350px",
-    height: "380px"
+    height: "330px"
   }
 };
 
@@ -231,15 +231,6 @@ class CollegesActions extends Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <button
-            className="btn btn-danger"
-            style={{ float: "right", fontSize: "15px" }}
-            onClick={this.closeModal}
-          >
-            <i className="fas fa-times" />
-          </button>
-          <br />
-          <br />
           <div className="row">
             <div className="col-12">
               <h2 ref={subtitle => (this.subtitle = subtitle)}>
@@ -334,6 +325,12 @@ class CollegesActions extends Component {
                   </label>
                 </div>
                 <br />
+                <input
+                  type="button"
+                  value="Cancel"
+                  onClick={this.closeModal}
+                  className="btn btn-danger"
+                />{" "}
                 {disableFlag ? (
                   <input
                     type="button"
