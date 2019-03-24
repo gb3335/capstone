@@ -9,7 +9,7 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
   let title = "";
   let words = "\""+word+"\"";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
-  let score="["
+  let score="[";
   output.forEach((out, index)=>{
       if(out.SimilarityScore>0 && out.SimilarityScore<30){
       little++;
@@ -61,11 +61,10 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
           height: 5rem;
           float: left;
         }
-
         .blank_row {
-            height: 10px !important; /* overwrites any other rules */
-            background-color: #FFFFFF;
-        }
+          height: 10px !important; /* overwrites any other rules */
+          background-color: #FFFFFF;
+      }
   
         .cict-logo {
           width: 5rem;
@@ -104,8 +103,8 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
         }
 
         .over-container{
-            padding-top: 50px;
-            padding-bottom: 5px;
+            padding-top: 20px;
+            padding-bottom: 20px;
             width: 450px;
             margin: auto;
         }
@@ -175,9 +174,8 @@ mark {
           <h6>${subTypeOfReport}</h6>
           <h5>University Research Office</h5>
         </div>
-        <br/>
-            <br/>
-        <div class="courses" style="font-size: 8px">
+        
+        <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
             </div>
@@ -187,10 +185,9 @@ mark {
                 <div class="overviewContent heavy-text">Heavy Plagiarism: ${heavy}</div>
                 <div class="overviewContent moderate-text">Moderate Plagiarism: ${moderate}</div>
                 <div class="overviewContent little-text">Little Plagiarism: ${little}</div>
+                
                 <div class="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
             </div>
-            <br/>
-            <br/>
             <h4 style="font-size: 10px">Text Checked for Plagiarism: </h4>
             <div class="context">
                 <p>${pattern}</p>
@@ -214,6 +211,7 @@ mark {
 
     <script>
 
+        
         Chart.defaults.global.defaultFontSize = 9;
         const canvas = document.getElementById('pie');
 
@@ -235,6 +233,7 @@ mark {
             data: data,
             options: {}
         })
+        
         
     </script>
     <script>

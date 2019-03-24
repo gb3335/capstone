@@ -7,10 +7,9 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
   let little= 0, moderate= 0, heavy=0;
   let docuFound="";
   let title = "";
-  let score="[";
-
   let words = "\""+word+"\"";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  let score="[";
   output.forEach((out, index)=>{
       if(out.SimilarityScore>0 && out.SimilarityScore<30){
       little++;
