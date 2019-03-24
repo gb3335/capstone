@@ -192,12 +192,12 @@ mark {
             <br />
             <br />
             <br />
-            <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
+            <h4 style="font-size: 10px">Source Document for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
             <br />
-            <h4 style="font-size: 10px">Text Checked for Plagiarism: ${output[0].Document.Text.Name}</h4>
+            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}</h4>
             <div class="context2">
                 <p>${text}</p>
             </div>
