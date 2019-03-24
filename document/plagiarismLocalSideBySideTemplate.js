@@ -62,7 +62,7 @@ let clean = 100 - plagiarised;
           width: 5rem;
           height: 5rem;
           padding-left: 40px;
-          padding-top: 20px;
+          padding-top: 10px;
           
         }
         .bulsu-logo2 {
