@@ -15,9 +15,8 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  abstract: {
+  description: {
     type: String,
-    required: true
   },
   issn: {
     type: String,
@@ -35,7 +34,7 @@ const ResearchSchema = new Schema({
     type: String,
     required: true
   },
-  schoolYear: {
+  yearPublished: {
     type: String,
     required: true
   },

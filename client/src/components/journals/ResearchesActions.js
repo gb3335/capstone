@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
   toggleResearchBin,
@@ -17,7 +18,7 @@ const customStyles = {
     bottom: "auto",
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
-    width: "410px",
+    width: "390px",
     height: "460px"
   }
 };
@@ -27,16 +28,18 @@ class ResearchesAction extends Component {
     super(props);
     this.state = {
       status: true,
-      researchId: true,
+      issn: true,
       college: true,
       course: true,
-      type: true,
       pages: true,
-      academicYear: true,
+      yearPublished: true,
       lastUpdate: true,
-      deletedResearches: false,
+      deletedJournals: false,
       bin: false,
-      modalIsOpen: false
+      modalIsOpen: false,
+      // for alerts
+      checkOneAlert: false,
+      generateAlert: false
     };
   }
 
@@ -76,52 +79,63 @@ class ResearchesAction extends Component {
   };
 
   onGenerateReport = () => {
+    if (!this.props.journal.buttonDisable) {
+      if (
+        this.state.status === false &&
+        this.state.issn === false &&
+        this.state.college === false &&
+        this.state.course === false &&
+        this.state.type === false &&
+        this.state.pages === false &&
+        this.state.yearPublished === false &&
+        this.state.lastUpdate === false &&
+        this.state.deletedJournals === false
+      ) {
+        // show check one alert
+        this.setState({ checkOneAlert: true });
+      } else {
+        const name =
+          this.props.auth.user.firstName +
+          " " +
+          this.props.auth.user.middleName +
+          " " +
+          this.props.auth.user.lastName;
 
-    if (
-      this.state.status === false &&
-      this.state.researchId === false &&
-      this.state.college === false &&
-      this.state.course === false &&
-      this.state.type === false &&
-      this.state.pages === false &&
-      this.state.academicYear === false &&
-      this.state.lastUpdate === false &&
-      this.state.deletedResearches === false
-    ) {
-      alert("Please check at least one");
-    } else {
-      const name =
-        this.props.auth.user.firstName +
-        " " +
-        this.props.auth.user.middleName +
-        " " +
-        this.props.auth.user.lastName;
+        const researchesReportData = {
+          status: this.state.status,
+          issn: this.state.issn,
+          college: this.state.college,
+          course: this.state.course,
+          type: this.state.type,
+          pages: this.state.pages,
+          yearPublished: this.state.yearPublished,
+          lastUpdate: this.state.lastUpdate,
+          deletedJournals: this.state.deletedJournals,
+          journals: this.props.journal.journals,
+          typeOfReport: "Journals Report",
+          printedBy: name
+        };
 
-      const researchesReportData = {
-        status: this.state.status,
-        researchId: this.state.researchId,
-        college: this.state.college,
-        course: this.state.course,
-        type: this.state.type,
-        pages: this.state.pages,
-        academicYear: this.state.academicYear,
-        lastUpdate: this.state.lastUpdate,
-        deletedResearches: this.state.deletedResearches,
-        researches: this.props.research.researches,
-        typeOfReport: "Researches Report",
-        printedBy: name
-      };
-
-      this.props.createReportForResearches(researchesReportData);
-      alert("Please wait while your report is being generated");
+        this.props.createReportForResearches(researchesReportData);
+        // show generate alert
+        this.setState({ generateAlert: true });
+      }
     }
+  };
 
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
   };
 
 
   render() {
     let binAction;
-
+    const disableFlag = this.props.journal.buttonDisable;
 
     if (this.state.bin) {
       binAction = (
@@ -139,6 +153,26 @@ class ResearchesAction extends Component {
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
+        {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+        {/* ------------------------ */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
         <Link to="/add-journal" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" /> Add Journal
         </Link>
@@ -190,14 +224,14 @@ class ResearchesAction extends Component {
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
-                    name="researchId"
-                    id="researchId"
-                    value={this.state.researchId}
+                    name="issn"
+                    id="issn"
+                    value={this.state.issn}
                     onChange={this.onChange}
-                    checked={this.state.researchId}
+                    checked={this.state.issn}
                   />
-                  <label className="form-check-label" htmlFor="researchId">
-                    Research ID
+                  <label className="form-check-label" htmlFor="issn">
+                    ISSN
                   </label>
                 </div>
                 <div className="form-check">
@@ -232,20 +266,6 @@ class ResearchesAction extends Component {
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
-                    name="type"
-                    id="type"
-                    value={this.state.type}
-                    onChange={this.onChange}
-                    checked={this.state.type}
-                  />
-                  <label className="form-check-label" htmlFor="type">
-                    Research Type
-                  </label>
-                </div>
-                <div className="form-check">
-                  <input
-                    className="form-check form-check-inline"
-                    type="checkbox"
                     name="pages"
                     id="pages"
                     value={this.state.pages}
@@ -260,13 +280,13 @@ class ResearchesAction extends Component {
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
-                    name="academicYear"
-                    id="academicYear"
-                    value={this.state.academicYear}
+                    name="yearPublished"
+                    id="yearPublished"
+                    value={this.state.yearPublished}
                     onChange={this.onChange}
-                    checked={this.state.academicYear}
+                    checked={this.state.yearPublished}
                   />
-                  <label className="form-check-label" htmlFor="academicYear">
+                  <label className="form-check-label" htmlFor="yearPublished">
                     Published Year
                   </label>
                 </div>
@@ -288,26 +308,35 @@ class ResearchesAction extends Component {
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
-                    name="deletedResearches"
-                    id="deletedResearches"
-                    value={this.state.deletedResearches}
+                    name="deletedJournals"
+                    id="deletedJournals"
+                    value={this.state.deletedJournals}
                     onChange={this.onChange}
-                    checked={this.state.deletedResearches}
+                    checked={this.state.deletedJournals}
                   />
                   <label
                     className="form-check-label"
-                    htmlFor="deletedResearches"
+                    htmlFor="deletedJournals"
                   >
-                    Include Deleted Researches
+                    Include Deleted Journals
                   </label>
                 </div>
                 <br />
-                <input
-                  type="button"
-                  value="Generate Report"
-                  onClick={this.onGenerateReport}
-                  className="btn btn-info disabled"
-                />
+                {disableFlag ? (
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info disabled"
+                  />
+                ) : (
+                    <input
+                      type="button"
+                      value="Generate Report"
+                      onClick={this.onGenerateReport}
+                      className="btn btn-info"
+                    />
+                  )}
               </form>
             </div>
           </div>

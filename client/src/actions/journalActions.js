@@ -8,8 +8,12 @@ import {
   GET_ERRORS,
   CLEAR_ERRORS,
   TOGGLE_JOURNAL_BIN,
-  TOGGLE_JOURNAL_LIST
+  TOGGLE_JOURNAL_LIST,
+  CHANGE_BUTTON_STATUS_JOURNAL
 } from "./types";
+
+
+
 
 // Get all researches
 export const getResearches = () => dispatch => {
@@ -34,16 +38,16 @@ export const getResearches = () => dispatch => {
 
 // Create Report for all Researches
 export const createReportForResearches = reportData => dispatch => {
-  //dispatch(changeButtonStatus(true));
+  dispatch(changeButtonStatus(true));
   axios
-    .post("/api/researches/createReport/researches", reportData)
+    .post("/api/journals/createReport/journals", reportData)
     .then(() =>
       axios
-        .get("/api/researches/fetchReport/researches", { responseType: "blob" })
+        .get("/api/journals/fetchReport/journals", { responseType: "blob" })
         .then(res => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
-          //dispatch(changeButtonStatus(false));
-          saveAs(pdfBlob, "ResearchesReport.pdf");
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "JournalsReport.pdf");
 
           // send base64 to api for s3 upload -FOR ANDROID-
           if (reportData.android) {
@@ -132,6 +136,42 @@ export const addAuthor = (authorData, history) => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
+      })
+    );
+};
+// Create Report for specific Research
+export const createReportForResearch = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/journals/createReport/journal", reportData)
+    .then(() =>
+      axios
+        .get("/api/journals/fetchReport/journal", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "JournalReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function () {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_JOURNALS,
+        payload: null
       })
     );
 };
@@ -226,43 +266,50 @@ export const deleteDocument = (researchId, filename) => dispatch => {
 
 // Move to bin Research
 export const deleteResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/journals/remove/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/journals`), res =>
-        dispatch({
-          type: GET_JOURNAL,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_ERRORS,
-          payload: err.response.data
-        })
-      );
-  }
+
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/journals/remove/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/journals`), res =>
+      dispatch({
+        type: GET_JOURNAL,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+
 };
 
 // Restore Research
 export const restoreResearch = (data, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setResearchLoading());
-    axios
-      .post(`/api/journals/restore/${data.id}`, data)
-      .then(dispatch(getResearches()), history.push(`/journals`), res =>
+
+  dispatch(setResearchLoading());
+  axios
+    .post(`/api/journals/restore/${data.id}`, data)
+    .then(dispatch(getResearches()), history.push(`/journals`), res =>
+      dispatch({
+        type: GET_JOURNAL,
+        payload: res.data
+      }).catch(err =>
         dispatch({
-          type: GET_JOURNAL,
-          payload: res.data
-        }).catch(err =>
-          dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-          })
-        )
-      );
-  }
+          type: GET_ERRORS,
+          payload: err.response.data
+        })
+      )
+    );
+
+};
+
+export const changeButtonStatus = flag => {
+  return {
+    type: CHANGE_BUTTON_STATUS_JOURNAL,
+    payload: flag
+  };
 };
 
 // set loading state
@@ -278,3 +325,4 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   };
 };
+

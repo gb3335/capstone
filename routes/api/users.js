@@ -5,8 +5,24 @@ const jwt = require("jsonwebtoken");
 const keys = require("../../config/keys");
 const passport = require("passport");
 const generator = require("generate-password");
-
+const uuid = require("uuid");
 //Load input Validation
+
+
+
+
+
+
+const AWS = require("aws-sdk");
+const s3config = require("../../config/s3keys");
+AWS.config.update({
+  accessKeyId: s3config.iamUser,
+  secretAccessKey: s3config.iamSecret,
+  region: "us-east-2"
+});
+
+
+
 const validateRegisterInput = require("../../validation/register");
 const validateProfileInput = require("../../validation/profile");
 const validateLoginInput = require("../../validation/login");
@@ -416,7 +432,7 @@ router.post(
           },
           email: req.body.email,
           password,
-          avatar: "../../images/user.png",
+          avatar: "/images/User.png",
           contact: req.body.contact,
           userType: req.body.usertype,
           college: req.body.college,
@@ -618,5 +634,87 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
+
+// @route   POST api/researches/images
+// @desc    Add images to research
+// @access  Private
+router.post(
+  "/images",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let imageArray = [];
+    for (i = 0; i < req.body.images.length; i++) {
+      const rand = uuid();
+      // let ext = req.body.images[i].split(";")[0].split("/")[1];
+
+      // if (ext == "jpeg") {
+      //   ext = "jpg";
+      // }
+
+      // S3 upload
+      s3 = new AWS.S3();
+
+      const base64Data = new Buffer(
+        req.body.images[i].replace(/^data:image\/\w+;base64,/, ""),
+        "base64"
+      );
+
+      const type = req.body.images[i].split(";")[0].split("/")[1];
+
+      const userId = 1;
+
+      params = {
+        Bucket: "bulsu-capstone",
+        Key: `researchImages/${req.body.id + "-" + rand}.png`, // type is not required
+        Body: base64Data,
+        ACL: "public-read",
+        ContentEncoding: "base64", // required
+        ContentType: `image/${type}` // required. Notice the back ticks
+      };
+
+      s3.upload(params, (err, data) => {
+        if (err) {
+          return console.log(err);
+        }
+
+        console.log("Image successfully uploaded.");
+      });
+
+      imageArray.push(req.body.id + "-" + rand + ".png");
+    }
+
+    Research.findOne({ _id: req.body.id }).then(research => {
+      for (i = 0; i < req.body.images.length; i++) {
+        const newImage = {
+          name: imageArray[i]
+        };
+
+        // Add to exp array
+        research.images.unshift(newImage);
+      }
+
+      const newResearch = {
+        lastUpdate: Date.now()
+      };
+
+      Research.findOneAndUpdate(
+        { _id: req.body.id },
+        { $set: newResearch },
+        { new: true }
+      ).then(research);
+
+      // add activity
+      const newActivity = {
+        title: "Image added to " + research.title
+      };
+      new Activity(newActivity).save();
+
+      research
+        .save()
+        .then(research => res.json(research))
+        .catch(err => console.log(err));
+    });
+  }
+);
 
 module.exports = router;

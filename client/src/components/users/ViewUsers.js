@@ -7,10 +7,9 @@ import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
 
 import { getUsers } from "../../actions/userActions";
-import UserItems from "./UserItems";
 import RegisterActions from "./RegisterActions";
 import './ViewUsers.css';
-import TextFieldGroup from "../common/TextFieldGroup";
+
 
 class ViewUsers extends Component {
 
@@ -85,19 +84,44 @@ class ViewUsers extends Component {
 
         })
 
-        const userData = users.map((user, index) => ({
-          avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
-          username: user.name.firstName + " " + user.name.lastName,
-          type: user.userType,
-          view: (
-            <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
-
-          ),
-          blocked: whenBlock[index],
-          college: user.college ? user.college : <div>None</div>
 
 
-        }));
+
+        // const userData = users.map((user, index) => ({
+        //   avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
+        //   username: user.name.firstName + " " + user.name.lastName,
+        //   type: user.userType,
+        //   view: (
+        //     <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
+
+        //   ),
+        //   blocked: whenBlock[index],
+        //   college: user.college ? user.college : <div>None</div>
+
+
+        // }));
+
+        const usersData = [];
+
+        users.map((user, index) => {
+          if (user._id !== this.props.auth.user.id) {
+            usersData.push({
+              avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
+              username: user.name.firstName + " " + user.name.lastName,
+              type: user.userType,
+              view: (
+                <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
+
+              ),
+              blocked: whenBlock[index],
+              college: user.college ? user.college : <div>None</div>
+
+            })
+          }
+
+        })
+
+
 
 
 
@@ -114,8 +138,8 @@ class ViewUsers extends Component {
               { title: "Status", field: "blocked" },
               { title: "View Details", field: "view" }
             ]}
-            data={userData}
-            title="UserData"
+            data={usersData}
+            title="User Data"
           />
         );
       }
@@ -129,39 +153,30 @@ class ViewUsers extends Component {
 
     return (
 
-      <div className="profiles" >
 
-        <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-          <div className="modal-dialog modal-dialog-centered" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="exampleModalCenterTitle">Account</h5>
-                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                {this.state.delPanel}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="container">
-          <div className="row">
-
-            <div className="col-md-12">
-              <div className="display-4 text-center">User Account
-                <p className="lead text-center">
-                  User list of Accounts
+      <div className="profiles">
+        <div className="row" style={{ margin: "5px" }}>
+          <div className="col-md-12">
+            <div className="usersBg ">
+              <div className="light-overlay p-2">
+                <div className="display-4 text-center mb-1">Users
+                <p className="lead text-center ">
+                    User list of Accounts
                 </p>
+
+                </div>
               </div>
-              <RegisterActions />
-              {userItems}
             </div>
+            <br />
+            <RegisterActions />
+            {userItems}
           </div>
         </div>
-
       </div>
+
+
+
+
     )
   }
 }

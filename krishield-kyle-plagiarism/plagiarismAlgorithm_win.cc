@@ -425,7 +425,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     // }
     
     double patternSimilarityTotal = calculateSimilarityScore(sentenceDetected, numofpatternsentence);
-    //double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
+    double textSimilarityTotal = calculateSimilarityScore(sentenceDetected, numoftextsentence);
 
 
     v8::Local<v8::String> nameprop = Nan::New("Name").ToLocalChecked();
@@ -462,29 +462,32 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
     Nan::Set(documentObject, patterndocuprop, patterndocuvalue);
     Nan::Set(documentObject, textdocuprop, textdocuvalue);
 
-    // v8::Local<v8::Object> similarityObject = Nan::New<v8::Object>();
+    v8::Local<v8::Object> similarityObject = Nan::New<v8::Object>();
 
-    // v8::Local<v8::String> patternprop = Nan::New("Pattern").ToLocalChecked();
-	// v8::Local<v8::String> textprop = Nan::New("Text").ToLocalChecked();
+    v8::Local<v8::String> patternprop = Nan::New("Pattern").ToLocalChecked();
+	v8::Local<v8::String> textprop = Nan::New("Text").ToLocalChecked();
 
-    // v8::Local<v8::Value> patternvalue = Nan::New(patternSimilarityTotal);
-	// v8::Local<v8::Value> textvalue = Nan::New(textSimilarityTotal);
+    v8::Local<v8::Value> patternvalue = Nan::New(patternSimilarityTotal);
+	v8::Local<v8::Value> textvalue = Nan::New(textSimilarityTotal);
 
-    // Nan::Set(similarityObject, patternprop, patternvalue);
-    // Nan::Set(similarityObject, textprop, textvalue);
+    Nan::Set(similarityObject, patternprop, patternvalue);
+    Nan::Set(similarityObject, textprop, textvalue);
 
     //Whole Object to Return
     v8::Local<v8::Object> jsonObject = Nan::New<v8::Object>();
 
 	v8::Local<v8::String> totalprop = Nan::New("SimilarityScore").ToLocalChecked();
+	v8::Local<v8::String> similarprop = Nan::New("DocumentScore").ToLocalChecked();
     v8::Local<v8::String> documentprop = Nan::New("Document").ToLocalChecked();
 	v8::Local<v8::String> arrayprop = Nan::New("Index").ToLocalChecked();
 
 	v8::Local<v8::Value> totalvalue = Nan::New(patternSimilarityTotal);
+	v8::Local<v8::Value> similarvalue = similarityObject;
 	v8::Local<v8::Value> documentvalue = documentObject;
 	v8::Local<v8::Value> arrayvalue = myarray;
 
 	Nan::Set(jsonObject, totalprop, totalvalue);
+	Nan::Set(jsonObject, similarprop, similarvalue);
 	Nan::Set(jsonObject, documentprop, documentvalue);
 	Nan::Set(jsonObject, arrayprop, arrayvalue);
 	info.GetReturnValue().Set(jsonObject);

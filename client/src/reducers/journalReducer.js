@@ -3,7 +3,8 @@ import {
   GET_JOURNALS,
   JOURNAL_LOADING,
   TOGGLE_JOURNAL_BIN,
-  TOGGLE_JOURNAL_LIST
+  TOGGLE_JOURNAL_LIST,
+  CHANGE_BUTTON_STATUS_JOURNAL
 } from "../actions/types";
 
 const initialState = {
@@ -12,7 +13,7 @@ const initialState = {
   loading: false,
   buttonDisable: false,
   bin: false
-  
+
   //  research: {},
   // researches: {},
   // loading: false,
@@ -48,6 +49,11 @@ export default function (state = initialState, action) {
         ...state,
         journals: action.payload,
         loading: false
+      };
+    case CHANGE_BUTTON_STATUS_JOURNAL:
+      return {
+        ...state,
+        buttonDisable: action.payload
       };
     default:
       return state;

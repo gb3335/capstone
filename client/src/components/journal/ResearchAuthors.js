@@ -14,7 +14,7 @@ class ResearchAuthors extends Component {
           <div>
             <hr />
             <p>
-              <span>No author is added in this research</span>
+              <span>No author is added in this journal</span>
             </p>
           </div>
         );

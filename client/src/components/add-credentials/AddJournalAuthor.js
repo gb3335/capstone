@@ -24,11 +24,17 @@ class AddAuthor extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
     const authorData = {
       name: this.state.name,
       // role: this.state.role,
-      researchId: this.props.journal.journal._id
+      researchId: this.props.journal.journal._id,
+      username: name
     };
 
     this.refs.authorBtn.setAttribute("disabled", "disabled");
@@ -90,12 +96,14 @@ class AddAuthor extends Component {
 AddAuthor.propTypes = {
   errors: PropTypes.object.isRequired,
   addAuthor: PropTypes.func.isRequired,
-  journal: PropTypes.object.isRequired
+  journal: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  journal: state.journal
+  journal: state.journal,
+  auth: state.auth
 });
 
 export default connect(

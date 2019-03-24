@@ -12,22 +12,22 @@ const path = require("path");
 const pdf = require("html-pdf");
 
 // report templates
-let pdfResearchesTemplate;
-let pdfResearchTemplate;
+let pdfJournalsTemplate;
+let pdfJournalTemplate;
 let fontFooter;
 
 if (process.env.NODE_ENV === "production") {
-  pdfResearchesTemplate = require("../../document/researchesTemplate");
-  pdfResearchTemplate = require("../../document/researchTemplate");
+  pdfJournalsTemplate = require("../../document/journalsTemplate");
+  pdfJournalTemplate = require("../../document/journalTemplate");
   fontFooter = "7px";
 } else {
-  pdfResearchesTemplate = require("../../document/researchesTemplate_Dev");
-  pdfResearchTemplate = require("../../document/researchTemplate_Dev");
+  pdfJournalsTemplate = require("../../document/journalsTemplate_Dev");
+  pdfJournalTemplate = require("../../document/journalTemplate_Dev");
   fontFooter = "10px";
 }
 
-// Research model
-const Research = require("../../models/Journal");
+// Journal model
+const Journal = require("../../models/Journal");
 const College = require("../../models/College");
 const Activity = require("../../models/Activity");
 
@@ -41,12 +41,12 @@ AWS.config.update({
 });
 
 //Validator
-const validateResearchInput = require("../../validation/journal");
+const validateJournalInput = require("../../validation/journal");
 const validateAuthorInput = require("../../validation/author");
 
 router.get("/pdfText", (req, res) => {
   let dataBuffer = fs.readFileSync(
-    "client/public/documents/researchDocuments/sample.pdf"
+    "client/public/documents/journalDocuments/sample.pdf"
   );
 
   pdf(dataBuffer).then(function (data) {
@@ -67,48 +67,49 @@ router.get("/pdfText", (req, res) => {
   });
 });
 
-// @route   GET api/researches/test
+// @route   GET api/journals/test
 // @desc    Tests get route
 // @access  Public
-router.get("/test", (req, res) => res.json({ msg: "Research Works" }));
+router.get("/test", (req, res) => res.json({ msg: "Journal Works" }));
 
-// @route   GET api/researches
-// @desc    Get researches
+// @route   GET api/journals
+// @desc    Get journals
 // @access  Public
 router.get("/", (req, res) => {
-  Research.find()
+  Journal.find()
     .sort({ title: 1 })
-    .then(researches => res.json(researches))
+    .then(journals => res.json(journals))
     .catch(err =>
-      res.status(404).json({ noresearchfound: "No Researches found" })
+      res.status(404).json({ nojournalfound: "No Journals found" })
     );
 });
 
-// @route   GET api/researches/:id
-// @desc    Get research by id
+// @route   GET api/journals/:id
+// @desc    Get journal by id
 // @access  Public
 router.get("/:id", (req, res) => {
   const errors = {};
-  Research.findOne({ _id: req.params.id })
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
+  Journal.findOne({ _id: req.params.id })
+    .then(journal => {
+      if (!journal) {
+        errors.nojournal = "There is no data for this journal";
         res.status(404).json(errors);
       }
 
-      res.json(research);
+      res.json(journal);
     })
     .catch(err => res.status(404).json(err));
 });
 
-// @route   POST api/researches
-// @desc    Create / Update research
+// @route   POST api/journals
+// @desc    Create / Update journal
 // @access  Private
 router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, isValid } = validateResearchInput(req.body);
+
+    const { errors, isValid } = validateJournalInput(req.body);
 
     // Check Validation
     if (!isValid) {
@@ -116,24 +117,25 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Research.findOne({ _id: req.body.id }).then(research => {
-      if (research) {
-        Research.findOne({ title: req.body.title }).then(research => {
+    Journal.findOne({ _id: req.body.id }).then(journal => {
+      if (journal) {
+        Journal.findOne({ title: req.body.title }).then(journal => {
           let title;
           let copyAuthorArray = [];
           try {
-            title = research.title;
-            copyAuthorArray = research.author;
+            title = journal.title;
+            copyAuthorArray = journal.author;
           } catch (error) {
             title = "";
           }
-          if (research && title != req.body.oldTitle) {
-            errors.title = "Research Title already exists";
+          if (journal && title != req.body.oldTitle) {
+            errors.title = "Journal Title already exists";
             res.status(400).json(errors);
           } else {
             // add activity
             const newActivity = {
-              title: "Research " + req.body.title + " updated"
+              title: "Journal " + req.body.title + " updated",
+              by: req.body.username
             };
             new Activity(newActivity).save();
 
@@ -142,7 +144,7 @@ router.post(
               name: req.body.authorOne,
               role: "Author One"
             });
-           
+
 
             copyAuthorArray.map(aut => {
               aut.role === "Author"
@@ -153,16 +155,16 @@ router.post(
                 : "";
             });
 
-            let newResearch = {
+            let newJournal = {
               title: req.body.title,
               college: req.body.college,
               course: req.body.course,
-              abstract: req.body.abstract,
+              description: req.body.description,
               issn: req.body.issn,
               pages: req.body.pages,
               publisher: req.body.publisher,
               volume: req.body.volume,
-              schoolYear: req.body.schoolYear,
+              yearPublished: req.body.yearPublished,
               author: authorArray,
               lastUpdate: Date.now()
             };
@@ -170,29 +172,30 @@ router.post(
             // Add new Author One and existing
 
             // update college
-            Research.findOneAndUpdate(
+            Journal.findOneAndUpdate(
               { _id: req.body.id },
-              { $set: newResearch },
+              { $set: newJournal },
               { new: true }
             )
-              .then(research => res.json(research))
+              .then(journal => res.json(journal))
               .catch(err => console.log(err));
           }
         });
       } else {
-        Research.findOne({ title: req.body.title }).then(research => {
-          if (research) {
-            errors.title = "Research Title already exists";
+        Journal.findOne({ title: req.body.title }).then(journal => {
+          if (journal) {
+            errors.title = "Journal Title already exists";
             res.status(400).json(errors);
           } else {
             try {
-              // increase college research total
+              // increase college journal total
               College.findOne({ "name.fullName": req.body.college }).then(
                 college => {
                   if (college) {
                     // add activity
                     const newActivity = {
-                      title: "Research " + req.body.title + " added"
+                      title: "Journal " + req.body.title + " added",
+                      by: req.body.username
                     };
                     new Activity(newActivity).save();
 
@@ -203,8 +206,8 @@ router.post(
                       if (cou.name === req.body.course) {
                         courseId = cou._id;
                         dupliCourse = cou;
-                        courseResTotal = ++dupliCourse.researchTotal;
-                        dupliCourse.researchTotal = courseResTotal;
+                        courseResTotal = ++dupliCourse.journalTotal;
+                        dupliCourse.journalTotal = courseResTotal;
                       }
                     });
 
@@ -223,10 +226,10 @@ router.post(
 
                     college.save();
 
-                    const total = ++college.researchTotal;
+                    const total = ++college.journalTotal;
 
                     const newCollege = {
-                      researchTotal: total
+                      journalTotal: total
                     };
 
                     let authorArray = [];
@@ -234,24 +237,24 @@ router.post(
                       name: req.body.authorOne,
                       role: "Author One"
                     });
-                   
 
-                    let newResearch = {
+
+                    let newJournal = {
                       title: req.body.title,
                       college: req.body.college,
                       course: req.body.course,
-                      abstract: req.body.abstract,
+                      description: req.body.description,
                       issn: req.body.issn,
                       pages: req.body.pages,
                       publisher: req.body.pages,
                       volume: req.body.volume,
-                      schoolYear: req.body.schoolYear,
+                      yearPublished: req.body.yearPublished,
                       author: authorArray,
                       lastUpdate: Date.now()
                     };
 
-                    // Save Research
-                    new Research(newResearch).save();
+                    // Save Journal
+                    new Journal(newJournal).save();
 
                     College.findOneAndUpdate(
                       { "name.fullName": req.body.college },
@@ -273,8 +276,8 @@ router.post(
   }
 );
 
-// @route   POST api/researches/author
-// @desc    Add author to research
+// @route   POST api/journals/author
+// @desc    Add author to journal
 // @access  Private
 router.post(
   "/author",
@@ -288,7 +291,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Research.findOne({ _id: req.body.researchId }).then(research => {
+    Journal.findOne({ _id: req.body.researchId }).then(journal => {
       const newAuthor = {
         name: req.body.name,
         role: req.body.role
@@ -296,24 +299,25 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: req.body.name + " added as Author in " + research.title
+        title: req.body.name + " added as Author in " + journal.title,
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
-      Research.findOneAndUpdate(
+      Journal.findOneAndUpdate(
         { _id: req.body.researchId },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
-      ).then(research);
+      ).then(journal);
 
       // Add to exp array
-      research.author.unshift(newAuthor);
+      journal.author.unshift(newAuthor);
 
-      research.save().then(research => res.json(research));
+      journal.save().then(journal => res.json(journal));
     });
   }
 );
@@ -330,7 +334,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Research.findOne({ _id: req.body.researchId }).then(research => {
+    Journal.findOne({ _id: req.body.researchId }).then(journal => {
       const newAuthor = {
         name: req.body.name,
         role: req.body.role
@@ -338,75 +342,77 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: req.body.name + " added as Author in " + research.title
+        title: req.body.name + " added as Publisher in " + journal.title,
+        by: req.body.name
       };
       new Activity(newActivity).save();
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
-      Research.findOneAndUpdate(
+      Journal.findOneAndUpdate(
         { _id: req.body.researchId },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
-      ).then(research);
+      ).then(journal);
 
       // Add to exp array
-      research.author.unshift(newAuthor);
+      journal.author.unshift(newAuthor);
 
-      research.save().then(research => res.json(research));
+      journal.save().then(journal => res.json(journal));
     });
   }
 );
 
-// @route   DELETE api/researches/author/:research_id/:author_id
-// @desc    Delete author from research
+// @route   DELETE api/journals/author/:journal_id/:author_id
+// @desc    Delete author from journal
 // @access  Private
 router.delete(
-  "/author/:research_id/:author_id",
+  "/author/:journal_id/:author_id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Research.findOne({ _id: req.params.research_id })
-      .then(research => {
+    Journal.findOne({ _id: req.params.journal_id })
+      .then(journal => {
         // Get remove index
-        const removeIndex = research.author
+        const removeIndex = journal.author
           .map(item => item.id)
           .indexOf(req.params.author_id);
 
         // add activity
         const newActivity = {
           title:
-            research.author[removeIndex].name +
+            journal.author[removeIndex].name +
             " removed as " +
-            research.author[removeIndex].role +
+            journal.author[removeIndex].role +
             " in " +
-            research.title
+            journal.title,
+          by: req.params.name
         };
         new Activity(newActivity).save();
 
-        const newResearch = {
+        const newJournal = {
           lastUpdate: Date.now()
         };
 
-        Research.findOneAndUpdate(
-          { _id: req.params.research_id },
-          { $set: newResearch },
+        Journal.findOneAndUpdate(
+          { _id: req.params.journal_id },
+          { $set: newJournal },
           { new: true }
-        ).then(research);
+        ).then(journal);
 
         // Splice out of array
-        research.author.splice(removeIndex, 1);
+        journal.author.splice(removeIndex, 1);
 
         // Save
-        research.save().then(research => res.json(research));
+        journal.save().then(journal => res.json(journal));
       })
       .catch(err => res.status(404).json(err));
   }
 );
 
-// @route   POST api/researches/images
-// @desc    Add images to research
+// @route   POST api/journals/images
+// @desc    Add images to journal
 // @access  Private
 router.post(
   "/images",
@@ -435,7 +441,7 @@ router.post(
 
       params = {
         Bucket: "bulsu-capstone",
-        Key: `researchImages/${req.body.id + "-" + rand}.png`, // type is not required
+        Key: `journalImages/${req.body.id + "-" + rand}.png`, // type is not required
         Body: base64Data,
         ACL: "public-read",
         ContentEncoding: "base64", // required
@@ -453,42 +459,43 @@ router.post(
       imageArray.push(req.body.id + "-" + rand + ".png");
     }
 
-    Research.findOne({ _id: req.body.id }).then(research => {
+    Journal.findOne({ _id: req.body.id }).then(journal => {
       for (i = 0; i < req.body.images.length; i++) {
         const newImage = {
           name: imageArray[i]
         };
 
         // Add to exp array
-        research.images.unshift(newImage);
+        journal.images.unshift(newImage);
       }
 
-      const newResearch = {
+      const newJournal = {
         lastUpdate: Date.now()
       };
 
-      Research.findOneAndUpdate(
+      Journal.findOneAndUpdate(
         { _id: req.body.id },
-        { $set: newResearch },
+        { $set: newJournal },
         { new: true }
-      ).then(research);
+      ).then(journal);
 
       // add activity
       const newActivity = {
-        title: "Image added to " + research.title
+        title: "Image added to " + journal.title,
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
-      research
+      journal
         .save()
-        .then(research => res.json(research))
+        .then(journal => res.json(journal))
         .catch(err => console.log(err));
     });
   }
 );
 
-// @route   POST api/researches/document
-// @desc    Add document to research
+// @route   POST api/journals/document
+// @desc    Add document to journal
 // @access  Private
 router.post(
   "/document",
@@ -500,12 +507,12 @@ router.post(
     const filename = req.body.researchId + "-" + rand + ".pdf";
 
     if (req.body.oldFile) {
-      // delete research document from s3
+      // delete journal document from s3
       let s3 = new AWS.S3();
 
       let params = {
         Bucket: "bulsu-capstone",
-        Key: `researchDocuments/${req.body.oldFile}`
+        Key: `journalDocuments/${req.body.oldFile}`
       };
 
       s3.deleteObject(params, function (err, data) {
@@ -529,7 +536,7 @@ router.post(
 
     params = {
       Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
+      Key: `journalDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
       Body: base64Data,
       ACL: "public-read",
       ContentEncoding: "base64", // required
@@ -541,7 +548,7 @@ router.post(
         return console.log(err);
       }
       const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
         filename;
       const options = {
         directory: "./routes/downloadedDocu",
@@ -556,176 +563,123 @@ router.post(
         document: filename,
         lastUpdate: Date.now()
       };
-      Research.findOne({ _id: req.body.researchId }).then(research => {
+      Journal.findOne({ _id: req.body.researchId }).then(journal => {
         // add activity
         const newActivity = {
-          title: "Document added to " + research.title
+          title: "Document added to " + journal.title,
+          by: req.body.username
         };
         new Activity(newActivity).save();
       });
 
-      Research.findOneAndUpdate(
+      Journal.findOneAndUpdate(
         { _id: req.body.researchId },
         { $set: newDocument },
         { new: true }
-      ).then(research => res.json(research));
+      ).then(journal => res.json(journal));
     });
 
-    // fs.writeFile(
-    //   `client/public/documents/researchDocuments/${req.body.researchId +
-    //     "-" +
-    //     rand}.pdf`,
-    //   base64Doc,
-    //   { encoding: "base64" },
-    //   function(err) {
-    //     console.log("file created");
-    //     let pdfString;
-    //     let documentsArray = [];
-    //     let pdfStringForAll;
-    //     fs.readFile(
-    //       `client/public/documents/researchDocuments/${req.body.researchId +
-    //         "-" +
-    //         rand}.pdf`,
-    //       (err, pdfBuffer) => {
-    //         try {
-    //           new PdfReader().parseBuffer(pdfBuffer, function(err, item) {
-    //             if (err) {
-    //               console.log(err);
-    //             } else if (!item) {
-    //               // finished reading texts
-    //               const tokenizer = new Tokenizer("Chuck");
-    //               tokenizer.setEntry(pdfString);
-    //               // ETO PRE, YUNG INUPLOAD NA FILE NA ICHECHECK
-    //               //console.log(tokenizer.getSentences());
-
-    //               // find each documents
-    //               try {
-    //                 Research.find()
-    //                   .sort({ title: 1 })
-    //                   .then(researches => {
-    //                     let ctr = 0;
-    //                     let ctr2 = 0;
-    //                     researches.map(research => {
-    //                       if (research._id != req.body.researchId) {
-    //                         if (research.document != "") {
-    //                           ctr++;
-    //                         }
-    //                       }
-    //                     });
-    //                     researches.map(research => {
-    //                       if (research._id != req.body.researchId) {
-    //                         if (research.document != "") {
-    //                           fs.readFile(
-    //                             `client/public/documents/researchDocuments/${
-    //                               research.document
-    //                             }`,
-    //                             (err, pdfBuffer) => {
-    //                               try {
-    //                                 new PdfReader().parseBuffer(
-    //                                   pdfBuffer,
-    //                                   function(err, item) {
-    //                                     if (err) {
-    //                                       console.log(err);
-    //                                     } else if (!item) {
-    //                                       const tokenizer = new Tokenizer(
-    //                                         "Chuck"
-    //                                       );
-    //                                       tokenizer.setEntry(pdfStringForAll);
-    //                                       documentsArray.push(
-    //                                         tokenizer.getSentences()
-    //                                       );
-    //                                       ctr2++;
-    //                                       if (ctr === ctr2) {
-    //                                         // ETO PRE, DOCUMENT ARRAY MAY LAMAN LAHAT NUNG TEXTS
-    //                                         // console.log(documentsArray);
-    //                                       }
-    //                                       pdfStringForAll = "";
-    //                                     } else if (item.text) {
-    //                                       let text = " " + item.text;
-    //                                       pdfStringForAll =
-    //                                         pdfStringForAll + text;
-    //                                     }
-    //                                   }
-    //                                 );
-    //                               } catch (error) {}
-    //                             }
-    //                           );
-    //                         }
-    //                       }
-    //                     });
-    //                   })
-    //                   .catch(err =>
-    //                     res
-    //                       .status(404)
-    //                       .json({ noresearchfound: "No Researches found" })
-    //                   );
-    //               } catch (error) {}
-    //             } else if (item.text) {
-    //               let text = " " + item.text;
-    //               pdfString = pdfString + text;
-    //             }
-    //           });
-    //         } catch (error) {}
-    //       }
-    //     );
-    //   }
-    // );
   }
 );
 
-// @route   DELETE api/researches/document/:research_id/:filename
-// @desc    Delete document from research
+// @route   DELETE api/journals/document/:journal_id/:filename
+// @desc    Delete document from journal
 // @access  Private
 router.delete(
-  "/document/:research_id/:filename",
+  "/document/:journal_id/:filename",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //delete research document from s3
+    //delete journal document from s3
     let s3 = new AWS.S3();
 
     let params = {
       Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.params.filename}`
+      Key: `journalDocuments/${req.params.filename}`
     };
 
     s3.deleteObject(params, function (err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
-    // try {
-    //   fs.unlinkSync(
-    //     `client/public/documents/researchDocuments/${req.params.filename}`
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+
 
     const newDocument = {
       document: "",
       lastUpdate: Date.now()
     };
 
-    Research.findOne({ _id: req.params.research_id }).then(research => {
+    Journal.findOne({ _id: req.params.journal_id }).then(journal => {
       // add activity
       const newActivity = {
-        title: "Document removed from " + research.title
+        title: "Document removed from " + journal.title,
+        by: req.params.name
       };
       new Activity(newActivity).save();
     });
 
-    Research.findOneAndUpdate(
-      { _id: req.params.research_id },
+    Journal.findOneAndUpdate(
+      { _id: req.params.journal_id },
       { $set: newDocument },
       { new: true }
-    ).then(research => res.json(research));
+    ).then(journal => res.json(journal));
   }
 );
 
-// @route   POST api/researches/createReport/researches
-// @desc    Generate List of all researches Report
+// @route   POST api/journals/createReport/journals
+// @desc    Generate List of all journals Report
 // @access  Private
 router.post(
-  "/createReport/researches",
+  "/createReport/journals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfJournalsTemplate(req.body), options)
+      .toFile("journalsPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/journals/fetchReport/journals
+// @desc    Send the generated pdf to client - list of journals
+// @access  Private
+router.get(
+  "/fetchReport/journals",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/journalsPdf.pdf`);
+  }
+);
+
+// @route   POST api/journals/createReport/journal
+// @desc    Generate individual journal Report
+// @access  Private
+router.post(
+  "/createReport/journal",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const printedBy = req.body.printedBy;
@@ -748,8 +702,8 @@ router.post(
       }
     };
     pdf
-      .create(pdfResearchesTemplate(req.body), options)
-      .toFile("researchesPdf.pdf", err => {
+      .create(pdfJournalTemplate(req.body), options)
+      .toFile("journalPdf.pdf", err => {
         if (err) {
           res.send(Promise.reject());
         }
@@ -758,117 +712,69 @@ router.post(
   }
 );
 
-// @route   GET api/researches/fetchReport/researches
-// @desc    Send the generated pdf to client - list of researches
+// @route   GET api/journals/fetchReport/journal
+// @desc    Send the generated pdf to client - individual journal
 // @access  Private
 router.get(
-  "/fetchReport/researches",
+  "/fetchReport/journal",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/researchesPdf.pdf`);
+    res.sendFile(`${reqPath}/journalPdf.pdf`);
   }
 );
 
-// @route   POST api/researches/createReport/research
-// @desc    Generate individual research Report
-// @access  Private
-router.post(
-  "/createReport/research",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const printedBy = req.body.printedBy;
-    const options = {
-      border: {
-        top: "0.5in",
-        right: "0.5in",
-        bottom: "0.5in",
-        left: "0.5in"
-      },
-      paginationOffset: 1, // Override the initial pagination number
-      footer: {
-        height: "28mm",
-        contents: {
-          default: `<div class="item5">
-          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
-          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
-        </div>` // fallback value
-        }
-      }
-    };
-    pdf
-      .create(pdfResearchTemplate(req.body), options)
-      .toFile("researchPdf.pdf", err => {
-        if (err) {
-          res.send(Promise.reject());
-        }
-        res.send(Promise.resolve());
-      });
-  }
-);
-
-// @route   GET api/researches/fetchReport/research
-// @desc    Send the generated pdf to client - individual research
-// @access  Private
-router.get(
-  "/fetchReport/research",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/researchPdf.pdf`);
-  }
-);
-
-// @route   DELETE api/researches/remove/:id
-// @desc    Delete research
+// @route   DELETE api/journals/remove/:id
+// @desc    Delete journal
 // @access  Private
 router.post(
   "/remove/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let newResearch;
+    let newJournal;
     if (req.body.hidden) {
-      newResearch = {
+      newJournal = {
         hidden: 1
       };
     } else {
-      newResearch = {
+      newJournal = {
         deleted: 1
       };
     }
 
-    Research.findOneAndUpdate(
+    Journal.findOneAndUpdate(
       { _id: req.params.id },
-      { $set: newResearch },
+      { $set: newJournal },
       { new: true }
-    ).then(research => {
+    ).then(journal => {
       // add activity
       const newActivity = {
         title: req.body.hidden
-          ? "Research: " + research.title + " hidden from list"
-          : "Research: " + research.title + " moved to bin"
+          ? "Journal: " + journal.title + " hidden from list"
+          : "Journal: " + journal.title + " moved to bin",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
-      // increase decrease research count in college and course
-      College.findOne({ "name.fullName": research.college }).then(college => {
-        let researchCount = parseInt(college.researchTotal, 10);
+      // increase decrease journal count in college and course
+      College.findOne({ "name.fullName": journal.college }).then(college => {
+        let journalCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: req.body.hidden ? researchCount : --researchCount
+          journalTotal: req.body.hidden ? journalCount : --journalCount
         };
 
         college.course.map((cou, index) => {
-          if (cou.name === research.course) {
+          if (cou.name === journal.course) {
             newCourse = {
               name: cou.name,
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : --cou.researchTotal,
+              journalTotal: req.body.hidden
+                ? cou.journalTotal
+                : --cou.journalTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
@@ -886,64 +792,65 @@ router.post(
           { "name.fullName": college.name.fullName },
           { $set: newCollege },
           { new: true }
-        ).then(research);
+        ).then(journal);
       });
 
-      res.json(research);
+      res.json(journal);
     });
   }
 );
 
-// @route   POST api/research/restore/:id
-// @desc    Restore research
+// @route   POST api/journal/restore/:id
+// @desc    Restore journal
 // @access  Private
 router.post(
   "/restore/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let newResearch;
+    let newJournal;
     if (req.body.hidden) {
-      newResearch = {
+      newJournal = {
         hidden: 0
       };
     } else {
-      newResearch = {
+      newJournal = {
         deleted: 0
       };
     }
 
-    Research.findOneAndUpdate(
+    Journal.findOneAndUpdate(
       { _id: req.params.id },
-      { $set: newResearch },
+      { $set: newJournal },
       { new: true }
-    ).then(research => {
+    ).then(journal => {
       // add activity
       const newActivity = {
         title: req.body.hidden
-          ? "Research: " + research.title + " showed in list"
-          : "Research: " + research.title + " restored from bin"
+          ? "Journal: " + journal.title + " showed in list"
+          : "Journal: " + journal.title + " restored from bin",
+        by: req.body.username
       };
       new Activity(newActivity).save();
 
-      // increase research count in college and course
-      College.findOne({ "name.fullName": research.college }).then(college => {
-        let researchCount = parseInt(college.researchTotal, 10);
+      // increase journal count in college and course
+      College.findOne({ "name.fullName": journal.college }).then(college => {
+        let journalCount = parseInt(college.journalTotal, 10);
         let newCourse;
         let removeIndex;
         const newCollege = {
-          researchTotal: req.body.hidden ? researchCount : ++researchCount
+          journalTotal: req.body.hidden ? journalCount : ++journalCount
         };
 
         college.course.map((cou, index) => {
-          if (cou.name === research.course) {
+          if (cou.name === journal.course) {
             newCourse = {
               name: cou.name,
               initials: cou.initials,
               status: cou.status,
               deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : ++cou.researchTotal,
+              journalTotal: req.body.hidden
+                ? cou.journalTotal
+                : ++cou.journalTotal,
               journalTotal: cou.journalTotal
             };
             removeIndex = index;
@@ -961,9 +868,9 @@ router.post(
           { "name.fullName": college.name.fullName },
           { $set: newCollege },
           { new: true }
-        ).then(research);
+        ).then(journal);
       });
-      res.json(research);
+      res.json(journal);
     });
   }
 );

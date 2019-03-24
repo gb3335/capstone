@@ -26,12 +26,12 @@ class EditResearch extends Component {
       course: journal.course,
       volume: journal.volume,
       publisher: journal.publisher,
-      abstract: journal.abstract,
+      description: journal.description,
       issn: journal.issn,
       volume: journal.volume,
       publisher: journal.publisher,
       pages: journal.pages,
-      schoolYear: journal.schoolYear,
+      yearPublished: journal.yearPublished,
       authorOne: "",
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {}
@@ -82,19 +82,27 @@ class EditResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
+    const name =
+      this.props.auth.user.firstName +
+      " " +
+      this.props.auth.user.middleName +
+      " " +
+      this.props.auth.user.lastName;
+
     const researchData = {
       title: this.state.title,
       oldTitle: this.state.oldTitle,
       college: this.state.college,
       course: this.state.course,
-      abstract: this.state.abstract,
+      description: this.state.description,
       pages: this.state.pages,
       issn: this.state.issn,
       volume: this.state.volume,
       publisher: this.state.publisher,
-      schoolYear: this.state.schoolYear,
+      yearPublished: this.state.yearPublished,
       authorOne: this.state.authorOne,
-      id: this.props.journal.journal._id
+      id: this.props.journal.journal._id,
+      username: name
 
       // title: journal.title,
       // oldTitle: journal.title,
@@ -102,10 +110,10 @@ class EditResearch extends Component {
       // course: journal.course,
       // volume:journal.volume,
       // publisher:journal.publisher,
-      // abstract: journal.abstract,
+      // description: journal.description,
       // issn: journal.issn,
       // pages: journal.pages,
-      // schoolYear: journal.schoolYear,
+      // yearPublished: journal.yearPublished,
       // authorOne: "",
     };
 
@@ -150,7 +158,7 @@ class EditResearch extends Component {
   };
 
   handleChange = value => {
-    this.setState({ abstract: value });
+    this.setState({ description: value });
   };
 
   quillChange = () => {
@@ -171,7 +179,7 @@ class EditResearch extends Component {
         });
       })
       .then(data => {
-        this.setState({ abstract: data.text });
+        this.setState({ description: data.text });
       })
       .catch(console.error);
   };
@@ -274,8 +282,8 @@ class EditResearch extends Component {
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
-                  placeholder="* Abstract"
-                  value={this.state.abstract}
+                  placeholder="* Description"
+                  value={this.state.description}
                   onChange={this.handleChange}
                   onKeyPress={this.quillChange}
                 />
@@ -284,7 +292,7 @@ class EditResearch extends Component {
                 <br />
                 <div>
                   <p style={{ color: "#d9534f", fontSize: 13 }}>
-                    {errors.abstract}
+                    {errors.description}
                   </p>
                 </div>
                 <TextFieldGroup
@@ -329,11 +337,11 @@ class EditResearch extends Component {
                 />
                 <TextFieldGroup
                   placeholder="* School Year"
-                  name="schoolYear"
-                  value={this.state.schoolYear}
+                  name="yearPublished"
+                  value={this.state.yearPublished}
                   onChange={this.onChange}
-                  error={errors.schoolYear}
-                  info="School Year you've finished the journal"
+                  error={errors.yearPublished}
+                  info="Year you've published the journal"
                 />
                 <input
                   ref="resBtn"
@@ -354,12 +362,14 @@ EditResearch.propTypes = {
   createResearch: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   journal: state.journal,
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

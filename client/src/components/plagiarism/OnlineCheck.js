@@ -15,7 +15,7 @@ import OnlineHighlightedResult from './OnlineHighlightedResult'
 import Output from '../plagiarism-result/Output';
 import './OnlineCheck.css'
 
-import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails} from '../../actions/onlinePlagiarismAction'
+import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails ,createOnlinePlagiarismReport, setPlagiarismGenerateReportLoading} from '../../actions/onlinePlagiarismAction'
 
  
 class OnlineCheck extends Component {
@@ -81,6 +81,38 @@ class OnlineCheck extends Component {
             this.setState({q: this.props.onlinePlagiarism.original})
         }
     }
+
+    onClickGenerateReport = () => {
+        const {output, original} = this.props.onlinePlagiarism;
+        this.props.setPlagiarismGenerateReportLoading(true);
+        const words = [];
+
+        output.forEach((out) => {
+            out.Index.forEach((index) => {
+            let obj = JSON.parse(index);
+            words.push(obj.Pattern)
+            })
+        })
+        var uniqueItems = [...new Set(words)]
+
+        const word = uniqueItems.join(' ');
+        const name =
+            this.props.auth.user.firstName +
+            " " +
+            this.props.auth.user.middleName +
+            " " +
+            this.props.auth.user.lastName;
+  
+        const input = {
+          printedBy: name,
+          pattern: original,
+          word,
+          typeOfReport: "Check Plagiarism Report",
+          subTypeOfReport: "Checked in the World Wide Web",
+          output : this.props.onlinePlagiarism.output
+        }
+        this.props.createOnlinePlagiarismReport(input);
+      }
 
     
 
@@ -209,18 +241,24 @@ class OnlineCheck extends Component {
             }
             
 
-        
+        const {generateReport} = this.props.onlinePlagiarism;
         
         return (
             <div className="container-fluid">
             <div className="row">
               <div className="col-md-8">
-                <Link
-                  to={``}
+              { generateReport ? <button
+                  className="btn btn-light mb-3 float-right disabled"
+                >
+                  <i className="fas fa-flag text-danger" /> Generating Report...
+                </button>
+
+                : <button
+                  onClick={this.onClickGenerateReport}
                   className="btn btn-light mb-3 float-right"
                 >
                   <i className="fas fa-flag text-danger" /> Generate Report
-                </Link>
+                </button>}
               </div>
             </div>
                 <div className="row">
@@ -251,13 +289,16 @@ class OnlineCheck extends Component {
 OnlineCheck.propTypes = {
     checkPlagiarismOnline: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
     setPlagiarismOnlineShowDetails : PropTypes.func.isRequired,
-    setPlagiarismOnlineHideDetails : PropTypes.func.isRequired
+    setPlagiarismOnlineHideDetails : PropTypes.func.isRequired,
+    setPlagiarismGenerateReportLoading : PropTypes.func.isRequired
 }
 
 const mapStateToProps = (state) =>({
     errors : state.errors,
-    onlinePlagiarism: state.onlinePlagiarism
+    onlinePlagiarism: state.onlinePlagiarism,
+    auth: state.auth
 })
  
-export default connect(mapStateToProps,{checkPlagiarismOnline,setPlagiarismOnlineShowDetails,setPlagiarismOnlineHideDetails})(OnlineCheck);
+export default connect(mapStateToProps,{checkPlagiarismOnline,setPlagiarismOnlineShowDetails,setPlagiarismOnlineHideDetails, createOnlinePlagiarismReport,setPlagiarismGenerateReportLoading})(OnlineCheck);

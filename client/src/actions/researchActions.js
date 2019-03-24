@@ -9,7 +9,8 @@ import {
   CLEAR_ERRORS,
   TOGGLE_RESEARCH_BIN,
   TOGGLE_RESEARCH_LIST,
-  CHANGE_BUTTON_STATUS_RESEARCH
+  CHANGE_BUTTON_STATUS_RESEARCH,
+  TOGGLE_SIDE_BY_SIDE
 } from "./types";
 
 // Get all researches
@@ -50,7 +51,7 @@ export const createReportForResearches = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -87,7 +88,7 @@ export const createReportForResearch = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -112,6 +113,14 @@ export const createReportForResearch = reportData => dispatch => {
 export const changeButtonStatus = flag => {
   return {
     type: CHANGE_BUTTON_STATUS_RESEARCH,
+    payload: flag
+  };
+};
+
+export const onSideBySide = flag => {
+  console.log(flag);
+  return {
+    type: TOGGLE_SIDE_BY_SIDE,
     payload: flag
   };
 };

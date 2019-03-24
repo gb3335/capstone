@@ -5,6 +5,8 @@ const fs = require('fs');
 const extract = require('pdf-text-extract');
 const pdfUtil = require('pdf-to-text');
 const download = require("download-pdf");
+const pdf = require("html-pdf");
+const path = require("path");
 
 const extractor = require('unfluff');
 const scraping = require('text-scraping');
@@ -25,6 +27,16 @@ const processor = require('../../validation/plagiarism/processor');
 // Load Input Validation
 const validateOnlineInput = require("../../validation/plagiarism/online");
 const validateLocalInput = require("../../validation/plagiarism/local");
+
+
+// Templates
+const plagiarismLocalTemplate = require('../../document/plagiarismLocalTemplate');
+const plagiarismLocalSideBySideTemplate = require('../../document/plagiarismLocalSideBySideTemplate');
+const plagiarismOnlineTemplate = require('../../document/plagiarismOnlineTemplate');
+
+
+// FOnt
+let fontFooter ="7px";
 
 // @routes  GET api/plagiarism/test
 // @desc    Test plagiarism route
@@ -297,6 +309,45 @@ router.post("/get/pattern", (req,res) => {
 
 })
 
+// @routes  POST api/extract/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/get/text", (req,res) => {
+  let docuId = req.body.docuId;
+
+  //option to extract text from page 0 to 10
+  var option = {from: 0, to: 10};
+  let docuFile = req.body.docuFile;
+  const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function(err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
+        
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({ 
+          success: true,
+          data: data.toString(),
+          textId: docuId
+        })
+    });
+  });
+
+})
+
 // @routes  POST api/local/initialize/pattern
 // @desc    extract patter pdf
 // @access  public
@@ -424,5 +475,139 @@ router.post("/local/result", (req, res) => {
   });
   
 });
+
+router.post('/create/report/local', (req,res) => {
+  const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      timeout: '100000',
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+  pdf.create(plagiarismLocalTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
+    if(err){
+      console.log(err);
+      res.send(Promise.reject())
+      
+    }else{
+      res.send(Promise.resolve())
+    }
+    
+  });
+
+});// end of post
+
+router.get('/get/report/local', (req,res) => {
+  let reqPath = path.join(__dirname, "../../");
+  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
+  
+});// end of post
+
+router.post('/create/report/local/side', (req,res) => {
+  console.log("clicked")
+  const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      timeout: '1000000',
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+  pdf.create(plagiarismLocalSideBySideTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
+    if(err){
+      console.log(err);
+      res.send(Promise.reject())
+    }
+    res.send(Promise.resolve())
+    console.log("done")
+  });
+
+});// end of post
+
+router.get('/get/report/local/side', (req,res) => {
+  console.log("get")
+  let reqPath = path.join(__dirname, "../../");
+  res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
+  
+  
+});// end of post
+
+
+router.post('/create/report/online', (req,res) => {
+  const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      timeout: '100000',
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+  pdf.create(plagiarismOnlineTemplate(req.body), options).toFile('PlagiarismOnlineResult.pdf', (err) => {
+    if(err){
+      res.send(Promise.reject())
+    }
+    res.send(Promise.resolve())
+  });
+
+});// end of post
+
+router.get('/get/report/online', (req,res) => {
+  let reqPath = path.join(__dirname, "../../");
+  res.sendFile(`${reqPath}/PlagiarismOnlineResult.pdf`, () => {
+    fs.unlink(`${reqPath}/PlagiarismOnlineResult.pdf`, (err) => {
+      if (err) throw err;
+      console.log('successfully deleted');
+    });
+  }) 
+  
+  
+});// end of Get
 
 module.exports = router;

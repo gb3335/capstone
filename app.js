@@ -28,9 +28,16 @@ mongoose
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "25mb" }));
+app.use(express.static(path.join(__dirname, "client/build"))) // ADDED BY KRISHIELD 3/20/2019
 
 //Passport Middleware
 app.use(passport.initialize());
+
+// app.use(function (req, res, next) {
+//   console.log("NEW REQUEST " + req.url);
+//   req.connection.setTimeout(5000000)
+//   next()
+// })
 
 // Passport Config
 require("./config/passport.js")(passport);
@@ -61,4 +68,7 @@ if (process.env.NODE_ENV === "production") {
 
 app.listen(port, () => {
   console.log(`Listening to port ${port}`);
-});
+})
+
+
+//"proxy": "http://54.83.141.99:80",

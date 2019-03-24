@@ -6,10 +6,12 @@ import {
   PLAGIARISM_ONLINE_DISABLE_BUTTON,
   PLAGIARISM_ONLINE_SHOW_DETAILS,
   PLAGIARISM_ONLINE_HIDE_DETAILS,
-  PLAGIARISM_ONLINE_GOOGLE
+  PLAGIARISM_ONLINE_GOOGLE,
+  PLAGIARISM_ONLINE_GENERATE_REPORT
 } from "./types";
 import axios from "axios";
 
+import { saveAs } from "file-saver";
 // Check Plagiarism Online
 export const checkPlagiarismOnline = input => dispatch => {
   dispatch(setPlagiarismOnlineDisableButton());
@@ -35,6 +37,7 @@ let promises = [];
 
 export const getOnlinePlagiarismResult = input => dispatch =>{
   console.time("Initialize")
+  dispatch(setPlagiarismOnlineDisableButton());
   axios
   .post("/api/plagiarism/online/initialize/pattern", input)
   .then(res => {
@@ -70,6 +73,25 @@ export const getOnlinePlagiarismResult = input => dispatch =>{
           });
         });
     }
+  })
+}
+
+export const setPlagiarismGenerateReportLoading = (input) =>{
+  return {
+    type: PLAGIARISM_ONLINE_GENERATE_REPORT,
+    payload: input
+  };
+}
+
+
+export const createOnlinePlagiarismReport = (input) => dispatch => {
+  axios.post('/api/plagiarism/create/report/online', input)
+  .then(() => axios.get('/api/plagiarism/get/report/online', {responseType: 'blob'}))
+  .then((res) =>{
+    const  pdfBlob = new Blob([res.data], {type: 'application/pdf'})
+
+    saveAs(pdfBlob, 'PlagiarismOnlineResult.pdf');
+    dispatch(setPlagiarismGenerateReportLoading(false));
   })
 }
 
