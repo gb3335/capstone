@@ -40,10 +40,13 @@ module.exports = ({
     courseString = `<li>Course: ${journal.course}</li>`;
   }
   if (issn) {
-    issnString = `<li>Research ID: ${journal.researchID}</li>`;
+    issnString = `<li>ISSN: ${journal.issn}</li>`;
   }
-  if (pages) {
-    pagesString = `<li>Pages: ${journal.pages}</li>`;
+  if (issn) {
+    issnString = `<li>ISSN: ${journal.issn}</li>`;
+  }
+  if (volume) {
+    pagesString = `<li>Pages: ${journal.volume}</li>`;
   }
   if (yearPublished) {
     yearPublishedString = `<li>Academic Year: ${journal.schoolYear}</li>`;
