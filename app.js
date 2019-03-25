@@ -15,6 +15,7 @@ const colleges = require("./routes/api/colleges");
 const researches = require("./routes/api/researches");
 const activities = require("./routes/api/activities");
 const journals = require("./routes/api/journals");
+const grammar = require("./routes/api/grammar");
 
 //DB Config
 const db = require("./config/keys").mongoURI;
@@ -55,6 +56,7 @@ app.use("/api/colleges", colleges);
 app.use("/api/researches", researches);
 app.use("/api/activities", activities);
 app.use("/api/journals", journals);
+app.use("/api/grammar", grammar);
 
 // Server static assests if in production
 if (process.env.NODE_ENV === "production") {

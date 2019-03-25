@@ -46,6 +46,9 @@ import EditAccount from "../edit-account/EditAccount";
 import LocalResult from "../plagiarism-result/LocalResult";
 import LocalResultSideBySide from "../plagiarism-result/LocalResultSideBySide";
 
+// Grammar Check
+import Grammar from "../grammar-check/Grammar"
+
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -101,9 +104,6 @@ class Main extends Component {
               <Route exact path="/journals/:id" component={Journal} />
 
               <Route exact path="/not-found" component={NotFound} />
-
-
-
 
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
@@ -206,6 +206,13 @@ class Main extends Component {
                   exact
                   path="/localResultSideBySide"
                   component={LocalResultSideBySide}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/grammar"
+                  component={Grammar}
                 />
               </Switch>
             </div>

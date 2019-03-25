@@ -434,6 +434,16 @@ class Sidebar extends Component {
                 </ul>
               </div>
             </li>
+            <li>
+              <Link
+                to="/grammar"
+                onClick={() => this.changeTitle("Grammar")}
+                className="parentA"
+              >
+                <i className="fa fa-book-reader" />
+                <p>Check Grammar</p>
+              </Link>
+            </li>
           </ul>
         </div>
       </nav>
