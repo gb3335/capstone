@@ -522,6 +522,7 @@ router.post("/local/result", (req, res) => {
 });
 
 router.post('/create/report/local', (req,res) => {
+  req.connection.setTimeout(1000*60*10);
   const printedBy = req.body.printedBy;
     const options = {
       border: {
@@ -568,6 +569,7 @@ router.get('/get/report/local', (req,res) => {
 
 router.post('/create/report/local/side', (req,res) => {
   console.log("clicked")
+  req.connection.setTimeout(1000*60*10);
   const printedBy = req.body.printedBy;
     const options = {
       border: {
@@ -576,7 +578,7 @@ router.post('/create/report/local/side', (req,res) => {
         bottom: "0.5in",
         left: "0.5in"
       },
-      timeout: '1000000',
+      timeout: '5000000',
       paginationOffset: 1, // Override the initial pagination number
       footer: {
         height: "28mm",
@@ -614,6 +616,7 @@ router.get('/get/report/local/side', (req,res) => {
 
 
 router.post('/create/report/online', (req,res) => {
+  req.connection.setTimeout(1000*60*10);
   const printedBy = req.body.printedBy;
     const options = {
       border: {
@@ -622,7 +625,7 @@ router.post('/create/report/online', (req,res) => {
         bottom: "0.5in",
         left: "0.5in"
       },
-      timeout: '100000',
+      timeout: '1000000',
       paginationOffset: 1, // Override the initial pagination number
       footer: {
         height: "28mm",

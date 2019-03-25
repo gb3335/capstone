@@ -4,13 +4,12 @@ const moment_timezone = require('moment-timezone');
 
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output, pattern, word, text} = input;
+const {typeOfReport, subTypeOfReport , output, pattern, text} = input;
 
   let docuFound="";
   let title = "";
   let score="[";
 
-  let words = "\""+word+"\"";
   const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
   let level="";
 
@@ -211,13 +210,11 @@ mark {
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
         
         Chart.defaults.global.defaultFontSize = 9;
-        Chart.defaults.global.animation = 0;
         const canvas = document.getElementById('pie');
 
         const data = {
@@ -235,27 +232,15 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         
-    </script>
-    <script>
-    var options = {
-      "accuracy": {
-          "value": "exactly",
-          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
-      }
-    };
-       
-        var context = document.querySelector(".context");
-        var instance = new Mark(context);
-        instance.mark(${words}, options);
-
-
-        var context2 = document.querySelector(".context2");
-        var instance2 = new Mark(context2);
-        instance2.mark(${words}, options);
     </script>
     </body>
 

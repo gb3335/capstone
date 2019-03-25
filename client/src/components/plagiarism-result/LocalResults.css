@@ -92,5 +92,7 @@
     margin-top: 200px;
 }
 
-
-
+.forHide{
+    position: absolute;
+    display: none;
+}

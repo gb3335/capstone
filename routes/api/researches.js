@@ -80,7 +80,7 @@ router.get("/test", (req, res) => res.json({ msg: "Research Works" }));
 // @desc    Get researches
 // @access  Public
 router.get("/", (req, res) => {
-  Research.find()
+  Research.find({},{content:0})
     .sort({ title: 1 })
     .then(researches => res.json(researches))
     .catch(err =>
@@ -93,7 +93,7 @@ router.get("/", (req, res) => {
 // @access  Public
 router.get("/:id", (req, res) => {
   const errors = {};
-  Research.findOne({ _id: req.params.id })
+  Research.findOne({ _id: req.params.id },{content:0})
     .then(research => {
       if (!research) {
         errors.noresearch = "There is no data for this research";
@@ -598,6 +598,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength: ""
+      },
       lastUpdate: Date.now()
     };
 

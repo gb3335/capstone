@@ -70,7 +70,16 @@ const ResearchSchema = new Schema({
       }
     }
   ],
-
+  content: {
+    text: {
+      type: String,
+      required: false
+    },
+    sentenceLength: {
+      type: Number,
+      required: false
+    }
+  },
   dateCreated: {
     type: Date,
     default: Date.now

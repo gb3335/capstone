@@ -127,19 +127,18 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-    const {output, text, pattern} = this.props.localPlagiarism
+    const {output} = this.props.localPlagiarism
     
     this.props.setPlagiarismGenerateReportLoading(true);
-      const words = [];
-        output[0].Index.forEach((index) => {
-          let obj = JSON.parse(index);
-          words.push(obj.Pattern)
-        })
 
+    const node = ReactDOM.findDOMNode(this);
+
+      // Get child nodes
       
-      var uniqueItems = [...new Set(words)]
-
-      const word = uniqueItems.join(' ');
+      let pattern = node.querySelector('#highlightPat');
+      let text = node.querySelector('#highlightText');
+      pattern = pattern.innerHTML.toString()
+      text = text.innerHTML.toString()
 
       const name =
           this.props.auth.user.firstName +
@@ -150,9 +149,8 @@ class LocalResultSideBySide extends Component {
 
       const input = {
         printedBy: name,
-        pattern : pattern.data,
-        text: text.data,
-        word,
+        pattern,
+        text,
         typeOfReport: "Plagiarism Check Result",
         subTypeOfReport: "Side by Side Comparison",
         output

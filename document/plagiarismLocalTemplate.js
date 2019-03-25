@@ -4,7 +4,7 @@ const moment_timezone = require('moment-timezone');
 
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
+const {typeOfReport, subTypeOfReport , output, word} = input;
 
   let little= 0, moderate= 0, heavy=0;
   let docuFound="";
@@ -14,19 +14,30 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
   let score="[";
   output.forEach((out, index)=>{
       if(out.SimilarityScore>0 && out.SimilarityScore<30){
-      little++;
+        little++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                  </tr>`
       }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
-      moderate++;
+        moderate++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                    </tr>`
       }
       else if(out.SimilarityScore>70){
-      heavy++;
+        heavy++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                    </tr>`
       }
       title=out.Document.Pattern.Name;
-      docuFound+=`<tr>
-                    <td>${index+1}</td>
-                    <td>${out.Document.Text.Name}</td>
-                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
-                  </tr>`
+      
   })
 
   docuFound+=`<tr class="blank_row"><td colspan="${3}" style="text-align:center;">- Nothing Follows -</td></tr>`
@@ -198,7 +209,7 @@ mark {
             </div>
             <h4 style="font-size: 10px">Text Checked for Plagiarism: </h4>
             <div class="context">
-                <p>${pattern}</p>
+                <p>${word}</p>
             </div>
             <div class="courses" style="font-size: 7px">
                 <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
@@ -215,13 +226,11 @@ mark {
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
         
         Chart.defaults.global.defaultFontSize = 9;
-        Chart.defaults.global.animation = 0;
         const canvas = document.getElementById('pie');
 
         const data = {
@@ -240,22 +249,15 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         
-    </script>
-    <script>
-    var options = {
-      "accuracy": {
-          "value": "exactly",
-          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
-      }
-    };
-       
-        var context = document.querySelector(".context");
-        var instance = new Mark(context);
-        instance.mark(${words}, options);
     </script>
     </body>
 
