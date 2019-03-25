@@ -45,9 +45,7 @@ module.exports = ({
   let authorsTitle = "";
   let volumeString = "";
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
-  if (Volume) {
-    volumeString = `<li>Volume: ${journal.volume}</li>`;
-  }
+
   if (college) {
     collegeString = `<li>College: ${journal.college}</li>`;
   }
@@ -55,7 +53,10 @@ module.exports = ({
     courseString = `<li>Course: ${journal.course}</li>`;
   }
   if (issn) {
-    issnString = `<li>Research ID: ${journal.researchID}</li>`;
+    issnString = `<li>ISSN: ${journal.issn}</li>`;
+  }
+  if (volume) {
+    volumeString = `<li>Volume: ${journal.volume}</li>`;
   }
   if (pages) {
     pagesString = `<li>Pages: ${journal.pages}</li>`;
