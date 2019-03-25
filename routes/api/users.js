@@ -571,76 +571,91 @@ router.post("/login", (req, res) => {
           errors.username = "User not found!";
           return res.status(404).json(errors);
         } else {
-          //Check password
-          bcrypt.compare(password, user.password).then(isMatch => {
-            if (isMatch) {
-              //User Match!
+          if (user.isBlock === 0) {
+            //Check password
+            bcrypt.compare(password, user.password).then(isMatch => {
+              if (isMatch) {
+                //User Match!
 
-              const payload = {
-                id: user._id,
-                userName: user.userName,
-                email: user.email,
-                contact: user.contact,
-                firstName: user.name.firstName,
-                middleName: user.name.middleName,
-                lastName: user.name.lastName,
-                avatar: user.avatar,
-                userType: user.userType,
-                isLock: user.isLock,
-                isBlock: user.isBlock,
-                invitedBy: user.invitedBy,
-                college: user.college,
-                date: user.date
-              }; //Create JWT Payload
-              //Sign the Token
-              jwt.sign(payload, keys.secretOrKey, (err, token) => {
-                res.json({
-                  success: true,
-                  token: "Bearer " + token
+                const payload = {
+                  id: user._id,
+                  userName: user.userName,
+                  email: user.email,
+                  contact: user.contact,
+                  firstName: user.name.firstName,
+                  middleName: user.name.middleName,
+                  lastName: user.name.lastName,
+                  avatar: user.avatar,
+                  userType: user.userType,
+                  isLock: user.isLock,
+                  isBlock: user.isBlock,
+                  invitedBy: user.invitedBy,
+                  college: user.college,
+                  date: user.date
+                }; //Create JWT Payload
+                //Sign the Token
+                jwt.sign(payload, keys.secretOrKey, (err, token) => {
+                  res.json({
+                    success: true,
+                    token: "Bearer " + token
+                  });
                 });
-              });
-            } else {
-              errors.password = "Password Incorrect!";
-              return res.status(400).json(errors);
-            }
-          });
+              } else {
+                errors.password = "Password Incorrect!";
+                return res.status(400).json(errors);
+              }
+            });
+          }
+          else {
+            errors.username = "User currently blocked. Please contact the administrator!";
+            return res.status(400).json(errors);
+          }
+
         }
       });
     } else {
-      //Check password
-      bcrypt.compare(password, user.password).then(isMatch => {
-        if (isMatch) {
-          //User Match!
 
-          const payload = {
-            id: user._id,
-            userName: user.userName,
-            email: user.email,
-            contact: user.contact,
-            firstName: user.name.firstName,
-            middleName: user.name.middleName,
-            lastName: user.name.lastName,
-            avatar: user.avatar,
-            userType: user.userType,
-            isLock: user.isLock,
-            isBlock: user.isBlock,
-            invitedBy: user.invitedBy,
-            college: user.college,
-            date: user.date
-          }; //Create JWT Payload
+      if (user.isBlock === 0) {
+        //Check password
+        bcrypt.compare(password, user.password).then(isMatch => {
+          if (isMatch) {
+            //User Match!
 
-          //Sign the Token
-          jwt.sign(payload, keys.secretOrKey, (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token
+            const payload = {
+              id: user._id,
+              userName: user.userName,
+              email: user.email,
+              contact: user.contact,
+              firstName: user.name.firstName,
+              middleName: user.name.middleName,
+              lastName: user.name.lastName,
+              avatar: user.avatar,
+              userType: user.userType,
+              isLock: user.isLock,
+              isBlock: user.isBlock,
+              invitedBy: user.invitedBy,
+              college: user.college,
+              date: user.date
+            }; //Create JWT Payload
+
+            //Sign the Token
+            jwt.sign(payload, keys.secretOrKey, (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
             });
-          });
-        } else {
-          errors.password = "Password Incorrect!";
-          return res.status(400).json(errors);
-        }
-      });
+          } else {
+            errors.password = "Password Incorrect!";
+            return res.status(400).json(errors);
+          }
+        });
+      }
+      else {
+        errors.username = "User currently blocked. Please contact the administrator!";
+        return res.status(400).json(errors);
+      }
+
     }
   });
 });
@@ -670,7 +685,7 @@ router.get(
     });
   }
 );
-// @route   GET api/users/all
+// @route   GET api/users/      
 // @desc    Get activities
 // @access  Public
 router.get(
@@ -705,86 +720,19 @@ router.get("/:id", (req, res) => {
 });
 
 
-// @route   POST api/researches/images
-// @desc    Add images to research
+// @route   POST api/users/avatar
+// @desc    add avatar to user
 // @access  Private
 router.post(
-  "/images",
+  "/avatar",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    let imageArray = [];
-    for (i = 0; i < req.body.images.length; i++) {
-      const rand = uuid();
-      // let ext = req.body.images[i].split(";")[0].split("/")[1];
 
-      // if (ext == "jpeg") {
-      //   ext = "jpg";
-      // }
+    console.log(req.body)
 
-      // S3 upload
-      s3 = new AWS.S3();
-
-      const base64Data = new Buffer(
-        req.body.images[i].replace(/^data:image\/\w+;base64,/, ""),
-        "base64"
-      );
-
-      const type = req.body.images[i].split(";")[0].split("/")[1];
-
-      const userId = 1;
-
-      params = {
-        Bucket: "bulsu-capstone",
-        Key: `researchImages/${req.body.id + "-" + rand}.png`, // type is not required
-        Body: base64Data,
-        ACL: "public-read",
-        ContentEncoding: "base64", // required
-        ContentType: `image/${type}` // required. Notice the back ticks
-      };
-
-      s3.upload(params, (err, data) => {
-        if (err) {
-          return console.log(err);
-        }
-
-        console.log("Image successfully uploaded.");
-      });
-
-      imageArray.push(req.body.id + "-" + rand + ".png");
-    }
-
-    Research.findOne({ _id: req.body.id }).then(research => {
-      for (i = 0; i < req.body.images.length; i++) {
-        const newImage = {
-          name: imageArray[i]
-        };
-
-        // Add to exp array
-        research.images.unshift(newImage);
-      }
-
-      const newResearch = {
-        lastUpdate: Date.now()
-      };
-
-      Research.findOneAndUpdate(
-        { _id: req.body.id },
-        { $set: newResearch },
-        { new: true }
-      ).then(research);
-
-      // add activity
-      const newActivity = {
-        title: "Image added to " + research.title
-      };
-      new Activity(newActivity).save();
-
-      research
-        .save()
-        .then(research => res.json(research))
-        .catch(err => console.log(err));
-    });
   }
 );
+
+
 
 module.exports = router;
