@@ -100,8 +100,8 @@ class Main extends Component {
 
               <Route exact path="/not-found" component={NotFound} />
 
-              <Route exact path="/viewusers" component={ViewUsers} />
-              <Route exact path="/viewusers/:id" component={ViewUser} />
+
+
 
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
@@ -112,6 +112,20 @@ class Main extends Component {
                   exact
                   path="/edit-course"
                   component={EditCourse}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/viewusers"
+                  component={ViewUsers}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/viewusers/:id"
+                  component={ViewUser}
                 />
               </Switch>
 
@@ -135,7 +149,7 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute exact path="/add-journal-author" component={AddJournalAuthor} />
               </Switch>
-              
+
               <Switch>
                 <PrivateRoute
                   exact
