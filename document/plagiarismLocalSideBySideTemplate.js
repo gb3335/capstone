@@ -217,7 +217,6 @@ mark {
 
         
         Chart.defaults.global.defaultFontSize = 9;
-        Chart.defaults.global.animation = 0;
         const canvas = document.getElementById('pie');
 
         const data = {
@@ -235,7 +234,12 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         

@@ -14,19 +14,30 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
   let score="[";
   output.forEach((out, index)=>{
       if(out.SimilarityScore>0 && out.SimilarityScore<30){
-      little++;
+        little++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                  </tr>`
       }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
-      moderate++;
+        moderate++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                    </tr>`
       }
       else if(out.SimilarityScore>70){
-      heavy++;
+        heavy++;
+        docuFound+=`<tr>
+                      <td>${index+1}</td>
+                      <td>${out.Document.Text.Name}</td>
+                      <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                    </tr>`
       }
       title=out.Document.Pattern.Name;
-      docuFound+=`<tr>
-                    <td>${index+1}</td>
-                    <td>${out.Document.Text.Name}</td>
-                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
-                  </tr>`
+      
   })
 
   docuFound+=`<tr class="blank_row"><td colspan="${3}" style="text-align:center;">- Nothing Follows -</td></tr>`
@@ -221,7 +232,6 @@ mark {
 
         
         Chart.defaults.global.defaultFontSize = 9;
-        Chart.defaults.global.animation = 0;
         const canvas = document.getElementById('pie');
 
         const data = {
@@ -240,7 +250,12 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         
