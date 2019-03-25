@@ -598,6 +598,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength: ""
+      },
       lastUpdate: Date.now()
     };
 

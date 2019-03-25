@@ -257,7 +257,7 @@ class OnlineCheck extends Component {
                 <button
                     className="btn btn-light mb-3 float-right disabled"
                 >
-                    <i className="fas fa-flag text-danger" /> Generating Report
+                    <i className="fas fa-flag text-danger" /> Generate Report
                 </button> 
                 :
                 <button

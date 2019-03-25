@@ -116,6 +116,7 @@ export const getTextPattern = (input) => dispatch =>{
 }
 
 export const getPattern = (input) => dispatch =>{
+  dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/pattern', input)
   .then(res =>{
     dispatch(outputLocalPlagiarismPattern(res.data));
