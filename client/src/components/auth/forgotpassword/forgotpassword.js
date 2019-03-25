@@ -55,8 +55,9 @@ class Login extends Component {
       <div className="container-fluid p-2">
         <Link to="/login" className="btn btn-light mb-3 float-left">
           <i className="fas fa-angle-left" /> Back to Accounts
-      </Link>
+         </Link>
         <div className="forgot-box">
+
           <div className="forgot-box-imgdiv">
             <img src="/images/bulsu_logo.png" className="mb-2" alt="BSU LOGO" />
 

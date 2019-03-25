@@ -3,8 +3,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
+import ImageFieldGroup from "../common/ImageFieldGroup";
+import { changeStatus, changeAvatar } from '../../actions/registerActions';
 
-import { changeStatus } from '../../actions/registerActions';
+
 
 import SweetAlert from "react-bootstrap-sweetalert";
 class UserAction extends Component {
@@ -26,10 +28,41 @@ class UserAction extends Component {
       // Show Alert
       showAlert: false,
       showAlertCancel: false,
-      showAlertOkay: false
+      showAlertOkay: false,
+      image: "",
+      images: []
     };
   }
+  onFileSelected = e => {
+    const files = e.target.files;
+    const len = files.length;
+    let i = 0;
+    let ctr = 0;
+    let upImages;
 
+    for (i = 0; i < files.length; i++) {
+      let reader = new FileReader();
+      reader.readAsDataURL(files[i]);
+      reader.onload = e => {
+        this.setState({
+          images: [...this.state.images, e.target.result]
+        });
+        upImages = this.state.images;
+        ctr++;
+
+        if (ctr === len) {
+
+          const data = {
+            images: upImages,
+            id: this.props.auth.user._id,
+
+          };
+
+          this.props.changeAvatar(data, this.props.history);
+        }
+      };
+    }
+  };
 
   changeClick() {
 
@@ -104,10 +137,13 @@ class UserAction extends Component {
 
         );
         imageAction = (
-          <Link to="#" htmlFor="imageUpload" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1 " />
-            Change Image
-        </Link>
+
+          <label to="#" htmlFor="imageUpload" className="btn btn-light">
+            <i className="fas fa-plus text-info mr-1" />
+            Change avatar
+          </label>
+
+
         )
 
       }
@@ -119,7 +155,7 @@ class UserAction extends Component {
 
     }
     return (
-      <div className="btn-group mb-3 btn-group-sm" >
+      <div>
         <SweetAlert
           show={this.state.deleteAlert}
           warning
@@ -153,9 +189,22 @@ class UserAction extends Component {
         >
           Status Changed.
         </SweetAlert>
-        {editAction}
-        {blockAction}
-        {imageAction}
+        <div className="btn-group mb-3 btn-group-sm" >
+          {editAction}
+        </div>
+        <div className="btn-group mb-3 btn-group-sm" >
+          {blockAction}
+        </div>
+        <div className="btn-group mb-2 btn-group-sm" role="group">
+          {imageAction}
+          <ImageFieldGroup
+            placeholder="* Images"
+            name="image"
+            value={this.state.image}
+            onChange={this.onFileSelected}
+            id="imageUpload"
+          />
+        </div>
 
       </div>
     );
@@ -164,7 +213,8 @@ class UserAction extends Component {
 
 UserAction.propTypes = {
   users: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  changeAvatar: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   users: state.users,
@@ -173,5 +223,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeStatus }
+  { changeStatus, changeAvatar }
 )(withRouter(UserAction));
