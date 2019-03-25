@@ -28,7 +28,6 @@ const validateProfileInput = require("../../validation/profile");
 const validateLoginInput = require("../../validation/login");
 const validatePasswordInput = require("../../validation/password");
 const validateuserNameInput = require("../../validation/profileusername");
-const validatepasswordInput = require("../../validation/profilepassword");
 // Load User Model
 const User = require("../../models/User");
 
@@ -228,12 +227,12 @@ router.post(
   "/profile/updatepassword",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    const { errors, isValid } = validatepasswordInput(req.body);
+    const { errors, isValid } = validatePasswordInput(req.body);
     //Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    const password = req.body.password;
+    const password = req.body.newpassword;
     const password1 = req.body.password1;
     const password2 = req.body.password2;
     const profileData = {
@@ -243,7 +242,7 @@ router.post(
     };
 
     User.findById(req.user._id).then(user => {
-      bcrypt.compare(req.body.password1, user.password).then(isMatch => {
+      bcrypt.compare(req.body.password, user.password).then(isMatch => {
         if (isMatch) {
 
 
@@ -263,8 +262,7 @@ router.post(
 
         }
         else {
-          errors.password1 = "Invalid password";
-          errors.password2 = "Invalid password";
+          errors.password = "Invalid password";
           return res.status(400).json(errors);
         }
       });
