@@ -268,21 +268,21 @@ class EditAccount extends Component {
                           type="password"
                         />
                         <TextFieldGroup
-                          placeholder="* Re-type your password"
+                          placeholder="* Enter your new password"
                           name="newpassword"
                           value={this.state.newpassword}
                           onChange={this.onChange}
                           error={errors.newpassword}
-                          info="Re-type your password."
+                          info="Type your new password."
                           type="password"
                         />
                         <TextFieldGroup
-                          placeholder="* Type your new password"
+                          placeholder="* Re-type your password"
                           name="newpassword2"
                           value={this.state.newpassword2}
                           onChange={this.onChange}
                           error={errors.newpassword2}
-                          info="Type your new password."
+                          info="Re-type your password."
                           type="password"
                         />
                         <input

@@ -26,6 +26,22 @@ export const loginUser = userData => dispatch => {
       })
     );
 };
+//forgotuser
+export const forgotUser = (userData, history) => dispatch => {
+  console.log(userData)
+  axios
+    .post("/api/users/forgotpassword", userData)
+    .then(res => {
+      history.push(`/login`);
+
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 // set Logged in user
 export const setCurrentUser = decoded => {
   return {
@@ -46,6 +62,7 @@ export const logoutUser = () => dispatch => {
 
 
 };
+
 
 export const clearCurrentProfile = () => {
   return {
