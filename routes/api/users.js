@@ -12,7 +12,6 @@ const uuid = require("uuid");
 
 
 
-
 const AWS = require("aws-sdk");
 const s3config = require("../../config/s3keys");
 AWS.config.update({
@@ -28,6 +27,7 @@ const validateProfileInput = require("../../validation/profile");
 const validateLoginInput = require("../../validation/login");
 const validatePasswordInput = require("../../validation/password");
 const validateuserNameInput = require("../../validation/profileusername");
+const validateForgotInput = require("../../validation/forgot");
 // Load User Model
 const User = require("../../models/User");
 
@@ -329,7 +329,7 @@ router.post(
 
       if (profileData.isBlock == 0) {
         profileData.isBlock = 1;
-        console.log(profileData.isBlock);
+
         User.findByIdAndUpdate(
           req.user._id,
           { $set: profileData },
@@ -399,7 +399,81 @@ router.post(
   }
 );
 
+// @routes  POST api/users/forgotpassword
+// @desc    Forgot password/
+// @access  private
+router.post("/forgotpassword",
 
+  (req, res) => {
+
+    const { errors, isValid } = validateForgotInput(req.body);
+
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    User.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        const password = generatePassword();
+        const mailOptions = {
+          from: "dummykrishield@gmail.com",
+          to: req.body.email,
+          subject: "Bulacan State University",
+          text: `You are invited to be ${
+            req.body.usertype
+            }
+                
+                Login to <todo link>
+                Email: ${req.body.email}
+                Password: ${password}
+                `
+        };
+        Transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            errors.sendemail = "Sending Email Failed!";
+            return res.status(400).json(errors);
+          } else {
+            success.sendemail = "Invitation Successfully Sent!";
+          }
+        });
+
+        const newUser = {
+
+
+          password,
+
+        };
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            User.findByIdAndUpdate(
+              user._id,
+              { $set: newUser },
+              { new: true }
+            )
+              .then(user => res.json(user))
+              .catch(err => console.log(err));
+          });
+        });
+
+      }
+      else {
+        errors.email = "Email do not exist."
+        return res.status(400).json(errors);
+      }
+
+
+
+
+
+
+    }).catch(err => { res.status(400).json(err); })
+
+
+  });
 
 // @routes  POST api/users/register
 // @desc    Register/Edit a User

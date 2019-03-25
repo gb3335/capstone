@@ -2,16 +2,16 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { loginUser } from "../../../actions/authActions";
+import { forgotUser } from "../../../actions/authActions";
 import TextFieldGroup from "../../common/TextFieldGroup";
-import "./Login.css";
+import "./forgotpassword.css";
 
 class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: "",
-      password: "",
+      email: "",
+
       errors: {}
     };
 
@@ -42,40 +42,36 @@ class Login extends Component {
     e.preventDefault();
 
     const userData = {
-      username: this.state.username,
-      password: this.state.password
+      email: this.state.email
+
     };
-    this.props.loginUser(userData);
+    this.props.forgotUser(userData, this.props.history);
   }
 
   render() {
     const { errors } = this.state;
     return (
+
       <div className="container-fluid p-2">
-        <div className="login-box">
-          <div className="login-box-imgdiv">
-            <img src="/images/bulsu_logo.png" alt="BSU LOGO" />
+        <Link to="/login" className="btn btn-light mb-3 float-left">
+          <i className="fas fa-angle-left" /> Back to Accounts
+      </Link>
+        <div className="forgot-box">
+          <div className="forgot-box-imgdiv">
+            <img src="/images/bulsu_logo.png" className="mb-2" alt="BSU LOGO" />
+
           </div>
           <div className="row">
             <div className="col">
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
-                  placeholder="Email or Username"
-                  name="username"
+                  placeholder="Email"
+                  name="email"
                   type="text"
-                  value={this.state.username}
+                  value={this.state.email}
                   onChange={this.onChange}
-                  error={errors.username}
+                  error={errors.email}
                   autoComplete={true}
-                />
-                {/* <input className="form-control" placeholder="Email or Username" type="text"/> */}
-                <TextFieldGroup
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  value={this.state.password}
-                  onChange={this.onChange}
-                  error={errors.password}
                 />
                 <div className="optiondiv">
                   {/* <input className="form-control" placeholder="Password" type="password"/> */}
@@ -87,10 +83,10 @@ class Login extends Component {
                                     </div>*/}
 
                   <button type="submit" className="btn form-control">
-                    Sign In
+                    Send new password
                   </button>
                   <div className="spacer" />
-                  <Link to="/forgotpassword">Forgot Password?</Link>
+
                 </div>
               </form>
             </div>
@@ -102,7 +98,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  loginUser: PropTypes.func.isRequired,
+  forgotUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -114,5 +110,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { loginUser }
+  { forgotUser }
 )(Login);
