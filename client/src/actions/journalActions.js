@@ -177,11 +177,11 @@ export const createReportForResearch = reportData => dispatch => {
 };
 
 // Delete Author
-export const deleteAuthor = (research, id) => dispatch => {
+export const deleteAuthor = (journal, id, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/journals/author/${research}/${id}`)
+      .delete(`/api/journals/author/${journal}/${id}/${name}`)
       .then(res =>
         dispatch({
           type: GET_JOURNAL,
@@ -244,11 +244,11 @@ export const addDocument = (docuData, history) => dispatch => {
 };
 
 // Delete Document
-export const deleteDocument = (researchId, filename) => dispatch => {
+export const deleteDocument = (researchId, filename, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
     dispatch(setResearchLoading());
     axios
-      .delete(`/api/journals/document/${researchId}/${filename}`)
+      .delete(`/api/journals/document/${researchId}/${filename}/${name}`)
       .then(res =>
         dispatch({
           type: GET_JOURNAL,
