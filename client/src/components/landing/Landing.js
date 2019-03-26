@@ -59,19 +59,24 @@ class Landing extends Component {
       textAlign: "center"
     };
     const insideStyles = {
-      background: "white",
+      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      color: "white",
+      fontFamily: "ABeeZee",
+      fontSize: "30px",
       padding: 20,
       position: "absolute",
+      zIndex: "1",
       top: "50%",
       left: "50%",
       transform: "translate(-50%,-50%)"
     };
+
     const image1 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsumaingate.jpg";
     const image2 =
-      "https://img00.deviantart.net/2bd0/i/2009/276/c/9/magic_forrest_wallpaper_by_goergen.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg1.png";
     const image3 =
-      "https://brightcove04pmdo-a.akamaihd.net/5104226627001/5104226627001_5297440765001_5280261645001-vs.jpg?pubId=5104226627001&videoId=5280261645001";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg2.png";
     const image4 =
       "https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/empire-state-building-black-and-white-square-format-john-farnan.jpg";
 
@@ -79,80 +84,53 @@ class Landing extends Component {
       <div>
         <div style={styles}>
           {/* <Hello name="Parallax" /> */}
-          <Parallax bgImage={image1} strength={500}>
+          <Parallax bgImage={image1} strength={300}>
             <div style={{ height: 500 }}>
-              <div style={insideStyles}>BulSU Plagiarism & Grammar Checker</div>
-            </div>
-          </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
-          <Parallax bgImage={image3} blur={{ min: -1, max: 3 }}>
-            <div style={{ height: 500 }}>
-              <div style={insideStyles}>Dynamic Blur</div>
-            </div>
-          </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
-          <Parallax bgImage={image2} strength={-100}>
-            <div style={{ height: 500 }}>
-              <div style={insideStyles}>Reverse direction</div>
-            </div>
-          </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
-          <Parallax
-            bgImage={image4}
-            strength={200}
-            renderLayer={percentage => (
-              <div>
-                <div
-                  style={{
-                    position: "absolute",
-                    background: `rgba(255, 125, 0, ${percentage * 1})`,
-                    left: "50%",
-                    top: "50%",
-                    borderRadius: "50%",
-                    transform: "translate(-50%,-50%)",
-                    width: percentage * 500,
-                    height: percentage * 500
-                  }}
-                />
+              <div style={insideStyles}>
+                BulSU Plagiarism & Grammar Checker <br />
+                <i
+                  className={this.state.day}
+                  style={{ color: this.state.color }}
+                />{" "}
+                {this.state.greet}
+                {name}
               </div>
-            )}
-          >
+            </div>
+          </Parallax>
+          <h1>
+            {"\u25CC"} {"\u25CC"} {"\u25CC"}
+          </h1>
+          <Parallax bgImage={image2} strength={-300}>
             <div style={{ height: 500 }}>
-              <div style={insideStyles}>renderProp</div>
+              <div style={insideStyles}>Plagiarism Checker</div>
+              <div id="books">
+                <img id="bookimg" src="./images/books.png" alt="books" />
+              </div>
+            </div>
+          </Parallax>
+          <h1>
+            {"\u25CC"} {"\u25CC"} {"\u25CC"}
+          </h1>
+
+          <Parallax bgImage={image3} strength={300}>
+            <div style={{ height: 500 }}>
+              <div style={insideStyles}>Grammar Checker</div>
+              <div id="books">
+                <img id="writeimg" src="./images/writing.png" alt="books" />
+              </div>
+            </div>
+          </Parallax>
+          <h1>
+            {"\u25CC"} {"\u25CC"} {"\u25CC"}
+          </h1>
+          <Parallax bgImage={image4} strength={-300}>
+            <div style={{ height: 500 }}>
+              <div style={insideStyles}>Android App</div>
             </div>
           </Parallax>
           <div style={{ height: 500 }} />
           <h2>{"\u2728"}</h2>
         </div>
-        {/* <div className="landing">
-          <div className="dark-overlay landing-inner text-light">
-            <div className="row">
-              <div className="col-12 text-center">
-                <h3 className="display-4 text-center">
-                  BulSU Plagiarism and Grammar Checker
-                  <hr />
-                  <p style={{ fontSize: "30px" }}>
-                    <i
-                      className={this.state.day}
-                      style={{ color: this.state.color }}
-                    />{" "}
-                    {this.state.greet}
-                    {name}
-                  </p>
-                </h3>
-                <br />
-              </div>
-            </div>
-          </div>
-        </div>
-        <br />
-        <div /> */}
       </div>
     );
   }

@@ -4,7 +4,7 @@ img {
 
 .landing {
   position: relative;
-  background: url("./bulsumaingate.png") no-repeat;
+  background: url("./images/bulsumaingate.png") no-repeat;
   background-size: cover;
   background-position: center;
   height: 60vh;
@@ -23,4 +23,23 @@ img {
   left: 0;
   width: 100%;
   height: 100%;
+}
+
+#books {
+  z-index: 0;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+#bookimg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+#writeimg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
 }

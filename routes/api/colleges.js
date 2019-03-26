@@ -15,9 +15,9 @@ let pdfCollegesTemplate;
 let fontFooter;
 
 // if (process.env.NODE_ENV === "production") {
-  pdfCollegeTemplate = require("../../document/collegeTemplate");
-  pdfCollegesTemplate = require("../../document/collegesTemplate");
-  fontFooter = "7px";
+pdfCollegeTemplate = require("../../document/collegeTemplate");
+pdfCollegesTemplate = require("../../document/collegesTemplate");
+fontFooter = "7px";
 // } else {
 //   pdfCollegeTemplate = require("../../document/collegeTemplate_Dev");
 //   pdfCollegesTemplate = require("../../document/collegesTemplate_Dev");
@@ -592,7 +592,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/collegePdf.pdf`);
+    res.sendFile(`${reqPath}/collegePdf.pdf`, () => {
+      fs.unlink(`${reqPath}/collegePdf.pdf`, err => {
+        if (err) throw err;
+        console.log("deleted successfully");
+      });
+    });
   }
 );
 
@@ -641,7 +646,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/collegesPdf.pdf`);
+    res.sendFile(`${reqPath}/collegesPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/collegesPdf.pdf`, err => {
+        if (err) throw err;
+        console.log("deleted successfully");
+      });
+    });
   }
 );
 

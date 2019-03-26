@@ -8,20 +8,23 @@ class CollegeDetails extends Component {
   render() {
     const { college } = this.props;
     let activeCourseLenght = 0;
+    let deleted;
 
-    college.course.map(cou => {
-      if (cou.status === 0 && cou.deleted === 0) {
-        activeCourseLenght++;
-      }
-    });
+    try {
+      college.course.map(cou => {
+        if (cou.status === 0 && cou.deleted === 0) {
+          activeCourseLenght++;
+        }
+      });
 
-    const deleted =
-      college.deleted === 1 ? (
-        <span className="badge badge-danger">Deleted</span>
-      ) : (
-        // not status, just indicate that its not deleted
-        <span className="badge badge-success">Active</span>
-      );
+      deleted =
+        college.deleted === 1 ? (
+          <span className="badge badge-danger">Deleted</span>
+        ) : (
+          // not status, just indicate that its not deleted
+          <span className="badge badge-success">Active</span>
+        );
+    } catch (error) {}
 
     return (
       <div className="row">

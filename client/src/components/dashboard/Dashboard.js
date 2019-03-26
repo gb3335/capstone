@@ -40,6 +40,7 @@ class Dashboard extends Component {
     let researchData;
     let journalData;
     let dashboardItems;
+    let dashboardItems2;
     let activityItems;
     let researchDiv;
     let journalDiv;
@@ -336,138 +337,136 @@ class Dashboard extends Component {
             }
           }
         }
-
-        dashboardItems = (
-          <div className="row">
-            <div className="col-12">
-              <div className="row">
-                {/* Colleges */}
-                <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row no-gutters align-items-center">
-                        <div className="col mr-2">
-                          <div
-                            className="text-xs font-weight-bold text-uppercase mb-1"
-                            style={{ color: "#2E86C1" }}
-                          >
-                            Colleges
-                          </div>
-                          <div className="h5 mb-0 font-weight-bold">
-                            {collegeTot}
-                          </div>
+      } catch (error) {}
+      dashboardItems = (
+        <div className="row">
+          <div className="col-12">
+            <div className="row">
+              {/* Colleges */}
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div
+                          className="text-xs font-weight-bold text-uppercase mb-1"
+                          style={{ color: "#2E86C1" }}
+                        >
+                          Colleges
                         </div>
-                        <div className="col-auto">
-                          <i
-                            className="fas fa-university fa-2x"
-                            style={{ color: "#5DADE2" }}
-                          />
+                        <div className="h5 mb-0 font-weight-bold">
+                          {collegeTot}
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Courses */}
-                <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row no-gutters align-items-center">
-                        <div className="col mr-2">
-                          <div
-                            className="text-xs font-weight-bold text-uppercase mb-1"
-                            style={{ color: "#1E8449" }}
-                          >
-                            Courses
-                          </div>
-                          <div className="h5 mb-0 font-weight-bold">
-                            {courseTot}
-                          </div>
-                        </div>
-                        <div className="col-auto">
-                          <i
-                            className="fas fa-graduation-cap fa-2x"
-                            style={{ color: "#58D68D" }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Researches */}
-                <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row no-gutters align-items-center">
-                        <div className="col mr-2">
-                          <div
-                            className="text-xs font-weight-bold text-uppercase mb-1"
-                            style={{ color: "#BA4A00" }}
-                          >
-                            Researches
-                          </div>
-                          <div className="h5 mb-0 font-weight-bold">
-                            {researchTot}
-                          </div>
-                        </div>
-                        <div className="col-auto">
-                          <i
-                            className="fas fa-book fa-2x"
-                            style={{ color: "#E59866" }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Journals */}
-                <div className="col-xl-3 col-md-6 mb-4">
-                  <div className="card">
-                    <div className="card-body">
-                      <div className="row no-gutters align-items-center">
-                        <div className="col mr-2">
-                          <div
-                            className="text-xs font-weight-bold text-uppercase mb-1"
-                            style={{ color: "#D4AC0D" }}
-                          >
-                            Journals
-                          </div>
-                          <div className="h5 mb-0 font-weight-bold">
-                            {journalTot}
-                          </div>
-                        </div>
-                        <div className="col-auto">
-                          <i
-                            className="fas fa-book-open fa-2x"
-                            style={{ color: "#F4D03F" }}
-                          />
-                        </div>
+                      <div className="col-auto">
+                        <i
+                          className="fas fa-university fa-2x"
+                          style={{ color: "#5DADE2" }}
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              {/* Graphs */}
-              <div>
-                <div className={graphDiv}>
-                  <div className={graphsDiv}>
-                    <div className="card">
-                      <div className="row">
-                        {researchDiv}
-                        {journalDiv}
+              {/* Courses */}
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div
+                          className="text-xs font-weight-bold text-uppercase mb-1"
+                          style={{ color: "#1E8449" }}
+                        >
+                          Courses
+                        </div>
+                        <div className="h5 mb-0 font-weight-bold">
+                          {courseTot}
+                        </div>
+                      </div>
+                      <div className="col-auto">
+                        <i
+                          className="fas fa-graduation-cap fa-2x"
+                          style={{ color: "#58D68D" }}
+                        />
                       </div>
                     </div>
-                    <br />
                   </div>
-                  {recactDiv}
-                  {/* {summaryDiv} */}
+                </div>
+              </div>
+              {/* Researches */}
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div
+                          className="text-xs font-weight-bold text-uppercase mb-1"
+                          style={{ color: "#BA4A00" }}
+                        >
+                          Researches
+                        </div>
+                        <div className="h5 mb-0 font-weight-bold">
+                          {researchTot}
+                        </div>
+                      </div>
+                      <div className="col-auto">
+                        <i
+                          className="fas fa-book fa-2x"
+                          style={{ color: "#E59866" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* Journals */}
+              <div className="col-xl-3 col-md-6 mb-4">
+                <div className="card">
+                  <div className="card-body">
+                    <div className="row no-gutters align-items-center">
+                      <div className="col mr-2">
+                        <div
+                          className="text-xs font-weight-bold text-uppercase mb-1"
+                          style={{ color: "#D4AC0D" }}
+                        >
+                          Journals
+                        </div>
+                        <div className="h5 mb-0 font-weight-bold">
+                          {journalTot}
+                        </div>
+                      </div>
+                      <div className="col-auto">
+                        <i
+                          className="fas fa-book-open fa-2x"
+                          style={{ color: "#F4D03F" }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            {/* Graphs */}
+            <div>
+              <div className={graphDiv}>
+                <div className={graphsDiv}>
+                  <div className="card">
+                    <div className="row">
+                      {researchDiv}
+                      {journalDiv}
+                    </div>
+                  </div>
+                  <br />
+                </div>
+                {recactDiv}
+                {/* {summaryDiv} */}
+              </div>
+            </div>
           </div>
-        );
-      } catch (error) {}
+        </div>
+      );
     }
-
     return (
       <div className="container-fluid">
         {/* <h1 className="display-4 text-center">Dashboard</h1>
