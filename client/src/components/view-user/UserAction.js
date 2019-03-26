@@ -40,28 +40,28 @@ class UserAction extends Component {
     let ctr = 0;
     let upImages;
 
-    for (i = 0; i < files.length; i++) {
-      let reader = new FileReader();
-      reader.readAsDataURL(files[i]);
-      reader.onload = e => {
-        this.setState({
-          images: [...this.state.images, e.target.result]
-        });
-        upImages = this.state.images;
-        ctr++;
 
-        if (ctr === len) {
+    let reader = new FileReader();
+    reader.readAsDataURL(files[0]);
+    reader.onload = e => {
+      this.setState({
+        images: [...this.state.images, e.target.result]
+      });
+      upImages = this.state.images;
+      ctr = 1;
 
-          const data = {
-            images: upImages,
-            id: this.props.auth.user._id,
+      if (ctr === len) {
 
-          };
+        const data = {
+          images: upImages,
+          id: this.props.users.user._id,
 
-          this.props.changeAvatar(data, this.props.history);
-        }
-      };
-    }
+        };
+
+        this.props.changeAvatar(data, this.props.history);
+      }
+    };
+
   };
 
   changeClick() {

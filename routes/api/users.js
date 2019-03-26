@@ -727,8 +727,44 @@ router.post(
   "/avatar",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const rand = uuid();
 
-    console.log(req.body)
+
+
+
+
+    s3 = new AWS.S3();
+    const base64Data = new Buffer(
+      req.body.images[0].replace(/^data:image\/\w+;base64,/, ""),
+      "base64"
+    );
+    const type = req.body.images[0].split(";")[0].split("/")[1];
+    const userId = 1;
+    params = {
+      Bucket: "bulsu-capstone",
+      Key: `userImages/${req.body.id + "-" + rand}.png`, // type is not required
+      Body: base64Data,
+      ACL: "public-read",
+      ContentEncoding: "base64", // required
+      ContentType: `image/${type}` // required. Notice the back ticks
+    };
+    s3.upload(params, (err, data) => {
+      if (err) {
+        return console.log(err);
+      }
+      console.log("Image successfully uploaded.");
+    });
+    newUser = {
+      avatar: req.body.id + "-" + rand + ".png"
+    }
+    User.findOneAndUpdate(
+      { _id: req.body.id },
+      { $set: newUser },
+      { new: true }
+    ).then(user => res.json(user)).catch(err => console.log(res.json(err)));
+
+
+
 
   }
 );

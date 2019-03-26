@@ -699,7 +699,7 @@ router.get(
         if (err) throw err;
         console.log('successfully deleted');
       });
-    }) 
+    })
   }
 );
 
@@ -753,7 +753,7 @@ router.get(
         if (err) throw err;
         console.log('successfully deleted');
       });
-    }) 
+    })
   }
 );
 

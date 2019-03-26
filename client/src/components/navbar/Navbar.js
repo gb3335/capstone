@@ -48,7 +48,16 @@ class Navbar extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
+    let path = ""
 
+    if (user.avatar === "/images/User.png") {
+      path = "/images/User.png"
+    }
+    else {
+      path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+    }
+
+    console.log(path)
     // const { pageTitle } = this.props.sidebar;
 
     const guestLinks = (
@@ -77,7 +86,7 @@ class Navbar extends Component {
             onMouseEnter={this.onMouseEnter}
             onMouseLeave={this.onMouseLeave}
           >
-            <img className="user_img" src={user.avatar} alt="" />
+            <img className="user_img" src={path} alt="" />
             <p>{user.firstName}</p>
           </a>
           <div

@@ -81,6 +81,7 @@ class EditAccount extends Component {
       newpassword: this.state.newpassword,
       newpassword2: this.state.newpassword2,
       id: this.props.users.user._id
+
     };
 
 

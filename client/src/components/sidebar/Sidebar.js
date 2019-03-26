@@ -70,6 +70,14 @@ class Sidebar extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
+    let path = ""
+
+    if (user.avatar === "/images/User.png") {
+      path = "/images/User.png"
+    }
+    else {
+      path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+    }
 
     const guestLinks = (
       <nav className="sidebar_navigation">
@@ -262,7 +270,7 @@ class Sidebar extends Component {
         </div>
         <div className="sidebar_user">
           <div className="sidebar_user_image">
-            <img src={user.avatar} alt="Your Avatar" />
+            <img src={path} alt="Your Avatar" />
           </div>
           <div className="sidebar_user_name">
             <Link to="/account">{user.firstName}</Link>
