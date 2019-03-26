@@ -8,8 +8,12 @@ const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
+const pdfUtil = require('pdf-to-text');
 const path = require("path");
 const pdf = require("html-pdf");
+
+// Text Processor
+const processor = require('../../validation/plagiarism/processor');
 
 // report templates
 let pdfResearchesTemplate;
@@ -76,7 +80,7 @@ router.get("/test", (req, res) => res.json({ msg: "Research Works" }));
 // @desc    Get researches
 // @access  Public
 router.get("/", (req, res) => {
-  Research.find()
+  Research.find({},{content:0})
     .sort({ title: 1 })
     .then(researches => res.json(researches))
     .catch(err =>
@@ -89,13 +93,13 @@ router.get("/", (req, res) => {
 // @access  Public
 router.get("/:id", (req, res) => {
   const errors = {};
-  Research.findOne({ _id: req.params.id })
+  Research.findOne({ _id: req.params.id },{content:0})
     .then(research => {
       if (!research) {
         errors.noresearch = "There is no data for this research";
         res.status(404).json(errors);
       }
-
+      delete research.content
       res.json(research);
     })
     .catch(err => res.status(404).json(err));
@@ -174,7 +178,10 @@ router.post(
               { $set: newResearch },
               { new: true }
             )
-              .then(research => res.json(research))
+              .then(research => {
+                delete research.content
+                res.json(research)
+              })
               .catch(err => console.log(err));
           }
         });
@@ -312,7 +319,10 @@ router.post(
       // Add to exp array
       research.author.unshift(newAuthor);
 
-      research.save().then(research => res.json(research));
+      research.save().then(research => {
+        delete research.content
+        res.json(research)
+      });
     });
   }
 );
@@ -357,7 +367,10 @@ router.delete(
         research.author.splice(removeIndex, 1);
 
         // Save
-        research.save().then(research => res.json(research));
+        research.save().then(research => {
+          delete research.content
+          res.json(research)
+        });
       })
       .catch(err => res.status(404).json(err));
   }
@@ -440,7 +453,10 @@ router.post(
 
       research
         .save()
-        .then(research => res.json(research))
+        .then(research => {
+          delete research.content
+          res.json(research)
+        })
         .catch(err => console.log(err));
     });
   }
@@ -499,36 +515,56 @@ router.post(
       if (err) {
         return console.log(err);
       }
-      // const docPath =
-      //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-      //   filename;
-      // const options = {
-      //   directory: "./routes/downloadedDocu",
-      //   filename: req.body.researchId + ".pdf"
-      // };
-      // download(docPath, options, function (err) {
-      //   if (err) console.log(err);
-      //   console.log("Document successfully uploaded.");
-      // });
-
-      const newDocument = {
-        document: filename,
-        lastUpdate: Date.now()
+      const docPath =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+        filename;
+      const options = {
+        directory: "./routes/downloadedDocu",
+        filename: req.body.researchId + ".pdf"
       };
-      Research.findOne({ _id: req.body.researchId }).then(research => {
-        // add activity
-        const newActivity = {
-          title: "Document added to " + research.title,
-          by: req.body.username
-        };
-        new Activity(newActivity).save();
+      download(docPath, options, function (err) {
+        if (err) console.log(err);
+        console.log("Document successfully downloaded.");
+        pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+
+        
+            fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+              if (err) throw err;
+              console.log('successfully deleted');
+            });
+            
+            let {text, len} = processor.textProcess(data.toString().toLowerCase());
+
+            const newDocument = {
+              document: filename,
+              content: {
+                text,
+                sentenceLength: len
+              },
+              lastUpdate: Date.now()
+            };
+            Research.findOne({ _id: req.body.researchId }).then(research => {
+              // add activity
+              const newActivity = {
+                title: "Document added to " + research.title,
+                by: req.body.username
+              };
+              new Activity(newActivity).save();
+            });
+      
+            Research.findOneAndUpdate(
+              { _id: req.body.researchId },
+              { $set: newDocument },
+              { new: true }
+            ).then(research => {
+              delete research.content
+              res.json(research)
+            });
+            
+        });
       });
 
-      Research.findOneAndUpdate(
-        { _id: req.body.researchId },
-        { $set: newDocument },
-        { new: true }
-      ).then(research => res.json(research));
+      
     });
   }
 );
@@ -562,6 +598,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength: ""
+      },
       lastUpdate: Date.now()
     };
 
@@ -578,7 +618,10 @@ router.delete(
       { _id: req.params.research_id },
       { $set: newDocument },
       { new: true }
-    ).then(research => res.json(research));
+    ).then(research => {
+      delete research.content
+      res.json(research)
+    });
   }
 );
 
@@ -628,11 +671,11 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/researchesPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/researchesPdf.pdf`, err => {
+      fs.unlink(`${reqPath}/researchesPdf.pdf`, (err) => {
         if (err) throw err;
-        console.log("deleted successfully");
+        console.log('successfully deleted');
       });
-    });
+    }) 
   }
 );
 
@@ -682,11 +725,11 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/researchPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/researchPdf.pdf`, err => {
+      fs.unlink(`${reqPath}/researchPdf.pdf`, (err) => {
         if (err) throw err;
-        console.log("deleted successfully");
+        console.log('successfully deleted');
       });
-    });
+    }) 
   }
 );
 
@@ -760,7 +803,7 @@ router.post(
           { new: true }
         ).then(research);
       });
-
+      delete research.content
       res.json(research);
     });
   }
@@ -836,6 +879,7 @@ router.post(
           { new: true }
         ).then(research);
       });
+      delete research.content
       res.json(research);
     });
   }

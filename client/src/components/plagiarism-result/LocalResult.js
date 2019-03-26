@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
+import Highlighter from "react-highlight-words";
 
 import {Spring, Transition, animated} from 'react-spring/renderprops';
 
@@ -28,7 +30,7 @@ class LocalResult extends Component {
       heavy: 0,
       score: [],
       showDetails: false,
-      
+      words: []
     };
   }
 
@@ -65,6 +67,22 @@ class LocalResult extends Component {
     score.push(heavy);
 
     this.setState({little, moderate,heavy,score})
+
+    const words = [];
+
+      output.forEach((out) => {
+        out.Index.forEach((index) => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+      })
+      var uniqueItems = [...new Set(words)]
+      
+
+      const word = uniqueItems.join(' ');
+
+      var splited = word.split(' ');
+      this.setState({words: splited});
     
   }
 
@@ -84,19 +102,16 @@ class LocalResult extends Component {
     }
 
     onClickGenerateReport = () => {
-      const {output, pattern} = this.props.localPlagiarism;
+      const {output} = this.props.localPlagiarism;
       this.props.setPlagiarismGenerateReportLoading(true);
-      const words = [];
+      
+      const node = ReactDOM.findDOMNode(this);
 
-      output.forEach((out) => {
-        out.Index.forEach((index) => {
-          let obj = JSON.parse(index);
-          words.push(obj.Pattern)
-        })
-      })
-      var uniqueItems = [...new Set(words)]
-
-      const word = uniqueItems.join(' ');
+      // Get child nodes
+      let child="";
+      child = node.querySelector('.forhidehighlightSpan');
+      
+      let word = child.innerHTML.toString()
 
       const name =
           this.props.auth.user.firstName +
@@ -107,16 +122,66 @@ class LocalResult extends Component {
 
       const input = {
         printedBy: name,
-        pattern : pattern.data,
         word,
-        typeOfReport: "Check Plagiarism Report",
+        typeOfReport: "Plagiarism Check Result",
         subTypeOfReport: "Checked in the System Database",
         output
       }
-      this.props.createLocalPlagiarismReport(input);
+     this.props.createLocalPlagiarismReport(input);
       
       
     }
+
+    // Complex example
+  findChunksAtBeginningOfWords = ({
+    autoEscape,
+    caseSensitive,
+    sanitize,
+    searchWords,
+    textToHighlight
+  }) => {
+    const chunks = [];
+    const textLow = textToHighlight.toLowerCase();
+    // Match at the beginning of each new word
+    // New word start after whitespace or - (hyphen)
+    const startSep = /[^a-zA-Z\d]/;
+    
+    // Match at the beginning of each new word
+    // New word start after whitespace or - (hyphen)
+    const singleTextWords = textLow.split(startSep);
+    // It could be possible that there are multiple spaces between words
+    // Hence we store the index (position) of each single word with textToHighlight
+    let fromIndex = 0;
+    const singleTextWordsWithPos = singleTextWords.map(s => { //Compound
+    
+     const indexInWord = textLow.indexOf(s, fromIndex); // Index = 0
+      fromIndex = indexInWord;
+      return {
+        word: s,
+        index: indexInWord
+      };
+    });
+    
+    // Add chunks for every searchWord
+    searchWords.forEach(sw => {
+      
+      const swLow = sw.toString().toLowerCase();
+      // Do it for every single text word
+      singleTextWordsWithPos.forEach(s => {
+        
+       if (s.word.startsWith(swLow) && s.word.endsWith(swLow)) {
+          const start = s.index;
+          const end = s.index + swLow.length;
+          chunks.push({
+            start,
+            end
+          });
+        }
+      });
+
+    });
+    return chunks;
+  };
 
 
   render() {
@@ -236,11 +301,37 @@ class LocalResult extends Component {
       )
     }
 
+    let forhide;
+
+    if(patternLoading || pattern===""){
+      forhide = (
+        <div className="spinnerMainDiv">
+            <div className="spinner">
+              <Spinner />
+            </div>
+          </div>
+      )
+    }else{
+      forhide = (
+        <Highlighter
+              className="forhidehighlightSpan"
+              highlightClassName="hightlight"
+              searchWords={this.state.words}
+              autoEscape={true}
+              textToHighlight={pattern.data}
+              findChunks={this.findChunksAtBeginningOfWords}
+            />
+      )
+    }
+
 
     const {generateReport} = this.props.localPlagiarism;
 
     return (
       <div className="research">
+        <div className="forHide">
+          {forhide};
+        </div>
         <div className="container-fluid" style={{ padding: "1em" }}>
         <div className="row">
               <div className="col-md-8">

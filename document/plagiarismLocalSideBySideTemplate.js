@@ -1,15 +1,16 @@
 const moment = require("moment");
 
+const moment_timezone = require('moment-timezone');
+
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output, pattern, word, text} = input;
+const {typeOfReport, subTypeOfReport , output, pattern, text} = input;
 
   let docuFound="";
   let title = "";
   let score="[";
 
-  let words = "\""+word+"\"";
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
   let level="";
 
       if(output[0].SimilarityScore>0 && output[0].SimilarityScore<30){
@@ -56,9 +57,18 @@ let clean = 100 - plagiarised;
         }
   
         .bulsu-logo {
+          position: absolute;
+          width: 5rem;
+          height: 5rem;
+          padding-left: 40px;
+          padding-top: 10px;
+          
+        }
+        .bulsu-logo2 {
           width: 5rem;
           height: 5rem;
           float: left;
+          visibility:hidden;
         }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
@@ -146,12 +156,17 @@ mark {
       </style>
     </head>
     <body>
+    <img
+            src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+            alt="bulsu-logo"
+            class="bulsu-logo"
+          />
       <div class="grid-container">
         <div class="item1 headerr" style="font-size: 12px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
-            class="bulsu-logo"
+            class="bulsu-logo2"
           />
 
           <img
@@ -168,9 +183,8 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <br />
           <h5>${typeOfReport}</h5>
-          <h6>${subTypeOfReport}</h6>
+          <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
         
@@ -180,15 +194,6 @@ mark {
             </div>
             <br />
             <br />
-            <br />
-            <br />
-            <br />
-            <div className="col-md-8 overviewContent pt-2" style="font-size: 9px">
-                <p><b>Similarity Score: </b> ${parseFloat(output[0].SimilarityScore).toFixed(2)}%</p>
-                <p className="pt-3"><b>Source Document: </b> ${output[0].Document.Pattern.Name}</p>
-                <p><b>Target Document: </b> ${output[0].Document.Text.Name}</p>
-                <p><b>Plagiarism Level: </b> ${level}</p>
-            </div>
             <br />
             <br />
             <br />
@@ -205,7 +210,6 @@ mark {
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
@@ -214,7 +218,7 @@ mark {
         const canvas = document.getElementById('pie');
 
         const data = {
-            labels : ["Clean", "Plagiarised"],
+            labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(2)}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
             datasets : [
                 {
                     data : ${score},
@@ -228,27 +232,15 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         
-    </script>
-    <script>
-    var options = {
-      "accuracy": {
-          "value": "exactly",
-          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
-      }
-    };
-       
-        var context = document.querySelector(".context");
-        var instance = new Mark(context);
-        instance.mark(${words}, options);
-
-
-        var context2 = document.querySelector(".context2");
-        var instance2 = new Mark(context2);
-        instance2.mark(${words}, options);
     </script>
     </body>
 

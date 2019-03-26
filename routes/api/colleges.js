@@ -595,7 +595,7 @@ router.get(
     res.sendFile(`${reqPath}/collegePdf.pdf`, () => {
       fs.unlink(`${reqPath}/collegePdf.pdf`, err => {
         if (err) throw err;
-        console.log("deleted successfully");
+        console.log("successfully deleted");
       });
     });
   }
@@ -649,7 +649,7 @@ router.get(
     res.sendFile(`${reqPath}/collegesPdf.pdf`, () => {
       fs.unlink(`${reqPath}/collegesPdf.pdf`, err => {
         if (err) throw err;
-        console.log("deleted successfully");
+        console.log("successfully deleted");
       });
     });
   }

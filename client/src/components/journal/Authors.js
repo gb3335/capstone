@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { deleteAuthor } from "../../actions/journalActions";
 
 class Authors extends Component {
-  onDeleteClick = (research, id, name) => {
-    this.props.deleteAuthor(research, id, name);
+  onDeleteClick = (journal, id, name) => {
+    this.props.deleteAuthor(journal, id, name);
   };
 
   render() {

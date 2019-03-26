@@ -8,8 +8,12 @@ const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
+const pdfUtil = require('pdf-to-text');
 const path = require("path");
 const pdf = require("html-pdf");
+
+// Text Processor
+const processor = require('../../validation/plagiarism/processor');
 
 // report templates
 let pdfJournalsTemplate;
@@ -76,7 +80,7 @@ router.get("/test", (req, res) => res.json({ msg: "Journal Works" }));
 // @desc    Get journals
 // @access  Public
 router.get("/", (req, res) => {
-  Journal.find()
+  Journal.find({}, { content: 0 })
     .sort({ title: 1 })
     .then(journals => res.json(journals))
     .catch(err =>
@@ -89,7 +93,7 @@ router.get("/", (req, res) => {
 // @access  Public
 router.get("/:id", (req, res) => {
   const errors = {};
-  Journal.findOne({ _id: req.params.id })
+  Journal.findOne({ _id: req.params.id }, { content: 0 })
     .then(journal => {
       if (!journal) {
         errors.nojournal = "There is no data for this journal";
@@ -177,7 +181,7 @@ router.post(
               { $set: newJournal },
               { new: true }
             )
-              .then(journal => res.json(journal))
+              .then(journal => { res.json(journal) })
               .catch(err => console.log(err));
           }
         });
@@ -369,7 +373,7 @@ router.post(
 // @desc    Delete author from journal
 // @access  Private
 router.delete(
-  "/author/:journal_id/:author_id",
+  "/author/:journal_id/:author_id/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Journal.findOne({ _id: req.params.journal_id })
@@ -556,27 +560,46 @@ router.post(
       };
       download(docPath, options, function (err) {
         if (err) console.log(err);
-        console.log("Document successfully uploaded.");
+        console.log("Document successfully downloaded.");
+        pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+          fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+            if (err) throw err;
+            console.log('successfully deleted');
+          });
+
+          let { text, len } = processor.textProcess(data.toString().toLowerCase());
+
+          const newDocument = {
+            document: filename,
+            content: {
+              text,
+              sentenceLength: len
+            },
+            lastUpdate: Date.now()
+          };
+          Journal.findOne({ _id: req.body.researchId }).then(journal => {
+            // add activity
+            const newActivity = {
+              title: "Document added to " + journal.title,
+              by: req.body.username
+            };
+            new Activity(newActivity).save();
+          });
+
+          Journal.findOneAndUpdate(
+            { _id: req.body.researchId },
+            { $set: newDocument },
+            { new: true }
+          ).then(journal => {
+            delete journal.content.text
+            res.json(journal)
+          });
+
+        });
       });
 
-      const newDocument = {
-        document: filename,
-        lastUpdate: Date.now()
-      };
-      Journal.findOne({ _id: req.body.researchId }).then(journal => {
-        // add activity
-        const newActivity = {
-          title: "Document added to " + journal.title,
-          by: req.body.username
-        };
-        new Activity(newActivity).save();
-      });
 
-      Journal.findOneAndUpdate(
-        { _id: req.body.researchId },
-        { $set: newDocument },
-        { new: true }
-      ).then(journal => res.json(journal));
     });
 
   }
@@ -586,7 +609,7 @@ router.post(
 // @desc    Delete document from journal
 // @access  Private
 router.delete(
-  "/document/:journal_id/:filename",
+  "/document/:journal_id/:filename/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     //delete journal document from s3
@@ -671,7 +694,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/journalsPdf.pdf`);
+    res.sendFile(`${reqPath}/journalsPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/journalsPdf.pdf`, (err) => {
+        if (err) throw err;
+        console.log('successfully deleted');
+      });
+    }) 
   }
 );
 
@@ -720,7 +748,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/journalPdf.pdf`);
+    res.sendFile(`${reqPath}/journalPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/journalsPdf.pdf`, (err) => {
+        if (err) throw err;
+        console.log('successfully deleted');
+      });
+    }) 
   }
 );
 

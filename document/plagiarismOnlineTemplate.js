@@ -1,4 +1,5 @@
 const moment = require("moment");
+const moment_timezone = require("moment-timezone");
 
 module.exports = (input) => {
   
@@ -8,23 +9,33 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
   let docuFound="";
   let title = "";
   let words = "\""+word+"\"";
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
   let score="[";
   output.forEach((out, index)=>{
       if(out.SimilarityScore>0 && out.SimilarityScore<30){
       little++;
-      }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
-      moderate++;
-      }
-      else if(out.SimilarityScore>70){
-      heavy++;
-      }
-      title=out.Document.Pattern.Name;
       docuFound+=`<tr>
                     <td>${index+1}</td>
                     <td>${out.Document.Text.Id}</td>
                     <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
                   </tr>`
+      }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
+      moderate++;
+      docuFound+=`<tr>
+                    <td>${index+1}</td>
+                    <td>${out.Document.Text.Id}</td>
+                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                  </tr>`
+      }
+      else if(out.SimilarityScore>70){
+      heavy++;
+      docuFound+=`<tr>
+                    <td>${index+1}</td>
+                    <td>${out.Document.Text.Id}</td>
+                    <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
+                  </tr>`
+      }
+      title=out.Document.Pattern.Name;
   })
 
   docuFound+=`<tr class="blank_row"><td colspan="${3}" style="text-align:center;">- Nothing Follows -</td></tr>`
@@ -57,9 +68,18 @@ const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
         }
   
         .bulsu-logo {
+          position:absolute;
+          width: 5rem;
+          height: 5rem;
+          padding-left: 40px;
+          padding-top: 10px;
+        }
+
+        .bulsu-logo2 {
           width: 5rem;
           height: 5rem;
           float: left;
+          visibility:hidden;
         }
         .blank_row {
           height: 10px !important; /* overwrites any other rules */
@@ -148,12 +168,17 @@ mark {
       </style>
     </head>
     <body>
+    <img
+            src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
+            alt="bulsu-logo"
+            class="bulsu-logo"
+          />
       <div class="grid-container">
         <div class="item1 headerr" style="font-size: 12px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
-            class="bulsu-logo"
+            class="bulsu-logo2"
           />
 
           <img
@@ -170,9 +195,8 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <br />
           <h5>${typeOfReport}</h5>
-          <h6>${subTypeOfReport}</h6>
+          <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
         
@@ -185,15 +209,6 @@ mark {
             <br />
             <br />
             <br />
-            <div class="over-container" style="font-size: 15px">
-                <div class="overview">Statistics Overview</div>
-                <div class="overviewContent mb-2">Number Of Candidate Document: ${little+moderate+heavy}</div>
-                <div class="overviewContent heavy-text">Heavy Plagiarism: ${heavy}</div>
-                <div class="overviewContent moderate-text">Moderate Plagiarism: ${moderate}</div>
-                <div class="overviewContent little-text">Little Plagiarism: ${little}</div>
-                
-                <div class="note">Note: Little Plagiarism is less than 30% similarity score, 30 to 69% for Moderate and 70 to 100% for Heavy</div>
-            </div>
             <h4 style="font-size: 10px">Text Checked for Plagiarism: </h4>
             <div class="context">
                 <p>${pattern}</p>
@@ -222,7 +237,7 @@ mark {
         const canvas = document.getElementById('pie');
 
         const data = {
-            labels : ["Little Plagiarism", "Moderate Plagiarism", "Heavy Plagiarism"],
+            labels : ["Little Plagiarism ${little}", "Moderate Plagiarism ${moderate}", "Heavy Plagiarism ${heavy}"],
             datasets : [
                 {
                     data : ${score},
@@ -237,7 +252,12 @@ mark {
         const pieChart = new Chart(canvas,{
             type:"pie",
             data: data,
-            options: {}
+            options: {
+              animation: false,
+              legend: {
+                position: "right"
+              }
+            }
         })
         
         

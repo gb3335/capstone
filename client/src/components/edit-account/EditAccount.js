@@ -22,9 +22,9 @@ class EditAccount extends Component {
       contact: this.props.users.user.contact,
       userType: this.props.users.user.userType,
       college: this.props.users.user.college,
+      newpassword2: '',
       password: '',
-      password1: '',
-      password2: '',
+      newpassword: '',
 
       userName: this.props.users.user.userName,
       errors: {}
@@ -76,9 +76,10 @@ class EditAccount extends Component {
 
     const userData = {
 
+
       password: this.state.password,
-      password1: this.state.password1,
-      password2: this.state.password2,
+      newpassword: this.state.newpassword,
+      newpassword2: this.state.newpassword2,
       id: this.props.users.user._id
     };
 
@@ -259,29 +260,29 @@ class EditAccount extends Component {
 
                         <TextFieldGroup
                           placeholder="* Type your password"
-                          name="password1"
-                          value={this.state.password1}
-                          onChange={this.onChange}
-                          error={errors.password1}
-                          info="Type your password."
-                          type="password"
-                        />
-                        <TextFieldGroup
-                          placeholder="* Re-type your password"
-                          name="password2"
-                          value={this.state.password2}
-                          onChange={this.onChange}
-                          error={errors.password2}
-                          info="Re-type your password."
-                          type="password"
-                        />
-                        <TextFieldGroup
-                          placeholder="* Type your new password"
                           name="password"
                           value={this.state.password}
                           onChange={this.onChange}
                           error={errors.password}
+                          info="Type your password."
+                          type="password"
+                        />
+                        <TextFieldGroup
+                          placeholder="* Enter your new password"
+                          name="newpassword"
+                          value={this.state.newpassword}
+                          onChange={this.onChange}
+                          error={errors.newpassword}
                           info="Type your new password."
+                          type="password"
+                        />
+                        <TextFieldGroup
+                          placeholder="* Re-type your password"
+                          name="newpassword2"
+                          value={this.state.newpassword2}
+                          onChange={this.onChange}
+                          error={errors.newpassword2}
+                          info="Re-type your password."
                           type="password"
                         />
                         <input

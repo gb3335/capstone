@@ -89,7 +89,7 @@ class Navbar extends Component {
           >
             <ul className="account_submenus">
               <li>
-                <Link to={/viewusers/ + this.props.auth.user.id} onClick={() => window.location.reload()}>My Account</Link>
+                <Link to={/viewusers/ + this.props.auth.user.id}>My Account</Link>
               </li>
               <li>
                 <Link to="#" onClick={this.onLogoutClick.bind(this)}>

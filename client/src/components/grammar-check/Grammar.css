@@ -1,0 +1,47 @@
+.sourceResearch{
+    display: flex;
+    flex-direction: column;
+}
+
+.sourceHeader{
+    margin: 0;
+    display: flex;
+    align-items: center;
+    background-color: rgb(76, 189, 238);
+    font-size: 1.5em;
+    font-weight: 200;
+    padding-left: 4px;
+    
+}
+
+.sourceContent{
+    font-size: 1.5em;
+    font-weight: 500;
+    text-indent: 1%;
+    padding-top: 10px;
+    padding-left: 5px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+    background-color: rgb(255, 253, 251);
+    border-bottom: 1px solid rgb(76, 189, 238);
+    border-left: 1px solid rgb(76, 189, 238);
+    border-right: 1px solid rgb(76, 189, 238);
+    margin-bottom: 10px;
+    
+}
+
+.editableDiv{
+    height: 500px;
+    font-size: 18px;
+    overflow: auto;
+}
+
+.spellingError{
+    text-decoration: none;
+    border-bottom: 3px solid rgba(228, 93, 93, 0.815);
+}
+
+.grammarsError{
+    text-decoration: none;
+    border-bottom: 3px solid rgba(98, 228, 93, 0.815);
+}
