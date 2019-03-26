@@ -593,7 +593,6 @@ router.post(
             { new: true }
           ).then(journal => {
             delete journal.content.text
-            console.log(journal.content)
             res.json(journal)
           });
 
