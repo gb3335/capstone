@@ -627,7 +627,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/researchesPdf.pdf`);
+    res.sendFile(`${reqPath}/researchesPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/researchesPdf.pdf`, err => {
+        if (err) throw err;
+        console.log("deleted successfully");
+      });
+    });
   }
 );
 
@@ -676,7 +681,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
-    res.sendFile(`${reqPath}/researchPdf.pdf`);
+    res.sendFile(`${reqPath}/researchPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/researchPdf.pdf`, err => {
+        if (err) throw err;
+        console.log("deleted successfully");
+      });
+    });
   }
 );
 

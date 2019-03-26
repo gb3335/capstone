@@ -74,11 +74,11 @@ class Landing extends Component {
     const image1 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsumaingate.jpg";
     const image2 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg1.png";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg4.png";
     const image3 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg2.png";
     const image4 =
-      "https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/empire-state-building-black-and-white-square-format-john-farnan.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg3.png";
 
     return (
       <div>
@@ -97,9 +97,9 @@ class Landing extends Component {
               </div>
             </div>
           </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
+          <br />
+          <h1>Features</h1>
+          <br />
           <Parallax bgImage={image2} strength={-300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>Plagiarism Checker</div>
@@ -125,11 +125,22 @@ class Landing extends Component {
           </h1>
           <Parallax bgImage={image4} strength={-300}>
             <div style={{ height: 500 }}>
-              <div style={insideStyles}>Android App</div>
+              <div style={insideStyles}>
+                Android App
+                <br />
+                <a
+                  target="_blank"
+                  href="https://i.kym-cdn.com/photos/images/newsfeed/000/237/357/9d8.jpg"
+                  className="btn btn-info"
+                >
+                  Download here
+                </a>
+              </div>
+              <div id="books">
+                <img id="androidimg" src="./images/android.png" alt="books" />
+              </div>
             </div>
           </Parallax>
-          <div style={{ height: 500 }} />
-          <h2>{"\u2728"}</h2>
         </div>
       </div>
     );
