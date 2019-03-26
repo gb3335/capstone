@@ -12,7 +12,7 @@ class Grammar extends Component {
     constructor(){
         super()
         this.state = {
-            html: "",
+            html: "<u class='spellingError'>wer</u>",
             original: "",
             output: {}
         }
@@ -23,43 +23,36 @@ class Grammar extends Component {
         if(nextProps.grammar.output !== this.props.grammar.output){
             const {matches} = nextProps.grammar.output.grammar.data;
             let newhtml = this.state.original;
-            let spellFront = "<u className='spellingError'>"
+            let spellFront = "<u class='spellingError' onClick={this.onCorrect}>"
             let spellBack = "</u>"
-            let spelllen = 33;
 
-            let grammarFront = "<u className='grammarsError'>"
+            let grammarFront = "<u class='grammarsError' onClick={this.onCorrect}>"
             let grammarBack = "</u>"
-            let grammarlen = 33
 
-            let addflag=0;
+            newhtml = newhtml.split('');
+            
 
             this.setState({output: nextProps.grammar.output})
             if(matches.length>0){
-                matches.forEach(match => {
-                    if(addflag===0){
-                        if(match.shortMessage==="Spelling mistake"){
-                            newhtml = [newhtml.slice(0, match.offset), spellFront, newhtml.slice(match.offset)].join('');
-                            newhtml = [newhtml.slice(0, match.length+spellFront.length), spellBack, newhtml.slice(match.length+spellFront.length)].join('');
-                            addflag=1;
-                        }else{
-                            newhtml = [newhtml.slice(0, match.offset), grammarFront, newhtml.slice(match.offset)].join('');
-                            newhtml = [newhtml.slice(0, match.offset+match.length+grammarFront.length), grammarBack, newhtml.slice(match.offset+match.length+grammarFront.length)].join('');
-                            addflag=1;
-                        }
+                matches.forEach((match,index) => {
+                    if(match.shortMessage==="Spelling mistake"){
+                        newhtml[match.offset] = spellFront+newhtml[match.offset];
+                        newhtml[match.offset+match.length-1] = newhtml[match.offset+match.length-1]+spellBack;
                     }else{
-                        if(match.shortMessage==="Spelling mistake"){
-                            newhtml = [newhtml.slice(0, match.offset+33), spellFront, newhtml.slice(match.offset+33)].join('');
-                            newhtml = [newhtml.slice(0, match.offset+match.length+33+spellFront.length), spellBack, newhtml.slice(match.offset+match.length+33+spellFront.length)].join('');
-                        }else{
-                            newhtml = [newhtml.slice(0, match.offset+33), grammarFront, newhtml.slice(match.offset+33)].join('');
-                            newhtml = [newhtml.slice(0, match.offset+match.length+33+grammarFront.length), grammarBack, newhtml.slice(match.offset+match.length+33+grammarFront.length)].join('');
-                        }
+                        newhtml[match.offset] = grammarFront+newhtml[match.offset];
+                        newhtml[match.offset+match.length-1] = newhtml[match.offset+match.length-1]+grammarBack;
                     }
                     
+                    
                 });
-                this.setState({html: newhtml})
             }
+            newhtml = newhtml.join('');
+            this.setState({html: newhtml})
         }
+    }
+
+    onCorrect = () => {
+        console.log("Wer");
     }
 
     onGrammarCheck = () => {
@@ -84,6 +77,7 @@ class Grammar extends Component {
             <div className="sourceHeader">Check Grammar</div>
             <div className="sourceContent">
                 <ContentEditable
+                    spellCheck="false"
                     className="editableDiv"
                     innerRef={this.contentEditable}
                     html={this.state.html} // innerHTML of the editable div
@@ -94,7 +88,7 @@ class Grammar extends Component {
                 
             </div>
             <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
-            {JSON.stringify(this.state.output)}
+            {/* {JSON.stringify(this.state.output)} */}
         </div>
       </div>
     )

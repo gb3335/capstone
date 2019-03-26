@@ -36,6 +36,10 @@
     overflow: auto;
 }
 
+u {
+    text-decoration: none;
+}
+
 .spellingError{
     text-decoration: none;
     border-bottom: 3px solid rgba(228, 93, 93, 0.815);
