@@ -86,7 +86,7 @@ class Grammar extends Component {
       <div className="container">
         <div className="sourceResearch">
             <div className="sourceHeader">Check Grammar</div>
-            <div className="sourceContent">
+            <div className="sourceContents">
                 <ContentEditable
                     spellCheck="false"
                     className="editableDiv"

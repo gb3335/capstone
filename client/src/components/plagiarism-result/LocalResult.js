@@ -37,12 +37,12 @@ class LocalResult extends Component {
   componentWillMount(){
     this.props.setPlagiarismLocalHideDetails();
     const {docuId} = this.props.localPlagiarism;
-    const {researches} = this.props.research;
+    const {researches, research} = this.props.research;
    
-    let newob = researches.find(obj => obj._id === docuId);
+    // let newob = researches.find(obj => obj._id === docuId);
     const input = {
       docuId : docuId,
-      docuFile : newob.document
+      docuFile : research.document
     }
     this.props.getPattern(input);
   }
