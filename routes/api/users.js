@@ -172,54 +172,37 @@ router.post(
     if (!isValid) {
       return res.status(400).json(errors);
     }
-    const password = req.body.password;
+
 
     const profileData = {
-      name: {
-        firstName: req.body.firstname,
-        middleName: req.body.middlename,
-        lastName: req.body.lastname
-      },
-      email: req.body.email,
+
+
       userName: req.body.userName,
-      contact: req.body.contact,
-      college: req.body.college,
-      id: req.body.id,
-      password,
+
+
+
     };
-    User.findOne({ email: profileData.email }).then(user => {
-      const errors = {}
+    User.findOne({ userName: profileData.userName }).then(user => {
       if (user) {
-        if (user.email != req.user.email) {
-          errors.email = "Email Already Exists!";
+        if (user.userName != req.user.userName) {
+          errors.userName = "Username Already Exists!";
           return res.status(400).json(errors);
         }
       }
-      User.findOne({ userName: profileData.userName }).then(user => {
+      User.findByIdAndUpdate(
+        req.user._id,
+        { $set: profileData },
+        { new: true }
+      ).then(user => res.json(user));
 
-        if (user) {
-          if (user.userName != req.user.userName) {
-            errors.userName = "Username Already Exists!";
-            return res.status(400).json(errors);
-          }
-        }
+    })
 
 
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(profileData.password, salt, (err, hash) => {
-            if (err) throw err;
-            profileData.password = hash;
-            User.findByIdAndUpdate(
-              req.user._id,
-              { $set: profileData },
-              { new: true }
-            ).then(user => res.json(user));
-          });
-        });
-      })
-    });
-  }
-);
+
+
+
+  });
+
 // @routes  POST api/users/profile/updatepassword
 // @desc    Edit User profile
 // @access  private
@@ -728,16 +711,25 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const rand = uuid();
-
-
-
-
-
+    if (req.body.oldFile !== "/images/User.png") {
+      // delete journal document from s3
+      let s3 = new AWS.S3();
+      let params = {
+        Bucket: "bulsu-capstone",
+        Key: `userImages/${req.body.oldFile}`
+      };
+      s3.deleteObject(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else console.log(data);
+      });
+      console.log("Old avatar deleted")
+    }
     s3 = new AWS.S3();
     const base64Data = new Buffer(
       req.body.images[0].replace(/^data:image\/\w+;base64,/, ""),
       "base64"
     );
+
     const type = req.body.images[0].split(";")[0].split("/")[1];
     const userId = 1;
     params = {
@@ -753,22 +745,110 @@ router.post(
         return console.log(err);
       }
       console.log("Image successfully uploaded.");
+      newUser = {
+        avatar: req.body.id + "-" + rand + ".png"
+      }
+      User.findOneAndUpdate(
+        { _id: req.body.id },
+        { $set: newUser },
+        { new: true }
+      ).then(user => res.json({ username: user.userName })).catch(err => console.log(res.json(err)));
     });
-    newUser = {
-      avatar: req.body.id + "-" + rand + ".png"
-    }
-    User.findOneAndUpdate(
-      { _id: req.body.id },
-      { $set: newUser },
-      { new: true }
-    ).then(user => res.json(user)).catch(err => console.log(res.json(err)));
-
 
 
 
   }
 );
 
+router.post(
+  "/avatarupdateauth",
 
+  (req, res) => {
+
+    const userName = req.body.username;
+
+
+    //FIND THE USER BY USERNAME
+    User.findOne({ userName }).then(user => {
+      //Check for User
+      if (!user) {
+        User.findOne({ email: userName }).then(user => {
+          if (!user) {
+            errors.username = "User not found!";
+            return res.status(404).json(errors);
+          } else {
+            if (user.isBlock === 0) {
+              const payload = {
+                id: user._id,
+                userName: user.userName,
+                email: user.email,
+                contact: user.contact,
+                firstName: user.name.firstName,
+                middleName: user.name.middleName,
+                lastName: user.name.lastName,
+                avatar: user.avatar,
+                userType: user.userType,
+                isLock: user.isLock,
+                isBlock: user.isBlock,
+                invitedBy: user.invitedBy,
+                college: user.college,
+                date: user.date
+              }; //Create JWT Payload
+              //Sign the Token
+              jwt.sign(payload, keys.secretOrKey, (err, token) => {
+                res.json({
+                  success: true,
+                  token: "Bearer " + token
+                });
+              });
+            }
+            else {
+              errors.username = "User currently blocked. Please contact the administrator!";
+              return res.status(400).json(errors);
+            }
+
+          }
+        });
+      } else {
+
+        if (user.isBlock === 0) {
+
+          const payload = {
+            id: user._id,
+            userName: user.userName,
+            email: user.email,
+            contact: user.contact,
+            firstName: user.name.firstName,
+            middleName: user.name.middleName,
+            lastName: user.name.lastName,
+            avatar: user.avatar,
+            userType: user.userType,
+            isLock: user.isLock,
+            isBlock: user.isBlock,
+            invitedBy: user.invitedBy,
+            college: user.college,
+            date: user.date
+          }; //Create JWT Payload
+
+          //Sign the Token
+          jwt.sign(payload, keys.secretOrKey, (err, token) => {
+            res.json({
+              success: true,
+              token: "Bearer " + token
+            });
+          });
+        }
+        else {
+          errors.username = "User currently blocked. Please contact the administrator!";
+          return res.status(400).json(errors);
+        }
+
+      }
+    });
+
+
+  }
+
+);
 
 module.exports = router;

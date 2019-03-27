@@ -34,7 +34,7 @@ class Navbar extends Component {
   onLogoutClick(e) {
     e.preventDefault();
     this.props.clearCurrentProfile();
-    this.props.logoutUser();
+    this.props.logoutUser(this.props.history);
   }
 
   onClickHideSidebar = () => {
@@ -57,7 +57,7 @@ class Navbar extends Component {
       path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
     }
 
-    console.log(path)
+
     // const { pageTitle } = this.props.sidebar;
 
     const guestLinks = (

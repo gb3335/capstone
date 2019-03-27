@@ -28,6 +28,14 @@ class ViewUserHeader extends Component {
       });
     };
 
+    let path = ""
+
+    if (user.avatar === "/images/User.png") {
+      path = "/images/User.png"
+    }
+    else {
+      path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+    }
 
 
     return (
@@ -41,7 +49,7 @@ class ViewUserHeader extends Component {
               <div className="col-4 col-md-3 m-auto d-md-block">
                 <img
                   className="rounded-circle"
-                  src={user.avatar}
+                  src={path}
                   alt=""
                   style={{ width: "100%" }}
                 />

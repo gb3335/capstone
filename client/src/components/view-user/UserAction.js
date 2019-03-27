@@ -40,7 +40,6 @@ class UserAction extends Component {
     let ctr = 0;
     let upImages;
 
-
     let reader = new FileReader();
     reader.readAsDataURL(files[0]);
     reader.onload = e => {
@@ -59,6 +58,10 @@ class UserAction extends Component {
         };
 
         this.props.changeAvatar(data, this.props.history);
+        this.setState({
+          image: "",
+          images: []
+        })
       }
     };
 

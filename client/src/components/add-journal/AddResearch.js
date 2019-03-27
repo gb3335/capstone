@@ -78,13 +78,30 @@ class AddResearch extends Component {
       " " +
       this.props.auth.user.lastName;
 
+
+    const replaceString = require('replace-string');
+
+    let a = this.state.description;
+    let b = replaceString(a, '<p>', '')
+    let c = replaceString(b, '</p>', '')
+    require('str-trim');
+    let d = c.trim()
+    let mystring;
+    if (d.length === 0) {
+      mystring = ""
+
+    }
+    else {
+      mystring = this.state.description;
+
+    }
     const researchData = {
       title: this.state.title,
       volume: this.state.volume,
       publisher: this.state.publisher,
       college: this.state.college,
       course: this.state.course,
-      description: this.state.description,
+      description: mystring,
       issn: this.state.issn,
       yearPublished: this.state.yearPublished,
       pages: this.state.pages,
