@@ -23,10 +23,10 @@ class Grammar extends Component {
         if(nextProps.grammar.output !== this.props.grammar.output){
             const {matches} = nextProps.grammar.output.grammar.data;
             let newhtml = this.state.original;
-            let spellFront = "<u class='spellingError' onClick={this.onCorrect}>"
+            let spellFront = "<u class='spellingError'"
             let spellBack = "</u>"
 
-            let grammarFront = "<u class='grammarsError' onClick={this.onCorrect}>"
+            let grammarFront = "<u class='grammarsError'"
             let grammarBack = "</u>"
 
             newhtml = newhtml.split('');
@@ -36,10 +36,10 @@ class Grammar extends Component {
             if(matches.length>0){
                 matches.forEach((match,index) => {
                     if(match.shortMessage==="Spelling mistake"){
-                        newhtml[match.offset] = spellFront+newhtml[match.offset];
+                        newhtml[match.offset] = `${spellFront} id='${index}'>${newhtml[match.offset]}`;
                         newhtml[match.offset+match.length-1] = newhtml[match.offset+match.length-1]+spellBack;
                     }else{
-                        newhtml[match.offset] = grammarFront+newhtml[match.offset];
+                        newhtml[match.offset] = `${grammarFront} id='${index}'>${newhtml[match.offset]}`;
                         newhtml[match.offset+match.length-1] = newhtml[match.offset+match.length-1]+grammarBack;
                     }
                     
@@ -51,8 +51,19 @@ class Grammar extends Component {
         }
     }
 
-    onCorrect = () => {
-        console.log("Wer");
+    onCorrect = (e) => {
+        let el = e.target;
+        const {matches} = this.props.grammar.output.grammar.data;
+        // while (el && el !== e.currentTarget && el.className !== "spellingError") {
+        //     el = el.parentNode;
+        // }
+
+        console.log(el.id)
+
+        // if (el && el.className === "spellingError") {
+        //     //this.setState(({clicks}) => ({clicks: clicks + 1}));
+        //     console.log(123)
+        // }
     }
 
     onGrammarCheck = () => {
@@ -84,6 +95,7 @@ class Grammar extends Component {
                     disabled={false}       // use true to disable editing
                     onChange={this.handleChange} // handle innerHTML change
                     tagName='p'
+                    onClick={this.onCorrect}
                 />
                 
             </div>

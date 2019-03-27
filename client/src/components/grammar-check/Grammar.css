@@ -43,9 +43,11 @@ u {
 .spellingError{
     text-decoration: none;
     border-bottom: 3px solid rgba(228, 93, 93, 0.815);
+    cursor: pointer;
 }
 
 .grammarsError{
     text-decoration: none;
     border-bottom: 3px solid rgba(98, 228, 93, 0.815);
+    cursor: pointer;
 }
