@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable'
 import stripHtml from "string-strip-html";
+import ReactDOM from "react-dom";
+import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import {checkGrammar} from '../../actions/grammarActions';
 
@@ -12,8 +14,11 @@ class Grammar extends Component {
     constructor(){
         super()
         this.state = {
-            html: "<u class='spellingError'>wer</u>",
+            html: "",
             original: "",
+            matches: [],
+            classes: [],
+            id: "",
             output: {}
         }
         this.contentEditable = React.createRef();
@@ -47,7 +52,7 @@ class Grammar extends Component {
                 });
             }
             newhtml = newhtml.join('');
-            this.setState({html: newhtml})
+            this.setState({html: newhtml, matches})
         }
     }
 
@@ -57,8 +62,13 @@ class Grammar extends Component {
         // while (el && el !== e.currentTarget && el.className !== "spellingError") {
         //     el = el.parentNode;
         // }
+        if(el.id){
+            this.setState({id:el.id})
+        }else{
+            this.setState({id:""})
 
-        console.log(el.id)
+        }
+        
 
         // if (el && el.className === "spellingError") {
         //     //this.setState(({clicks}) => ({clicks: clicks + 1}));
@@ -73,7 +83,7 @@ class Grammar extends Component {
         const input = {
             input: html
         }
-
+        this.setState({id:""})
         this.props.checkGrammar(input);
     }
 
@@ -81,11 +91,47 @@ class Grammar extends Component {
         this.setState({html: evt.target.value});
     };
 
+    handleClick = (e, data) => {
+        console.log(data.foo);
+    }
+
   render() {
+
+    const {matches, id} = this.state
+    let items;
+    if(id!==""){
+        items = matches[id].replacements.map((replacement, index) =>(
+            <li key={index}>{replacement.value}</li>
+        ))
+    }
+        
+    
+    const {loading} = this.props.grammar
+    
+
+
+
     return (
       <div className="container">
         <div className="sourceResearch">
-            <div className="sourceHeader">Check Grammar</div>
+            {/* <ContextMenuTrigger id="some_unique_identifier">
+                <div className="well">Right click to see the menu</div>
+            </ContextMenuTrigger>
+            <ContextMenu id="some_unique_identifier">
+                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
+                ContextMenu Item 1
+                </MenuItem>
+                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
+                ContextMenu Item 2
+                </MenuItem>
+                <MenuItem divider />
+                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
+                ContextMenu Item 3
+                </MenuItem>
+            </ContextMenu> */}
+            <ul>{items}</ul>
+            
+            <div className="sourceHeader">Grammar Checker</div>
             <div className="sourceContents">
                 <ContentEditable
                     spellCheck="false"
@@ -99,7 +145,10 @@ class Grammar extends Component {
                 />
                 
             </div>
-            <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            {loading ? <button className="btn btn-primary btn-block btn-flat disabled">Checking Grammar...</button>
+                    : <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            }
+            
             {/* {JSON.stringify(this.state.output)} */}
         </div>
       </div>
