@@ -3,9 +3,12 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument } from "../../actions/journalActions";
+import { addDocument, deleteDocument, onSideBySide } from "../../actions/journalActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
+
 import Spinner from "../common/Spinner";
+
+import './ResearchDocumentActions.css'
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -31,19 +34,18 @@ class ResearchImageActions extends Component {
         this.setState({
           file: e.target.result
         });
-
         const name =
           this.props.auth.user.firstName +
           " " +
           this.props.auth.user.middleName +
           " " +
           this.props.auth.user.lastName;
+
         const docuData = {
           researchId: this.props.journal.journal._id,
           oldFile: this.props.journal.journal.document,
           file: this.state.file,
           username: name
-
         };
 
         this.props.addDocument(docuData, this.props.history);
@@ -60,6 +62,7 @@ class ResearchImageActions extends Component {
       this.props.auth.user.middleName +
       " " +
       this.props.auth.user.lastName;
+
     const researchId = this.props.journal.journal._id;
     const filename = this.props.journal.journal.document;
 
@@ -70,11 +73,25 @@ class ResearchImageActions extends Component {
     const input = {
       docuId: this.props.journal.journal._id,
       title: this.props.journal.journal.title,
+      docuFile: this.props.journal.journal.document,
       journals: this.props.journal.journals,
-      flag: true
-    };
+      flag: true,
+      fromFlag: false
 
+      // docuId: this.props.research.research._id,
+      // title: this.props.research.research.title,
+      // docuFile: this.props.research.research.document,
+      // researches: this.props.research.researches,
+      // flag: true,
+      // fromFlag: false
+
+    };
     this.props.checkPlagiarismLocal(input, this.props.history);
+
+  };
+
+  onSidebySideFlagTrue = e => {
+    this.props.onSideBySide(true);
   };
 
   render() {
@@ -83,14 +100,23 @@ class ResearchImageActions extends Component {
 
     if (journal.document) {
       docuItem = (
-        <div className="btn-group mb-3 btn-group-sm" role="group">
+        <div className="docuItem btn-group-sm">
+          <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
+            <i className="fas fa-search text-info mr-1" />
+            Check Document |
+            <i className="fas fa-database text-info mr-1 ml-1" />
+            <b>All </b>
+          </label>
+          <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
+            <i className="fas fa-search text-info mr-1" />
+            Check Document |
+            <i className="fas fa-copy text-info mr-1 ml-1" />
+            <b>Side By Side</b>
+          </label>
+          <div className="spacer" />
           <label to="#" htmlFor="docUpload" className="btn btn-light">
             <i className="fas fa-redo-alt text-info mr-1" />
             Update Document
-          </label>
-          <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
-            <i className="fas fa-search text-info mr-1" />
-            Check Document
           </label>
           <label
             to="#"
@@ -135,10 +161,11 @@ ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
   checkPlagiarismLocal: PropTypes.func.isRequired,
+  onSideBySide: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
   localPlagiarism: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -150,5 +177,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addDocument, deleteDocument, checkPlagiarismLocal }
+  { addDocument, deleteDocument, checkPlagiarismLocal, onSideBySide }
 )(withRouter(ResearchImageActions));

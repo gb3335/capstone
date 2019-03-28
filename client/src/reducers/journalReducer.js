@@ -4,7 +4,8 @@ import {
   JOURNAL_LOADING,
   TOGGLE_JOURNAL_BIN,
   TOGGLE_JOURNAL_LIST,
-  CHANGE_BUTTON_STATUS_JOURNAL
+  CHANGE_BUTTON_STATUS_JOURNAL,
+  TOGGLE_SIDE_BY_SIDE_JOURNAL
 } from "../actions/types";
 
 const initialState = {
@@ -12,7 +13,9 @@ const initialState = {
   journals: {},
   loading: false,
   buttonDisable: false,
-  bin: false
+  bin: false,
+  onSideBySide: false,
+
 
   //  research: {},
   // researches: {},
@@ -54,6 +57,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         buttonDisable: action.payload
+      };
+    case TOGGLE_SIDE_BY_SIDE_JOURNAL:
+      return {
+        ...state,
+        onSideBySide: action.payload
       };
     default:
       return state;

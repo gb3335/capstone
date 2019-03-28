@@ -94,17 +94,17 @@ class ResearchImageActions extends Component {
         <div className="docuItem btn-group-sm">
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document | 
+            Check Document |
             <i className="fas fa-database text-info mr-1 ml-1" />
             <b>All </b>
           </label>
           <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document | 
+            Check Document |
             <i className="fas fa-copy text-info mr-1 ml-1" />
             <b>Side By Side</b>
           </label>
-          <div className="spacer"/>
+          <div className="spacer" />
           <label to="#" htmlFor="docUpload" className="btn btn-light">
             <i className="fas fa-redo-alt text-info mr-1" />
             Update Document

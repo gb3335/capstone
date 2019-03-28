@@ -1,0 +1,8 @@
+.docuItem{
+    display: flex;
+
+}
+
+.spacer{
+    flex:1;
+}

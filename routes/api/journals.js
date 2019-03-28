@@ -303,8 +303,13 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: req.body.name + " added as Author in " + journal.title,
-        by: req.body.username
+        title:
+          "Journal: " +
+          req.body.name +
+          " added as Author in " +
+          journal.title,
+        by: req.body.username,
+        type: "Journal"
       };
       new Activity(newActivity).save();
 
@@ -385,13 +390,15 @@ router.delete(
 
         // add activity
         const newActivity = {
-          title:
+          title: "Journal: " +
             journal.author[removeIndex].name +
             " removed as " +
             journal.author[removeIndex].role +
             " in " +
             journal.title,
-          by: req.params.name
+
+          by: req.params.name,
+          type: "Journal"
         };
         new Activity(newActivity).save();
 

@@ -9,12 +9,19 @@ import {
   CLEAR_ERRORS,
   TOGGLE_JOURNAL_BIN,
   TOGGLE_JOURNAL_LIST,
-  CHANGE_BUTTON_STATUS_JOURNAL
+  CHANGE_BUTTON_STATUS_JOURNAL,
+  TOGGLE_SIDE_BY_SIDE_JOURNAL
 } from "./types";
 
 
 
-
+export const onSideBySide = flag => {
+  console.log(flag);
+  return {
+    type: TOGGLE_SIDE_BY_SIDE_JOURNAL,
+    payload: flag
+  };
+};
 // Get all researches
 export const getResearches = () => dispatch => {
   dispatch(clearErrors());
