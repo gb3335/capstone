@@ -461,40 +461,41 @@ router.post(
       });
 
       imageArray.push(req.body.id + "-" + rand + ".png");
-    }
+      Journal.findOne({ _id: req.body.id }).then(journal => {
+        for (i = 0; i < req.body.images.length; i++) {
+          const newImage = {
+            name: imageArray[i]
+          };
 
-    Journal.findOne({ _id: req.body.id }).then(journal => {
-      for (i = 0; i < req.body.images.length; i++) {
-        const newImage = {
-          name: imageArray[i]
+          // Add to exp array
+          journal.images.unshift(newImage);
+        }
+
+        const newJournal = {
+          lastUpdate: Date.now()
         };
 
-        // Add to exp array
-        journal.images.unshift(newImage);
-      }
+        Journal.findOneAndUpdate(
+          { _id: req.body.id },
+          { $set: newJournal },
+          { new: true }
+        ).then(journal);
 
-      const newJournal = {
-        lastUpdate: Date.now()
-      };
+        // add activity
+        const newActivity = {
+          title: "Image added to " + journal.title,
+          by: req.body.username
+        };
+        new Activity(newActivity).save();
 
-      Journal.findOneAndUpdate(
-        { _id: req.body.id },
-        { $set: newJournal },
-        { new: true }
-      ).then(journal);
+        journal
+          .save()
+          .then(journal => res.json(journal))
+          .catch(err => console.log(err));
+      });
+    }
 
-      // add activity
-      const newActivity = {
-        title: "Image added to " + journal.title,
-        by: req.body.username
-      };
-      new Activity(newActivity).save();
 
-      journal
-        .save()
-        .then(journal => res.json(journal))
-        .catch(err => console.log(err));
-    });
   }
 );
 
