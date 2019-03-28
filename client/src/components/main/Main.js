@@ -13,6 +13,9 @@ import Forgot from "../auth/forgotpassword/forgotpassword";
 import Sidebar from "../sidebar/Sidebar";
 import NotFound from "../not-found/NotFound";
 
+// Dashboard
+import DetailedActivities from "../dashboard/DetailedActivities";
+
 // Colleges Import
 import Colleges from "../colleges/Colleges";
 import College from "../college/College";
@@ -35,7 +38,6 @@ import AddJournal from "../add-journal/AddResearch";
 import EditJournal from "../edit-journal/EditResearch";
 import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
 
-
 //register and user
 import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
@@ -47,8 +49,7 @@ import LocalResult from "../plagiarism-result/LocalResult";
 import LocalResultSideBySide from "../plagiarism-result/LocalResultSideBySide";
 
 // Grammar Check
-import Grammar from "../grammar-check/Grammar"
-
+import Grammar from "../grammar-check/Grammar";
 
 import PrivateRoute from "../common/PrivateRoute";
 
@@ -117,11 +118,7 @@ class Main extends Component {
                 />
               </Switch>
               <Switch>
-                <PrivateRoute
-                  exact
-                  path="/viewusers"
-                  component={ViewUsers}
-                />
+                <PrivateRoute exact path="/viewusers" component={ViewUsers} />
               </Switch>
               <Switch>
                 <PrivateRoute
@@ -132,11 +129,7 @@ class Main extends Component {
               </Switch>
 
               <Switch>
-                <PrivateRoute
-                  exact
-                  path="/register"
-                  component={Register}
-                />
+                <PrivateRoute exact path="/register" component={Register} />
               </Switch>
               <Switch>
                 <PrivateRoute
@@ -149,7 +142,11 @@ class Main extends Component {
                 <PrivateRoute exact path="/add-author" component={AddAuthor} />
               </Switch>
               <Switch>
-                <PrivateRoute exact path="/add-journal-author" component={AddJournalAuthor} />
+                <PrivateRoute
+                  exact
+                  path="/add-journal-author"
+                  component={AddJournalAuthor}
+                />
               </Switch>
 
               <Switch>
@@ -197,6 +194,13 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
+                  path="/activities"
+                  component={DetailedActivities}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
                   path="/localResult"
                   component={LocalResult}
                 />
@@ -209,11 +213,7 @@ class Main extends Component {
                 />
               </Switch>
               <Switch>
-                <PrivateRoute
-                  exact
-                  path="/grammar"
-                  component={Grammar}
-                />
+                <PrivateRoute exact path="/grammar" component={Grammar} />
               </Switch>
             </div>
             <Footer />

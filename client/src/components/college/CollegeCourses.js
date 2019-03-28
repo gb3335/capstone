@@ -15,10 +15,7 @@ class CollegeCourses extends Component {
     return (
       <div className="row">
         <div className="col-md-12">
-          <div className="card card-body bg-light mb-3">
-            <h3 className="text-center text-info">Courses</h3>
-            {courseItems}
-          </div>
+          <div className="card card-body bg-light mb-3">{courseItems}</div>
         </div>
       </div>
     );
