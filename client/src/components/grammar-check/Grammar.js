@@ -83,7 +83,7 @@ class Grammar extends Component {
         const input = {
             input: html
         }
-
+        this.setState({id:""})
         this.props.checkGrammar(input);
     }
 
@@ -106,7 +106,7 @@ class Grammar extends Component {
     }
         
     
-
+    const {loading} = this.props.grammar
     
 
 
@@ -131,7 +131,7 @@ class Grammar extends Component {
             </ContextMenu> */}
             <ul>{items}</ul>
             
-            <div className="sourceHeader">Check Grammar</div>
+            <div className="sourceHeader">Grammar Checker</div>
             <div className="sourceContents">
                 <ContentEditable
                     spellCheck="false"
@@ -145,7 +145,10 @@ class Grammar extends Component {
                 />
                 
             </div>
-            <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            {loading ? <button className="btn btn-primary btn-block btn-flat disabled">Checking Grammar...</button>
+                    : <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            }
+            
             {/* {JSON.stringify(this.state.output)} */}
         </div>
       </div>
