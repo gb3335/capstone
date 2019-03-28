@@ -101,7 +101,8 @@ class UserAction extends Component {
     const userData = {
 
       id: this.props.users.user._id,
-      isBlock: this.props.users.user.isBlock
+      isBlock: this.props.users.user.isBlock,
+      loginid: this.props.auth.user.id
 
     };
 

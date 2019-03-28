@@ -55,8 +55,10 @@
 .sidebar_user_image img {
   border-radius: 50%;
   width: 5.5vw;
+  
   margin-top: 2px;
   transition: 1s;
+  height:  5.5vw;
 }
 
 .sidebar_logo {

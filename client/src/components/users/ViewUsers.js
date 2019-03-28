@@ -104,9 +104,17 @@ class ViewUsers extends Component {
         const usersData = [];
 
         users.map((user, index) => {
+          let path;
+          if (user.avatar === "/images/User.png") {
+            path = "/images/User.png"
+          }
+          else {
+            path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+          }
+
           if (user._id !== this.props.auth.user.id) {
             usersData.push({
-              avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
+              avatar: <img src={path} alt="" className="img-thumbnail user_img" />,
               username: user.name.firstName + " " + user.name.lastName,
               type: user.userType,
               view: (

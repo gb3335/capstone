@@ -63,8 +63,6 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
       // Remove the auth header for future request
       setAuthToken(false);
       // Set the current to an empty object which will also set isAuthenticated FALSE
-
-      console.log(userData)
       const Data = {
         username: res.data.username,
         id: userData.id
@@ -148,10 +146,16 @@ export const changeStatus = (userData, history) => dispatch => {
   axios
     .post("/api/users/profile/changestatus", userData)
     .then(res => {
-      if (userData.id) {
-        history.push(`/viewusers`);
+      if (userData.id === userData.loginid) {
+
+        localStorage.removeItem("jwtToken");
+        // Remove the auth header for future request
+        setAuthToken(false);
+        // Set the current to an empty object which will also set isAuthenticated FALSE
+        dispatch(setCurrentUser({}));
+
       } else {
-        history.push(`/viewusers`);
+        history.push(`/viewusers/${userData.id}`);
       }
     })
     .catch(err =>
