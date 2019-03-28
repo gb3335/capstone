@@ -114,7 +114,7 @@ class ViewUsers extends Component {
 
           if (user._id !== this.props.auth.user.id) {
             usersData.push({
-              avatar: <img src={path} alt="" className="img-thumbnail rounded-circle img " />,
+              avatar: <img src={path} alt="" className="img-thumbnail user_img" />,
               username: user.name.firstName + " " + user.name.lastName,
               type: user.userType,
               view: (

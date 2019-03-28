@@ -51,7 +51,7 @@ class ViewUserHeader extends Component {
                   className="rounded-circle"
                   src={path}
                   alt=""
-                  style={{ width: "100%" }}
+                  style={{ width: "240px", height: "240px" }}
                 />
               </div>
             </div>

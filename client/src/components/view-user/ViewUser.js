@@ -26,9 +26,11 @@ class ViewUser extends Component {
       this.props.getUserById(this.props.match.params.id);
     }
   }
-  editcontent(authuser, user) {
-    console.log(user)
-  }
+
+
+
+
+
   render() {
 
 
