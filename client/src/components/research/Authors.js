@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import sort from "fast-sort";
 import { deleteAuthor } from "../../actions/researchActions";
 
 class Authors extends Component {
@@ -12,6 +13,8 @@ class Authors extends Component {
     const { research } = this.props.research;
     let author;
     let name;
+    let columnButton;
+
     try {
       name =
         this.props.auth.user.firstName +
@@ -19,31 +22,52 @@ class Authors extends Component {
         this.props.auth.user.middleName +
         " " +
         this.props.auth.user.lastName;
-    } catch (error) { }
+    } catch (error) {}
     if (this.props.auth.isAuthenticated === true) {
+      // Sorted Authors
+      let sortedAuthor = sort(this.props.author).asc(u => u.name);
+
+      columnButton = <th />;
       if (research.deleted === 0) {
-        author = this.props.author.map(author => (
+        author = sortedAuthor.map(author => (
           <tr key={author._id}>
             <td>
               {author.name} ({author.role})
             </td>
-            <td>
-              <button
-                onClick={this.onDeleteClick.bind(
-                  this,
-                  research._id,
-                  author._id,
-                  name
-                )}
-                className="btn btn-danger"
-              >
-                Remove
-              </button>
-            </td>
+            {author.role === "Author One" ? (
+              <td>
+                <button
+                  onClick={this.onDeleteClick.bind(
+                    this,
+                    research._id,
+                    author._id,
+                    name
+                  )}
+                  className="btn btn-danger"
+                  disabled={true}
+                >
+                  Remove
+                </button>
+              </td>
+            ) : (
+              <td>
+                <button
+                  onClick={this.onDeleteClick.bind(
+                    this,
+                    research._id,
+                    author._id,
+                    name
+                  )}
+                  className="btn btn-danger"
+                >
+                  Remove
+                </button>
+              </td>
+            )}
           </tr>
         ));
       } else {
-        author = this.props.author.map(author => (
+        author = sortedAuthor.map(author => (
           <tr key={author._id}>
             <td>
               {author.name} ({author.role})
@@ -52,7 +76,10 @@ class Authors extends Component {
         ));
       }
     } else {
-      author = this.props.author.map(author => (
+      // Sorted Authors
+      let sortedAuthor = sort(this.props.author).asc(u => u.name);
+
+      author = sortedAuthor.map(author => (
         <tr key={author._id}>
           <td>
             {author.name} ({author.role})
@@ -67,7 +94,7 @@ class Authors extends Component {
           <thead>
             <tr>
               <th>Name</th>
-              <th />
+              {columnButton}
             </tr>
           </thead>
           <tbody>{author}</tbody>

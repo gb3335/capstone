@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import "moment-timezone";
 
@@ -40,7 +41,6 @@ class Dashboard extends Component {
     let researchData;
     let journalData;
     let dashboardItems;
-    let dashboardItems2;
     let activityItems;
     let researchDiv;
     let journalDiv;
@@ -55,6 +55,11 @@ class Dashboard extends Component {
     let courseTot = 0;
     let researchTot = 0;
     let journalTot = 0;
+    let detailedAct = (
+      <h5 className="card-title" style={{ textAlign: "center" }}>
+        Recent Activities
+      </h5>
+    );
 
     let recentActivities = [];
 
@@ -77,6 +82,12 @@ class Dashboard extends Component {
               <Moment fromNow>{activity.date}</Moment>
             </p>
           )
+        );
+
+        detailedAct = (
+          <h5 className="card-title" style={{ textAlign: "center" }}>
+            Recent Activities | <Link to="/activities">Detailed List</Link>
+          </h5>
         );
 
         activityItems = (
@@ -239,9 +250,7 @@ class Dashboard extends Component {
             <div className={activityDiv}>
               <div className="card">
                 <div className="card-body pr-0">
-                  <h5 className="card-title" style={{ textAlign: "center" }}>
-                    Recent Activities
-                  </h5>
+                  {detailedAct}
                   {activityItems}
                 </div>
               </div>
@@ -344,7 +353,8 @@ class Dashboard extends Component {
             <div className="row">
               {/* Colleges */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card">
+                <div className="card border-primary">
+                  <div className="card-header bg-primary" />
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -370,7 +380,8 @@ class Dashboard extends Component {
               </div>
               {/* Courses */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card">
+                <div className="card border-success">
+                  <div className="card-header bg-success" />
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -396,7 +407,8 @@ class Dashboard extends Component {
               </div>
               {/* Researches */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card">
+                <div className="card border-danger">
+                  <div className="card-header bg-danger" />
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -422,7 +434,8 @@ class Dashboard extends Component {
               </div>
               {/* Journals */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card">
+                <div className="card border-warning">
+                  <div className="card-header bg-warning" />
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">

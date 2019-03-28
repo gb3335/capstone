@@ -137,8 +137,9 @@ router.post(
           } else {
             // add activity
             const newActivity = {
-              title: "Research " + req.body.title + " updated",
-              by: req.body.username
+              title: "Research: " + req.body.title + " updated",
+              by: req.body.username,
+              type: "Research"
             };
             new Activity(newActivity).save();
 
@@ -198,8 +199,9 @@ router.post(
                   if (college) {
                     // add activity
                     const newActivity = {
-                      title: "Research " + req.body.title + " added",
-                      by: req.body.username
+                      title: "Research: " + req.body.title + " added",
+                      by: req.body.username,
+                      type: "Research"
                     };
                     new Activity(newActivity).save();
 
@@ -301,8 +303,13 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: req.body.name + " added as Author in " + research.title,
-        by: req.body.username
+        title:
+          "Research: " +
+          req.body.name +
+          " added as Author in " +
+          research.title,
+        by: req.body.username,
+        type: "Research"
       };
       new Activity(newActivity).save();
 
@@ -344,12 +351,14 @@ router.delete(
         // add activity
         const newActivity = {
           title:
+            "Research: " +
             research.author[removeIndex].name +
             " removed as " +
             research.author[removeIndex].role +
             " in " +
             research.title,
-          by: req.params.name
+          by: req.params.name,
+          type: "Research"
         };
         new Activity(newActivity).save();
 
@@ -446,8 +455,9 @@ router.post(
 
       // add activity
       const newActivity = {
-        title: "Image/s added to " + research.title,
-        by: req.body.username
+        title: "Research: Image/s added to " + research.title,
+        by: req.body.username,
+        type: "Research"
       };
       new Activity(newActivity).save();
 
@@ -548,8 +558,9 @@ router.post(
             Research.findOne({ _id: req.body.researchId }).then(research => {
               // add activity
               const newActivity = {
-                title: "Document added to " + research.title,
-                by: req.body.username
+                title: "Research: Document added to " + research.title,
+                by: req.body.username,
+                type: "Research"
               };
               new Activity(newActivity).save();
             });
@@ -608,8 +619,9 @@ router.delete(
     Research.findOne({ _id: req.params.research_id }).then(research => {
       // add activity
       const newActivity = {
-        title: "Document removed from " + research.title,
-        by: req.params.name
+        title: "Research: Document removed from " + research.title,
+        by: req.params.name,
+        type: "Research"
       };
       new Activity(newActivity).save();
     });
@@ -761,7 +773,8 @@ router.post(
         title: req.body.hidden
           ? "Research: " + research.title + " hidden from list"
           : "Research: " + research.title + " moved to bin",
-        by: req.body.username
+        by: req.body.username,
+        type: "Research"
       };
       new Activity(newActivity).save();
 
@@ -837,7 +850,8 @@ router.post(
         title: req.body.hidden
           ? "Research: " + research.title + " showed in list"
           : "Research: " + research.title + " restored from bin",
-        by: req.body.username
+        by: req.body.username,
+        type: "Research"
       };
       new Activity(newActivity).save();
 

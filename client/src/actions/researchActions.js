@@ -46,21 +46,6 @@ export const createReportForResearches = reportData => dispatch => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
           dispatch(changeButtonStatus(false));
           saveAs(pdfBlob, "ResearchesReport.pdf");
-
-          // send base64 to api for s3 upload -FOR ANDROID-
-          if (reportData.android) {
-            const reader = new FileReader();
-            reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
-              const pdfData = {
-                base64: reader.result
-              };
-              axios
-                .post("/api/colleges/uploadS3/android", pdfData)
-                .then()
-                .catch(err => console.log(err));
-            };
-          }
         })
     )
     .catch(err =>
@@ -83,21 +68,6 @@ export const createReportForResearch = reportData => dispatch => {
           const pdfBlob = new Blob([res.data], { type: "application/pdf" });
           dispatch(changeButtonStatus(false));
           saveAs(pdfBlob, "ResearchReport.pdf");
-
-          // send base64 to api for s3 upload -FOR ANDROID-
-          if (reportData.android) {
-            const reader = new FileReader();
-            reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
-              const pdfData = {
-                base64: reader.result
-              };
-              axios
-                .post("/api/colleges/uploadS3/android", pdfData)
-                .then()
-                .catch(err => console.log(err));
-            };
-          }
         })
     )
     .catch(err =>

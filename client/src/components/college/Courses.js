@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
+import sort from "fast-sort";
 import { deleteCourse } from "../../actions/collegeActions";
 
 import "./College.css";
@@ -30,6 +31,9 @@ class Courses extends Component {
     let course;
     let name;
     let courseFiltered;
+    let courseText;
+    let noCourses;
+    let columnButton;
     try {
       name =
         this.props.auth.user.firstName +
@@ -40,11 +44,15 @@ class Courses extends Component {
     } catch (error) {}
 
     try {
+      // Sorted Course
+      let sortedCourse = sort(this.props.course).asc(u => u.name);
+
       if (this.props.auth.isAuthenticated === true) {
+        columnButton = <th />;
         if (this.state.coursebin) {
           if (college.deleted === 0) {
-            // college not deleted with buttons
-            course = this.props.course.map(cou =>
+            // college not deleted with buttons with restore
+            course = sortedCourse.map(cou =>
               // ternary operator if deleted do not show
               cou.deleted === 1 ? (
                 <tr key={cou._id}>
@@ -123,7 +131,7 @@ class Courses extends Component {
             );
           } else {
             // college deleted no buttons
-            course = this.props.course.map(cou =>
+            course = sortedCourse.map(cou =>
               cou.deleted === 0 ? (
                 <tr key={cou._id}>
                   <td>{cou.name}</td>
@@ -143,10 +151,11 @@ class Courses extends Component {
               )
             );
           }
+          courseText = <h3 className="text-center text-danger">Courses Bin</h3>;
         } else {
           if (college.deleted === 0) {
             // college not deleted with buttons
-            course = this.props.course.map(cou =>
+            course = sortedCourse.map(cou =>
               // ternary operator if active do not show
               cou.deleted === 0 ? (
                 <tr key={cou._id}>
@@ -189,6 +198,7 @@ class Courses extends Component {
                         />
                       </Link>
                       {cou.researchTotal + cou.journalTotal === 0 ? (
+                        // Active Button
                         <button
                           onClick={this.onDeleteClick.bind(
                             this,
@@ -214,9 +224,20 @@ class Courses extends Component {
                           />
                         </button>
                       ) : (
-                        ""
+                        // Disabled button
+                        <button
+                          className="btn btn-danger"
+                          title="Delete Course"
+                          disabled={true}
+                        >
+                          <i
+                            className="fas fa-trash text-light"
+                            style={{ fontSize: "12px" }}
+                          />
+                        </button>
                       )}
                       {cou.status === 0 ? (
+                        // Active Button
                         <Link
                           to={{
                             pathname: "/add-research",
@@ -236,7 +257,17 @@ class Courses extends Component {
                           />
                         </Link>
                       ) : (
-                        ""
+                        // Disabled button
+                        <button
+                          className="btn btn-primary"
+                          title="Add research to this course"
+                          disabled={true}
+                        >
+                          <i
+                            className="fas fa-plus text-light"
+                            style={{ fontSize: "12px" }}
+                          />
+                        </button>
                       )}
                     </div>
                   </td>
@@ -247,7 +278,7 @@ class Courses extends Component {
             );
           } else {
             // college deleted no buttons
-            course = this.props.course.map(cou =>
+            course = sortedCourse.map(cou =>
               cou.deleted === 1 ? (
                 <tr key={cou._id}>
                   <td>{cou.name}</td>
@@ -267,10 +298,11 @@ class Courses extends Component {
               )
             );
           }
+          courseText = <h3 className="text-center text-info">Courses</h3>;
         }
       } else {
         // Not logged in no buttons
-        course = this.props.course.map(cou =>
+        course = sortedCourse.map(cou =>
           cou.deleted === 0 ? (
             <tr key={cou._id}>
               <td>{cou.name}</td>
@@ -296,8 +328,14 @@ class Courses extends Component {
         return el !== "";
       });
     } catch (error) {}
+
+    if (courseFiltered.length === 0) {
+      noCourses = "Nothing here";
+    }
+
     return (
-      <div style={{ overflowX: "auto" }}>
+      <div style={{ overflowX: "auto", textAlign: "center" }}>
+        {courseText}
         <table
           style={{
             borderCollapse: "collapse",
@@ -313,11 +351,12 @@ class Courses extends Component {
               <th>Status</th>
               <th>Researches</th>
               <th>Journals</th>
-              <th />
+              {columnButton}
             </tr>
           </thead>
           <tbody>{courseFiltered}</tbody>
         </table>
+        <h5>{noCourses}</h5>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { saveAs } from "file-saver";
 
 import { GET_ACTIVITIES, ACTIVITY_LOADING } from "./types";
 
@@ -12,6 +13,26 @@ export const getActivities = () => dispatch => {
         type: GET_ACTIVITIES,
         payload: res.data
       })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ACTIVITIES,
+        payload: null
+      })
+    );
+};
+
+// Create Report for activities
+export const createReportForActivity = reportData => dispatch => {
+  axios
+    .post("/api/activities/createReport", reportData)
+    .then(() =>
+      axios
+        .get("/api/activities/fetchReport", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          saveAs(pdfBlob, "ActivityReport.pdf");
+        })
     )
     .catch(err =>
       dispatch({
