@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable'
 import stripHtml from "string-strip-html";
-import ReactDOM from "react-dom";
-import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 import {checkGrammar} from '../../actions/grammarActions';
 
@@ -19,10 +17,17 @@ class Grammar extends Component {
             matches: [],
             classes: [],
             id: "",
-            output: {}
+            output: {},
+            top: 0,
+            left: 0,
+            display: "none",
+            visible: false
         }
+        this.menuRef = React.createRef();
         this.contentEditable = React.createRef();
+        this.onGetValue = this.onGetValue.bind(this);
     }
+
 
     componentWillReceiveProps(nextProps){
         if(nextProps.grammar.output !== this.props.grammar.output){
@@ -58,22 +63,37 @@ class Grammar extends Component {
 
     onCorrect = (e) => {
         let el = e.target;
-        const {matches} = this.props.grammar.output.grammar.data;
-        // while (el && el !== e.currentTarget && el.className !== "spellingError") {
-        //     el = el.parentNode;
-        // }
+
+        // console.log(this.menuRef.current)
         if(el.id){
-            this.setState({id:el.id})
+            this.setState({
+                id:el.id,
+                top: e.pageY+20,
+                left: e.pageX-342,
+                display: "table"
+            })
         }else{
-            this.setState({id:""})
+            this.setState({
+                id:"",
+                top: 0,
+                left: 0,
+                display: "none"
+            })
 
         }
-        
+    }
 
-        // if (el && el.className === "spellingError") {
-        //     //this.setState(({clicks}) => ({clicks: clicks + 1}));
-        //     console.log(123)
-        // }
+    onGetValue = (index) => {
+        this.contentEditable.current.children[this.state.id].innerHTML = this.menuRef.current.children[index].innerHTML;
+        this.contentEditable.current.children[this.state.id].className = "";
+        this.contentEditable.current.children[this.state.id].id = "";
+        this.setState({
+            html: this.contentEditable.current.innerHTML,
+            id:"",
+            top: 0,
+            left: 0,
+            display: "none"
+        })
     }
 
     onGrammarCheck = () => {
@@ -91,9 +111,6 @@ class Grammar extends Component {
         this.setState({html: evt.target.value});
     };
 
-    handleClick = (e, data) => {
-        console.log(data.foo);
-    }
 
   render() {
 
@@ -101,7 +118,7 @@ class Grammar extends Component {
     let items;
     if(id!==""){
         items = matches[id].replacements.map((replacement, index) =>(
-            <li key={index}>{replacement.value}</li>
+            <li onClick={() => this.onGetValue(index)} key={index}>{replacement.value}</li>
         ))
     }
         
@@ -114,22 +131,10 @@ class Grammar extends Component {
     return (
       <div className="container">
         <div className="sourceResearch">
-            {/* <ContextMenuTrigger id="some_unique_identifier">
-                <div className="well">Right click to see the menu</div>
-            </ContextMenuTrigger>
-            <ContextMenu id="some_unique_identifier">
-                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
-                ContextMenu Item 1
-                </MenuItem>
-                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
-                ContextMenu Item 2
-                </MenuItem>
-                <MenuItem divider />
-                <MenuItem data={{foo: 'bar'}} onClick={this.handleClick}>
-                ContextMenu Item 3
-                </MenuItem>
-            </ContextMenu> */}
-            <ul>{items}</ul>
+        
+            <ul className="menu" ref={this.menuRef}style={{display: this.state.display, top: this.state.top, left: this.state.left}}>
+                {items}
+            </ul>
             
             <div className="sourceHeader">Grammar Checker</div>
             <div className="sourceContents">
