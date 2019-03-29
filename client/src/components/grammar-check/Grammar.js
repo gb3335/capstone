@@ -21,13 +21,29 @@ class Grammar extends Component {
             top: 0,
             left: 0,
             display: "none",
-            visible: false
+            visible: false,
+            broHeight: 0,
+            broWidth: 0
         }
         this.menuRef = React.createRef();
         this.contentEditable = React.createRef();
         this.onGetValue = this.onGetValue.bind(this);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
 
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+      }
+      
+      componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+      }
+      
+      updateWindowDimensions() {
+        this.setState({ broWidth: window.innerWidth, broHeight: window.innerHeight });
+        
+      }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.grammar.output !== this.props.grammar.output){
@@ -63,15 +79,25 @@ class Grammar extends Component {
 
     onCorrect = (e) => {
         let el = e.target;
-
         // console.log(this.menuRef.current)
         if(el.id){
-            this.setState({
-                id:el.id,
-                top: e.pageY+20,
-                left: e.pageX-342,
-                display: "table"
-            })
+            if(this.state.broWidth<963){
+                this.setState({
+                    id:el.id,
+                    top: e.pageY+20,
+                    left: e.pageX-150,
+                    display: "table"
+                })
+
+            }else{
+                this.setState({
+                    id:el.id,
+                    top: e.pageY+20,
+                    left: e.pageX-340,
+                    display: "table"
+                })
+            }
+            
         }else{
             this.setState({
                 id:"",
