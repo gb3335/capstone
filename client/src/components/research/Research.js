@@ -198,7 +198,6 @@ class Research extends Component {
     let authorAction;
     let imageAction;
     let docAction;
-    let abstractAction;
     let doc;
     let docSideAction;
     let reportSideAction;
