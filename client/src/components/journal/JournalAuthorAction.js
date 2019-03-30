@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ResearchAuthorActions = () => {
+const JournalAuthorAction = () => {
   return (
     <div className="btn-group mb-3 btn-group-sm" role="group">
       <Link to="/add-journal-author" className="btn btn-light">
@@ -12,4 +12,4 @@ const ResearchAuthorActions = () => {
   );
 };
 
-export default ResearchAuthorActions;
+export default JournalAuthorAction;

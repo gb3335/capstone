@@ -70,6 +70,71 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
 };
 
+
+// Check Plagiarism Local
+export const journalPlagiarismLocal = (input, history) => dispatch => {
+  dispatch(setPlagiarismLocalLoading());
+  dispatch(setDocumentId(input.docuId));
+  dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
+  console.time("Initialize")
+  axios
+    .post("/api/plagiarism/local/initialize/pattern", input)
+    .then(res => {
+      console.log(res.data);
+      if (res.data.success) {
+        promises = []
+        input.researches.forEach(function (research) {
+          if (research._id !== input.docuId) {
+            if (research.document && research.deleted !== 1) {
+              promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
+            }
+          }
+
+        })
+        axios
+          .all(promises)
+          .then(res => {
+            const hm = new jsscompress.Hauffman();
+            let newres = [];
+            res.forEach(function (r, index) {
+              //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
+              //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
+              newres.push(r.data.localPlagiarism.data)
+            })
+            newres.sort(function (obj1, obj2) {
+              // Ascending: first age less than the previous
+              return obj2.SimilarityScore - obj1.SimilarityScore;
+            });
+            console.log(newres);
+
+            console.timeEnd("Initialize")
+            dispatch(outputLocalPlagiarism(newres));
+            console.log("test")
+            if (input.fromFlag) {
+              history.push(`/localResultSideBySide`);
+            } else {
+              history.push(`/localResult`);
+            }
+
+          })
+          .catch(err => {
+            dispatch({
+              type: GET_ERRORS,
+              payload: err.response.data
+            });
+          });
+      }//else{
+      //   dispatch(outputLocalPlagiarism(res.data));
+      //   dispatch({
+      //     type: GET_ERRORS,
+      //     payload: {initializeLocal: "Document not Found!"}
+      //   });
+      // }
+
+    })
+
+};
+
 export const setPlagiarismGenerateReportLoading = (input) => {
   return {
     type: PLAGIARISM_LOCAL_GENERATE_REPORT,

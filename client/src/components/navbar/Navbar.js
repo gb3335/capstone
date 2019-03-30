@@ -74,6 +74,44 @@ class Navbar extends Component {
       </ul>
     );
 
+
+
+    const replaceString = require('replace-string');
+    let strstart = 0;
+    let a = window.location.href;
+    let oldpath;
+    let oldid;
+
+
+    let mylink;
+
+
+    let b = replaceString(a, 'http://localhost:3000/', '')
+    if (b.includes("/")) {
+      strstart = b.indexOf("/");
+      oldpath = b.substring(0, strstart);
+      oldid = b.substring(strstart + 1, b.length)
+      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid
+
+    }
+    else {
+      if (b === "") {
+        mylink = "/myaccount/" + this.props.auth.user.id + "/" + "undefined" + "/" + oldid
+      }
+      else {
+        mylink = "/myaccount/" + this.props.auth.user.id + "/" + b + "/" + oldid
+      }
+
+    }
+    if ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id === mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)) {
+      mylink = mylink.substring(("/myaccount/" + this.props.auth.user.id).length, mylink.length);
+    }
+
+
+    let oldlink = mylink;
+    mylink = "";
+
+
     const authLinks = (
       <ul className="mainUL">
         <li className="mainLI">
@@ -98,7 +136,7 @@ class Navbar extends Component {
           >
             <ul className="account_submenus">
               <li>
-                <Link to={/viewusers/ + this.props.auth.user.id}>My Account</Link>
+                <Link to={oldlink}>My Account</Link>
               </li>
               <li>
                 <Link to="#" onClick={this.onLogoutClick.bind(this)}>

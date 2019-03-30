@@ -47,11 +47,9 @@ class ViewUserHeader extends Component {
           >
             <div className="row">
               <div className="col-4 col-md-3 m-auto d-md-block">
-                <img
-                  className="rounded-circle"
-                  src={path}
-                  alt=""
-                  style={{ width: "240px", height: "240px" }}
+                <div
+                  className="square"
+                  style={{ backgroundImage: `url('${path}')` }}
                 />
               </div>
             </div>

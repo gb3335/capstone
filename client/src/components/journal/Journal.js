@@ -7,24 +7,24 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import { Spring, Transition, animated } from 'react-spring/renderprops';
 
 import {
-  getResearchById,
-  deleteResearch,
-  restoreResearch
+  getJournalById,
+  deleteJournal,
+  restoreJournal
 } from "../../actions/journalActions";
 
-import ResearchHeader from "./ResearchHeader";
-import ResearchAbstract from "./ResearchAbstract";
-import ResearchAuthors from "./ResearchAuthors";
-import ResearchImages from "./ResearchImages";
-import ResearchActions from "./ResearchActions";
-import ResearchAuthorActions from "./ResearchAuthorActions";
-import ResearchImageActions from "./ResearchImageActions";
-import ResearchDocument from "./ResearchDocument";
-import ResearchDocumentActions from "./ResearchDocumentActions";
+import JournalHeader from "./JournalHeader";
+import JournalDescription from "./JournalDescription";
+import JournalAuthors from "./JournalAuthor";
+import JournalImages from "./JournalImage";
+import JournalActions from "./JournalAction";
+import JournalAuthorAction from "./JournalAuthorAction";
+import JournalImageAction from "./JournalImageActions";
+import JournalDocument from "./JournalDocument";
+import JournalDocumentAction from "./JournalDocumentActions";
 import Report from "./Report";
-import ResearchSideBySide from "./ResearchSideBySide"
+import JournalSideBySide from "./JournalSideBySide"
 
-class Research extends Component {
+class Journal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -51,12 +51,12 @@ class Research extends Component {
 
   componentWillMount() {
     if (this.props.match.params.id) {
-      this.props.getResearchById(this.props.match.params.id);
+      this.props.getJournalById(this.props.match.params.id);
     }
   }
   componentDidMount() {
     if (this.props.match.params.id) {
-      this.props.getResearchById(this.props.match.params.id);
+      this.props.getJournalById(this.props.match.params.id);
     }
   }
 
@@ -89,7 +89,7 @@ class Research extends Component {
       id: this.props.journal.journal._id,
       username: name
     };
-    this.props.deleteResearch(data, this.props.history);
+    this.props.deleteJournal(data, this.props.history);
   };
   onDeleteResearch = () => {
     this.setState({ deleteAlertOkay: true, deleteAlert: false });
@@ -119,7 +119,7 @@ class Research extends Component {
       username: name
     };
 
-    this.props.restoreResearch(data, this.props.history);
+    this.props.restoreJournal(data, this.props.history);
   };
   onRestoreResearch = e => {
     this.setState({ restoreAlertOkay: true, restoreAlert: false });
@@ -151,14 +151,14 @@ class Research extends Component {
       username: name
     };
 
-    this.props.deleteResearch(data, this.props.history);
+    this.props.deleteJournal(data, this.props.history);
   };
 
   onHideResearch = e => {
     this.setState({ hideAlertOkay: true, hideAlert: false });
   };
 
-  // show research alerts
+  // show journal alerts
   onShowAlert = () => {
     this.setState({ showAlert: true });
   };
@@ -185,7 +185,7 @@ class Research extends Component {
       username: name
     };
 
-    this.props.restoreResearch(data, this.props.history);
+    this.props.restoreJournal(data, this.props.history);
   };
   onShowResearch = e => {
     this.setState({ showAlertOkay: true, showAlert: false });
@@ -196,8 +196,8 @@ class Research extends Component {
     const { journal, loading } = this.props.journal;
     let deletedAction;
     let hideAction;
-    let researchContent;
-    let researchAction;
+    let journalContent;
+    let journalAction;
     let authorAction;
     let imageAction;
     let docAction;
@@ -210,11 +210,11 @@ class Research extends Component {
 
       if (this.props.auth.isAuthenticated) {
         if (deleted === 0) {
-          authorAction = <ResearchAuthorActions />;
-          imageAction = <ResearchImageActions />;
-          docAction = <ResearchDocumentActions research={journal} />;
+          authorAction = <JournalAuthorAction />;
+          imageAction = <JournalImageAction />;
+          docAction = <JournalDocumentAction journal={journal} />;
         }
-        // check if research is deleted
+        // check if journal is deleted
         if (deleted === 1) {
           deletedAction = (
             <a
@@ -246,7 +246,7 @@ class Research extends Component {
             </a>
           );
         }
-        // check if research is hidden
+        // check if journal is hidden
         if (deleted === 0 && hidden === 0) {
           hideAction = (
             <a
@@ -279,8 +279,8 @@ class Research extends Component {
             </a>
           );
         }
-        researchAction = <ResearchActions />;
-        doc = <ResearchDocument research={journal} />;
+        journalAction = <JournalActions />;
+        doc = <JournalDocument journal={journal} />;
         docSideAction = (
           <a
             className="list-group-item list-group-item-action"
@@ -325,7 +325,7 @@ class Research extends Component {
                 config={{ delay: 100, duration: 800 }}>
                 {props => (
                   <div style={props}>
-                    <ResearchSideBySide />
+                    <JournalSideBySide />
                   </div>
                 )}
               </Spring>
@@ -348,13 +348,13 @@ class Research extends Component {
       }
 
       if (journal === null || loading) {
-        researchContent = <Spinner />;
+        journalContent = <Spinner />;
       } else {
         try {
-          researchContent = (
+          journalContent = (
             <div>
               {/* <div hidden>
-              <p>{research.title}</p>
+              <p>{journal.title}</p>
             </div> */}
               <div className="row">
                 <div className="col-md-6">
@@ -433,8 +433,8 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-details-list"
                     >
-                      {researchAction}
-                      <ResearchHeader research={journal} />
+                      {journalAction}
+                      <JournalHeader journal={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -442,7 +442,7 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-abstract-list"
                     >
-                      <ResearchAbstract research={journal} />
+                      <JournalDescription journal={journal} />
                     </div>
                     <div
                       className="tab-pane fade"
@@ -451,7 +451,7 @@ class Research extends Component {
                       aria-labelledby="list-authors-list"
                     >
                       {authorAction}
-                      <ResearchAuthors research={journal} />
+                      <JournalAuthors journal={journal} />
                     </div>
 
                     <div
@@ -461,7 +461,7 @@ class Research extends Component {
                       aria-labelledby="list-pictures-list"
                     >
                       {imageAction}
-                      <ResearchImages research={journal} />
+                      <JournalImages journal={journal} />
                     </div>
 
                     <div
@@ -633,7 +633,7 @@ class Research extends Component {
         </SweetAlert>
         <div style={{ padding: "1em" }}>
           <div className="row">
-            <div className="col-md-12">{researchContent}</div>
+            <div className="col-md-12">{journalContent}</div>
           </div>
         </div>
       </div>
@@ -641,11 +641,11 @@ class Research extends Component {
   }
 }
 
-Research.propTypes = {
+Journal.propTypes = {
   journal: PropTypes.object.isRequired,
-  getResearchById: PropTypes.func.isRequired,
-  deleteResearch: PropTypes.func.isRequired,
-  restoreResearch: PropTypes.func.isRequired,
+  getJournalById: PropTypes.func.isRequired,
+  deleteJournal: PropTypes.func.isRequired,
+  restoreJournal: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -656,5 +656,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getResearchById, deleteResearch, restoreResearch }
-)(Research);
+  { getJournalById, deleteJournal, restoreJournal }
+)(Journal);

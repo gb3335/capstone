@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import SweetAlert from "react-bootstrap-sweetalert";
 
-import { createReportForResearch } from "../../actions/journalActions";
+import { createReportForJournal } from "../../actions/journalActions";
 
 class Report extends Component {
   constructor(props) {
@@ -80,7 +80,7 @@ class Report extends Component {
           printedBy: name
         };
 
-        this.props.createReportForResearch(reportData);
+        this.props.createReportForJournal(reportData);
         // show generate alert
         this.setState({ generateAlert: true });
       }
@@ -288,7 +288,7 @@ class Report extends Component {
 }
 
 Report.propTypes = {
-  createReportForResearch: PropTypes.func.isRequired,
+  createReportForJournal: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -302,5 +302,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { createReportForResearch }
+  { createReportForJournal }
 )(Report);
