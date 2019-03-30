@@ -10,7 +10,8 @@ import {
   TOGGLE_RESEARCH_BIN,
   TOGGLE_RESEARCH_LIST,
   CHANGE_BUTTON_STATUS_RESEARCH,
-  TOGGLE_SIDE_BY_SIDE
+  TOGGLE_SIDE_BY_SIDE,
+  SET_ABSTRACT_CLICK
 } from "./types";
 
 // Get all researches
@@ -87,13 +88,20 @@ export const changeButtonStatus = flag => {
   };
 };
 
-export const onSideBySide = flag => {
-  console.log(flag);
-  return {
+export const onSideBySide = input => dispatch => {
+  dispatch(setAbstractClick(input.abstract));
+  dispatch({
     type: TOGGLE_SIDE_BY_SIDE,
-    payload: flag
+    payload: input.fromFlag
+  });
+};
+export const setAbstractClick = abstract => {
+  return {
+    type: SET_ABSTRACT_CLICK,
+    payload: abstract
   };
 };
+
 
 // Toggle Research Bin
 export const toggleResearchBin = toggle => {

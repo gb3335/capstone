@@ -76,7 +76,7 @@ class ResearchImageActions extends Component {
       researches: this.props.research.researches,
       flag: true,
       fromFlag: false,
-      abstract: false
+      abstract: true
     };
 
     this.props.checkPlagiarismLocal(input, this.props.history);
@@ -84,9 +84,9 @@ class ResearchImageActions extends Component {
 
   onSidebySideFlagTrue = e => {
     const input = {
-      fromFlag: true,
-      abstract: false
-  }
+        fromFlag: true,
+        abstract: true
+    }
     this.props.onSideBySide(input);
   };
 
@@ -94,46 +94,22 @@ class ResearchImageActions extends Component {
     const { research } = this.props.research;
     let docuItem;
 
-    if (research.document) {
       docuItem = (
         <div className="docuItem btn-group-sm">
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document |
+            Check Abstract |
             <i className="fas fa-database text-info mr-1 ml-1" />
             <b>All </b>
           </label>
           <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document |
+            Check Abstract |
             <i className="fas fa-copy text-info mr-1 ml-1" />
             <b>Side By Side</b>
           </label>
-          <div className="spacer" />
-          <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-redo-alt text-info mr-1" />
-            Update Document
-          </label>
-          <label
-            to="#"
-            onClick={this.onDeleteDocument}
-            className="btn btn-danger"
-          >
-            <i className="fas fa-trash text-light mr-1" />
-            Remove Document
-          </label>
         </div>
       );
-    } else {
-      docuItem = (
-        <div className="btn-group mb-3 btn-group-sm" role="group">
-          <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1" />
-            Add Document
-          </label>
-        </div>
-      );
-    }
 
     return (
       <div>

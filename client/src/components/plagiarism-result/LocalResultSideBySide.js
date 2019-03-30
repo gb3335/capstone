@@ -24,7 +24,7 @@ class LocalResultSideBySide extends Component {
 
   componentWillMount(){
 
-    const {output, docuId} = this.props.localPlagiarism;
+    const {output, docuId, abstract} = this.props.localPlagiarism;
     const {researches} = this.props.research
     
       let level=0;
@@ -43,7 +43,8 @@ class LocalResultSideBySide extends Component {
       const input = {
         docuId : docuId,
         docuFile : this.props.research.research.document,
-        textId: output[0].Document.Text.Id
+        textId: output[0].Document.Text.Id,
+        abstract
       }
 
       this.props.getSourcePattern(input);
@@ -53,7 +54,8 @@ class LocalResultSideBySide extends Component {
       const input2 = {
         docuId : output[0].Document.Text.Id,
         docuFile : textdocument.document,
-        textId: output[0].Document.Text.Id
+        textId: output[0].Document.Text.Id,
+        abstract
       }
 
       

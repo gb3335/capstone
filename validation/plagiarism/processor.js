@@ -54,7 +54,7 @@ const textProcess = (text) => {
         
         // ********************************** //
         text =text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
-        text = text.replace(/[^A-Za-z0-9. ]/g, " ");
+        text = text.replace(/[^A-Za-z0-9. ]/g, "");
         text = text.replace(/\s+/g," ");
         let words = text.split(' ');
         words = sw.removeStopwords(words);

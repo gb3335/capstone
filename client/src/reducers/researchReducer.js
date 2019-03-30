@@ -5,7 +5,8 @@ import {
   TOGGLE_RESEARCH_BIN,
   TOGGLE_RESEARCH_LIST,
   CHANGE_BUTTON_STATUS_RESEARCH,
-  TOGGLE_SIDE_BY_SIDE
+  TOGGLE_SIDE_BY_SIDE,
+  SET_ABSTRACT_CLICK
 } from "../actions/types";
 
 const initialState = {
@@ -14,7 +15,8 @@ const initialState = {
   loading: false,
   bin: false,
   buttonDisable: false,
-  onSideBySide: false
+  onSideBySide: false,
+  abstact: false
 };
 
 export default function (state = initialState, action) {
@@ -55,6 +57,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         onSideBySide: action.payload
+      };
+    case SET_ABSTRACT_CLICK:
+      return {
+        ...state,
+        abstract: action.payload
       };
     default:
       return state;

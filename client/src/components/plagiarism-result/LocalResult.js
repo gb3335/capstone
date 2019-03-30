@@ -42,7 +42,8 @@ class LocalResult extends Component {
     // let newob = researches.find(obj => obj._id === docuId);
     const input = {
       docuId: docuId,
-      docuFile: research.document
+      docuFile: research.document,
+      abstract: this.props.localPlagiarism.abstract
     }
     this.props.getPattern(input);
   }
@@ -92,7 +93,8 @@ class LocalResult extends Component {
     const input = {
       docuId: newob.Document.Pattern.Id,
       docuFile: this.props.research.research.document,
-      textId: id
+      textId: id,
+      abstract: this.props.localPlagiarism.abstract
     }
     this.props.getTextPattern(input);
   }
@@ -102,7 +104,7 @@ class LocalResult extends Component {
   }
 
   onClickGenerateReport = () => {
-    const { output } = this.props.localPlagiarism;
+    const { output, abstract } = this.props.localPlagiarism;
     this.props.setPlagiarismGenerateReportLoading(true);
 
     const node = ReactDOM.findDOMNode(this);
@@ -119,12 +121,16 @@ class LocalResult extends Component {
       this.props.auth.user.middleName +
       " " +
       this.props.auth.user.lastName;
-
+    
+    let subTypeOfReport="Checked in the System Database";
+    if(abstract){
+      subTypeOfReport="Checked in the System Database (ABSTRACT)"
+    }
     const input = {
       printedBy: name,
       word,
       typeOfReport: "Plagiarism Check Result",
-      subTypeOfReport: "Checked in the System Database",
+      subTypeOfReport,
       output
     }
     this.props.createLocalPlagiarismReport(input);

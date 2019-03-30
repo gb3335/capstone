@@ -3,6 +3,7 @@ const router = express.Router();
 const request = require("request");
 const fs = require('fs');
 const extract = require('pdf-text-extract');
+const stripHtml = require("string-strip-html");
 const pdfUtil = require('pdf-to-text');
 const download = require("download-pdf");
 const pdf = require("html-pdf");
@@ -46,7 +47,9 @@ let fontFooter = "7px";
 // @access  public
 router.get("/test", (req, res) => {
 
-  let result = processor.textProcess(req.body.text.toString());
+
+  console.log(req.body.text)
+  let result = processor.textProcess(stripHtml(req.body.text).toString());
   //result.text = result.text.split(' ');
   res.json({ 
     success: true,
@@ -284,38 +287,58 @@ router.post("/online", (req, res) => {
 // @access  public
 router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
+  let abstract = req.body.abstract
 
-  //option to extract text from page 0 to 10
-  var option = { from: 0, to: 10 };
-
-  let docuFile = req.body.docuFile;
-  const docPath =
-    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-    docuFile;
-
-  const options = {
-    directory: "./routes/downloadedDocu/",
-    filename: docuFile
-  };
-
-  download(docPath, options, function (err) {
-    if (err) console.log(err);
-    console.log("Document successfully downloaded.");
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
-
-
-      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-        if (err) throw err;
-        console.log('successfully deleted');
-      });
-
+  if(abstract){
+    Research.findOne({ _id: docuId },{content:0})
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
+      }
       res.json({
         success: true,
-        data: data.toString(),
+        data: stripHtml(research.abstract),
         docuId
       })
+
+
+    })
+    .catch(err => res.status(404).json(err));
+  }else{
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          docuId
+        })
+      });
     });
-  });
+  }
+ 
 
 })
 
@@ -324,37 +347,57 @@ router.post("/get/pattern", (req, res) => {
 // @access  public
 router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
+  let abstract = req.body.abstract
 
-  //option to extract text from page 0 to 10
-  var option = { from: 0, to: 10 };
-  let docuFile = req.body.docuFile;
-  const docPath =
-    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-    docuFile;
-
-  const options = {
-    directory: "./routes/downloadedDocu/",
-    filename: docuFile
-  };
-
-  download(docPath, options, function (err) {
-    if (err) console.log(err);
-    console.log("Document successfully downloaded.");
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
-
-
-      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-        if (err) throw err;
-        console.log('successfully deleted');
-      });
-
+  if(abstract){
+    Research.findOne({ _id: docuId },{content:0})
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
+      }
       res.json({
         success: true,
-        data: data.toString(),
-        textId: docuId
+        data: stripHtml(research.abstract),
+        docuId
       })
+
+
+    })
+    .catch(err => res.status(404).json(err));
+  }else{
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          textId: docuId
+        })
+      });
     });
-  });
+  }
+  
 
 })
 
@@ -365,8 +408,31 @@ router.post("/local/initialize/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
   let docuFile = req.body.docuFile;
+  let abstract = req.body.abstract;
 
-  Research.findOne({ _id: docuId })
+  if(abstract){
+    Research.findOne({ _id: docuId },{content:0})
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        res.status(404).json(errors);
+      }
+
+      let newtext = stripHtml(research.abstract);
+
+      let {text, len} = processor.textProcess(newtext.toString().toLowerCase());
+      arr = text.split(' ')
+
+      plagiarism.initialize(arr, len, title, docuId);
+      res.json({
+        success: true
+      })
+
+
+    })
+    .catch(err => res.status(404).json(err));
+  }else{
+    Research.findOne({ _id: docuId })
     .then(research => {
       if (!research) {
         errors.noresearch = "There is no data for this research";
@@ -385,6 +451,8 @@ router.post("/local/initialize/pattern", (req, res) => {
 
     })
     .catch(err => res.status(404).json(err));
+  }
+  
 
 
   // const docPath =
@@ -434,8 +502,30 @@ router.post("/local/result", (req, res) => {
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   let textFile = req.body.textFile;
+  let abstract = req.body.abstract;
 
-  Research.findOne({ _id: textId })
+  if(abstract){
+    Research.findOne({ _id: textId }, {content:0})
+    .then(research => {
+      if (!research) {
+        errors.noresearch = "There is no data for this research";
+        console.log("test");
+        res.status(404).json(errors);
+      }
+
+      let {text, len} = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
+      console.log(text);
+      let result = plagiarism.search(text, len, textTitle, textId);
+      res.json({
+        localPlagiarism: {
+          success: true,
+          data: result
+        }
+      });
+    })
+    .catch(err => res.status(404).json(err));
+  }else{
+    Research.findOne({ _id: textId })
     .then(research => {
       if (!research) {
         errors.noresearch = "There is no data for this research";
@@ -454,6 +544,8 @@ router.post("/local/result", (req, res) => {
       });
     })
     .catch(err => res.status(404).json(err));
+  }
+  
 
   // const docPath =
   //       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +

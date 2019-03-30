@@ -225,14 +225,14 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/localResultSideBySide"
+                  path="/localResultSideBySide/research"
                   component={LocalResultSideBySide}
                 />
               </Switch>
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/localResultSideBySide"
+                  path="/localResultSideBySide/journal"
                   component={JournalLocalResultSideBySide}
                 />
               </Switch>

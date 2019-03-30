@@ -23,8 +23,11 @@ class ResearchSideBySide extends Component {
   }
 
   setSideBySideFalse() {
-    console.log("side")
-    this.props.onSideBySide(false);
+    const input = {
+      fromFlag: false,
+      abstract: false
+    }
+    this.props.onSideBySide(input);
   }
 
   onSelect(research) {
@@ -36,9 +39,15 @@ class ResearchSideBySide extends Component {
       docuFile: this.props.research.research.document,
       researches: newresearch,
       flag: true,
-      fromFlag: true
+      fromFlag: true,
+      abstract: this.props.research.abstract
     };
-    this.props.onSideBySide(false);
+
+    const input2 = {
+      fromFlag: false,
+      abstract: this.props.research.abstract
+    }
+    this.props.onSideBySide(input2);
 
     this.props.checkPlagiarismLocal(input, this.props.history);
 
