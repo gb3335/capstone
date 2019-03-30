@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { addAuthor } from "../../actions/journalActions";
 
-class AddAuthor extends Component {
+class AddJournalAuthor extends Component {
   constructor(props) {
     super(props);
 
@@ -24,16 +24,18 @@ class AddAuthor extends Component {
 
   onSubmit = e => {
     e.preventDefault();
+
     const name =
       this.props.auth.user.firstName +
       " " +
       this.props.auth.user.middleName +
       " " +
       this.props.auth.user.lastName;
+
     const authorData = {
       name: this.state.name,
       // role: this.state.role,
-      researchId: this.props.journal.journal._id,
+      journalId: this.props.journal.journal._id,
       username: name
     };
 
@@ -48,7 +50,7 @@ class AddAuthor extends Component {
 
   render() {
     const { errors } = this.state;
-    const path = "/journals/" + this.props.journal.journal._id;
+    const path = "/researches/" + this.props.journal.journal._id;
     return (
       <div className="add-author">
         <div className="container">
@@ -93,7 +95,7 @@ class AddAuthor extends Component {
   }
 }
 
-AddAuthor.propTypes = {
+AddJournalAuthor.propTypes = {
   errors: PropTypes.object.isRequired,
   addAuthor: PropTypes.func.isRequired,
   journal: PropTypes.object.isRequired,
@@ -109,4 +111,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { addAuthor }
-)(withRouter(AddAuthor));
+)(withRouter(AddJournalAuthor));

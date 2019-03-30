@@ -89,33 +89,39 @@ class EditResearch extends Component {
       " " +
       this.props.auth.user.lastName;
 
+
+    const replaceString = require('replace-string');
+
+    let a = this.state.description;
+    let b = replaceString(a, '<p>', '')
+    let c = replaceString(b, '</p>', '')
+    require('str-trim');
+    let d = c.trim()
+    let mystring;
+    if (d.length === 0) {
+      mystring = ""
+
+    }
+    else {
+      mystring = this.state.description;
+
+    }
     const researchData = {
       title: this.state.title,
-      oldTitle: this.state.oldTitle,
-      college: this.state.college,
-      course: this.state.course,
-      description: this.state.description,
-      pages: this.state.pages,
-      issn: this.state.issn,
+      id: this.props.journal.journal._id,
       volume: this.state.volume,
       publisher: this.state.publisher,
+      college: this.state.college,
+      course: this.state.course,
+      description: mystring,
+      issn: this.state.issn,
       yearPublished: this.state.yearPublished,
+      pages: this.state.pages,
       authorOne: this.state.authorOne,
-      id: this.props.journal.journal._id,
-      username: name
-
-      // title: journal.title,
-      // oldTitle: journal.title,
-      // college: journal.college,
-      // course: journal.course,
-      // volume:journal.volume,
-      // publisher:journal.publisher,
-      // description: journal.description,
-      // issn: journal.issn,
-      // pages: journal.pages,
-      // yearPublished: journal.yearPublished,
-      // authorOne: "",
+      username: name,
+      oldTitle: this.state.oldTitle
     };
+
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.createResearch(researchData, this.props.history);

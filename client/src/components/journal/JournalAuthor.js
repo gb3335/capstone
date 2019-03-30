@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import Authors from "./Authors";
 
-class ResearchAuthors extends Component {
+class JournalAuthor extends Component {
   render() {
-    const { research } = this.props;
+    const { journal } = this.props;
     let authorItems;
 
     try {
-      if (Object.keys(research.author).length > 0) {
-        authorItems = <Authors author={research.author} />;
+      if (Object.keys(journal.author).length > 0) {
+        authorItems = <Authors author={journal.author} />;
       } else {
         authorItems = (
           <div>
@@ -31,4 +31,4 @@ class ResearchAuthors extends Component {
   }
 }
 
-export default ResearchAuthors;
+export default JournalAuthor;

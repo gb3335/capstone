@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import Images from "./Images";
 
-class ResearchImages extends Component {
+class JournalImage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      images: this.props.research.images
+      images: this.props.journal.images
 
     };
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ images: nextProps.research.images })
+    this.setState({ images: nextProps.journal.images })
 
   }
   render() {
-    const { research } = this.props;
+    const { journal } = this.props;
     let imageItems;
 
     try {
@@ -37,4 +37,4 @@ class ResearchImages extends Component {
   }
 }
 
-export default ResearchImages;
+export default JournalImage;

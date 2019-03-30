@@ -32,8 +32,8 @@ import AddAuthor from "../add-credentials/AddAuthor";
 import EditResearch from "../edit-research/EditResearch";
 
 //Journal Import
-import Journals from "../journals/Researches";
-import Journal from "../journal/Research";
+import Journals from "../journals/Journals";
+import Journal from "../journal/Journal";
 import AddJournal from "../add-journal/AddResearch";
 import EditJournal from "../edit-journal/EditResearch";
 import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
@@ -43,10 +43,13 @@ import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
 import ViewUser from "../view-user/ViewUser";
 import EditAccount from "../edit-account/EditAccount";
+import MyAccount from "../view-user/MyAccount";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
 import LocalResultSideBySide from "../plagiarism-result/LocalResultSideBySide";
+import JournalLocalResult from "../plagiarism-result/JournalLocalResult";
+import JournalLocalResultSideBySide from "../plagiarism-result/JournalLocalResultSideBySide";
 
 // Grammar Check
 import Grammar from "../grammar-check/Grammar";
@@ -125,6 +128,13 @@ class Main extends Component {
                   exact
                   path="/viewusers/:id"
                   component={ViewUser}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/myaccount/:id/:oldurl/:oldid"
+                  component={MyAccount}
                 />
               </Switch>
 
@@ -208,8 +218,22 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
+                  path="/JournallocalResult"
+                  component={LocalResult}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
                   path="/localResultSideBySide"
                   component={LocalResultSideBySide}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/localResultSideBySide"
+                  component={JournalLocalResultSideBySide}
                 />
               </Switch>
               <Switch>

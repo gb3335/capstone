@@ -143,7 +143,7 @@ class UserAction extends Component {
         imageAction = (
 
           <label to="#" htmlFor="imageUpload" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1" />
+            <i className="fas fa-circle-notch text-info mr-1" />
             Change avatar
           </label>
 

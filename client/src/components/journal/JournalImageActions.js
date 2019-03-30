@@ -5,7 +5,7 @@ import ImageFieldGroup from "../common/ImageFieldGroup";
 import { withRouter } from "react-router-dom";
 import { addImages } from "../../actions/journalActions";
 
-class ResearchImageActions extends Component {
+class JournalImageActions extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -78,7 +78,7 @@ class ResearchImageActions extends Component {
   }
 }
 
-ResearchImageActions.propTypes = {
+JournalImageActions.propTypes = {
   journal: PropTypes.object.isRequired,
   addImages: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
@@ -94,4 +94,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { addImages }
-)(withRouter(ResearchImageActions));
+)(withRouter(JournalImageActions));
