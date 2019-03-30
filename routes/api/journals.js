@@ -713,7 +713,7 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/journalPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/journalsPdf.pdf`, (err) => {
+      fs.unlink(`${reqPath}/journalPdf.pdf`, (err) => {
         if (err) throw err;
         console.log('successfully deleted');
       });
