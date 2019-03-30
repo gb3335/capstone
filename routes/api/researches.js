@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/researchDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function(data) {
+  pdf(dataBuffer).then(function (data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -152,9 +152,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                    name: aut.name,
-                    role: "Author"
-                  })
+                  name: aut.name,
+                  role: "Author"
+                })
                 : "";
             });
 
@@ -496,7 +496,7 @@ router.post(
         Key: `researchDocuments/${req.body.oldFile}`
       };
 
-      s3.deleteObject(params, function(err, data) {
+      s3.deleteObject(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -535,12 +535,12 @@ router.post(
         directory: "./routes/downloadedDocu",
         filename: req.body.researchId + ".pdf"
       };
-      download(docPath, options, function(err) {
+      download(docPath, options, function (err) {
         if (err) console.log(err);
         console.log("Document successfully downloaded.");
         pdfUtil.pdfToText(
           `./routes/downloadedDocu/${options.filename}`,
-          function(err, data) {
+          function (err, data) {
             fs.unlink(`./routes/downloadedDocu/${options.filename}`, err => {
               if (err) throw err;
               console.log("successfully deleted");
@@ -598,7 +598,7 @@ router.delete(
       Key: `researchDocuments/${req.params.filename}`
     };
 
-    s3.deleteObject(params, function(err, data) {
+    s3.deleteObject(params, function (err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });

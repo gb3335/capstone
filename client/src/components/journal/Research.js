@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import SweetAlert from "react-bootstrap-sweetalert";
+import { Spring, Transition, animated } from 'react-spring/renderprops';
 
 import {
   getResearchById,
@@ -21,6 +22,7 @@ import ResearchImageActions from "./ResearchImageActions";
 import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
 import Report from "./Report";
+import ResearchSideBySide from "./ResearchSideBySide"
 
 class Research extends Component {
   constructor(props) {
@@ -307,6 +309,44 @@ class Research extends Component {
         );
       }
 
+      let docuOrSideItems;
+
+      if (this.props.journal.onSideBySide) {
+        docuOrSideItems = (<Transition
+          items={this.props.journal.onSideBySide}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+        >
+          {show => show && (props => (
+            <animated.div style={props}>
+              <Spring from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                config={{ delay: 100, duration: 800 }}>
+                {props => (
+                  <div style={props}>
+                    <ResearchSideBySide />
+                  </div>
+                )}
+              </Spring>
+
+
+            </animated.div>
+          ))}
+
+        </Transition>)
+      } else {
+        docuOrSideItems = (<Spring from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+          config={{ delay: 100, duration: 800 }}>
+          {props => (
+            <div style={props}>
+              {docAction}{doc}
+            </div>
+          )}
+        </Spring>)
+      }
+
       if (journal === null || loading) {
         researchContent = <Spinner />;
       } else {
@@ -430,8 +470,7 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-document-list"
                     >
-                      {docAction}
-                      {doc}
+                      {docuOrSideItems}
                     </div>
                     <div
                       className="tab-pane fade"

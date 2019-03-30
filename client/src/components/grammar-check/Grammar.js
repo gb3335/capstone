@@ -12,12 +12,38 @@ class Grammar extends Component {
     constructor(){
         super()
         this.state = {
-            html: "<u class='spellingError'>wer</u>",
+            html: "",
             original: "",
-            output: {}
+            matches: [],
+            classes: [],
+            id: "",
+            output: {},
+            top: 0,
+            left: 0,
+            display: "none",
+            visible: false,
+            broHeight: 0,
+            broWidth: 0
         }
+        this.menuRef = React.createRef();
         this.contentEditable = React.createRef();
+        this.onGetValue = this.onGetValue.bind(this);
+        this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
     }
+
+    componentDidMount() {
+        this.updateWindowDimensions();
+        window.addEventListener('resize', this.updateWindowDimensions);
+      }
+      
+      componentWillUnmount() {
+        window.removeEventListener('resize', this.updateWindowDimensions);
+      }
+      
+      updateWindowDimensions() {
+        this.setState({ broWidth: window.innerWidth, broHeight: window.innerHeight });
+        
+      }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.grammar.output !== this.props.grammar.output){
@@ -47,23 +73,53 @@ class Grammar extends Component {
                 });
             }
             newhtml = newhtml.join('');
-            this.setState({html: newhtml})
+            this.setState({html: newhtml, matches})
         }
     }
 
     onCorrect = (e) => {
         let el = e.target;
-        const {matches} = this.props.grammar.output.grammar.data;
-        // while (el && el !== e.currentTarget && el.className !== "spellingError") {
-        //     el = el.parentNode;
-        // }
+        // console.log(this.menuRef.current)
+        if(el.id){
+            if(this.state.broWidth<963){
+                this.setState({
+                    id:el.id,
+                    top: e.pageY+20,
+                    left: e.pageX-150,
+                    display: "table"
+                })
 
-        console.log(el.id)
+            }else{
+                this.setState({
+                    id:el.id,
+                    top: e.pageY+20,
+                    left: e.pageX-340,
+                    display: "table"
+                })
+            }
+            
+        }else{
+            this.setState({
+                id:"",
+                top: 0,
+                left: 0,
+                display: "none"
+            })
 
-        // if (el && el.className === "spellingError") {
-        //     //this.setState(({clicks}) => ({clicks: clicks + 1}));
-        //     console.log(123)
-        // }
+        }
+    }
+
+    onGetValue = (index) => {
+        this.contentEditable.current.children[this.state.id].innerHTML = this.menuRef.current.children[index].innerHTML;
+        this.contentEditable.current.children[this.state.id].className = "";
+        this.contentEditable.current.children[this.state.id].id = "";
+        this.setState({
+            html: this.contentEditable.current.innerHTML,
+            id:"",
+            top: 0,
+            left: 0,
+            display: "none"
+        })
     }
 
     onGrammarCheck = () => {
@@ -73,7 +129,7 @@ class Grammar extends Component {
         const input = {
             input: html
         }
-
+        this.setState({id:""})
         this.props.checkGrammar(input);
     }
 
@@ -81,11 +137,32 @@ class Grammar extends Component {
         this.setState({html: evt.target.value});
     };
 
+
   render() {
+
+    const {matches, id} = this.state
+    let items;
+    if(id!==""){
+        items = matches[id].replacements.map((replacement, index) =>(
+            <li onClick={() => this.onGetValue(index)} key={index}>{replacement.value}</li>
+        ))
+    }
+        
+    
+    const {loading} = this.props.grammar
+    
+
+
+
     return (
       <div className="container">
         <div className="sourceResearch">
-            <div className="sourceHeader">Check Grammar</div>
+        
+            <ul className="menu" ref={this.menuRef}style={{display: this.state.display, top: this.state.top, left: this.state.left}}>
+                {items}
+            </ul>
+            
+            <div className="sourceHeader">Grammar Checker</div>
             <div className="sourceContents">
                 <ContentEditable
                     spellCheck="false"
@@ -99,7 +176,10 @@ class Grammar extends Component {
                 />
                 
             </div>
-            <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            {loading ? <button className="btn btn-primary btn-block btn-flat disabled">Checking Grammar...</button>
+                    : <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
+            }
+            
             {/* {JSON.stringify(this.state.output)} */}
         </div>
       </div>

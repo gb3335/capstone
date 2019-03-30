@@ -11,7 +11,7 @@ class ResearchImages extends Component {
   }
   componentWillReceiveProps(nextProps) {
     this.setState({ images: nextProps.research.images })
-    console.log(nextProps.research.images)
+
   }
   render() {
     const { research } = this.props;

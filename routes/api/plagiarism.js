@@ -11,7 +11,7 @@ const path = require("path");
 const extractor = require('unfluff');
 const scraping = require('text-scraping');
 
-const {gzip, ungzip} = require('node-gzip');
+const { gzip, ungzip } = require('node-gzip');
 const jsscompress = require("js-string-compression");
 const hm = new jsscompress.Hauffman();
 
@@ -39,7 +39,7 @@ const Research = require("../../models/Research");
 
 
 // FOnt
-let fontFooter ="7px";
+let fontFooter = "7px";
 
 // @routes  GET api/plagiarism/test
 // @desc    Test plagiarism route
@@ -51,7 +51,7 @@ router.get("/test", (req, res) => {
 
   // console.log(newString.text);
   // console.log(newString.len);
-  
+
   // pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
   //   if (err) throw(err);
   //   //console.log(data); //print all text
@@ -100,7 +100,7 @@ router.get("/test", (req, res) => {
 
   // })
 
-  scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function(response) {
+  scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
     console.log(response)
     let data = response.join('');
     console.log(data.length)
@@ -116,13 +116,13 @@ router.get("/test", (req, res) => {
 router.post("/online/initialize/pattern", (req, res) => {
   let pattern = req.body.pattern;
 
-  const {arr, len} = processor.arrayProcess(pattern.toString().toLowerCase());
+  const { arr, len } = processor.arrayProcess(pattern.toString().toLowerCase());
   plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
-  res.json({ 
+  res.json({
     success: true
   })
-  
-  
+
+
 });
 
 
@@ -134,30 +134,30 @@ router.post("/online/result", (req, res) => {
   let title = req.body.title;
   let mime = req.body.mime;
   let index = req.body.index;
-  
-  if(mime=="application/pdf"){
-    
+
+  if (mime == "application/pdf") {
+
     const docPath = link;
     const options = {
       directory: "./routes/downloadedDocu/online",
       filename: `${index}.pdf`
     };
-    download(docPath, options, function(err) {
+    download(docPath, options, function (err) {
       if (err) console.log(err);
       console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/online/${options.filename}`, function(err, data) {
+      pdfUtil.pdfToText(`./routes/downloadedDocu/online/${options.filename}`, function (err, data) {
 
-        
+
         fs.unlink(`./routes/downloadedDocu/online/${options.filename}`, (err) => {
           if (err) throw err;
           console.log('successfully deleted');
         });
 
-        
-        let {text, len} = processor.textProcess(data.toString().toLowerCase());
+
+        let { text, len } = processor.textProcess(data.toString().toLowerCase());
 
         let result = plagiarism.search(text, len, title, link);
-        
+
         res.json({
           onlinePlagiarism: {
             success: true,
@@ -166,7 +166,7 @@ router.post("/online/result", (req, res) => {
         });
       });
     });
-  }else{
+  } else {
     let result = {
       SimilarityScore: 0,
       Document: {
@@ -174,40 +174,40 @@ router.post("/online/result", (req, res) => {
           Name: 'Not Applicable',
           Id: 'Not Applicable'
         },
-        Text:{
+        Text: {
           Name: title,
           Id: link
         }
       },
       Index: []
     }
-    
 
-    scraping(link, function(response) {
+
+    scraping(link, function (response) {
       let resp = response.join(' ');
       let fortest = response.join('');
       // console.log(data.text);
-      
+
       let newtext = resp
-      if(newtext=="" || fortest.length==0){
+      if (newtext == "" || fortest.length == 0) {
         res.json({
           onlinePlagiarism: {
             success: true,
             data: result
           }
         });
-      }else{
-        let {text, len} = processor.textProcess(newtext.toString().toLowerCase());
+      } else {
+        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
         result = plagiarism.search(text, len, title, link);
         res.json({
-            onlinePlagiarism: {
-              success: true,
-              data: result
-            }
-          });
+          onlinePlagiarism: {
+            success: true,
+            data: result
+          }
+        });
       }
-      
-      
+
+
       // console.log(result);
       // res.json({
       //   onlinePlagiarism: {
@@ -215,24 +215,24 @@ router.post("/online/result", (req, res) => {
       //     data: result
       //   }
       // });
-      
+
     });
-      
-      
-      //console.log("KRISHIELD: "+ text);
-      
-      // let result = plagiarism.search(text, len, title, title);
-      // console.log(result);
-      //     // res.json({
-      //     //   onlinePlagiarism: {
-      //     //     success: true,
-      //     //     data: result
-      //     //   }
-      //     // });
-      //     //console.log(result);
-    
+
+
+    //console.log("KRISHIELD: "+ text);
+
+    // let result = plagiarism.search(text, len, title, title);
+    // console.log(result);
+    //     // res.json({
+    //     //   onlinePlagiarism: {
+    //     //     success: true,
+    //     //     data: result
+    //     //   }
+    //     // });
+    //     //console.log(result);
+
   }
-  
+
 
 });
 
@@ -275,38 +275,38 @@ router.post("/online", (req, res) => {
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
 // @access  public
-router.post("/get/pattern", (req,res) => {
+router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
 
   //option to extract text from page 0 to 10
-  var option = {from: 0, to: 10};
+  var option = { from: 0, to: 10 };
 
   let docuFile = req.body.docuFile;
   const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        docuFile;
+    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+    docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+  const options = {
+    directory: "./routes/downloadedDocu/",
+    filename: docuFile
+  };
 
-    download(docPath, options, function(err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+  download(docPath, options, function (err) {
+    if (err) console.log(err);
+    console.log("Document successfully downloaded.");
+    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
-        
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
 
-        res.json({ 
-          success: true,
-          data: data.toString(),
-          docuId
-        })
+      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+        if (err) throw err;
+        console.log('successfully deleted');
+      });
+
+      res.json({
+        success: true,
+        data: data.toString(),
+        docuId
+      })
     });
   });
 
@@ -315,37 +315,37 @@ router.post("/get/pattern", (req,res) => {
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
 // @access  public
-router.post("/get/text", (req,res) => {
+router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
 
   //option to extract text from page 0 to 10
-  var option = {from: 0, to: 10};
+  var option = { from: 0, to: 10 };
   let docuFile = req.body.docuFile;
   const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        docuFile;
+    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+    docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+  const options = {
+    directory: "./routes/downloadedDocu/",
+    filename: docuFile
+  };
 
-    download(docPath, options, function(err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
+  download(docPath, options, function (err) {
+    if (err) console.log(err);
+    console.log("Document successfully downloaded.");
+    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
-        
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
 
-        res.json({ 
-          success: true,
-          data: data.toString(),
-          textId: docuId
-        })
+      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+        if (err) throw err;
+        console.log('successfully deleted');
+      });
+
+      res.json({
+        success: true,
+        data: data.toString(),
+        textId: docuId
+      })
     });
   });
 
@@ -354,7 +354,7 @@ router.post("/get/text", (req,res) => {
 // @routes  POST api/local/initialize/pattern
 // @desc    extract patter pdf
 // @access  public
-router.post("/local/initialize/pattern", (req,res) => {
+router.post("/local/initialize/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
   let docuFile = req.body.docuFile;
@@ -371,11 +371,11 @@ router.post("/local/initialize/pattern", (req,res) => {
       let arr = newtext.split(' ')
 
       plagiarism.initialize(arr, len, title, docuId);
-      res.json({ 
+      res.json({
         success: true
       })
 
-      
+
     })
     .catch(err => res.status(404).json(err));
 
@@ -394,7 +394,7 @@ router.post("/local/initialize/pattern", (req,res) => {
   //     console.log("Document successfully downloaded.");
   //     pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
 
-        
+
   //       fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
   //         if (err) throw err;
   //         console.log('successfully deleted');
@@ -409,7 +409,7 @@ router.post("/local/initialize/pattern", (req,res) => {
   //     });
   //   });
 
-  
+
 })
 
 
@@ -422,8 +422,8 @@ router.post("/local/result", (req, res) => {
   // if (!isValid) {
   //   return res.status(400).json(errors);
   // }
-  
-  
+
+
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   let textFile = req.body.textFile;
@@ -463,7 +463,7 @@ router.post("/local/result", (req, res) => {
   //   console.log("Document successfully downloaded.");
   //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function(err, data) {
 
-      
+
   //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
   //       if (err) throw err;
   //       console.log('successfully deleted');
@@ -515,83 +515,83 @@ router.post("/local/result", (req, res) => {
   //         data: result
   //       }
   //     });
-      
+
   //   });
   // });
-  
+
 });
 
-router.post('/create/report/local', (req,res) => {
-  req.connection.setTimeout(1000*60*10);
+router.post('/create/report/local', (req, res) => {
+  req.connection.setTimeout(1000 * 60 * 10);
   const printedBy = req.body.printedBy;
-    const options = {
-      border: {
-        top: "0.5in",
-        right: "0.5in",
-        bottom: "0.5in",
-        left: "0.5in"
-      },
-      timeout: '100000',
-      paginationOffset: 1, // Override the initial pagination number
-      footer: {
-        height: "28mm",
-        contents: {
-          default: `<div class="item5">
+  const options = {
+    border: {
+      top: "0.5in",
+      right: "0.5in",
+      bottom: "0.5in",
+      left: "0.5in"
+    },
+    timeout: '100000',
+    paginationOffset: 1, // Override the initial pagination number
+    footer: {
+      height: "28mm",
+      contents: {
+        default: `<div class="item5">
           <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
-        }
       }
-    };
+    }
+  };
   pdf.create(plagiarismLocalTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
-    if(err){
+    if (err) {
       console.log(err);
       res.send(Promise.reject())
-      
-    }else{
+
+    } else {
       res.send(Promise.resolve())
     }
-    
+
   });
 
 });// end of post
 
-router.get('/get/report/local', (req,res) => {
+router.get('/get/report/local', (req, res) => {
   let reqPath = path.join(__dirname, "../../");
   res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
     fs.unlink(`${reqPath}/PlagiarismLocalResult.pdf`, (err) => {
       if (err) throw err;
       console.log('successfully deleted');
     });
-  }) 
-  
+  })
+
 });// end of post
 
-router.post('/create/report/local/side', (req,res) => {
+router.post('/create/report/local/side', (req, res) => {
   console.log("clicked")
-  req.connection.setTimeout(1000*60*10);
+  req.connection.setTimeout(1000 * 60 * 10);
   const printedBy = req.body.printedBy;
-    const options = {
-      border: {
-        top: "0.5in",
-        right: "0.5in",
-        bottom: "0.5in",
-        left: "0.5in"
-      },
-      timeout: '5000000',
-      paginationOffset: 1, // Override the initial pagination number
-      footer: {
-        height: "28mm",
-        contents: {
-          default: `<div class="item5">
+  const options = {
+    border: {
+      top: "0.5in",
+      right: "0.5in",
+      bottom: "0.5in",
+      left: "0.5in"
+    },
+    timeout: '5000000',
+    paginationOffset: 1, // Override the initial pagination number
+    footer: {
+      height: "28mm",
+      contents: {
+        default: `<div class="item5">
           <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
-        }
       }
-    };
+    }
+  };
   pdf.create(plagiarismLocalSideBySideTemplate(req.body), options).toFile('PlagiarismLocalResult.pdf', (err) => {
-    if(err){
+    if (err) {
       console.log(err);
       res.send(Promise.reject())
     }
@@ -601,7 +601,7 @@ router.post('/create/report/local/side', (req,res) => {
 
 });// end of post
 
-router.get('/get/report/local/side', (req,res) => {
+router.get('/get/report/local/side', (req, res) => {
   console.log("get")
   let reqPath = path.join(__dirname, "../../");
   res.sendFile(`${reqPath}/PlagiarismLocalResult.pdf`, () => {
@@ -609,36 +609,36 @@ router.get('/get/report/local/side', (req,res) => {
       if (err) throw err;
       console.log('successfully deleted');
     });
-  }) 
-  
-  
+  })
+
+
 });// end of post
 
 
-router.post('/create/report/online', (req,res) => {
-  req.connection.setTimeout(1000*60*10);
+router.post('/create/report/online', (req, res) => {
+  req.connection.setTimeout(1000 * 60 * 10);
   const printedBy = req.body.printedBy;
-    const options = {
-      border: {
-        top: "0.5in",
-        right: "0.5in",
-        bottom: "0.5in",
-        left: "0.5in"
-      },
-      timeout: '1000000',
-      paginationOffset: 1, // Override the initial pagination number
-      footer: {
-        height: "28mm",
-        contents: {
-          default: `<div class="item5">
+  const options = {
+    border: {
+      top: "0.5in",
+      right: "0.5in",
+      bottom: "0.5in",
+      left: "0.5in"
+    },
+    timeout: '1000000',
+    paginationOffset: 1, // Override the initial pagination number
+    footer: {
+      height: "28mm",
+      contents: {
+        default: `<div class="item5">
           <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
           <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
         </div>` // fallback value
-        }
       }
-    };
+    }
+  };
   pdf.create(plagiarismOnlineTemplate(req.body), options).toFile('PlagiarismOnlineResult.pdf', (err) => {
-    if(err){
+    if (err) {
       res.send(Promise.reject())
     }
     res.send(Promise.resolve())
@@ -646,16 +646,16 @@ router.post('/create/report/online', (req,res) => {
 
 });// end of post
 
-router.get('/get/report/online', (req,res) => {
+router.get('/get/report/online', (req, res) => {
   let reqPath = path.join(__dirname, "../../");
   res.sendFile(`${reqPath}/PlagiarismOnlineResult.pdf`, () => {
     fs.unlink(`${reqPath}/PlagiarismOnlineResult.pdf`, (err) => {
       if (err) throw err;
       console.log('successfully deleted');
     });
-  }) 
-  
-  
+  })
+
+
 });// end of Get
 
 module.exports = router;
