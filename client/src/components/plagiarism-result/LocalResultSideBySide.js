@@ -129,7 +129,7 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-    const {output} = this.props.localPlagiarism
+    const {output, abstract} = this.props.localPlagiarism
     
     this.props.setPlagiarismGenerateReportLoading(true);
 
@@ -149,12 +149,18 @@ class LocalResultSideBySide extends Component {
           " " +
           this.props.auth.user.lastName;
 
+      let subTypeOfReport = "Side by Side Comparison";
+
+      if(abstract){
+        subTypeOfReport = "Side by Side Comparison (ABSTRACT)";
+      }
+
       const input = {
         printedBy: name,
         pattern,
         text,
         typeOfReport: "Plagiarism Check Result",
-        subTypeOfReport: "Side by Side Comparison",
+        subTypeOfReport,
         output
       }
       this.props.createLocalSideBySidePlagiarismReport(input);
