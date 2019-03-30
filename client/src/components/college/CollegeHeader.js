@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import "./College.css";
+
 class CollegeHeader extends Component {
   render() {
     const path =
@@ -30,11 +32,9 @@ class CollegeHeader extends Component {
           >
             <div className="row">
               <div className="col-4 col-md-3 m-auto d-md-block">
-                <img
-                  className="rounded-circle"
-                  src={path + college.logo}
-                  alt=""
-                  style={{ width: "100%" }}
+                <div
+                  className="square"
+                  style={{ backgroundImage: `url('${path + college.logo}')` }}
                 />
               </div>
             </div>

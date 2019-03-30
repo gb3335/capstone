@@ -128,7 +128,7 @@ class DetailedActivities extends Component {
         </SweetAlert>
         <h1 className="display-4 text-center">Recent Activites</h1>
         <p className="lead text-center">Detailed View of Recent Activities</p>
-        <div className="container">{activityItems}</div>
+        <div style={{ margin: "15px" }}>{activityItems}</div>
       </div>
     );
   }

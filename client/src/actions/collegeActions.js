@@ -170,8 +170,9 @@ export const changeCollegeLogo = (collegeData, history) => dispatch => {
   axios
     .post("/api/colleges/changeLogo", collegeData)
     .then(res => {
+      dispatch(getCollegeByInitials(collegeData.initials));
       history.push(`/colleges/${collegeData.initials}`);
-      window.location.reload();
+      //window.location.reload();
     })
     .catch(err =>
       dispatch({
@@ -185,9 +186,10 @@ export const changeCollegeLogo = (collegeData, history) => dispatch => {
 export const addCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/course", courseData)
-    .then(res =>
-      history.push(`/colleges/${courseData.college.college.name.initials}`)
-    )
+    .then(res => {
+      dispatch(getCollegeByInitials(courseData.college.college.name.initials));
+      history.push(`/colleges/${courseData.college.college.name.initials}`);
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -200,7 +202,10 @@ export const addCourse = (courseData, history) => dispatch => {
 export const editCourse = (courseData, history) => dispatch => {
   axios
     .post("/api/colleges/editcourse", courseData)
-    .then(res => history.push(`/colleges/${courseData.colInit}`))
+    .then(res => {
+      dispatch(getCollegeByInitials(courseData.colInit));
+      history.push(`/colleges/${courseData.colInit}`);
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -211,27 +216,19 @@ export const editCourse = (courseData, history) => dispatch => {
 
 // Delete Course
 export const deleteCourse = (course, history) => dispatch => {
-  if (window.confirm("Are you sure?")) {
-    dispatch(setCollegeLoading());
-    axios
-      .post(`/api/colleges/deletecourse`, course)
-      .then(
-        history.push(`/colleges`),
-        history.push(`/colleges/${course.collegeInit}`),
-        window.location.reload(),
-        res =>
-          dispatch({
-            type: GET_COLLEGE,
-            payload: res.data
-          })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_COLLEGE,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setCollegeLoading());
+  axios
+    .post(`/api/colleges/deletecourse`, course)
+    .then(res => {
+      dispatch(getCollegeByInitials(course.collegeInit));
+      history.push(`/colleges/${course.collegeInit}`);
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_COLLEGE,
+        payload: err.response.data
+      })
+    );
 };
 
 // Delete College
