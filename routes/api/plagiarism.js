@@ -46,6 +46,13 @@ let fontFooter = "7px";
 // @access  public
 router.get("/test", (req, res) => {
 
+  let result = processor.textProcess(req.body.text.toString());
+  //result.text = result.text.split(' ');
+  res.json({ 
+    success: true,
+    data: result
+  })
+
   // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
   // const newString = processor.textProcess(oldString);
 
@@ -100,12 +107,12 @@ router.get("/test", (req, res) => {
 
   // })
 
-  scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
-    console.log(response)
-    let data = response.join('');
-    console.log(data.length)
-    res.send(data);//Returns text
-  });
+  // scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
+  //   console.log(response)
+  //   let data = response.join('');
+  //   console.log(data.length)
+  //   res.send(data);//Returns text
+  // });
 
   // res.json({ msg: "Plagiarism Works!" });
 });

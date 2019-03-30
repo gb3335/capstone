@@ -175,7 +175,7 @@ class LocalResultSideBySide extends Component {
       )
     }else{
       patternItem = (
-        <div className="hightlightSpanDiv">
+        <div className="hightlightSpanDivSbS">
           <div className="highlightComponentDiv">
             <Highlighter
               id="highlightPat"
@@ -202,7 +202,7 @@ class LocalResultSideBySide extends Component {
       )
     }else{
       textItem = (
-        <div className="hightlightSpanDiv">
+        <div className="hightlightSpanDivSbS">
           <div className="highlightComponentDiv">
             <Highlighter
               id="highlightText"
