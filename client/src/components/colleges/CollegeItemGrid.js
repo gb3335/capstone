@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
+import AutoFitImage from "react-image-autofit-frame";
+
+import "./Colleges.css";
 
 class CollegeItemGrid extends Component {
   render() {
@@ -8,11 +11,9 @@ class CollegeItemGrid extends Component {
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/";
     const { college } = this.props;
     const image = (
-      <img
-        src={path + college.logo}
-        alt={college.name.initials}
-        className="rounded-circle"
-        style={{ width: "50%", display: "block", margin: "auto" }}
+      <div
+        className="square"
+        style={{ backgroundImage: `url('${path + college.logo}')` }}
       />
     );
     // let colStatus;

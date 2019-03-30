@@ -9,11 +9,11 @@ class Footer extends Component {
         <p>
           {" "}
           <img
-            src="./images/weblogo.png"
+            src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/logo.png"
             alt="website-logo"
             style={{ width: "30px" }}
           />{" "}
-          BulSU Plagiarism and Grammar Checker. Copyright{" "}
+          BulSU Plagiarism and Grammar Checker. Copyright ©{" "}
           {new Date().getFullYear()}
         </p>
       </div>

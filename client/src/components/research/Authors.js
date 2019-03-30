@@ -2,11 +2,51 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import sort from "fast-sort";
+import SweetAlert from "react-bootstrap-sweetalert";
+
 import { deleteAuthor } from "../../actions/researchActions";
 
 class Authors extends Component {
-  onDeleteClick = (research, id, name) => {
-    this.props.deleteAuthor(research, id, name);
+  constructor(props) {
+    super(props);
+    this.state = {
+      research: "",
+      id: "",
+      name: "",
+      // Delete Alert
+      deleteAlert: false,
+      deleteAlertCancel: false,
+      deleteAlertOkay: false
+    };
+  }
+
+  // Delete alerts
+  onDeleteAlert = (research, id, name) => {
+    this.setState({
+      deleteAlert: true,
+      research: research,
+      id: id,
+      name: name
+    });
+  };
+  onCancelDelete = () => {
+    this.setState({ deleteAlert: false, deleteAlertCancel: true });
+  };
+  onRemoveDeleteCancel = () => {
+    this.setState({ deleteAlertCancel: false });
+  };
+
+  onRemoveDeleteOkay = () => {
+    this.setState({ deleteAlertOkay: false });
+    this.props.deleteAuthor(
+      this.state.research,
+      this.state.id,
+      this.state.name
+    );
+  };
+
+  onDeleteAuthor = () => {
+    this.setState({ deleteAlertOkay: true, deleteAlert: false });
   };
 
   render() {
@@ -36,23 +76,14 @@ class Authors extends Component {
             </td>
             {author.role === "Author One" ? (
               <td>
-                <button
-                  onClick={this.onDeleteClick.bind(
-                    this,
-                    research._id,
-                    author._id,
-                    name
-                  )}
-                  className="btn btn-danger"
-                  disabled={true}
-                >
+                <button className="btn btn-danger" disabled={true}>
                   Remove
                 </button>
               </td>
             ) : (
               <td>
                 <button
-                  onClick={this.onDeleteClick.bind(
+                  onClick={this.onDeleteAlert.bind(
                     this,
                     research._id,
                     author._id,
@@ -90,6 +121,43 @@ class Authors extends Component {
 
     return (
       <div>
+        {/* ALERTS */}
+        {/* DELETE ALERT */}
+        <SweetAlert
+          show={this.state.deleteAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, delete it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onDeleteAuthor}
+          onCancel={this.onCancelDelete}
+        >
+          Delete Author?
+        </SweetAlert>
+
+        {/* CANCEL DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveDeleteCancel}
+        >
+          Author is not deleted
+        </SweetAlert>
+
+        {/* COURSE DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertOkay}
+          success
+          title="Deleted"
+          onConfirm={this.onRemoveDeleteOkay}
+        >
+          Author deleted
+        </SweetAlert>
+
+        {/* CONTENTS */}
         <table className="table">
           <thead>
             <tr>

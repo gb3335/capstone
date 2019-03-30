@@ -138,23 +138,22 @@ router.post(
       }
 
       console.log("Image successfully uploaded.");
-    });
+      // add activity
+      const newActivity = {
+        title: "College: " + req.body.initials + " updated",
+        by: req.body.username,
+        type: "College"
+      };
+      new Activity(newActivity).save();
 
-    // add activity
-    const newActivity = {
-      title: "College: " + req.body.initials + " updated",
-      by: req.body.username,
-      type: "College"
-    };
-    new Activity(newActivity).save();
-
-    College.findOne({ _id: req.body.id }).then(college => {
-      // Update
-      College.findOneAndUpdate(
-        { _id: req.body.id },
-        { $set: newCollege },
-        { new: true }
-      ).then(college => res.json(college));
+      College.findOne({ _id: req.body.id }).then(college => {
+        // Update
+        College.findOneAndUpdate(
+          { _id: req.body.id },
+          { $set: newCollege },
+          { new: true }
+        ).then(college => res.json(college));
+      });
     });
   }
 );
@@ -297,20 +296,19 @@ router.post(
                     }
 
                     console.log("Image successfully uploaded.");
+                    // add activity
+                    const newActivity = {
+                      title: "College: " + req.body.initials + " created",
+                      by: req.body.username,
+                      type: "College"
+                    };
+                    new Activity(newActivity).save();
+
+                    // Save College
+                    new College(newCollege)
+                      .save()
+                      .then(college => res.json(college));
                   });
-
-                  // add activity
-                  const newActivity = {
-                    title: "College: " + req.body.initials + " created",
-                    by: req.body.username,
-                    type: "College"
-                  };
-                  new Activity(newActivity).save();
-
-                  // Save College
-                  new College(newCollege)
-                    .save()
-                    .then(college => res.json(college));
                 }
               });
             }
@@ -329,7 +327,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCourseInput(req.body);
-
+    let mark = false;
     // Check Validation
     if (!isValid) {
       // Return any errors with 400 status
@@ -339,42 +337,49 @@ router.post(
       college.course.map(cou => {
         if (req.body.name === cou.name) {
           errors.name = "Course Name already exists";
+          mark = true;
           res.status(400).json(errors);
         } else if (req.body.initials === cou.initials) {
           errors.initials = "Course Initials already exists";
+          mark = true;
           res.status(400).json(errors);
         }
       });
-      const newCourse = {
-        name: req.body.name,
-        initials: req.body.initials
-      };
+      if (mark === false) {
+        const newCourse = {
+          name: req.body.name,
+          initials: req.body.initials
+        };
 
-      // add activity
-      const newActivity = {
-        title:
-          "Course: " + req.body.initials + " added in " + college.name.initials,
-        by: req.body.username,
-        type: "Course"
-      };
-      new Activity(newActivity).save().then(college);
+        // add activity
+        const newActivity = {
+          title:
+            "Course: " +
+            req.body.initials +
+            " added in " +
+            college.name.initials,
+          by: req.body.username,
+          type: "Course"
+        };
+        new Activity(newActivity).save().then(college);
 
-      // Add to exp array
-      college.course.unshift(newCourse);
+        // Add to exp array
+        college.course.unshift(newCourse);
 
-      college.save();
+        college.save();
 
-      const newCollege = {
-        lastUpdate: {
-          date: Date.now()
-        }
-      };
+        const newCollege = {
+          lastUpdate: {
+            date: Date.now()
+          }
+        };
 
-      College.findOneAndUpdate(
-        { _id: req.body.colId },
-        { $set: newCollege },
-        { new: true }
-      ).then(college => res.json(college));
+        College.findOneAndUpdate(
+          { _id: req.body.colId },
+          { $set: newCollege },
+          { new: true }
+        ).then(college => res.json(college));
+      }
     });
   }
 );
@@ -387,13 +392,12 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const { errors, isValid } = validateCourseInput(req.body);
-
+    let mark = false;
     // Check Validation
     if (!isValid) {
       // Return any errors with 400 status
       return res.status(400).json(errors);
     }
-    let mark = false;
 
     College.findOne({ _id: req.body.colId }).then(college => {
       college.course.map(cou => {

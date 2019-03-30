@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import PropTypes from "prop-types";
 import sort from "fast-sort";
+import SweetAlert from "react-bootstrap-sweetalert";
+
 import { deleteCourse } from "../../actions/collegeActions";
 
 import "./College.css";
@@ -10,21 +12,62 @@ class Courses extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      coursebin: false
+      coursebin: false,
+      course: {},
+      // Delete Alert
+      deleteAlert: false,
+      deleteAlertCancel: false,
+      deleteAlertOkay: false,
+      // Restore Alert
+      restoreAlert: false,
+      restoreAlertCancel: false,
+      restoreAlertOkay: false
     };
   }
-
-  onDeleteClick = course => {
-    this.props.deleteCourse(course, this.props.history);
-  };
-
-  onRestoreClick = course => {
-    this.props.deleteCourse(course, this.props.history);
-  };
 
   componentWillReceiveProps(nextProps) {
     this.setState({ coursebin: nextProps.coursebin });
   }
+
+  // Delete alerts
+  onDeleteAlert = course => {
+    this.setState({ deleteAlert: true, course: course });
+  };
+  onCancelDelete = () => {
+    this.setState({ deleteAlert: false, deleteAlertCancel: true });
+  };
+  onRemoveDeleteCancel = () => {
+    this.setState({ deleteAlertCancel: false });
+  };
+
+  onRemoveDeleteOkay = () => {
+    this.setState({ deleteAlertOkay: false });
+    this.props.deleteCourse(this.state.course, this.props.history);
+  };
+
+  onDeleteCourse = () => {
+    this.setState({ deleteAlertOkay: true, deleteAlert: false });
+  };
+
+  // Restore Alerts
+  onRestoreAlert = course => {
+    this.setState({ restoreAlert: true, course: course });
+  };
+  onCancelRestore = () => {
+    this.setState({ restoreAlert: false, restoreAlertCancel: true });
+  };
+  onRemoveRestoreCancel = () => {
+    this.setState({ restoreAlertCancel: false });
+  };
+
+  onRemoveRestoreOkay = () => {
+    this.setState({ restoreAlertOkay: false });
+    this.props.deleteCourse(this.state.course, this.props.history);
+  };
+
+  onRestoreCourse = () => {
+    this.setState({ restoreAlertOkay: true, restoreAlert: false });
+  };
 
   render() {
     const { college } = this.props.college;
@@ -96,7 +139,7 @@ class Courses extends Component {
                       </Link>
                       {cou.researchTotal + cou.journalTotal === 0 ? (
                         <button
-                          onClick={this.onRestoreClick.bind(
+                          onClick={this.onRestoreAlert.bind(
                             this,
                             (course = {
                               courseName: cou.name,
@@ -200,7 +243,7 @@ class Courses extends Component {
                       {cou.researchTotal + cou.journalTotal === 0 ? (
                         // Active Button
                         <button
-                          onClick={this.onDeleteClick.bind(
+                          onClick={this.onDeleteAlert.bind(
                             this,
                             (course = {
                               courseName: cou.name,
@@ -335,6 +378,78 @@ class Courses extends Component {
 
     return (
       <div style={{ overflowX: "auto", textAlign: "center" }}>
+        {/* ALERTS */}
+        {/* DELETE ALERT */}
+        <SweetAlert
+          show={this.state.deleteAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, delete it!"
+          confirmBtnBsStyle="danger"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onDeleteCourse}
+          onCancel={this.onCancelDelete}
+        >
+          Delete Course?
+        </SweetAlert>
+
+        {/* CANCEL DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveDeleteCancel}
+        >
+          Course is not deleted
+        </SweetAlert>
+
+        {/* COURSE DELETE */}
+        <SweetAlert
+          show={this.state.deleteAlertOkay}
+          success
+          title="Deleted"
+          onConfirm={this.onRemoveDeleteOkay}
+        >
+          Course deleted
+        </SweetAlert>
+
+        {/* RESTORE ALERT */}
+        <SweetAlert
+          show={this.state.restoreAlert}
+          warning
+          showCancel
+          confirmBtnText="Yes, restore it!"
+          confirmBtnBsStyle="success"
+          cancelBtnBsStyle="default"
+          title="Are you sure?"
+          onConfirm={this.onRestoreCourse}
+          onCancel={this.onCancelRestore}
+        >
+          Restore Course?
+        </SweetAlert>
+
+        {/* CANCEL RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertCancel}
+          danger
+          title="Cancelled"
+          onConfirm={this.onRemoveRestoreCancel}
+        >
+          Course is not restored
+        </SweetAlert>
+
+        {/* COLLEGE RESTORE */}
+        <SweetAlert
+          show={this.state.restoreAlertOkay}
+          success
+          title="Restored"
+          onConfirm={this.onRemoveRestoreOkay}
+        >
+          Course restored
+        </SweetAlert>
+
+        {/* CONTENT */}
         {courseText}
         <table
           style={{

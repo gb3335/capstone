@@ -67,9 +67,9 @@ class CollegeActions extends Component {
             extensions={["jpg", "jpeg", "png"]}
             dims={{
               minWidth: 100,
-              maxWidth: 800,
+              maxWidth: 1500,
               minHeight: 100,
-              maxHeight: 800
+              maxHeight: 1500
             }}
             onChange={base64 => this.onFileSelected(base64)}
             onError={errMsg => alert(errMsg)}

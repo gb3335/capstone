@@ -12,9 +12,6 @@ import {
   CHANGE_BUTTON_STATUS_JOURNAL
 } from "./types";
 
-
-
-
 // Get all researches
 export const getResearches = () => dispatch => {
   dispatch(clearErrors());
@@ -35,7 +32,6 @@ export const getResearches = () => dispatch => {
     );
 };
 
-
 // Create Report for all Researches
 export const createReportForResearches = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
@@ -53,7 +49,7 @@ export const createReportForResearches = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
+            reader.onloadend = function() {
               const pdfData = {
                 base64: reader.result
               };
@@ -72,7 +68,6 @@ export const createReportForResearches = reportData => dispatch => {
       })
     );
 };
-
 
 // Toggle Research Bin
 export const toggleResearchBin = toggle => {
@@ -156,7 +151,7 @@ export const createReportForResearch = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
+            reader.onloadend = function() {
               const pdfData = {
                 base64: reader.result
               };
@@ -266,7 +261,6 @@ export const deleteDocument = (researchId, filename, name) => dispatch => {
 
 // Move to bin Research
 export const deleteResearch = (data, history) => dispatch => {
-
   dispatch(setResearchLoading());
   axios
     .post(`/api/journals/remove/${data.id}`, data)
@@ -282,12 +276,10 @@ export const deleteResearch = (data, history) => dispatch => {
         payload: err.response.data
       })
     );
-
 };
 
 // Restore Research
 export const restoreResearch = (data, history) => dispatch => {
-
   dispatch(setResearchLoading());
   axios
     .post(`/api/journals/restore/${data.id}`, data)
@@ -302,7 +294,6 @@ export const restoreResearch = (data, history) => dispatch => {
         })
       )
     );
-
 };
 
 export const changeButtonStatus = flag => {
@@ -325,4 +316,3 @@ export const clearErrors = () => {
     type: CLEAR_ERRORS
   };
 };
-

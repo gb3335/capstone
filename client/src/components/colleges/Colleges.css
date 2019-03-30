@@ -24,3 +24,19 @@
   width: 100%;
   height: 100%;
 }
+
+.square {
+  width: 100%;
+  padding-bottom: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}
+
+.squareList {
+  width: 100%;
+  padding-bottom: 100%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}

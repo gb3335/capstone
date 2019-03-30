@@ -393,6 +393,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let imageArray = [];
+    let imageLen = 0;
     for (i = 0; i < req.body.images.length; i++) {
       const rand = uuid();
       // let ext = req.body.images[i].split(";")[0].split("/")[1];
@@ -428,47 +429,49 @@ router.post(
         }
 
         console.log("Image successfully uploaded.");
-      });
+        ++imageLen;
+        // check if all images is uploaded
+        if (imageLen === req.body.images.length) {
+          Research.findOne({ _id: req.body.id }).then(research => {
+            for (i = 0; i < req.body.images.length; i++) {
+              const newImage = {
+                name: imageArray[i]
+              };
 
+              // Add to exp array
+              research.images.unshift(newImage);
+            }
+
+            const newResearch = {
+              lastUpdate: Date.now()
+            };
+
+            Research.findOneAndUpdate(
+              { _id: req.body.id },
+              { $set: newResearch },
+              { new: true }
+            ).then(research);
+
+            // add activity
+            const newActivity = {
+              title: "Research: Image/s added to " + research.title,
+              by: req.body.username,
+              type: "Research"
+            };
+            new Activity(newActivity).save();
+
+            research
+              .save()
+              .then(research => {
+                delete research.content;
+                res.json(research);
+              })
+              .catch(err => console.log(err));
+          });
+        }
+      });
       imageArray.push(req.body.id + "-" + rand + ".png");
     }
-
-    Research.findOne({ _id: req.body.id }).then(research => {
-      for (i = 0; i < req.body.images.length; i++) {
-        const newImage = {
-          name: imageArray[i]
-        };
-
-        // Add to exp array
-        research.images.unshift(newImage);
-      }
-
-      const newResearch = {
-        lastUpdate: Date.now()
-      };
-
-      Research.findOneAndUpdate(
-        { _id: req.body.id },
-        { $set: newResearch },
-        { new: true }
-      ).then(research);
-
-      // add activity
-      const newActivity = {
-        title: "Research: Image/s added to " + research.title,
-        by: req.body.username,
-        type: "Research"
-      };
-      new Activity(newActivity).save();
-
-      research
-        .save()
-        .then(research => {
-          delete research.content;
-          res.json(research);
-        })
-        .catch(err => console.log(err));
-    });
   }
 );
 

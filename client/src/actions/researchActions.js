@@ -164,23 +164,21 @@ export const addAuthor = (authorData, history) => dispatch => {
 
 // Delete Author
 export const deleteAuthor = (research, id, name) => dispatch => {
-  if (window.confirm("Are you sure? This can NOT be undone.")) {
-    dispatch(setResearchLoading());
-    axios
-      .delete(`/api/researches/author/${research}/${id}/${name}`)
-      .then(res =>
-        dispatch({
-          type: GET_RESEARCH,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_RESEARCH,
-          payload: err.response.data
-        })
-      );
-  }
+  dispatch(setResearchLoading());
+  axios
+    .delete(`/api/researches/author/${research}/${id}/${name}`)
+    .then(res =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_RESEARCH,
+        payload: err.response.data
+      })
+    );
 };
 
 // Add Images
@@ -188,21 +186,11 @@ export const addImages = (data, history) => dispatch => {
   dispatch(setResearchLoading());
   axios
     .post("/api/researches/images", data)
-    .then(
-      history.push("/researches"),
-      history.push(`/researches/${data.id}`),
-      res =>
-        dispatch(
-          {
-            type: GET_RESEARCHES,
-            payload: res.data
-          },
-          {
-            type: GET_RESEARCH,
-            payload: res.data
-          }
-        )
-    )
+    .then(res => {
+      dispatch(getResearches());
+      history.push("/researches");
+      history.push(`/researches/${data.id}`);
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
