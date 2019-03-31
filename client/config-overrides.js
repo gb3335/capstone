@@ -5,8 +5,8 @@ const cspConfigPolicy = {
     'default-src': "'self'  data: blob: 'unsafe-inline' 'unsafe-eval'",
     'base-uri': "'self'",
     'object-src': "'none'",
-    'script-src': ["* data: blob: 'unsafe-inline' 'unsafe-eval'"],
-    'style-src': ["*"],
+    'script-src': ["'self' code.jquery.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com"],
+    'style-src': ["'self' stackpath.bootstrapcdn.com use.fontawesome.com fonts.googleapis.com npmcdn.com"],
     'img-src': "*",
     'font-src': "*"
 };
