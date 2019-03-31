@@ -254,6 +254,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         {
             
             state = nextState(state,text[i]); /// traverse the trie state/node for the text.
+            cout<<state<<" "<<text[i]<<endl;
             if(out[state].count() > 0) ///        if the state. has at least one output
             {
                 for(int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
