@@ -126,6 +126,7 @@ class LocalResult extends Component {
     if (abstract) {
       subTypeOfReport = "Checked in the System Database (ABSTRACT)"
     }
+    
     const input = {
       reportFor: "Journal",
       printedBy: name,
