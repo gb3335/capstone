@@ -212,7 +212,7 @@ mark {
                 <p>${word}</p>
             </div>
             <div class="courses" style="font-size: 7px">
-                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
+                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy}</h4>
                 <table>
                     <tr>
                     <th>#</th>
