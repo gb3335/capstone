@@ -509,9 +509,16 @@ router.post("/local/result", (req, res) => {
       .then(research => {
         if (!research) {
           errors.noresearch = "There is no data for this research";
-          console.log("test");
           res.status(404).json(errors);
         }
+
+        let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
 
         let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
         console.log(text);

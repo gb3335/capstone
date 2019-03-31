@@ -211,15 +211,15 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/localResult"
+                  path="/localresult/research"
                   component={LocalResult}
                 />
               </Switch>
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/journallocalResult"
-                  component={JournalLocalResult}
+                  path="/localresult/journal"
+                  component={LocalResult}
                 />
               </Switch>
               <Switch>

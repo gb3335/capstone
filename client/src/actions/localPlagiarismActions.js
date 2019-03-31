@@ -36,7 +36,6 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
         axios
           .all(promises)
           .then(res => {
-            console.log(res)
             const hm = new jsscompress.Hauffman();
             let newres = [];
             res.forEach(function (r, index) {
@@ -48,7 +47,6 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            console.log(newres);
 
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
@@ -56,7 +54,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
             if (input.fromFlag) {
               history.push(`/localResultSideBySide/research`);
             } else {
-              history.push(`/localResult`);
+              history.push(`/localresult/research`);
             }
 
           })
@@ -113,7 +111,6 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            console.log(newres);
 
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
@@ -121,7 +118,7 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
             if (input.fromFlag) {
               history.push(`/localResultSideBySide/journal`);
             } else {
-              history.push(`/localResult`);
+              history.push(`/localresult/journal`);
             }
 
           })
