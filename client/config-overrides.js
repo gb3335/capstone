@@ -5,7 +5,7 @@ const cspConfigPolicy = {
     'default-src': "'self'  data: blob: 'unsafe-inline' 'unsafe-eval'",
     'base-uri': "'self'",
     'object-src': "'none'",
-    'script-src': ["*"],
+    'script-src': ["'self' data: blob: 'unsafe-inline' 'unsafe-eval'"],
     'style-src': ["*"],
     'img-src': "*",
     'font-src': "*"
