@@ -21,11 +21,11 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
         promises = []
         input.researches.forEach(function (research) {
           if (research._id !== input.docuId) {
-            if(input.abstract){
+            if (input.abstract) {
               if (research.deleted !== 1) {
                 promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
               }
-            }else{
+            } else {
               if (research.document && research.deleted !== 1) {
                 promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
               }
@@ -86,15 +86,15 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
   console.time("Initialize")
   axios
-    .post("/api/plagiarism/local/initialize/pattern", input)
+    .post("/api/plagiarism/local/initialize/journal/pattern", input)
     .then(res => {
       console.log(res.data);
       if (res.data.success) {
         promises = []
-        input.researches.forEach(function (research) {
-          if (research._id !== input.docuId) {
-            if (research.document && research.deleted !== 1) {
-              promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
+        input.journals.forEach(function (journal) {
+          if (journal._id !== input.docuId) {
+            if (journal.document && journal.deleted !== 1) {
+              promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }))
             }
           }
 

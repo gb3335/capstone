@@ -99,7 +99,7 @@ router.get("/:id", (req, res) => {
         errors.nojournal = "There is no data for this journal";
         res.status(404).json(errors);
       }
-
+      delete journal.content;
       res.json(journal);
     })
     .catch(err => res.status(404).json(err));
@@ -181,7 +181,10 @@ router.post(
               { $set: newJournal },
               { new: true }
             )
-              .then(journal => { res.json(journal) })
+              .then(journal => {
+                delete journal.content;
+                res.json(journal)
+              })
               .catch(err => console.log(err));
           }
         });
@@ -326,7 +329,10 @@ router.post(
       // Add to exp array
       journal.author.unshift(newAuthor);
 
-      journal.save().then(journal => res.json(journal));
+      journal.save().then(journal => {
+        delete journal.content;
+        res.json(journal)
+      });
     });
   }
 );
@@ -373,13 +379,16 @@ router.delete(
         journal.author.splice(removeIndex, 1);
 
         // Save
-        journal.save().then(journal => res.json(journal));
+        journal.save().then(journal => {
+          delete journal.content;
+          res.json(journal)
+        });
       })
       .catch(err => res.status(404).json(err));
   }
 );
 
-// @route   POST api/researches/images
+// @route   POST api/journals/images
 // @desc    Add images to journal
 // @access  Private
 router.post(
@@ -556,7 +565,7 @@ router.post(
             { $set: newDocument },
             { new: true }
           ).then(journal => {
-            delete journal.content.text
+            delete journal.content
             res.json(journal)
           });
 
@@ -592,6 +601,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength: ""
+      },
       lastUpdate: Date.now()
     };
 
@@ -608,7 +621,10 @@ router.delete(
       { _id: req.params.journal_id },
       { $set: newDocument },
       { new: true }
-    ).then(journal => res.json(journal));
+    ).then(journal => {
+      delete journal.content;
+      res.json(journal);
+    });
   }
 );
 
@@ -791,7 +807,7 @@ router.post(
           { new: true }
         ).then(journal);
       });
-
+      delete research.content;
       res.json(journal);
     });
   }
@@ -867,6 +883,7 @@ router.post(
           { new: true }
         ).then(journal);
       });
+      delete journal.content;
       res.json(journal);
     });
   }

@@ -37,7 +37,7 @@ const plagiarismOnlineTemplate = require('../../document/plagiarismOnlineTemplat
 
 // Models
 const Research = require("../../models/Research");
-
+const Journal = require("../../models/Journal");
 
 // FOnt
 let fontFooter = "7px";
@@ -51,7 +51,7 @@ router.get("/test", (req, res) => {
   console.log(req.body.text)
   let result = processor.textProcess(stripHtml(req.body.text).toString());
   //result.text = result.text.split(' ');
-  res.json({ 
+  res.json({
     success: true,
     data: result
   })
@@ -289,23 +289,23 @@ router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let abstract = req.body.abstract
 
-  if(abstract){
-    Research.findOne({ _id: docuId },{content:0})
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
-      res.json({
-        success: true,
-        data: stripHtml(research.abstract),
-        docuId
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(research.abstract),
+          docuId
+        })
+
+
       })
-
-
-    })
-    .catch(err => res.status(404).json(err));
-  }else{
+      .catch(err => res.status(404).json(err));
+  } else {
     //option to extract text from page 0 to 10
     var option = { from: 0, to: 10 };
 
@@ -338,7 +338,7 @@ router.post("/get/pattern", (req, res) => {
       });
     });
   }
- 
+
 
 })
 
@@ -349,23 +349,23 @@ router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
   let abstract = req.body.abstract
 
-  if(abstract){
-    Research.findOne({ _id: docuId },{content:0})
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
-      res.json({
-        success: true,
-        data: stripHtml(research.abstract),
-        docuId
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(research.abstract),
+          docuId
+        })
+
+
       })
-
-
-    })
-    .catch(err => res.status(404).json(err));
-  }else{
+      .catch(err => res.status(404).json(err));
+  } else {
     //option to extract text from page 0 to 10
     var option = { from: 0, to: 10 };
     let docuFile = req.body.docuFile;
@@ -397,7 +397,7 @@ router.post("/get/text", (req, res) => {
       });
     });
   }
-  
+
 
 })
 
@@ -410,49 +410,49 @@ router.post("/local/initialize/pattern", (req, res) => {
   let docuFile = req.body.docuFile;
   let abstract = req.body.abstract;
 
-  if(abstract){
-    Research.findOne({ _id: docuId },{content:0})
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
 
-      let newtext = stripHtml(research.abstract);
+        let newtext = stripHtml(research.abstract);
 
-      let {text, len} = processor.textProcess(newtext.toString().toLowerCase());
-      arr = text.split(' ')
+        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+        arr = text.split(' ')
 
-      plagiarism.initialize(arr, len, title, docuId);
-      res.json({
-        success: true
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
+
+
       })
-
-
-    })
-    .catch(err => res.status(404).json(err));
-  }else{
+      .catch(err => res.status(404).json(err));
+  } else {
     Research.findOne({ _id: docuId })
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
 
-      let newtext = research.content.text;
-      const len = research.content.sentenceLength;
-      let arr = newtext.split(' ')
+        let newtext = research.content.text;
+        const len = research.content.sentenceLength;
+        let arr = newtext.split(' ')
 
-      plagiarism.initialize(arr, len, title, docuId);
-      res.json({
-        success: true
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
+
+
       })
-
-
-    })
-    .catch(err => res.status(404).json(err));
+      .catch(err => res.status(404).json(err));
   }
-  
+
 
 
   // const docPath =
@@ -504,48 +504,48 @@ router.post("/local/result", (req, res) => {
   let textFile = req.body.textFile;
   let abstract = req.body.abstract;
 
-  if(abstract){
-    Research.findOne({ _id: textId }, {content:0})
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        console.log("test");
-        res.status(404).json(errors);
-      }
-
-      let {text, len} = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
-      console.log(text);
-      let result = plagiarism.search(text, len, textTitle, textId);
-      res.json({
-        localPlagiarism: {
-          success: true,
-          data: result
+  if (abstract) {
+    Research.findOne({ _id: textId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          console.log("test");
+          res.status(404).json(errors);
         }
-      });
-    })
-    .catch(err => res.status(404).json(err));
-  }else{
+
+        let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
+        console.log(text);
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
     Research.findOne({ _id: textId })
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
-
-      let text = research.content.text;
-      const len = research.content.sentenceLength;
-
-      let result = plagiarism.search(text, len, textTitle, textId);
-      res.json({
-        localPlagiarism: {
-          success: true,
-          data: result
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
         }
-      });
-    })
-    .catch(err => res.status(404).json(err));
+
+        let text = research.content.text;
+        const len = research.content.sentenceLength;
+
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      })
+      .catch(err => res.status(404).json(err));
   }
-  
+
 
   // const docPath =
   //       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
