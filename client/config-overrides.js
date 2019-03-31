@@ -2,11 +2,13 @@ const {override} = require('customize-cra');
 const cspHtmlWebpackPlugin = require("csp-html-webpack-plugin");
 
 const cspConfigPolicy = {
-    'default-src': "*  data: blob: 'unsafe-inline' 'unsafe-eval'",
+    'default-src': "'self'  data: blob: 'unsafe-inline' 'unsafe-eval'",
     'base-uri': "'self'",
     'object-src': "'none'",
-    'script-src': ["*"],
-    'style-src': ["*"]
+    'script-src': ["'self' code.jquery.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com"],
+    'style-src': ["'self' stackpath.bootstrapcdn.com use.fontawesome.com fonts.googleapis.com npmcdn.com"],
+    'img-src': "*",
+    'font-src': "*"
 };
 
 function addCspHtmlWebpackPlugin(config) {
