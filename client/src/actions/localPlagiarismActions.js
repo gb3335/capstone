@@ -184,7 +184,6 @@ export const getTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-
 export const getPattern = (input) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/pattern', input)
@@ -202,10 +201,48 @@ export const getSourcePattern = (input) => dispatch => {
     })
 }
 
+export const getJournalTextPattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  dispatch(setPlagiarismLocalShowDetails())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+export const getJournalPattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+
+export const getJournalSourcePattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+
+
+
+
+
 export const getTargetText = (input) => dispatch => {
   dispatch(setPlagiarismLocalTextLoading())
   dispatch(setTextDocumentId(input.textId))
   axios.post('/api/plagiarism/get/text', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismText(res.data));
+    })
+}
+export const getJournalTargetText = (input) => dispatch => {
+  dispatch(setPlagiarismLocalTextLoading())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/text', input)
     .then(res => {
       dispatch(outputLocalPlagiarismText(res.data));
     })

@@ -9,7 +9,7 @@ import Highlighter from "react-highlight-words";
 
 import { Spring, Transition, animated } from 'react-spring/renderprops';
 
-import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern } from "../../actions/localPlagiarismActions";
+import { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern } from "../../actions/localPlagiarismActions";
 
 import LocalHighlightedResult from './LocalHighlightedResult';
 import ResultStatistics from './ResultStatistics';
@@ -42,9 +42,10 @@ class LocalResult extends Component {
     // let newob = journals.find(obj => obj._id === docuId);
     const input = {
       docuId: docuId,
-      docuFile: journal.document
+      docuFile: journal.document,
+      abstract: this.props.localPlagiarism.abstract
     }
-    this.props.getPattern(input);
+    this.props.getJournalPattern(input);
   }
 
   componentDidMount() {
@@ -92,9 +93,10 @@ class LocalResult extends Component {
     const input = {
       docuId: newob.Document.Pattern.Id,
       docuFile: this.props.journal.journal.document,
-      textId: id
+      textId: id,
+      abstract: this.props.localPlagiarism.abstract
     }
-    this.props.getTextPattern(input);
+    this.props.getJournalTextPattern(input);
   }
 
   onClickHideDetails = () => {
@@ -102,7 +104,7 @@ class LocalResult extends Component {
   }
 
   onClickGenerateReport = () => {
-    const { output } = this.props.localPlagiarism;
+    const { output, abstract } = this.props.localPlagiarism;
     this.props.setPlagiarismGenerateReportLoading(true);
 
     const node = ReactDOM.findDOMNode(this);
@@ -120,11 +122,16 @@ class LocalResult extends Component {
       " " +
       this.props.auth.user.lastName;
 
+    let subTypeOfReport = "Checked in the System Database";
+    if (abstract) {
+      subTypeOfReport = "Checked in the System Database (ABSTRACT)"
+    }
     const input = {
+      reportFor: "Journal",
       printedBy: name,
       word,
       typeOfReport: "Plagiarism Check Result",
-      subTypeOfReport: "Checked in the System Database",
+      subTypeOfReport,
       output
     }
     this.props.createLocalPlagiarismReport(input);
@@ -260,9 +267,9 @@ class LocalResult extends Component {
                     <div className="sourceContent">
                       <ResultStatistics output={output} />
                     </div>
-                    <div className="sourceHeader">Research Title</div>
+                    <div className="sourceHeader">Journal Title</div>
                     <div className="sourceContent">{journal.title}</div>
-                    <div className="sourceHeader">Research Details</div>
+                    <div className="sourceHeader">Journal Details</div>
                     <div className="sourceContent researchDetails">
                       <div>
                         <span>College: </span>
@@ -272,17 +279,18 @@ class LocalResult extends Component {
                         <span>Course: </span>
                         {journal.course}
                       </div>
-                      <div>
-                        <span>Research Type: </span>
-                        {journal.type === "thesis" ? <span className="badge badge-success">{journal.type}</span> : <span className="badge badge-info">{journal.type}</span>}
-                      </div>
+
                       <div>
                         <span>Pages: </span>
                         {journal.pages}
                       </div>
                       <div>
-                        <span>School Year: </span>
-                        {journal.schoolYear}
+                        <span>Year Published: </span>
+                        {journal.yearPublished}
+                      </div>
+                      <div>
+                        <span>Publisher: </span>
+                        {journal.publisher}
                       </div>
                       <div>
                         <span>Last Update: </span>
@@ -328,7 +336,7 @@ class LocalResult extends Component {
     const { generateReport } = this.props.localPlagiarism;
 
     return (
-      <div className="journal">
+      <div className="research">
         <div className="forHide">
           {forhide};
         </div>
@@ -382,8 +390,8 @@ LocalResult.propTypes = {
   auth: PropTypes.object.isRequired,
   setPlagiarismLocalHideDetails: PropTypes.func.isRequired,
   setPlagiarismGenerateReportLoading: PropTypes.func.isRequired,
-  getTextPattern: PropTypes.func.isRequired,
-  getPattern: PropTypes.func.isRequired,
+  getJournalTextPattern: PropTypes.func.isRequired,
+  getJournalPattern: PropTypes.func.isRequired,
   createLocalPlagiarismReport: PropTypes.func.isRequired
 };
 
@@ -393,4 +401,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern })(LocalResult);
+export default connect(mapStateToProps, { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern })(LocalResult);

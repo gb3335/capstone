@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
 import { addDocument, deleteDocument, onSideBySide } from "../../actions/journalActions";
-import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
+import { journalPlagiarismLocal } from "../../actions/localPlagiarismActions";
 import Spinner from "../common/Spinner";
 
 import './JournalDocumentAction.css'
@@ -73,17 +73,23 @@ class ResearchImageActions extends Component {
       docuId: this.props.journal.journal._id,
       title: this.props.journal.journal.title,
       docuFile: this.props.journal.journal.document,
-      researches: this.props.journal.researches,
+      journals: this.props.journal.journals,
       flag: true,
-      fromFlag: false
+      fromFlag: false,
+      abstract: false
     };
 
-    this.props.checkPlagiarismLocal(input, this.props.history);
+    this.props.journalPlagiarismLocal(input, this.props.history);
   };
 
   onSidebySideFlagTrue = e => {
-    this.props.onSideBySide(true);
+    const input = {
+      fromFlag: true,
+      abstract: false
+    }
+    this.props.onSideBySide(input);
   };
+
 
   render() {
     const { journal } = this.props.journal;
@@ -151,7 +157,7 @@ class ResearchImageActions extends Component {
 ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
-  checkPlagiarismLocal: PropTypes.func.isRequired,
+  journalPlagiarismLocal: PropTypes.func.isRequired,
   onSideBySide: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
@@ -168,5 +174,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addDocument, deleteDocument, checkPlagiarismLocal, onSideBySide }
+  { addDocument, deleteDocument, journalPlagiarismLocal, onSideBySide }
 )(withRouter(ResearchImageActions));

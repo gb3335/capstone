@@ -219,7 +219,7 @@ class Main extends Component {
                 <PrivateRoute
                   exact
                   path="/localresult/journal"
-                  component={LocalResult}
+                  component={JournalLocalResult}
                 />
               </Switch>
               <Switch>

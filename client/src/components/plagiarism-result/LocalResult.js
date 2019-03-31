@@ -121,12 +121,13 @@ class LocalResult extends Component {
       this.props.auth.user.middleName +
       " " +
       this.props.auth.user.lastName;
-    
-    let subTypeOfReport="Checked in the System Database";
-    if(abstract){
-      subTypeOfReport="Checked in the System Database (ABSTRACT)"
+
+    let subTypeOfReport = "Checked in the System Database";
+    if (abstract) {
+      subTypeOfReport = "Checked in the System Database (ABSTRACT)"
     }
     const input = {
+      reportFor: "Research",
       printedBy: name,
       word,
       typeOfReport: "Plagiarism Check Result",

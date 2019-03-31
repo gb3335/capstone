@@ -10,14 +10,22 @@ import {
   TOGGLE_JOURNAL_BIN,
   TOGGLE_JOURNAL_LIST,
   CHANGE_BUTTON_STATUS_JOURNAL,
-  TOGGLE_SIDE_BY_SIDE_JOURNAL
+  TOGGLE_SIDE_BY_SIDE_JOURNAL,
+  SET_DESCRIPTION_CLICK
 } from "./types";
 
-export const onSideBySide = flag => {
-  console.log(flag);
-  return {
+export const onSideBySide = input => dispatch => {
+  dispatch(setAbstractClick(input.abstract));
+  dispatch({
     type: TOGGLE_SIDE_BY_SIDE_JOURNAL,
-    payload: flag
+    payload: input.fromFlag
+  });
+};
+
+export const setAbstractClick = abstract => {
+  return {
+    type: SET_DESCRIPTION_CLICK,
+    payload: abstract
   };
 };
 // Get all journals

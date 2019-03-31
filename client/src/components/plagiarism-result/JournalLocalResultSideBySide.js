@@ -9,7 +9,7 @@ import './LocalResultSideBySide.css'
 
 import ResultPie from './ResultPie';
 
-import { getSourcePattern, getTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading } from "../../actions/localPlagiarismActions";
+import { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading } from "../../actions/localPlagiarismActions";
 
 import Highlighter from "react-highlight-words";
 
@@ -46,7 +46,7 @@ class LocalResultSideBySide extends Component {
       textId: output[0].Document.Text.Id
     }
 
-    this.props.getSourcePattern(input);
+    this.props.getJournalSourcePattern(input);
 
     let textdocument = journals.find(obj => obj._id === output[0].Document.Text.Id)
 
@@ -57,7 +57,7 @@ class LocalResultSideBySide extends Component {
     }
 
 
-    this.props.getTargetText(input2);
+    this.props.getJournalTargetText(input2);
 
     let words = [];
     if (output[0].Index.length > 0) {
@@ -303,9 +303,9 @@ class LocalResultSideBySide extends Component {
 LocalResultSideBySide.propTypes = {
   localPlagiarism: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
-  getSourcePattern: PropTypes.func.isRequired,
+  getJournalSourcePattern: PropTypes.func.isRequired,
   createLocalSideBySidePlagiarismReport: PropTypes.func.isRequired,
-  getTargetText: PropTypes.func.isRequired,
+  getJournalTargetText: PropTypes.func.isRequired,
   setPlagiarismGenerateReportLoading: PropTypes.func.isRequired
 };
 
@@ -315,4 +315,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getSourcePattern, getTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading })(LocalResultSideBySide)
+export default connect(mapStateToProps, { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading })(LocalResultSideBySide)
