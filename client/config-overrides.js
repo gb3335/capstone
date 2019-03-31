@@ -6,7 +6,8 @@ const cspConfigPolicy = {
     'base-uri': "'self'",
     'object-src': "'none'",
     'script-src': ["*"],
-    'style-src': ["*"]
+    'style-src': ["*"],
+    'img-src': "*"
 };
 
 function addCspHtmlWebpackPlugin(config) {
