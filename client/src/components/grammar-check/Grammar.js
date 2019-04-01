@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable'
 import stripHtml from "string-strip-html";
 
-import {checkGrammar} from '../../actions/grammarActions';
+import {checkGrammar, clearError} from '../../actions/grammarActions';
 
 import './Grammar.css'
 
@@ -32,6 +32,7 @@ class Grammar extends Component {
     }
 
     componentDidMount() {
+        this.props.clearError();
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
       }
@@ -126,6 +127,7 @@ class Grammar extends Component {
         let html = stripHtml(this.state.html);
         html = html.replace(/\s+/g," ");
         this.setState({original:html})
+        console.log(html);
         const input = {
             input: html
         }
@@ -142,9 +144,12 @@ class Grammar extends Component {
 
     const {matches, id} = this.state
     let items;
+    let message;
     if(id!==""){
+        message = <li className="message" key={id}>{matches[id].message}</li>
+
         items = matches[id].replacements.map((replacement, index) =>(
-            <li onClick={() => this.onGetValue(index)} key={index}>{replacement.value}</li>
+            <li className="suggest" onClick={() => this.onGetValue(index)} key={index}>{replacement.value}</li>
         ))
     }
         
@@ -158,24 +163,28 @@ class Grammar extends Component {
       <div className="container">
         <div className="sourceResearch">
         
-            <ul className="menu" ref={this.menuRef}style={{display: this.state.display, top: this.state.top, left: this.state.left}}>
-                {items}
+            <ul className="menu" style={{display: this.state.display, top: this.state.top, left: this.state.left}}>
+                    {message}
+                    <div className="suggestDiv" ref={this.menuRef}>
+                        {items}
+                    </div>
+                
             </ul>
             
             <div className="sourceHeader">Grammar Checker</div>
-            <div className="sourceContents">
-                <ContentEditable
-                    spellCheck="false"
-                    className="editableDiv"
-                    innerRef={this.contentEditable}
-                    html={this.state.html} // innerHTML of the editable div
-                    disabled={false}       // use true to disable editing
-                    onChange={this.handleChange} // handle innerHTML change
-                    tagName='p'
-                    onClick={this.onCorrect}
-                />
-                
+            <div className="sourceContents is-invalid">
+                    <ContentEditable
+                        spellCheck="false"
+                        className="editableDiv"
+                        innerRef={this.contentEditable}
+                        html={this.state.html} // innerHTML of the editable div
+                        disabled={false}       // use true to disable editing
+                        onChange={this.handleChange} // handle innerHTML change
+                        tagName='p'
+                        onClick={this.onCorrect}
+                    />
             </div>
+            {this.props.errors ? <p className="error">{this.props.errors.grammarInput}</p> : ""}
             {loading ? <button className="btn btn-primary btn-block btn-flat disabled">Checking Grammar...</button>
                     : <button onClick={this.onGrammarCheck} className="btn btn-primary btn-block btn-flat">Check Grammar</button>
             }
@@ -189,6 +198,7 @@ class Grammar extends Component {
 
 Grammar.propTypes = {
     checkGrammar: PropTypes.func.isRequired,
+    clearError: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     grammar: PropTypes.object.isRequired
 }
@@ -199,4 +209,4 @@ const mapStateToProps = (state) => ({
 })
 
 
-export default connect(mapStateToProps, {checkGrammar})(Grammar)
+export default connect(mapStateToProps, {checkGrammar,clearError})(Grammar)
