@@ -11,6 +11,8 @@ import {
   createReportForColleges
 } from "../../actions/collegeActions";
 
+import "./Colleges.css";
+
 const customStyles = {
   content: {
     top: "50%",
@@ -212,18 +214,14 @@ class CollegesActions extends Component {
           Please wait for the report to generate
         </SweetAlert>
 
-        <div className="btn-group mb-3 btn-group-sm" role="group">
+        <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
           {addAction}
           {reportAction}
           {binActionForAuth}
-        </div>
-        <div
-          className="btn-group mb-3 btn-group-sm"
-          role="group"
-          style={{ float: "right" }}
-        >
+          <div className="spacer" />
           {listAction}
         </div>
+
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}

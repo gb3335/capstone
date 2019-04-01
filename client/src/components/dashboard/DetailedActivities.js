@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
-import Moment from "react-moment";
+import moment from "moment";
 import SweetAlert from "react-bootstrap-sweetalert";
-import "moment-timezone";
 
 import {
   getActivities,
@@ -73,9 +71,8 @@ class DetailedActivities extends Component {
               user: activity.by,
               type: activity.type,
               date:
-                activity.date.substring(0, 10) +
-                " at " +
-                activity.date.substring(11, 16)
+                activity.date +
+                moment(activity.date).format("MMMM Do YYYY, h:mm A")
             }
           : {
               activity: null,
@@ -91,7 +88,16 @@ class DetailedActivities extends Component {
             { title: "Activity", field: "activity" },
             { title: "User", field: "user" },
             { title: "Type", field: "type" },
-            { title: "Date", field: "date" }
+            {
+              title: "Date",
+              field: "date",
+              render: rowData => {
+                const date = moment(rowData.date.substr(0, 24)).format(
+                  "MMMM Do YYYY, h:mm A"
+                );
+                return date;
+              }
+            }
           ]}
           options={{
             pageSizeOptions: [10, 20, 30, 50, 100],

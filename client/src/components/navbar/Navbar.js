@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+
+import SearchBar from "./SearchBar";
+
 import { logoutUser } from "../../actions/authActions";
 import { clearCurrentProfile } from "../../actions/authActions";
 import { changePageTitle } from "../../actions/sidebarActions";
@@ -48,15 +51,15 @@ class Navbar extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
-    let path = ""
+    let path = "";
 
     if (user.avatar === "/images/User.png") {
-      path = "/images/User.png"
+      path = "/images/User.png";
+    } else {
+      path =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+        user.avatar;
     }
-    else {
-      path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
-    }
-
 
     // const { pageTitle } = this.props.sidebar;
 
@@ -98,19 +101,19 @@ class Navbar extends Component {
           >
             <ul className="account_submenus">
               <li>
-                <Link to={/viewusers/ + this.props.auth.user.id}>My Account</Link>
+                <Link to={/viewusers/ + this.props.auth.user.id}>
+                  My Account
+                </Link>
               </li>
               <li>
                 <Link to="#" onClick={this.onLogoutClick.bind(this)}>
                   Logout
                 </Link>
               </li>
-
-
             </ul>
           </div>
         </li>
-      </ul >
+      </ul>
     );
 
     return (
@@ -124,6 +127,10 @@ class Navbar extends Component {
             <i className="fa fa-grip-vertical" />
           </Link>
         </div>
+        <div className="ml-3" style={{ width: "40vw" }}>
+          <SearchBar />
+        </div>
+
         <div className="head-title">
           {/* <span>{pageTitle}</span> */}
           {/* <Link to="/">{pageTitle}</Link> */}

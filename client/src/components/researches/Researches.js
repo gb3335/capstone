@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
+import moment from "moment";
 
 import "./Researches.css";
 
@@ -61,6 +62,11 @@ class Researches extends Component {
                           ? "Active"
                           : "Hidden"
                         : "Deleted",
+                    updated:
+                      research.lastUpdate +
+                      moment(research.lastUpdate).format(
+                        "MMMM Do YYYY, h:mm A"
+                      ),
                     view: (
                       <Link
                         to={/researches/ + research._id}
@@ -75,6 +81,7 @@ class Researches extends Component {
                     college: null,
                     course: null,
                     status: null,
+                    updated: null,
                     view: null
                   }
             );
@@ -107,6 +114,11 @@ class Researches extends Component {
                           ? "Active"
                           : "Hidden"
                         : "Deleted",
+                    updated:
+                      research.lastUpdate +
+                      moment(research.lastUpdate).format(
+                        "MMMM Do YYYY, h:mm A"
+                      ),
                     view: (
                       <Link
                         to={/researches/ + research._id}
@@ -121,6 +133,7 @@ class Researches extends Component {
                     college: null,
                     course: null,
                     status: null,
+                    updated: null,
                     view: null
                   }
             );
@@ -151,6 +164,11 @@ class Researches extends Component {
                           ? "Active"
                           : "Hidden"
                         : "Deleted",
+                    updated:
+                      research.lastUpdate +
+                      moment(research.lastUpdate).format(
+                        "MMMM Do YYYY, h:mm A"
+                      ),
                     view: (
                       <Link
                         to={/researches/ + research._id}
@@ -165,6 +183,7 @@ class Researches extends Component {
                     college: null,
                     course: null,
                     status: null,
+                    updated: null,
                     view: null
                   }
               : {
@@ -172,6 +191,7 @@ class Researches extends Component {
                   college: null,
                   course: null,
                   status: null,
+                  updated: null,
                   view: null
                 }
           );
@@ -210,6 +230,16 @@ class Researches extends Component {
               { title: "College", field: "college" },
               { title: "Course", field: "course" },
               { title: "Status", field: "status" },
+              {
+                title: "Updated on",
+                field: "updated",
+                render: rowData => {
+                  const date = moment(rowData.updated.substr(0, 24)).format(
+                    "MMMM Do YYYY, h:mm A"
+                  );
+                  return date;
+                }
+              },
               { title: "View Details", field: "view" }
             ]}
             options={{
