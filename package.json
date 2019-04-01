@@ -46,6 +46,7 @@
     "request": "^2.88.0",
     "sentence-tokenizer": "^1.0.1",
     "stopword": "^0.1.13",
+    "string-strip-html": "^4.0.10",
     "striptags": "^3.1.1",
     "text-scraping": "0.0.8",
     "unfluff": "^3.2.0",

@@ -5,7 +5,9 @@ import {
   TOGGLE_JOURNAL_BIN,
   TOGGLE_JOURNAL_LIST,
   CHANGE_BUTTON_STATUS_JOURNAL,
-  TOGGLE_SIDE_BY_SIDE_JOURNAL
+  TOGGLE_SIDE_BY_SIDE_JOURNAL,
+  SET_DESCRIPTION_CLICK
+
 } from "../actions/types";
 
 const initialState = {
@@ -15,7 +17,7 @@ const initialState = {
   buttonDisable: false,
   bin: false,
   onSideBySide: false,
-
+  description: false
 
   //  research: {},
   // researches: {},
@@ -62,6 +64,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         onSideBySide: action.payload
+      };
+    case SET_DESCRIPTION_CLICK:
+      return {
+        ...state,
+        abstract: action.payload
       };
     default:
       return state;

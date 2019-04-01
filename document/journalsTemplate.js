@@ -234,7 +234,7 @@ module.exports = ({
           <h4>University Research Office</h4>
         </div>
         <div class="courses" style="font-size: 5px">
-          <p style="font-size: 7px"><b>Total # of Colleges: </b>${totalNumOfJournals}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <p style="font-size: 7px"><b>Total # of Research: </b>${totalNumOfJournals}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
           <table>
           ${journalListHeaders}
           ${journalsListNoComma}

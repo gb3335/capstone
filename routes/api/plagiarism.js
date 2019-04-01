@@ -3,6 +3,7 @@ const router = express.Router();
 const request = require("request");
 const fs = require('fs');
 const extract = require('pdf-text-extract');
+const stripHtml = require("string-strip-html");
 const pdfUtil = require('pdf-to-text');
 const download = require("download-pdf");
 const pdf = require("html-pdf");
@@ -36,7 +37,7 @@ const plagiarismOnlineTemplate = require('../../document/plagiarismOnlineTemplat
 
 // Models
 const Research = require("../../models/Research");
-
+const Journal = require("../../models/Journal");
 
 // FOnt
 let fontFooter = "7px";
@@ -45,6 +46,15 @@ let fontFooter = "7px";
 // @desc    Test plagiarism route
 // @access  public
 router.get("/test", (req, res) => {
+
+
+  console.log(req.body.text)
+  let result = processor.textProcess(stripHtml(req.body.text).toString());
+  //result.text = result.text.split(' ');
+  res.json({
+    success: true,
+    data: result
+  })
 
   // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
   // const newString = processor.textProcess(oldString);
@@ -100,12 +110,12 @@ router.get("/test", (req, res) => {
 
   // })
 
-  scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
-    console.log(response)
-    let data = response.join('');
-    console.log(data.length)
-    res.send(data);//Returns text
-  });
+  // scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
+  //   console.log(response)
+  //   let data = response.join('');
+  //   console.log(data.length)
+  //   res.send(data);//Returns text
+  // });
 
   // res.json({ msg: "Plagiarism Works!" });
 });
@@ -277,77 +287,237 @@ router.post("/online", (req, res) => {
 // @access  public
 router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
+  let abstract = req.body.abstract
 
-  //option to extract text from page 0 to 10
-  var option = { from: 0, to: 10 };
-
-  let docuFile = req.body.docuFile;
-  const docPath =
-    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-    docuFile;
-
-  const options = {
-    directory: "./routes/downloadedDocu/",
-    filename: docuFile
-  };
-
-  download(docPath, options, function (err) {
-    if (err) console.log(err);
-    console.log("Document successfully downloaded.");
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(research.abstract),
+          docuId
+        })
 
 
-      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-        if (err) throw err;
-        console.log('successfully deleted');
-      });
-
-      res.json({
-        success: true,
-        data: data.toString(),
-        docuId
       })
+      .catch(err => res.status(404).json(err));
+  } else {
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          docuId
+        })
+      });
     });
-  });
+  }
+
 
 })
+
+
+// @routes  POST api/extract/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/get/journal/pattern", (req, res) => {
+  let docuId = req.body.docuId;
+  let abstract = req.body.abstract
+  if (abstract) {
+    Journal.findOne({ _id: docuId }, { content: 0 })
+      .then(journal => {
+        if (!journal) {
+          errors.noresearch = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(journal.abstract),
+          docuId
+        })
+
+
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          docuId
+        })
+      });
+    });
+  }
+
+
+})
+
+
 
 // @routes  POST api/extract/pattern
 // @desc    extract patter pdf
 // @access  public
 router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
+  let abstract = req.body.abstract
 
-  //option to extract text from page 0 to 10
-  var option = { from: 0, to: 10 };
-  let docuFile = req.body.docuFile;
-  const docPath =
-    "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-    docuFile;
-
-  const options = {
-    directory: "./routes/downloadedDocu/",
-    filename: docuFile
-  };
-
-  download(docPath, options, function (err) {
-    if (err) console.log(err);
-    console.log("Document successfully downloaded.");
-    pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(research.abstract),
+          docuId
+        })
 
 
-      fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-        if (err) throw err;
-        console.log('successfully deleted');
-      });
-
-      res.json({
-        success: true,
-        data: data.toString(),
-        textId: docuId
       })
+      .catch(err => res.status(404).json(err));
+  } else {
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          textId: docuId
+        })
+      });
     });
-  });
+  }
+
+
+})
+// @routes  POST api/extract/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/get/journal/text", (req, res) => {
+  let docuId = req.body.docuId;
+  let abstract = req.body.abstract
+
+  if (abstract) {
+    Journal.findOne({ _id: docuId }, { content: 0 })
+      .then(journal => {
+        if (!journal) {
+          errors.nojournal = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+        res.json({
+          success: true,
+          data: stripHtml(journal.abstract),
+          docuId
+        })
+
+
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
+    //option to extract text from page 0 to 10
+    var option = { from: 0, to: 10 };
+    let docuFile = req.body.docuFile;
+    const docPath =
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
+      docuFile;
+
+    const options = {
+      directory: "./routes/downloadedDocu/",
+      filename: docuFile
+    };
+
+    download(docPath, options, function (err) {
+      if (err) console.log(err);
+      console.log("Document successfully downloaded.");
+      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+
+
+        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+          if (err) throw err;
+          console.log('successfully deleted');
+        });
+
+        res.json({
+          success: true,
+          data: data.toString(),
+          textId: docuId
+        })
+      });
+    });
+  }
+
 
 })
 
@@ -358,26 +528,51 @@ router.post("/local/initialize/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let title = req.body.title;
   let docuFile = req.body.docuFile;
+  let abstract = req.body.abstract;
 
-  Research.findOne({ _id: docuId })
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
+  if (abstract) {
+    Research.findOne({ _id: docuId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
 
-      let newtext = research.content.text;
-      const len = research.content.sentenceLength;
-      let arr = newtext.split(' ')
+        let newtext = stripHtml(research.abstract);
 
-      plagiarism.initialize(arr, len, title, docuId);
-      res.json({
-        success: true
+        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+        arr = text.split(' ')
+
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
+
+
       })
+      .catch(err => res.status(404).json(err));
+  } else {
+    Research.findOne({ _id: docuId })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+
+        let newtext = research.content.text;
+        const len = research.content.sentenceLength;
+        let arr = newtext.split(' ')
+
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
 
 
-    })
-    .catch(err => res.status(404).json(err));
+      })
+      .catch(err => res.status(404).json(err));
+  }
+
 
 
   // const docPath =
@@ -413,6 +608,61 @@ router.post("/local/initialize/pattern", (req, res) => {
 })
 
 
+// @routes  POST api/local/initialize/pattern
+// @desc    extract patter pdf
+// @access  public
+router.post("/local/initialize/journal/pattern", (req, res) => {
+  let docuId = req.body.docuId;
+  let title = req.body.title;
+  let docuFile = req.body.docuFile;
+  let description = req.body.description;
+
+  if (description) {
+    Journal.findOne({ _id: docuId }, { content: 0 })
+      .then(journal => {
+        if (!journal) {
+          errors.nojournal = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+
+        let newtext = stripHtml(journal.description);
+
+        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+        arr = text.split(' ')
+
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
+
+
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
+    Journal.findOne({ _id: docuId })
+      .then(journal => {
+        if (!journal) {
+          errors.nojournal = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+
+        let newtext = journal.content.text;
+        const len = journal.content.sentenceLength;
+        let arr = newtext.split(' ')
+
+        plagiarism.initialize(arr, len, title, docuId);
+        res.json({
+          success: true
+        })
+
+
+      })
+      .catch(err => res.status(404).json(err));
+  }
+})
+
+
+
 // @routes  POST api/plagiarism/local
 // @desc    search local route
 // @access  public
@@ -427,26 +677,49 @@ router.post("/local/result", (req, res) => {
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   let textFile = req.body.textFile;
+  let abstract = req.body.abstract;
 
-  Research.findOne({ _id: textId })
-    .then(research => {
-      if (!research) {
-        errors.noresearch = "There is no data for this research";
-        res.status(404).json(errors);
-      }
-
-      let text = research.content.text;
-      const len = research.content.sentenceLength;
-
-      let result = plagiarism.search(text, len, textTitle, textId);
-      res.json({
-        localPlagiarism: {
-          success: true,
-          data: result
+  if (abstract) {
+    Research.findOne({ _id: textId }, { content: 0 })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
         }
-      });
-    })
-    .catch(err => res.status(404).json(err));
+
+        let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
+    Research.findOne({ _id: textId })
+      .then(research => {
+        if (!research) {
+          errors.noresearch = "There is no data for this research";
+          res.status(404).json(errors);
+        }
+
+        let text = research.content.text;
+        const len = research.content.sentenceLength;
+
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  }
+
 
   // const docPath =
   //       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
@@ -520,6 +793,62 @@ router.post("/local/result", (req, res) => {
   // });
 
 });
+
+// @routes  POST api/plagiarism/local
+// @desc    search local route
+// @access  public
+router.post("/local/journal/result", (req, res) => {
+
+  let textId = req.body.textId;
+  let textTitle = req.body.textTitle;
+  let textFile = req.body.textFile;
+  let abstract = req.body.abstract;
+
+  if (abstract) {
+    Journal.findOne({ _id: textId }, { content: 0 })
+      .then(journal => {
+        if (!journal) {
+          errors.nojournal = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+
+        let { text, len } = processor.textProcess(stripHtml(journal.abstract).toString().toLowerCase());
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  } else {
+    Journal.findOne({ _id: textId })
+      .then(journal => {
+        if (!journal) {
+          errors.nojournal = "There is no data for this journal";
+          res.status(404).json(errors);
+        }
+
+        let text = journal.content.text;
+        const len = journal.content.sentenceLength;
+
+        let result = plagiarism.search(text, len, textTitle, textId);
+        res.json({
+          localPlagiarism: {
+            success: true,
+            data: result
+          }
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  }
+
+});
+
+
+
 
 router.post('/create/report/local', (req, res) => {
   req.connection.setTimeout(1000 * 60 * 10);

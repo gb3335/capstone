@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument, onSideBySide } from "../../actions/researchActions";
-import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
+import { addDocument, deleteDocument, onSideBySide } from "../../actions/journalActions";
+import { journalPlagiarismLocal } from "../../actions/localPlagiarismActions";
 import Spinner from "../common/Spinner";
 
-import './ResearchDocumentActions.css'
+import './JournalDocumentAction.css'
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -41,8 +41,8 @@ class ResearchImageActions extends Component {
           this.props.auth.user.lastName;
 
         const docuData = {
-          researchId: this.props.research.research._id,
-          oldFile: this.props.research.research.document,
+          journalId: this.props.journal.journal._id,
+          oldFile: this.props.journal.journal.document,
           file: this.state.file,
           username: name
         };
@@ -62,39 +62,40 @@ class ResearchImageActions extends Component {
       " " +
       this.props.auth.user.lastName;
 
-    const researchId = this.props.research.research._id;
-    const filename = this.props.research.research.document;
+    const journalId = this.props.journal.journal._id;
+    const filename = this.props.journal.journal.document;
 
-    this.props.deleteDocument(researchId, filename, name);
+    this.props.deleteDocument(journalId, filename, name);
   };
 
   onLocalCheck = e => {
     const input = {
-      docuId: this.props.research.research._id,
-      title: this.props.research.research.title,
-      docuFile: this.props.research.research.document,
-      researches: this.props.research.researches,
+      docuId: this.props.journal.journal._id,
+      title: this.props.journal.journal.title,
+      docuFile: this.props.journal.journal.document,
+      journals: this.props.journal.journals,
       flag: true,
       fromFlag: false,
       abstract: false
     };
 
-    this.props.checkPlagiarismLocal(input, this.props.history);
+    this.props.journalPlagiarismLocal(input, this.props.history);
   };
 
   onSidebySideFlagTrue = e => {
     const input = {
       fromFlag: true,
       abstract: false
-  }
+    }
     this.props.onSideBySide(input);
   };
 
+
   render() {
-    const { research } = this.props.research;
+    const { journal } = this.props.journal;
     let docuItem;
 
-    if (research.document) {
+    if (journal.document) {
       docuItem = (
         <div className="docuItem btn-group-sm">
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
@@ -156,22 +157,22 @@ class ResearchImageActions extends Component {
 ResearchImageActions.propTypes = {
   addDocument: PropTypes.func.isRequired,
   deleteDocument: PropTypes.func.isRequired,
-  checkPlagiarismLocal: PropTypes.func.isRequired,
+  journalPlagiarismLocal: PropTypes.func.isRequired,
   onSideBySide: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  research: PropTypes.object.isRequired,
+  journal: PropTypes.object.isRequired,
   localPlagiarism: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  research: state.research,
+  journal: state.journal,
   localPlagiarism: state.localPlagiarism,
   auth: state.auth
 });
 
 export default connect(
   mapStateToProps,
-  { addDocument, deleteDocument, checkPlagiarismLocal, onSideBySide }
+  { addDocument, deleteDocument, journalPlagiarismLocal, onSideBySide }
 )(withRouter(ResearchImageActions));

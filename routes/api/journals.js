@@ -20,15 +20,15 @@ let pdfJournalsTemplate;
 let pdfJournalTemplate;
 let fontFooter;
 
-if (process.env.NODE_ENV === "production") {
-  pdfJournalsTemplate = require("../../document/journalsTemplate");
-  pdfJournalTemplate = require("../../document/journalTemplate");
-  fontFooter = "7px";
-} else {
-  pdfJournalsTemplate = require("../../document/journalsTemplate_Dev");
-  pdfJournalTemplate = require("../../document/journalTemplate_Dev");
-  fontFooter = "10px";
-}
+// if (process.env.NODE_ENV === "production") {
+pdfJournalsTemplate = require("../../document/journalsTemplate");
+pdfJournalTemplate = require("../../document/journalTemplate");
+fontFooter = "7px";
+// } else {
+//   pdfJournalsTemplate = require("../../document/journalsTemplate_Dev");
+//   pdfJournalTemplate = require("../../document/journalTemplate_Dev");
+//   fontFooter = "10px";
+// }
 
 // Journal model
 const Journal = require("../../models/Journal");
@@ -99,7 +99,7 @@ router.get("/:id", (req, res) => {
         errors.nojournal = "There is no data for this journal";
         res.status(404).json(errors);
       }
-
+      delete journal.content;
       res.json(journal);
     })
     .catch(err => res.status(404).json(err));
@@ -181,7 +181,10 @@ router.post(
               { $set: newJournal },
               { new: true }
             )
-              .then(journal => { res.json(journal) })
+              .then(journal => {
+                delete journal.content;
+                res.json(journal)
+              })
               .catch(err => console.log(err));
           }
         });
@@ -295,7 +298,7 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    Journal.findOne({ _id: req.body.researchId }).then(journal => {
+    Journal.findOne({ _id: req.body.journalId }).then(journal => {
       const newAuthor = {
         name: req.body.name,
         role: req.body.role
@@ -318,7 +321,7 @@ router.post(
       };
 
       Journal.findOneAndUpdate(
-        { _id: req.body.researchId },
+        { _id: req.body.journalId },
         { $set: newJournal },
         { new: true }
       ).then(journal);
@@ -326,50 +329,10 @@ router.post(
       // Add to exp array
       journal.author.unshift(newAuthor);
 
-      journal.save().then(journal => res.json(journal));
-    });
-  }
-);
-
-router.post(
-  "/publisher",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const { errors, isValid } = validateAuthorInput(req.body);
-
-    // Check Validation
-    if (!isValid) {
-      // Return any errors with 400 status
-      return res.status(400).json(errors);
-    }
-
-    Journal.findOne({ _id: req.body.researchId }).then(journal => {
-      const newAuthor = {
-        name: req.body.name,
-        role: req.body.role
-      };
-
-      // add activity
-      const newActivity = {
-        title: req.body.name + " added as Publisher in " + journal.title,
-        by: req.body.name
-      };
-      new Activity(newActivity).save();
-
-      const newJournal = {
-        lastUpdate: Date.now()
-      };
-
-      Journal.findOneAndUpdate(
-        { _id: req.body.researchId },
-        { $set: newJournal },
-        { new: true }
-      ).then(journal);
-
-      // Add to exp array
-      journal.author.unshift(newAuthor);
-
-      journal.save().then(journal => res.json(journal));
+      journal.save().then(journal => {
+        delete journal.content;
+        res.json(journal)
+      });
     });
   }
 );
@@ -416,7 +379,10 @@ router.delete(
         journal.author.splice(removeIndex, 1);
 
         // Save
-        journal.save().then(journal => res.json(journal));
+        journal.save().then(journal => {
+          delete journal.content;
+          res.json(journal)
+        });
       })
       .catch(err => res.status(404).json(err));
   }
@@ -430,15 +396,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     let imageArray = [];
+    let imageLen = 0;
     for (i = 0; i < req.body.images.length; i++) {
       const rand = uuid();
-      // let ext = req.body.images[i].split(";")[0].split("/")[1];
-
-      // if (ext == "jpeg") {
-      //   ext = "jpg";
-      // }
-
-      // S3 upload
       s3 = new AWS.S3();
 
       const base64Data = new Buffer(
@@ -465,44 +425,49 @@ router.post(
         }
 
         console.log("Image successfully uploaded.");
-      });
+        ++imageLen;
+        // check if all images is uploaded
+        if (imageLen === req.body.images.length) {
+          Journal.findOne({ _id: req.body.id }).then(journal => {
+            for (i = 0; i < req.body.images.length; i++) {
+              const newImage = {
+                name: imageArray[i]
+              };
 
-      imageArray.push(req.body.id + "-" + rand + ".png");
-      Journal.findOne({ _id: req.body.id }).then(journal => {
-        for (i = 0; i < req.body.images.length; i++) {
-          const newImage = {
-            name: imageArray[i]
-          };
+              // Add to exp array
+              journal.images.unshift(newImage);
+            }
 
-          // Add to exp array
-          journal.images.unshift(newImage);
+            const newResearch = {
+              lastUpdate: Date.now()
+            };
+
+            Journal.findOneAndUpdate(
+              { _id: req.body.id },
+              { $set: newResearch },
+              { new: true }
+            ).then(journal);
+
+            // add activity
+            const newActivity = {
+              title: "Journal: Image/s added to " + journal.title,
+              by: req.body.username,
+              type: "Journal"
+            };
+            new Activity(newActivity).save();
+
+            journal
+              .save()
+              .then(journal => {
+                delete journal.content;
+                res.json(journal);
+              })
+              .catch(err => console.log(err));
+          });
         }
-
-        const newJournal = {
-          lastUpdate: Date.now()
-        };
-
-        Journal.findOneAndUpdate(
-          { _id: req.body.id },
-          { $set: newJournal },
-          { new: true }
-        ).then(journal);
-
-        // add activity
-        const newActivity = {
-          title: "Image added to " + journal.title,
-          by: req.body.username
-        };
-        new Activity(newActivity).save();
-
-        journal
-          .save()
-          .then(journal => res.json(journal))
-          .catch(err => console.log(err));
       });
+      imageArray.push(req.body.id + "-" + rand + ".png");
     }
-
-
   }
 );
 
@@ -516,7 +481,7 @@ router.post(
     const rand = uuid();
     let base64String = req.body.file;
     let base64Doc = base64String.split(";base64,").pop();
-    const filename = req.body.researchId + "-" + rand + ".pdf";
+    const filename = req.body.journalId + "-" + rand + ".pdf";
 
     if (req.body.oldFile) {
       // delete journal document from s3
@@ -548,7 +513,7 @@ router.post(
 
     params = {
       Bucket: "bulsu-capstone",
-      Key: `journalDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
+      Key: `journalDocuments/${req.body.journalId + "-" + rand}.pdf`, // type is not required
       Body: base64Data,
       ACL: "public-read",
       ContentEncoding: "base64", // required
@@ -564,7 +529,7 @@ router.post(
         filename;
       const options = {
         directory: "./routes/downloadedDocu",
-        filename: req.body.researchId + ".pdf"
+        filename: req.body.journalId + ".pdf"
       };
       download(docPath, options, function (err) {
         if (err) console.log(err);
@@ -586,7 +551,7 @@ router.post(
             },
             lastUpdate: Date.now()
           };
-          Journal.findOne({ _id: req.body.researchId }).then(journal => {
+          Journal.findOne({ _id: req.body.journalId }).then(journal => {
             // add activity
             const newActivity = {
               title: "Document added to " + journal.title,
@@ -596,11 +561,11 @@ router.post(
           });
 
           Journal.findOneAndUpdate(
-            { _id: req.body.researchId },
+            { _id: req.body.journalId },
             { $set: newDocument },
             { new: true }
           ).then(journal => {
-            delete journal.content.text
+            delete journal.content
             res.json(journal)
           });
 
@@ -636,6 +601,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength: ""
+      },
       lastUpdate: Date.now()
     };
 
@@ -652,7 +621,10 @@ router.delete(
       { _id: req.params.journal_id },
       { $set: newDocument },
       { new: true }
-    ).then(journal => res.json(journal));
+    ).then(journal => {
+      delete journal.content;
+      res.json(journal);
+    });
   }
 );
 
@@ -757,7 +729,7 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/journalPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/journalsPdf.pdf`, (err) => {
+      fs.unlink(`${reqPath}/journalPdf.pdf`, (err) => {
         if (err) throw err;
         console.log('successfully deleted');
       });
@@ -835,7 +807,7 @@ router.post(
           { new: true }
         ).then(journal);
       });
-
+      delete research.content;
       res.json(journal);
     });
   }
@@ -911,6 +883,7 @@ router.post(
           { new: true }
         ).then(journal);
       });
+      delete journal.content;
       res.json(journal);
     });
   }

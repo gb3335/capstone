@@ -3,47 +3,47 @@ const moment = require("moment");
 const moment_timezone = require('moment-timezone');
 
 module.exports = (input) => {
-  
-const {typeOfReport, subTypeOfReport , output, word} = input;
 
-  let little= 0, moderate= 0, heavy=0;
-  let docuFound="";
+  const { typeOfReport, subTypeOfReport, output, word, reportFor } = input;
+
+  let little = 0, moderate = 0, heavy = 0;
+  let docuFound = "";
   let title = "";
-  let words = "\""+word+"\"";
+  let words = "\"" + word + "\"";
   const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
-  let score="[";
-  output.forEach((out, index)=>{
-      if(out.SimilarityScore>0 && out.SimilarityScore<30){
-        little++;
-        docuFound+=`<tr>
-                      <td>${index+1}</td>
+  let score = "[";
+  output.forEach((out, index) => {
+    if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
+      little++;
+      docuFound += `<tr>
+                      <td>${index + 1}</td>
                       <td>${out.Document.Text.Name}</td>
                       <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
                   </tr>`
-      }else if(out.SimilarityScore>=30 && out.SimilarityScore<=70){
-        moderate++;
-        docuFound+=`<tr>
-                      <td>${index+1}</td>
+    } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
+      moderate++;
+      docuFound += `<tr>
+                      <td>${index + 1}</td>
                       <td>${out.Document.Text.Name}</td>
                       <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
                     </tr>`
-      }
-      else if(out.SimilarityScore>70){
-        heavy++;
-        docuFound+=`<tr>
-                      <td>${index+1}</td>
+    }
+    else if (out.SimilarityScore > 70) {
+      heavy++;
+      docuFound += `<tr>
+                      <td>${index + 1}</td>
                       <td>${out.Document.Text.Name}</td>
                       <td>${parseFloat(out.SimilarityScore).toFixed(2)}%</td>
                     </tr>`
-      }
-      title=out.Document.Pattern.Name;
-      
+    }
+    title = out.Document.Pattern.Name;
+
   })
 
-  docuFound+=`<tr class="blank_row"><td colspan="${3}" style="text-align:center;">- Nothing Follows -</td></tr>`
+  docuFound += `<tr class="blank_row"><td colspan="${3}" style="text-align:center;">- Nothing Follows -</td></tr>`
 
-  score+=little+','+moderate+','+heavy+']'
-  
+  score += little + ',' + moderate + ',' + heavy + ']'
+
 
 
   return `<!DOCTYPE html>
@@ -202,7 +202,7 @@ mark {
           <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
-        <h6>Research Title: ${title}</h6>
+        <h6>${reportFor} Title: ${title}</h6>
         <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
@@ -212,7 +212,7 @@ mark {
                 <p>${word}</p>
             </div>
             <div class="courses" style="font-size: 7px">
-                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy} &nbsp;&nbsp;&nbsp;Date Printed: ${currentDate}</h4>
+                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy}</h4>
                 <table>
                     <tr>
                     <th>#</th>

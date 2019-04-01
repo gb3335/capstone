@@ -2,13 +2,13 @@ import React, { Component } from "react";
 
 class ResearchDocument extends Component {
   render() {
-    const { research } = this.props;
+    const { journal } = this.props;
     const docPath =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
-      research.document;
+      journal.document;
     let fileItems;
 
-    if (research.document) {
+    if (journal.document) {
       fileItems = (
         <div style={{ height: "100vh" }}>
           <iframe src={docPath} height="100%" width="100%" />

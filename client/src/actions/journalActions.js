@@ -10,20 +10,28 @@ import {
   TOGGLE_JOURNAL_BIN,
   TOGGLE_JOURNAL_LIST,
   CHANGE_BUTTON_STATUS_JOURNAL,
-  TOGGLE_SIDE_BY_SIDE_JOURNAL
+  TOGGLE_SIDE_BY_SIDE_JOURNAL,
+  SET_DESCRIPTION_CLICK
 } from "./types";
 
-export const onSideBySide = flag => {
-  console.log(flag);
-  return {
+export const onSideBySide = input => dispatch => {
+  dispatch(setAbstractClick(input.abstract));
+  dispatch({
     type: TOGGLE_SIDE_BY_SIDE_JOURNAL,
-    payload: flag
+    payload: input.fromFlag
+  });
+};
+
+export const setAbstractClick = abstract => {
+  return {
+    type: SET_DESCRIPTION_CLICK,
+    payload: abstract
   };
 };
-// Get all researches
-export const getResearches = () => dispatch => {
+// Get all journals
+export const getJournals = () => dispatch => {
   dispatch(clearErrors());
-  dispatch(setResearchLoading());
+  dispatch(setJournalLoading());
   axios
     .get("/api/journals")
     .then(res =>
@@ -41,7 +49,7 @@ export const getResearches = () => dispatch => {
 };
 
 // Create Report for all Researches
-export const createReportForResearches = reportData => dispatch => {
+export const createReportForJournals = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
   axios
     .post("/api/journals/createReport/journals", reportData)
@@ -57,7 +65,7 @@ export const createReportForResearches = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -78,7 +86,7 @@ export const createReportForResearches = reportData => dispatch => {
 };
 
 // Toggle Research Bin
-export const toggleResearchBin = toggle => {
+export const toggleJournalBin = toggle => {
   if (toggle === 1) {
     return {
       type: TOGGLE_JOURNAL_BIN
@@ -91,9 +99,9 @@ export const toggleResearchBin = toggle => {
 };
 
 // Get research by id
-export const getResearchById = id => dispatch => {
+export const getJournalById = id => dispatch => {
   dispatch(clearErrors());
-  dispatch(setResearchLoading());
+  dispatch(setJournalLoading());
   axios
     .get(`/api/journals/${id}`)
     .then(res =>
@@ -131,10 +139,10 @@ export const createResearch = (researchData, history) => dispatch => {
 
 // Add Author
 export const addAuthor = (authorData, history) => dispatch => {
-  dispatch(setResearchLoading());
+  dispatch(setJournalLoading());
   axios
     .post("/api/journals/author", authorData)
-    .then(res => history.push(`/journals/${authorData.researchId}`))
+    .then(res => history.push(`/journals/${authorData.journalId}`))
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -143,7 +151,7 @@ export const addAuthor = (authorData, history) => dispatch => {
     );
 };
 // Create Report for specific Research
-export const createReportForResearch = reportData => dispatch => {
+export const createReportForJournal = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
   axios
     .post("/api/journals/createReport/journal", reportData)
@@ -159,7 +167,7 @@ export const createReportForResearch = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -181,45 +189,36 @@ export const createReportForResearch = reportData => dispatch => {
 
 // Delete Author
 export const deleteAuthor = (journal, id, name) => dispatch => {
-  if (window.confirm("Are you sure? This can NOT be undone.")) {
-    dispatch(setResearchLoading());
-    axios
-      .delete(`/api/journals/author/${journal}/${id}/${name}`)
-      .then(res =>
-        dispatch({
-          type: GET_JOURNAL,
-          payload: res.data
-        })
-      )
-      .catch(err =>
-        dispatch({
-          type: GET_JOURNAL,
-          payload: err.response.data
-        })
-      );
-  }
+
+  dispatch(setJournalLoading());
+
+  axios
+    .delete(`/api/journals/author/${journal}/${id}/${name}`)
+    .then(res =>
+      dispatch({
+        type: GET_JOURNAL,
+        payload: res.data
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_JOURNAL,
+        payload: err.response.data
+      })
+    );
+
 };
 
 // Add Images
 export const addImages = (data, history) => dispatch => {
-  dispatch(setResearchLoading());
+  dispatch(setJournalLoading());
   axios
     .post("/api/journals/images", data)
-    .then(
-      history.push("/journals"),
-      history.push(`/journals/${data.id}`),
-      res =>
-        dispatch(
-          {
-            type: GET_JOURNALS,
-            payload: res.data
-          },
-          {
-            type: GET_JOURNAL,
-            payload: res.data
-          }
-        )
-    )
+    .then(res => {
+      dispatch(getJournals());
+      history.push("/journals");
+      history.push(`/journals/${data.id}`);
+    })
     .catch(err =>
       dispatch({
         type: GET_ERRORS,
@@ -230,13 +229,13 @@ export const addImages = (data, history) => dispatch => {
 
 // Add Document
 export const addDocument = (docuData, history) => dispatch => {
-  dispatch(setResearchLoading());
+  dispatch(setJournalLoading());
   axios
     .post("/api/journals/document", docuData)
     .then(res => {
-      dispatch(getResearches());
+      dispatch(getJournals());
       history.push("/journals/");
-      history.push(`/journals/${docuData.researchId}`);
+      history.push(`/journals/${docuData.journalId}`);
     })
     .catch(err =>
       dispatch({
@@ -247,11 +246,11 @@ export const addDocument = (docuData, history) => dispatch => {
 };
 
 // Delete Document
-export const deleteDocument = (researchId, filename, name) => dispatch => {
+export const deleteDocument = (journalId, filename, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {
-    dispatch(setResearchLoading());
+    dispatch(setJournalLoading());
     axios
-      .delete(`/api/journals/document/${researchId}/${filename}/${name}`)
+      .delete(`/api/journals/document/${journalId}/${filename}/${name}`)
       .then(res =>
         dispatch({
           type: GET_JOURNAL,
@@ -268,11 +267,11 @@ export const deleteDocument = (researchId, filename, name) => dispatch => {
 };
 
 // Move to bin Research
-export const deleteResearch = (data, history) => dispatch => {
-  dispatch(setResearchLoading());
+export const deleteJournal = (data, history) => dispatch => {
+  dispatch(setJournalLoading());
   axios
     .post(`/api/journals/remove/${data.id}`, data)
-    .then(dispatch(getResearches()), history.push(`/journals`), res =>
+    .then(dispatch(getJournals()), history.push(`/journals`), res =>
       dispatch({
         type: GET_JOURNAL,
         payload: res.data
@@ -287,11 +286,11 @@ export const deleteResearch = (data, history) => dispatch => {
 };
 
 // Restore Research
-export const restoreResearch = (data, history) => dispatch => {
-  dispatch(setResearchLoading());
+export const restoreJournal = (data, history) => dispatch => {
+  dispatch(setJournalLoading());
   axios
     .post(`/api/journals/restore/${data.id}`, data)
-    .then(dispatch(getResearches()), history.push(`/journals`), res =>
+    .then(dispatch(getJournals()), history.push(`/journals`), res =>
       dispatch({
         type: GET_JOURNAL,
         payload: res.data
@@ -312,7 +311,7 @@ export const changeButtonStatus = flag => {
 };
 
 // set loading state
-export const setResearchLoading = () => {
+export const setJournalLoading = () => {
   return {
     type: JOURNAL_LOADING
   };

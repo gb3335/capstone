@@ -6,8 +6,8 @@ import Modal from "react-modal";
 import SweetAlert from "react-bootstrap-sweetalert";
 
 import {
-  toggleResearchBin,
-  createReportForResearches
+  toggleJournalBin,
+  createReportForJournals
 } from "../../actions/journalActions";
 
 const customStyles = {
@@ -18,12 +18,12 @@ const customStyles = {
     bottom: "auto",
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
-    width: "390px",
-    height: "460px"
+    width: "350px",
+    height: "410px"
   }
 };
 
-class ResearchesAction extends Component {
+class JournalAction extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,9 +49,9 @@ class ResearchesAction extends Component {
 
   onToggleBin = e => {
     if (this.props.journal.bin === false) {
-      this.props.toggleResearchBin(1);
+      this.props.toggleJournalBin(1);
     } else {
-      this.props.toggleResearchBin(0);
+      this.props.toggleJournalBin(0);
     }
   };
 
@@ -101,7 +101,7 @@ class ResearchesAction extends Component {
           " " +
           this.props.auth.user.lastName;
 
-        const researchesReportData = {
+        const journalReportData = {
           status: this.state.status,
           issn: this.state.issn,
           college: this.state.college,
@@ -116,7 +116,7 @@ class ResearchesAction extends Component {
           printedBy: name
         };
 
-        this.props.createReportForResearches(researchesReportData);
+        this.props.createReportForJournals(journalReportData);
         // show generate alert
         this.setState({ generateAlert: true });
       }
@@ -131,7 +131,6 @@ class ResearchesAction extends Component {
   onGenerateAlert = () => {
     this.setState({ generateAlert: false });
   };
-
 
   render() {
     let binAction;
@@ -173,6 +172,8 @@ class ResearchesAction extends Component {
         >
           Please wait for the report to generate
         </SweetAlert>
+
+
         <Link to="/add-journal" className="btn btn-light">
           <i className="fas fa-plus text-info mr-1" /> Add Journal
         </Link>
@@ -188,15 +189,6 @@ class ResearchesAction extends Component {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <button
-            className="btn btn-danger"
-            style={{ float: "right", fontSize: "15px" }}
-            onClick={this.closeModal}
-          >
-            <i className="fas fa-times" />
-          </button>
-          <br />
-          <br />
           <div className="row">
             <div className="col-12">
               <h2 ref={subtitle => (this.subtitle = subtitle)}>
@@ -322,6 +314,12 @@ class ResearchesAction extends Component {
                   </label>
                 </div>
                 <br />
+                <input
+                  type="button"
+                  value="Cancel"
+                  onClick={this.closeModal}
+                  className="btn btn-danger"
+                />{" "}
                 {disableFlag ? (
                   <input
                     type="button"
@@ -346,9 +344,9 @@ class ResearchesAction extends Component {
   }
 }
 
-ResearchesAction.propTypes = {
-  toggleResearchBin: PropTypes.func.isRequired,
-  createReportForResearches: PropTypes.func.isRequired,
+JournalAction.propTypes = {
+  toggleJournalBin: PropTypes.func.isRequired,
+  createReportForJournals: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -361,5 +359,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { toggleResearchBin, createReportForResearches }
-)(ResearchesAction);
+  { toggleJournalBin, createReportForJournals }
+)(JournalAction);

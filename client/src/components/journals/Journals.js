@@ -7,11 +7,11 @@ import MaterialTable from "material-table";
 
 import "./Journals.css";
 
-import { getResearches } from "../../actions/journalActions";
+import { getJournals } from "../../actions/journalActions";
 
-import ResearchesActions from "./ResearchesActions";
+import JournalAction from "./JournalAction";
 
-class Researches extends Component {
+class Journals extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -20,11 +20,11 @@ class Researches extends Component {
   }
 
   componentWillMount() {
-    this.props.getResearches();
+    this.props.getJournals();
   }
 
   componentDidMount() {
-    this.props.getResearches();
+    this.props.getJournals();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -49,34 +49,34 @@ class Researches extends Component {
             researchData = journals.map(research =>
               research.deleted === 1
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    view: (
-                      <Link
-                        to={/journals/ + research._id}
-                        className="btn btn-outline-danger btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  view: (
+                    <Link
+                      to={/journals/ + research._id}
+                      className="btn btn-outline-danger btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    view: null
-                  }
+                  title: null,
+                  college: null,
+                  course: null,
+                  status: null,
+                  view: null
+                }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -93,34 +93,34 @@ class Researches extends Component {
             researchData = journals.map(research =>
               research.deleted === 0
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    view: (
-                      <Link
-                        to={/journals/ + research._id}
-                        className="btn btn-outline-info btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  view: (
+                    <Link
+                      to={/journals/ + research._id}
+                      className="btn btn-outline-info btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    view: null
-                  }
+                  title: null,
+                  college: null,
+                  course: null,
+                  status: null,
+                  view: null
+                }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -137,41 +137,41 @@ class Researches extends Component {
             research.deleted === 0
               ? research.hidden === 0
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    view: (
-                      <Link
-                        to={/journal/ + research._id}
-                        className="btn btn-outline-info btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  view: (
+                    <Link
+                      to={/journal/ + research._id}
+                      className="btn btn-outline-info btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    view: null
-                  }
-              : {
                   title: null,
                   college: null,
                   course: null,
                   status: null,
                   view: null
                 }
+              : {
+                title: null,
+                college: null,
+                course: null,
+                status: null,
+                view: null
+              }
           );
           researchData.map((data, index) => {
             if (data.title === null) {
@@ -225,7 +225,7 @@ class Researches extends Component {
       }
 
       if (this.props.auth.isAuthenticated) {
-        action = <ResearchesActions />;
+        action = <JournalAction />;
       }
     }
 
@@ -249,8 +249,8 @@ class Researches extends Component {
   }
 }
 
-Researches.propTypes = {
-  getResearches: PropTypes.func.isRequired,
+Journals.propTypes = {
+  getJournals: PropTypes.func.isRequired,
   journal: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
@@ -263,5 +263,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getResearches }
-)(Researches);
+  { getJournals }
+)(Journals);

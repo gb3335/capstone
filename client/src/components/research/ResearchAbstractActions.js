@@ -3,9 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument, onSideBySide } from "../../actions/journalActions";
+import { addDocument, deleteDocument, onSideBySide } from "../../actions/researchActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
-
 import Spinner from "../common/Spinner";
 
 import './ResearchDocumentActions.css'
@@ -42,8 +41,8 @@ class ResearchImageActions extends Component {
           this.props.auth.user.lastName;
 
         const docuData = {
-          researchId: this.props.journal.journal._id,
-          oldFile: this.props.journal.journal.document,
+          researchId: this.props.research.research._id,
+          oldFile: this.props.research.research.document,
           file: this.state.file,
           username: name
         };
@@ -63,81 +62,54 @@ class ResearchImageActions extends Component {
       " " +
       this.props.auth.user.lastName;
 
-    const researchId = this.props.journal.journal._id;
-    const filename = this.props.journal.journal.document;
+    const researchId = this.props.research.research._id;
+    const filename = this.props.research.research.document;
 
     this.props.deleteDocument(researchId, filename, name);
   };
 
   onLocalCheck = e => {
     const input = {
-      docuId: this.props.journal.journal._id,
-      title: this.props.journal.journal.title,
-      docuFile: this.props.journal.journal.document,
-      journals: this.props.journal.journals,
+      docuId: this.props.research.research._id,
+      title: this.props.research.research.title,
+      docuFile: this.props.research.research.document,
+      researches: this.props.research.researches,
       flag: true,
-      fromFlag: false
-
-      // docuId: this.props.research.research._id,
-      // title: this.props.research.research.title,
-      // docuFile: this.props.research.research.document,
-      // researches: this.props.research.researches,
-      // flag: true,
-      // fromFlag: false
-
+      fromFlag: false,
+      abstract: true
     };
-    this.props.checkPlagiarismLocal(input, this.props.history);
 
+    this.props.checkPlagiarismLocal(input, this.props.history);
   };
 
   onSidebySideFlagTrue = e => {
-    this.props.onSideBySide(true);
+    const input = {
+        fromFlag: true,
+        abstract: true
+    }
+    this.props.onSideBySide(input);
   };
 
   render() {
-    const { journal } = this.props.journal;
+    const { research } = this.props.research;
     let docuItem;
 
-    if (journal.document) {
       docuItem = (
         <div className="docuItem btn-group-sm">
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document |
+            Check Abstract |
             <i className="fas fa-database text-info mr-1 ml-1" />
             <b>All </b>
           </label>
           <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
-            Check Document |
+            Check Abstract |
             <i className="fas fa-copy text-info mr-1 ml-1" />
             <b>Side By Side</b>
           </label>
-          <div className="spacer" />
-          <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-redo-alt text-info mr-1" />
-            Update Document
-          </label>
-          <label
-            to="#"
-            onClick={this.onDeleteDocument}
-            className="btn btn-danger"
-          >
-            <i className="fas fa-trash text-light mr-1" />
-            Remove Document
-          </label>
         </div>
       );
-    } else {
-      docuItem = (
-        <div className="btn-group mb-3 btn-group-sm" role="group">
-          <label to="#" htmlFor="docUpload" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1" />
-            Add Document
-          </label>
-        </div>
-      );
-    }
 
     return (
       <div>
@@ -163,14 +135,14 @@ ResearchImageActions.propTypes = {
   checkPlagiarismLocal: PropTypes.func.isRequired,
   onSideBySide: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  journal: PropTypes.object.isRequired,
+  research: PropTypes.object.isRequired,
   localPlagiarism: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   errors: state.errors,
-  journal: state.journal,
+  research: state.research,
   localPlagiarism: state.localPlagiarism,
   auth: state.auth
 });

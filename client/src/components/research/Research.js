@@ -21,6 +21,7 @@ import ResearchAuthorActions from "./ResearchAuthorActions";
 import ResearchImageActions from "./ResearchImageActions";
 import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
+import ResearchAbstractActions from "./ResearchAbstractActions";
 import Report from "./Report";
 import ResearchSideBySide from "./ResearchSideBySide"
 
@@ -305,12 +306,11 @@ class Research extends Component {
           </a>
         );
       }
+      let abstractDocuOrSideItems;
 
-      let docuOrSideItems;
-
-      if (this.props.research.onSideBySide) {
-        docuOrSideItems = (<Transition
-          items={this.props.research.onSideBySide}
+      if (this.props.research.onSideBySide && this.props.research.abstract) {
+        abstractDocuOrSideItems = (<Transition
+          items={this.props.research.onSideBySide && this.props.research.abstract}
           from={{ opacity: 0 }}
           enter={{ opacity: 1 }}
           leave={{ opacity: 0 }}
@@ -323,6 +323,45 @@ class Research extends Component {
                 {props => (
                   <div style={props}>
                     <ResearchSideBySide />
+                  </div>
+                )}
+              </Spring>
+
+
+            </animated.div>
+          ))}
+
+        </Transition>)
+      } else {
+        abstractDocuOrSideItems = (<Spring from={{ opacity: 0 }}
+          to={{ opacity: 1 }}
+          config={{ delay: 100, duration: 800 }}>
+          {props => (
+            <div style={props}>
+              <ResearchAbstractActions research={research} /><ResearchAbstract research={research} />
+            </div>
+          )}
+        </Spring>)
+      }
+
+
+      let docuOrSideItems;
+
+      if (this.props.research.onSideBySide  && !this.props.research.abstract) {
+        docuOrSideItems = (<Transition
+          items={this.props.research.onSideBySide  && !this.props.research.abstract}
+          from={{ opacity: 0 }}
+          enter={{ opacity: 1 }}
+          leave={{ opacity: 0 }}
+        >
+          {show => show && (props => (
+            <animated.div style={props}>
+              <Spring from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                config={{ delay: 100, duration: 800 }}>
+                {props => (
+                  <div style={props}>
+                    <ResearchSideBySide/>
                   </div>
                 )}
               </Spring>
@@ -439,7 +478,7 @@ class Research extends Component {
                       role="tabpanel"
                       aria-labelledby="list-abstract-list"
                     >
-                      <ResearchAbstract research={research} />
+                      {abstractDocuOrSideItems}
                     </div>
                     <div
                       className="tab-pane fade"

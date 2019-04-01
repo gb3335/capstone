@@ -36,6 +36,7 @@
     padding: 5px;
     border: 1px solid black;
     background: rgb(255, 255, 255);
+    z-index: 100000;
     margin: 0;
     list-style: none;
     width: 200px;
@@ -47,13 +48,25 @@
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
-.menu li{
+.message{
+    padding-bottom: 5px;
+    margin-bottom:5px;
+    border-bottom: 2px solid black;
+    font-size: 15px;
+}
+
+.suggestDiv{
+    max-height: 220px;
+    overflow: auto;
+}
+
+.suggest{
     cursor: pointer;
     width: 100%;
     text-align: center;
 }
 
-.menu li:hover{
+.suggest:hover{
     background: rgb(224, 224, 224);
 }
 
@@ -77,4 +90,8 @@ u {
     text-decoration: none;
     border-bottom: 3px solid rgba(98, 228, 93, 0.815);
     cursor: pointer;
+}
+
+.error{
+    color: red;
 }

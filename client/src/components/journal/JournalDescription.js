@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import renderHTML from "react-render-html";
 
-class ResearchAbstract extends Component {
+class JournalDescription extends Component {
   render() {
-    const { research } = this.props;
+    const { journal } = this.props;
     let abstract = "";
 
     try {
-      if (research.description == "" || research.description == null) {
+      if (journal.description == "" || journal.description == null) {
         abstract = <div>No description</div>
 
       }
       else {
-        abstract = renderHTML(research.description);
+        abstract = renderHTML(journal.description);
       }
     } catch (err) {
       console.log(err);
@@ -29,4 +29,4 @@ class ResearchAbstract extends Component {
   }
 }
 
-export default ResearchAbstract;
+export default JournalDescription;

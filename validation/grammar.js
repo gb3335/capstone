@@ -7,11 +7,11 @@ module.exports = function validateOnlineInput(data) {
     data.input = !isEmpty(data.input) ? data.input : '';
 
     if (Validator.isEmpty(data.input)) {
-        errors.input = "Please input text";
+        errors.grammarInput = "Please input text";
     }
 
-    if (!Validator.isLength(data.input, { min: 0, max: 4096 })) {
-        errors.length = "Character Length exceeds";
+    if (!Validator.isLength(data.input, { min: 0, max: 50000 })) {
+        errors.grammarInput = "Character Length exceeds";
     }
 
     return {

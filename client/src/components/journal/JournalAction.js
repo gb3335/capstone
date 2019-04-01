@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-class ResearchAction extends Component {
+class JournalAction extends Component {
   render() {
     const deleted = this.props.journal.journal.deleted;
     let editAction;
@@ -24,7 +24,7 @@ class ResearchAction extends Component {
   }
 }
 
-ResearchAction.propTypes = {
+JournalAction.propTypes = {
   journal: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired
 };
@@ -36,4 +36,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {}
-)(withRouter(ResearchAction));
+)(withRouter(JournalAction));

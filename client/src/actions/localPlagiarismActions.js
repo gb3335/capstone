@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT } from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT } from "./types";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
@@ -11,6 +11,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
   dispatch(setPlagiarismLocalLoading());
   dispatch(setDocumentId(input.docuId));
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
+  dispatch(setPlagiarismLocalAbstract(input.abstract))
   console.time("Initialize")
   axios
     .post("/api/plagiarism/local/initialize/pattern", input)
@@ -20,8 +21,14 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
         promises = []
         input.researches.forEach(function (research) {
           if (research._id !== input.docuId) {
-            if (research.document && research.deleted !== 1) {
-              promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
+            if (input.abstract) {
+              if (research.deleted !== 1) {
+                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
+              }
+            } else {
+              if (research.document && research.deleted !== 1) {
+                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }))
+              }
             }
           }
 
@@ -40,15 +47,78 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            console.log(newres);
 
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
             console.log("test")
             if (input.fromFlag) {
-              history.push(`/localResultSideBySide`);
+              history.push(`/localResultSideBySide/research`);
             } else {
-              history.push(`/localResult`);
+              history.push(`/localresult/research`);
+            }
+
+          })
+          .catch(err => {
+            dispatch({
+              type: GET_ERRORS,
+              payload: err.response.data
+            });
+          });
+      }//else{
+      //   dispatch(outputLocalPlagiarism(res.data));
+      //   dispatch({
+      //     type: GET_ERRORS,
+      //     payload: {initializeLocal: "Document not Found!"}
+      //   });
+      // }
+
+    })
+
+};
+
+
+// Check Plagiarism Local
+export const journalPlagiarismLocal = (input, history) => dispatch => {
+  dispatch(setPlagiarismLocalLoading());
+  dispatch(setDocumentId(input.docuId));
+  dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
+  console.time("Initialize")
+  axios
+    .post("/api/plagiarism/local/initialize/journal/pattern", input)
+    .then(res => {
+      console.log(res.data);
+      if (res.data.success) {
+        promises = []
+        input.journals.forEach(function (journal) {
+          if (journal._id !== input.docuId) {
+            if (journal.document && journal.deleted !== 1) {
+              promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }))
+            }
+          }
+
+        })
+        axios
+          .all(promises)
+          .then(res => {
+            const hm = new jsscompress.Hauffman();
+            let newres = [];
+            res.forEach(function (r, index) {
+              //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
+              //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
+              newres.push(r.data.localPlagiarism.data)
+            })
+            newres.sort(function (obj1, obj2) {
+              // Ascending: first age less than the previous
+              return obj2.SimilarityScore - obj1.SimilarityScore;
+            });
+
+            console.timeEnd("Initialize")
+            dispatch(outputLocalPlagiarism(newres));
+            console.log("test")
+            if (input.fromFlag) {
+              history.push(`/localResultSideBySide/journal`);
+            } else {
+              history.push(`/localresult/journal`);
             }
 
           })
@@ -114,7 +184,6 @@ export const getTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-
 export const getPattern = (input) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/pattern', input)
@@ -132,6 +201,36 @@ export const getSourcePattern = (input) => dispatch => {
     })
 }
 
+export const getJournalTextPattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  dispatch(setPlagiarismLocalShowDetails())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+export const getJournalPattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+
+export const getJournalSourcePattern = (input) => dispatch => {
+  dispatch(setPlagiarismLocalPatternLoading())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/pattern', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismPattern(res.data));
+    })
+}
+
+
+
+
+
 export const getTargetText = (input) => dispatch => {
   dispatch(setPlagiarismLocalTextLoading())
   dispatch(setTextDocumentId(input.textId))
@@ -140,8 +239,21 @@ export const getTargetText = (input) => dispatch => {
       dispatch(outputLocalPlagiarismText(res.data));
     })
 }
+export const getJournalTargetText = (input) => dispatch => {
+  dispatch(setPlagiarismLocalTextLoading())
+  dispatch(setTextDocumentId(input.textId))
+  axios.post('/api/plagiarism/get/journal/text', input)
+    .then(res => {
+      dispatch(outputLocalPlagiarismText(res.data));
+    })
+}
 
-
+export const setPlagiarismLocalAbstract = (flag) => {
+  return {
+    type: PLAGIARISM_LOCAL_SET_ABSTRACT,
+    payload: flag
+  };
+};
 
 export const setPlagiarismLocalFromFlag = (flag) => {
   return {

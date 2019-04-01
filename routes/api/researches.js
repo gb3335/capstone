@@ -119,7 +119,6 @@ router.post(
       // If any errors, send 400 with errors object
       return res.status(400).json(errors);
     }
-
     Research.findOne({ _id: req.body.id }).then(research => {
       if (research) {
         Research.findOne({ title: req.body.title }).then(research => {

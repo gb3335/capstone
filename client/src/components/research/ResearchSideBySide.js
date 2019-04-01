@@ -11,38 +11,47 @@ import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
 
 
 class ResearchSideBySide extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-          bin: false
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      bin: false
+    };
 
-        this.setSideBySideFalse = this.setSideBySideFalse.bind(this);
-        this.onSelect = this.onSelect.bind(this);
+    this.setSideBySideFalse = this.setSideBySideFalse.bind(this);
+    this.onSelect = this.onSelect.bind(this);
 
-      }
+  }
 
-    setSideBySideFalse(){
-        console.log("side")
-        this.props.onSideBySide(false);
+  setSideBySideFalse() {
+    const input = {
+      fromFlag: false,
+      abstract: false
     }
+    this.props.onSideBySide(input);
+  }
 
-    onSelect(research){
-        let newresearch=[]
-        newresearch.push(research)
-        const input = {
-            docuId: this.props.research.research._id,
-            title: this.props.research.research.title,
-            docuFile: this.props.research.research.document,
-            researches: newresearch,
-            flag: true,
-            fromFlag:true
-          };
-          this.props.onSideBySide(false);
+  onSelect(research) {
+    let newresearch = []
+    newresearch.push(research)
+    const input = {
+      docuId: this.props.research.research._id,
+      title: this.props.research.research.title,
+      docuFile: this.props.research.research.document,
+      researches: newresearch,
+      flag: true,
+      fromFlag: true,
+      abstract: this.props.research.abstract
+    };
 
-          this.props.checkPlagiarismLocal(input, this.props.history);
-
+    const input2 = {
+      fromFlag: false,
+      abstract: this.props.research.abstract
     }
+    this.props.onSideBySide(input2);
+
+    this.props.checkPlagiarismLocal(input, this.props.history);
+
+  }
 
   render() {
     const { researches, loading, research } = this.props.research;
@@ -53,17 +62,17 @@ class ResearchSideBySide extends Component {
     let info = "See all research and it's informations";
 
 
-    for(let x=0; x<researches.length; x++){
-        if(research.title === researches[x].title){
-            researches.splice(x,1);
-            break;
-        }
+    for (let x = 0; x < researches.length; x++) {
+      if (research.title === researches[x].title) {
+        researches.splice(x, 1);
+        break;
+      }
     }
 
-    for(let x=0; x<researches.length; x++){
-        if(!researches[x].document){
-            researches.splice(x,1);
-        }
+    for (let x = 0; x < researches.length; x++) {
+      if (!researches[x].document) {
+        researches.splice(x, 1);
+      }
     }
 
     if (researches === null || loading) {
@@ -90,7 +99,7 @@ class ResearchSideBySide extends Component {
                       : "Deleted",
                   view: (
                     <button
-                    onClick={()=> this.onSelect(research)}
+                      onClick={() => this.onSelect(research)}
                       className="btn btn-outline-danger btn-sm"
                     >
                       Select
@@ -136,7 +145,7 @@ class ResearchSideBySide extends Component {
                       : "Deleted",
                   view: (
                     <button
-                    onClick={()=> this.onSelect(research)}
+                      onClick={() => this.onSelect(research)}
                       className="btn btn-outline-info btn-sm"
                     >
                       Select
@@ -180,7 +189,7 @@ class ResearchSideBySide extends Component {
                       : "Deleted",
                   view: (
                     <button
-                    onClick={()=> this.onSelect(research)}
+                      onClick={() => this.onSelect(research)}
                       className="btn btn-outline-info btn-sm"
                     >
                       Select
@@ -250,18 +259,18 @@ class ResearchSideBySide extends Component {
     }
 
 
-    
+
     return (
       <div>
-          <div className="row">
-              <div className="col-md-8">
-                <button
-                  className="btn btn-light mb-3 float-left"
-                  onClick={this.setSideBySideFalse}
-                >
-                  <i className="fas fa-angle-left" /> Back
+        <div className="row">
+          <div className="col-md-8">
+            <button
+              className="btn btn-light mb-3 float-left"
+              onClick={this.setSideBySideFalse}
+            >
+              <i className="fas fa-angle-left" /> Back
                 </button>
-              </div>
+          </div>
         </div>
         {researchItems}
       </div>
@@ -270,16 +279,16 @@ class ResearchSideBySide extends Component {
 }
 
 ResearchSideBySide.propTypes = {
-    research: PropTypes.object.isRequired,
-    onSideBySide: PropTypes.func.isRequired,
-    checkPlagiarismLocal: PropTypes.func.isRequired,
-    auth: PropTypes.object.isRequired
-  };
+  research: PropTypes.object.isRequired,
+  onSideBySide: PropTypes.func.isRequired,
+  checkPlagiarismLocal: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
 
 const mapStateToProps = state => ({
-    research: state.research,
-    bin: state.research.bin,
-    auth: state.auth
-  });
+  research: state.research,
+  bin: state.research.bin,
+  auth: state.auth
+});
 
-export default connect(mapStateToProps,{onSideBySide,checkPlagiarismLocal})(withRouter(ResearchSideBySide))
+export default connect(mapStateToProps, { onSideBySide, checkPlagiarismLocal })(withRouter(ResearchSideBySide))

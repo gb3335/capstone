@@ -7,10 +7,10 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 import { onSideBySide } from "../../actions/journalActions";
-import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
+import { journalPlagiarismLocal } from "../../actions/localPlagiarismActions";
 
 
-class ResearchSideBySide extends Component {
+class JournalSideBySide extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,28 +28,27 @@ class ResearchSideBySide extends Component {
   }
 
   onSelect(journal) {
-    let newresearch = []
-    newresearch.push(journal)
+    let newJournal = []
+    newJournal.push(journal)
     const input = {
       docuId: this.props.journal.journal._id,
       title: this.props.journal.journal.title,
       docuFile: this.props.journal.journal.document,
-      journals: newresearch,
+      journals: newJournal,
       flag: true,
       fromFlag: true
     };
     this.props.onSideBySide(false);
-
-    this.props.checkPlagiarismLocal(input, this.props.history);
+    this.props.journalPlagiarismLocal(input, this.props.history);
 
   }
 
   render() {
     const { journals, loading, journal } = this.props.journal;
-    let researchItems;
-    let researchData;
+    let journalItems;
+    let journalData;
     let action;
-    let title = <h1 className="display-4 text-center">Researches</h1>;
+    let title = <h1 className="display-4 text-center">Journals</h1>;
     let info = "See all journal and it's informations";
 
 
@@ -67,13 +66,13 @@ class ResearchSideBySide extends Component {
     }
 
     if (journals === null || loading) {
-      researchItems = <Spinner />;
+      journalItems = <Spinner />;
     } else {
       if (journals.length > 0) {
         if (this.props.auth.isAuthenticated) {
           if (this.state.bin) {
-            // Research Bin
-            researchData = journals.map(journal =>
+            // Journal Bin
+            journalData = journals.map(journal =>
               journal.deleted === 1
                 ? {
                   title:
@@ -105,21 +104,21 @@ class ResearchSideBySide extends Component {
                   view: null
                 }
             );
-            researchData.map((data, index) => {
+            journalData.map((data, index) => {
               if (data.title === null) {
-                researchData.splice(index, 1);
+                journalData.splice(index, 1);
               }
             });
 
             title = (
               <h1 className="display-4 text-danger text-center">
-                Research Bin
+                Journal Bin
               </h1>
             );
             info = "List of Removed Researches";
           } else {
-            // Research List
-            researchData = journals.map(journal =>
+            // Journal List
+            journalData = journals.map(journal =>
               journal.deleted === 0
                 ? {
                   title:
@@ -151,9 +150,9 @@ class ResearchSideBySide extends Component {
                   view: null
                 }
             );
-            researchData.map((data, index) => {
+            journalData.map((data, index) => {
               if (data.title === null) {
-                researchData.splice(index, 1);
+                journalData.splice(index, 1);
               }
             });
 
@@ -161,8 +160,8 @@ class ResearchSideBySide extends Component {
             info = "See all journal and it's informations";
           }
         } else {
-          // Research List not logged in
-          researchData = journals.map(journal =>
+          // Journal List not logged in
+          journalData = journals.map(journal =>
             journal.deleted === 0
               ? journal.hidden === 0
                 ? {
@@ -202,9 +201,9 @@ class ResearchSideBySide extends Component {
                 view: null
               }
           );
-          researchData.map((data, index) => {
+          journalData.map((data, index) => {
             if (data.title === null) {
-              researchData.splice(index, 1);
+              journalData.splice(index, 1);
             }
           });
 
@@ -212,17 +211,17 @@ class ResearchSideBySide extends Component {
           info = "See all journal and it's informations";
         }
 
-        for (let index = 0; index < researchData.length; index++) {
-          researchData.map((data, index) => {
+        for (let index = 0; index < journalData.length; index++) {
+          journalData.map((data, index) => {
             if (data.title === null) {
-              researchData.splice(index, 1);
+              journalData.splice(index, 1);
             }
           });
 
-          researchData.map((data, i, arr) => {
+          journalData.map((data, i, arr) => {
             if (arr.length - 1 === i) {
               if (data.title === null) {
-                researchData.splice(i, 1);
+                journalData.splice(i, 1);
               }
             } else {
               // not last one
@@ -230,7 +229,7 @@ class ResearchSideBySide extends Component {
           });
         }
 
-        researchItems = (
+        journalItems = (
           <MaterialTable
             columns={[
               { title: "Title", field: "title" },
@@ -239,12 +238,12 @@ class ResearchSideBySide extends Component {
               { title: "Status", field: "status" },
               { title: "", field: "view" }
             ]}
-            data={researchData}
-            title={`Select a Research to compare with ${journal.title}`}
+            data={journalData}
+            title={`Select a Journal to compare with ${journal.title}`}
           />
         );
       } else {
-        researchItems = <h4>No journal found</h4>;
+        journalItems = <h4>No journal found</h4>;
       }
 
     }
@@ -263,16 +262,16 @@ class ResearchSideBySide extends Component {
                 </button>
           </div>
         </div>
-        {researchItems}
+        {journalItems}
       </div>
     )
   }
 }
 
-ResearchSideBySide.propTypes = {
+JournalSideBySide.propTypes = {
   journal: PropTypes.object.isRequired,
   onSideBySide: PropTypes.func.isRequired,
-  checkPlagiarismLocal: PropTypes.func.isRequired,
+  journalPlagiarismLocal: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
@@ -282,4 +281,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { onSideBySide, checkPlagiarismLocal })(withRouter(ResearchSideBySide))
+export default connect(mapStateToProps, { onSideBySide, journalPlagiarismLocal })(withRouter(JournalSideBySide))

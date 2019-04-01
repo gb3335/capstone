@@ -24,7 +24,7 @@ class LocalResultSideBySide extends Component {
 
   componentWillMount(){
 
-    const {output, docuId} = this.props.localPlagiarism;
+    const {output, docuId, abstract} = this.props.localPlagiarism;
     const {researches} = this.props.research
     
       let level=0;
@@ -43,7 +43,8 @@ class LocalResultSideBySide extends Component {
       const input = {
         docuId : docuId,
         docuFile : this.props.research.research.document,
-        textId: output[0].Document.Text.Id
+        textId: output[0].Document.Text.Id,
+        abstract
       }
 
       this.props.getSourcePattern(input);
@@ -53,7 +54,8 @@ class LocalResultSideBySide extends Component {
       const input2 = {
         docuId : output[0].Document.Text.Id,
         docuFile : textdocument.document,
-        textId: output[0].Document.Text.Id
+        textId: output[0].Document.Text.Id,
+        abstract
       }
 
       
@@ -127,7 +129,7 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-    const {output} = this.props.localPlagiarism
+    const {output, abstract} = this.props.localPlagiarism
     
     this.props.setPlagiarismGenerateReportLoading(true);
 
@@ -147,12 +149,18 @@ class LocalResultSideBySide extends Component {
           " " +
           this.props.auth.user.lastName;
 
+      let subTypeOfReport = "Side by Side Comparison";
+
+      if(abstract){
+        subTypeOfReport = "Side by Side Comparison (ABSTRACT)";
+      }
+
       const input = {
         printedBy: name,
         pattern,
         text,
         typeOfReport: "Plagiarism Check Result",
-        subTypeOfReport: "Side by Side Comparison",
+        subTypeOfReport,
         output
       }
       this.props.createLocalSideBySidePlagiarismReport(input);
@@ -175,7 +183,7 @@ class LocalResultSideBySide extends Component {
       )
     }else{
       patternItem = (
-        <div className="hightlightSpanDiv">
+        <div className="hightlightSpanDivSbS">
           <div className="highlightComponentDiv">
             <Highlighter
               id="highlightPat"
@@ -202,7 +210,7 @@ class LocalResultSideBySide extends Component {
       )
     }else{
       textItem = (
-        <div className="hightlightSpanDiv">
+        <div className="hightlightSpanDivSbS">
           <div className="highlightComponentDiv">
             <Highlighter
               id="highlightText"
