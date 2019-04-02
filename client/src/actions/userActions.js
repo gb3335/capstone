@@ -5,8 +5,32 @@ import {
   GET_USERS,
   USER_LOADING,
   GET_ERRORS,
-  CLEAR_ERRORS
+  CLEAR_ERRORS,
+  GET_USERLOGS
 } from "./types";
+
+
+// Get all profiles
+export const getUserLogs = () => dispatch => {
+  dispatch(clearErrors());
+  dispatch(setUserLoading());
+  axios
+    .get('/api/userlogs/all')
+    .then(res => {
+      dispatch({
+        type: GET_USERLOGS,
+        payload: res.data
+      },
+      )
+    }
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 
 // Get all profiles
 export const getUsers = () => dispatch => {
@@ -24,8 +48,8 @@ export const getUsers = () => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_USERS,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };
@@ -46,8 +70,8 @@ export const getUserById = id => dispatch => {
     )
     .catch(err =>
       dispatch({
-        type: GET_USER,
-        payload: null
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

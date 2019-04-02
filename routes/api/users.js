@@ -476,7 +476,29 @@ router.post(
     });
   }
 );
+router.post("/logout", (req, res) => {
 
+  const newUser = new UserLog({
+    name: {
+      firstName: req.body.name.firstName,
+      middleName: req.body.name.middleName,
+      lastName: req.body.name.lastName
+    },
+    email: req.body.email,
+    avatar: req.body.avatar,
+    isBlock: req.body.isBlock,
+    userType: req.body.userType,
+    college: req.body.college,
+    contact: req.body.contact,
+    type: "Logout"
+  });
+
+  newUser
+    .save()
+    .catch(err => console.log(err));
+
+
+})
 // @routes  POST api/users/login
 // @desc    Login User /Returning JWT Token
 // @access  public
@@ -532,9 +554,10 @@ router.post("/login", (req, res) => {
                   email: user.email,
                   avatar: user.avatar,
                   isBlock: user.isBlock,
-                  userType: user.usertype,
+                  userType: user.userType,
                   college: user.college,
-                  contact: user.contact
+                  contact: user.contact,
+                  type: "Login"
                 });
 
                 newUser
@@ -596,9 +619,10 @@ router.post("/login", (req, res) => {
               email: user.email,
               avatar: user.avatar,
               isBlock: user.isBlock,
-              userType: user.usertype,
+              userType: user.userType,
               college: user.college,
-              contact: user.contact
+              contact: user.contact,
+              type: "Login"
             });
 
             newUser

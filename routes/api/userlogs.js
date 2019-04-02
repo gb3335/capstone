@@ -26,12 +26,44 @@ router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    Userlog.find()
+
+
+    UserLog.find()
       .sort({ date: -1 })
-      .then(userlogs => res.json(userlogs))
-      .catch(err =>
-        res.status(404).json({ noUserLogsFound: "No Userlogs found" })
-      );
+      .then(user => {
+        const payload = []
+        const list = user
+        list.map((currentElement, index) => {
+          payload.push({
+
+            id: currentElement._id,
+            userName: currentElement.userName,
+            email: currentElement.email,
+            contact: currentElement.contact,
+            firstName: currentElement.name.firstName,
+            middleName: currentElement.name.middleName,
+            lastName: currentElement.name.lastName,
+            avatar: currentElement.avatar,
+            userType: currentElement.userType,
+            isLock: currentElement.isLock,
+            isBlock: currentElement.isBlock,
+            invitedBy: currentElement.invitedBy,
+            college: currentElement.college,
+            date: currentElement.date,
+            type: currentElement.type
+
+
+          })
+
+        });
+        res.json(payload)
+
+
+      }
+
+      )
+
+
   }
 );
 

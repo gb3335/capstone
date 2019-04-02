@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
+import moment from "moment";
 
 import "./Journals.css";
 
@@ -33,37 +34,42 @@ class Journals extends Component {
 
   render() {
     const { journals, loading } = this.props.journal;
-    let researchItems;
-    let researchData;
+    let journalItems;
+    let journalData;
     let action;
-    let title = <h1 className="display-4 text-center">Journal</h1>;
+    let title = <h1 className="display-4 text-center">Journals</h1>;
     let info = "See all journal and it's informations";
 
     if (journals === null || loading) {
-      researchItems = <Spinner />;
+      journalItems = <Spinner />;
     } else {
       if (journals.length > 0) {
         if (this.props.auth.isAuthenticated) {
           if (this.state.bin) {
-            // Research Bin
-            researchData = journals.map(research =>
-              research.deleted === 1
+            // Journal Bin
+            journalData = journals.map(journal =>
+              journal.deleted === 1
                 ? {
                   title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
+                    journal.title.length > 30
+                      ? journal.title.substring(0, 27) + "..."
+                      : journal.title,
+                  college: journal.college,
+                  course: journal.course,
                   status:
-                    research.deleted === 0
-                      ? research.hidden === 0
+                    journal.deleted === 0
+                      ? journal.hidden === 0
                         ? "Active"
                         : "Hidden"
                       : "Deleted",
+                  updated:
+                    journal.lastUpdate +
+                    moment(journal.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
                   view: (
                     <Link
-                      to={/journals/ + research._id}
+                      to={/journals/ + journal._id}
                       className="btn btn-outline-danger btn-sm"
                     >
                       View Details
@@ -75,39 +81,47 @@ class Journals extends Component {
                   college: null,
                   course: null,
                   status: null,
+                  updated: null,
                   view: null
                 }
             );
-            researchData.map((data, index) => {
+            journalData.map((data, index) => {
               if (data.title === null) {
-                researchData.splice(index, 1);
+                journalData.splice(index, 1);
               }
             });
 
             title = (
-              <h1 className="display-4 text-danger text-center">Journal Bin</h1>
+              <h1 className="display-4 text-danger text-center">
+                Journal Bin
+              </h1>
             );
             info = "List of Removed Journals";
           } else {
-            // Research List
-            researchData = journals.map(research =>
-              research.deleted === 0
+            // Journal list
+            journalData = journals.map(journal =>
+              journal.deleted === 0
                 ? {
                   title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
+                    journal.title.length > 30
+                      ? journal.title.substring(0, 27) + "..."
+                      : journal.title,
+                  college: journal.college,
+                  course: journal.course,
                   status:
-                    research.deleted === 0
-                      ? research.hidden === 0
+                    journal.deleted === 0
+                      ? journal.hidden === 0
                         ? "Active"
                         : "Hidden"
                       : "Deleted",
+                  updated:
+                    journal.lastUpdate +
+                    moment(journal.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
                   view: (
                     <Link
-                      to={/journals/ + research._id}
+                      to={/journals/ + journal._id}
                       className="btn btn-outline-info btn-sm"
                     >
                       View Details
@@ -119,39 +133,46 @@ class Journals extends Component {
                   college: null,
                   course: null,
                   status: null,
+                  updated: null,
                   view: null
                 }
             );
-            researchData.map((data, index) => {
+            journalData.map((data, index) => {
               if (data.title === null) {
-                researchData.splice(index, 1);
+                journalData.splice(index, 1);
               }
             });
 
-            title = <h1 className="display-4 text-center">Journal</h1>;
+
+            title = <h1 className="display-4 text-center">Journals</h1>;
             info = "See all journal and it's informations";
           }
         } else {
-          // Research List not logged in
-          researchData = journals.map(research =>
-            research.deleted === 0
-              ? research.hidden === 0
+          // Journal list not logged in
+          journalData = journals.map(journal =>
+            journal.deleted === 0
+              ? journal.hidden === 0
                 ? {
                   title:
-                    research.title.length > 30
-                      ? research.title.substring(0, 27) + "..."
-                      : research.title,
-                  college: research.college,
-                  course: research.course,
+                    journal.title.length > 30
+                      ? journal.title.substring(0, 27) + "..."
+                      : journal.title,
+                  college: journal.college,
+                  course: journal.course,
                   status:
-                    research.deleted === 0
-                      ? research.hidden === 0
+                    journal.deleted === 0
+                      ? journal.hidden === 0
                         ? "Active"
                         : "Hidden"
                       : "Deleted",
+                  updated:
+                    journal.lastUpdate +
+                    moment(journal.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
                   view: (
                     <Link
-                      to={/journal/ + research._id}
+                      to={/journals/ + journal._id}
                       className="btn btn-outline-info btn-sm"
                     >
                       View Details
@@ -163,6 +184,7 @@ class Journals extends Component {
                   college: null,
                   course: null,
                   status: null,
+                  updated: null,
                   view: null
                 }
               : {
@@ -170,30 +192,32 @@ class Journals extends Component {
                 college: null,
                 course: null,
                 status: null,
+                updated: null,
                 view: null
               }
           );
-          researchData.map((data, index) => {
+          journalData.map((data, index) => {
             if (data.title === null) {
-              researchData.splice(index, 1);
+              journalData.splice(index, 1);
             }
           });
 
-          title = <h1 className="display-4 text-center">Journal</h1>;
+          title = <h1 className="display-4 text-center">Journals</h1>;
           info = "See all journal and it's informations";
         }
 
-        for (let index = 0; index < researchData.length; index++) {
-          researchData.map((data, index) => {
+
+        for (let index = 0; index < journalData.length; index++) {
+          journalData.map((data, index) => {
             if (data.title === null) {
-              researchData.splice(index, 1);
+              journalData.splice(index, 1);
             }
           });
 
-          researchData.map((data, i, arr) => {
+          journalData.map((data, i, arr) => {
             if (arr.length - 1 === i) {
               if (data.title === null) {
-                researchData.splice(i, 1);
+                journalData.splice(i, 1);
               }
             } else {
               // not last one
@@ -201,13 +225,29 @@ class Journals extends Component {
           });
         }
 
-        researchItems = (
+        journalData.map((data, index) => {
+          if (data.title === null) {
+            journalData.splice(index, 1);
+          }
+        });
+
+        journalItems = (
           <MaterialTable
             columns={[
               { title: "Title", field: "title" },
               { title: "College", field: "college" },
               { title: "Course", field: "course" },
               { title: "Status", field: "status" },
+              {
+                title: "Updated on",
+                field: "updated",
+                render: rowData => {
+                  const date = moment(rowData.updated.substr(0, 24)).format(
+                    "MMMM Do YYYY, h:mm A"
+                  );
+                  return date;
+                }
+              },
               { title: "View Details", field: "view" }
             ]}
             options={{
@@ -216,12 +256,12 @@ class Journals extends Component {
               columnsButton: true,
               pageSize: 30
             }}
-            data={researchData}
+            data={journalData}
             title="Journals"
           />
         );
       } else {
-        researchItems = <h4>No journal found</h4>;
+        journalItems = <h4>No journal found</h4>;
       }
 
       if (this.props.auth.isAuthenticated) {
@@ -230,7 +270,7 @@ class Journals extends Component {
     }
 
     return (
-      <div className="researches">
+      <div className="journals">
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12" style={{ overflow: "auto" }}>
             <div className="journalBg">
@@ -241,7 +281,7 @@ class Journals extends Component {
             </div>
             <br />
             {action}
-            {researchItems}
+            {journalItems}
           </div>
         </div>
       </div>

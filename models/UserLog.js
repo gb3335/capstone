@@ -6,6 +6,10 @@ const UserLogSchema = new Schema({
   username: {
     type: String,
   },
+  type: {
+    type: String,
+    default: 'Login'
+  },
   email: {
     type: String,
     required: true
@@ -29,7 +33,8 @@ const UserLogSchema = new Schema({
     required: true
   },
   userType: {
-    type: String
+    type: String,
+    required: true
   },
   college: {
     type: String,
@@ -46,6 +51,7 @@ const UserLogSchema = new Schema({
     type: Date,
     default: Date.now
   },
+
 
 });
 

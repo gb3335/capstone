@@ -50,40 +50,40 @@ class Researches extends Component {
             researchData = researches.map(research =>
               research.deleted === 1
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    updated:
-                      research.lastUpdate +
-                      moment(research.lastUpdate).format(
-                        "MMMM Do YYYY, h:mm A"
-                      ),
-                    view: (
-                      <Link
-                        to={/researches/ + research._id}
-                        className="btn btn-outline-danger btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  updated:
+                    research.lastUpdate +
+                    moment(research.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
+                  view: (
+                    <Link
+                      to={/researches/ + research._id}
+                      className="btn btn-outline-danger btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    updated: null,
-                    view: null
-                  }
+                  title: null,
+                  college: null,
+                  course: null,
+                  status: null,
+                  updated: null,
+                  view: null
+                }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -102,40 +102,40 @@ class Researches extends Component {
             researchData = researches.map(research =>
               research.deleted === 0
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    updated:
-                      research.lastUpdate +
-                      moment(research.lastUpdate).format(
-                        "MMMM Do YYYY, h:mm A"
-                      ),
-                    view: (
-                      <Link
-                        to={/researches/ + research._id}
-                        className="btn btn-outline-info btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  updated:
+                    research.lastUpdate +
+                    moment(research.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
+                  view: (
+                    <Link
+                      to={/researches/ + research._id}
+                      className="btn btn-outline-info btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    updated: null,
-                    view: null
-                  }
+                  title: null,
+                  college: null,
+                  course: null,
+                  status: null,
+                  updated: null,
+                  view: null
+                }
             );
             researchData.map((data, index) => {
               if (data.title === null) {
@@ -152,41 +152,33 @@ class Researches extends Component {
             research.deleted === 0
               ? research.hidden === 0
                 ? {
-                    title:
-                      research.title.length > 30
-                        ? research.title.substring(0, 27) + "..."
-                        : research.title,
-                    college: research.college,
-                    course: research.course,
-                    status:
-                      research.deleted === 0
-                        ? research.hidden === 0
-                          ? "Active"
-                          : "Hidden"
-                        : "Deleted",
-                    updated:
-                      research.lastUpdate +
-                      moment(research.lastUpdate).format(
-                        "MMMM Do YYYY, h:mm A"
-                      ),
-                    view: (
-                      <Link
-                        to={/researches/ + research._id}
-                        className="btn btn-outline-info btn-sm"
-                      >
-                        View Details
+                  title:
+                    research.title.length > 30
+                      ? research.title.substring(0, 27) + "..."
+                      : research.title,
+                  college: research.college,
+                  course: research.course,
+                  status:
+                    research.deleted === 0
+                      ? research.hidden === 0
+                        ? "Active"
+                        : "Hidden"
+                      : "Deleted",
+                  updated:
+                    research.lastUpdate +
+                    moment(research.lastUpdate).format(
+                      "MMMM Do YYYY, h:mm A"
+                    ),
+                  view: (
+                    <Link
+                      to={/researches/ + research._id}
+                      className="btn btn-outline-info btn-sm"
+                    >
+                      View Details
                       </Link>
-                    )
-                  }
+                  )
+                }
                 : {
-                    title: null,
-                    college: null,
-                    course: null,
-                    status: null,
-                    updated: null,
-                    view: null
-                  }
-              : {
                   title: null,
                   college: null,
                   course: null,
@@ -194,6 +186,14 @@ class Researches extends Component {
                   updated: null,
                   view: null
                 }
+              : {
+                title: null,
+                college: null,
+                course: null,
+                status: null,
+                updated: null,
+                view: null
+              }
           );
           researchData.map((data, index) => {
             if (data.title === null) {

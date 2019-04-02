@@ -35,9 +35,40 @@ class Navbar extends Component {
   };
 
   onLogoutClick(e) {
+    // const newUser = new UserLog({
+    //   name: {
+    //     firstName: user.name.firstName,
+    //     middleName: user.name.middleName,
+    //     lastName: user.name.lastName
+    //   },
+    //   email: user.email,
+    //   avatar: user.avatar,
+    //   isBlock: user.isBlock,
+    //   userType: user.usertype,
+    //   college: user.college,
+    //   contact: user.contact,
+    //   type: "Login"
+    // });
+
+
+    const userData = {
+      name: {
+        firstName: this.props.auth.user.firstName,
+        middleName: this.props.auth.user.middleName,
+        lastName: this.props.auth.user.lastName
+      },
+      email: this.props.auth.user.email,
+      avatar: this.props.auth.user.avatar,
+      isBlock: this.props.auth.user.isBlock,
+      userType: this.props.auth.user.userType,
+      college: this.props.auth.user.college,
+      contact: this.props.auth.user.contact,
+    };
+
+
     e.preventDefault();
     this.props.clearCurrentProfile();
-    this.props.logoutUser(this.props.history);
+    this.props.logoutUser(userData, this.props.history);
   }
 
   onClickHideSidebar = () => {
@@ -129,6 +160,8 @@ class Navbar extends Component {
 
     let oldlink = mylink;
     mylink = "";
+
+
 
     const authLinks = (
       <ul className="mainUL">
