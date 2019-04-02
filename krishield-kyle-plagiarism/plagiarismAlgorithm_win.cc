@@ -245,6 +245,7 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
 
     int textCurNumWords=0;
 
+    int skipFlag=0;
 
     char *token = strtok(text,".");
     while(token != NULL){
@@ -252,8 +253,19 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
         text = text.substr(text.find_first_not_of(' '), (text.find_last_not_of(' ') - text.find_first_not_of(' ')) + 1);
         for(int i = 0; i<text.size(); i++)
         {
-            
+            if(text[i]==' '){
+                textCurNumWords++;
+                skipFlag=0;
+                continue;
+            }
+            if(skipFlag==1){
+                continue;
+            }
             state = nextState(state,text[i]); /// traverse the trie state/node for the text.
+            if(state<1){
+                skipFlag=1;
+                continue;
+            }
             if(out[state].count() > 0) ///        if the state. has at least one output
             {
                 for(int j = 0; j<arr2.size(); j++) ///For finding position of search strings.
@@ -372,10 +384,10 @@ void newsearch(const Nan::FunctionCallbackInfo<v8::Value>& info){
             }
             patternCurIndex=0;
             
-            if(text[i]==' '){
-                textCurNumWords++;
+            // if(text[i]==' '){
+            //     textCurNumWords++;
                 
-            }
+            // }
         }
 
         textCurNumWords++;
