@@ -67,27 +67,6 @@ class UserAction extends Component {
 
   };
 
-  changeClick() {
-
-
-    const userData = {
-
-      id: this.props.users.user._id,
-      isBlock: this.props.users.user.isBlock
-
-    };
-
-    var answer = window.confirm("Change user status?")
-    if (answer) {
-      this.props.changeStatus(userData, this.props.history);
-    }
-
-
-
-
-
-  }
-
   onDeleteAlert = () => {
     this.setState({ deleteAlert: true });
   };
@@ -151,7 +130,7 @@ class UserAction extends Component {
         )
 
       }
-      if (user.userType == 'ADMINISTRATOR') {
+      if (auth.user.userType == 'ADMINISTRATOR') {
         blockAction = (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
           <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
         </Link>)

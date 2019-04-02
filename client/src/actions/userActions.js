@@ -14,14 +14,13 @@ export const getUsers = () => dispatch => {
   dispatch(setUserLoading());
   axios
     .get('/api/users/all')
-    .then(res =>
+    .then(res => {
       dispatch({
         type: GET_USERS,
         payload: res.data
       },
-
-
       )
+    }
     )
     .catch(err =>
       dispatch({

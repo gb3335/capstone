@@ -13,11 +13,15 @@ class Sidebar extends Component {
       hide: false,
       sideclass: "sidebar ",
       aria: "false",
+      accountAria: "false",
       forcol: "collapse minimenu",
-      rotate: "fa fa-caret-down rotate"
+      accountForcol: "collapse minimenu",
+      rotate: "fa fa-caret-down rotate",
+      accountRotate: "fa fa-caret-down rotate"
     };
 
     this.updateClass = this.updateClass.bind(this);
+    this.updateAccountClass = this.updateAccountClass.bind(this);
   }
 
   updateClass = () => {
@@ -29,6 +33,17 @@ class Sidebar extends Component {
       rotate = "fa fa-caret-down rotate down";
     }
     this.setState({ rotate });
+  };
+
+  updateAccountClass = () => {
+    const temp = this.state.accountRotate;
+    let accountRotate;
+    if (temp.length > 23) {
+      accountRotate = "fa fa-caret-down rotate";
+    } else {
+      accountRotate = "fa fa-caret-down rotate down";
+    }
+    this.setState({ accountRotate });
   };
 
   changeTitle = title => {
@@ -46,6 +61,19 @@ class Sidebar extends Component {
     let aria = "false";
     let forcol = "collapse minimenu";
     this.setState({ aria, forcol });
+  };
+
+  onMouseAccountEnter = () => {
+    let accountAria = "true";
+    let accountForcol = "collapse minimenu show";
+
+    this.setState({ accountAria, accountForcol });
+  };
+
+  onMouseAccountLeave = () => {
+    let accountAria = "false";
+    let accountForcol = "collapse minimenu";
+    this.setState({ accountAria, accountForcol });
   };
 
   componentWillReceiveProps(nextProps) {
@@ -258,6 +286,107 @@ class Sidebar extends Component {
       </nav>
     );
 
+    let adminShowBig;
+    let adminShowSmall;
+
+    if (this.props.auth.user.userType === "ADMINISTRATOR") {
+      adminShowBig = (
+        <li className="multimenus forlarge">
+          <a
+            onClick={this.updateAccountClass}
+            className="parentA"
+            id="plagiarism"
+            data-toggle="collapse"
+            data-target="#accountClick"
+            href="#accountClick"
+            aria-expanded="false"
+          >
+            <i className="fa fa-user-alt" />
+            <p className="pr-2">Accounts</p>
+            <b id="rotate" className={this.state.accountRotate} />
+          </a>
+          <div
+            id="accountClick"
+            className="collapse"
+            aria-expanded="false"
+          >
+            <div className="csstriangle" />
+            <ul className="submenus nav">
+              <li>
+                <Link
+                  to="/viewusers"
+                  onClick={() => this.changeTitle("Accounts")}
+
+                >
+                  Accounts
+            </Link>
+              </li>
+              <li>
+                <Link
+                  to="/userlogs"
+                  onClick={() =>
+                    this.changeTitle("User Logs")
+                  }
+                >
+                  User Logs
+            </Link>
+              </li>
+
+            </ul>
+          </div>
+        </li>
+      )
+      adminShowSmall = (<li className="multimenus formini">
+        <a
+          onClick={this.updateClass}
+          onMouseEnter={this.onMouseAccountEnter}
+          onMouseLeave={this.onMouseAccountLeave}
+          className="parentA"
+          id="plagiarism"
+          data-toggle="collapse"
+          href="#accountClick"
+          aria-expanded={this.state.accountAria}
+
+        >
+          <i className="fa fa-user-alt" />
+          <p className="pr-2">Accounts</p>
+          <b id="rotate" className={this.state.rotate} />
+        </a>
+
+        <div
+          id="accountClick"
+          onMouseEnter={this.onMouseAccountEnter}
+          onMouseLeave={this.onMouseAccountLeave}
+          className={this.state.accountForcol}
+          aria-expanded="false"
+        >
+          <div className="csstriangle" />
+          <ul className="submenus nav">
+            <li>
+              <Link
+                to="/viewusers"
+                onClick={() => this.changeTitle("Accounts")}
+
+              >
+                Accounts
+                    </Link>
+            </li>
+            <li>
+              <Link
+                to="/userlogs"
+                onClick={() =>
+                  this.changeTitle("User Logs")
+                }
+              >
+                User Logs
+                    </Link>
+            </li>
+          </ul>
+        </div>
+      </li>)
+    }
+
+
     const authLinks = (
       <nav className="sidebar_navigation">
         <div className="sidebar_logo">
@@ -289,17 +418,8 @@ class Sidebar extends Component {
                 <p>Dashboard</p>
               </Link>
             </li>
-            <li>
-              <Link
-                to="/viewusers"
-                onClick={() => this.changeTitle("Accounts")}
-                className="parentA"
-              >
-                <i className="fas fa-user-alt" />
-                <p>Accounts</p>
-              </Link>
-            </li>
-            <li></li>
+            {adminShowBig}
+            {adminShowSmall}
             <li>
               <Link
                 to="/colleges"

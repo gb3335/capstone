@@ -41,9 +41,10 @@ import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
 //register and user
 import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
-import ViewUser from "../view-user/ViewUser";
+import ViewUser from "../user/ViewUser";
 import EditAccount from "../edit-account/EditAccount";
-import MyAccount from "../view-user/MyAccount";
+import MyAccount from "../user/MyAccount";
+import UserLogs from "../users/UserLogs";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
@@ -106,13 +107,10 @@ class Main extends Component {
               <Route exact path="/researches/:id" component={Research} />
               <Route exact path="/journals" component={Journals} />
               <Route exact path="/journals/:id" component={Journal} />
-
               <Route exact path="/not-found" component={NotFound} />
-
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
               </Switch>
-
               <Switch>
                 <PrivateRoute
                   exact
@@ -133,11 +131,17 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
+                  path="/userlogs"
+                  component={UserLogs}
+                />
+              </Switch>
+              <Switch>
+                <PrivateRoute
+                  exact
                   path="/myaccount/:id/:oldurl/:oldid"
                   component={MyAccount}
                 />
               </Switch>
-
               <Switch>
                 <PrivateRoute exact path="/register" component={Register} />
               </Switch>
@@ -158,7 +162,6 @@ class Main extends Component {
                   component={AddJournalAuthor}
                 />
               </Switch>
-
               <Switch>
                 <PrivateRoute
                   exact

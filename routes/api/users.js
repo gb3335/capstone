@@ -28,9 +28,12 @@ const validateLoginInput = require("../../validation/login");
 const validatePasswordInput = require("../../validation/password");
 const validateuserNameInput = require("../../validation/profileusername");
 const validateForgotInput = require("../../validation/forgot");
+
+
 // Load User Model
 const User = require("../../models/User");
-
+// Load UserLog Model
+const UserLog = require("../../models/UserLog");
 // Load Transport Email
 const Transporter = require("../../mailer/transporter");
 
@@ -295,90 +298,33 @@ router.post(
   "/profile/changestatus",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-
-
     const isBlock = req.body.isBlock;
-
     const profileData = {
       id: req.body.id,
-
       isBlock,
-
     };
-    console.log(profileData.isBlock);
-
-
     User.findById(req.user._id).then(user => {
-
       if (profileData.isBlock == 0) {
         profileData.isBlock = 1;
-
         User.findByIdAndUpdate(
-          req.user._id,
+          req.body.id,
           { $set: profileData },
           { new: true }
         )
           .then(user => res.json(user))
           .catch(err => console.log(err));
-
       }
       else {
         profileData.isBlock = 0;
-        console.log(profileData.isBlock);
         User.findByIdAndUpdate(
-          req.user._id,
+          req.body.id,
           { $set: profileData },
           { new: true }
         )
           .then(user => res.json(user))
           .catch(err => console.log(err));
       }
-
-
     });
-
-
-
-
-
-
-
-
-
-    // User.findOne({ email: profileData.email }).then(user => {
-    //   const errors = {}
-    //   if (user) {
-    //     if (user.email != req.user.email) {
-    //       errors.email = "Email Already Exists!";
-    //       return res.status(400).json(errors);
-    //     }
-    //   }
-    //   User.findOne({ userName: profileData.userName }).then(user => {
-
-    //     if (user) {
-    //       if (user.userName != req.user.userName) {
-    //         errors.userName = "Username Already Exists!";
-    //         return res.status(400).json(errors);
-    //       }
-    //     }
-
-
-    //     bcrypt.genSalt(10, (err, salt) => {
-    //       bcrypt.hash(profileData.password, salt, (err, hash) => {
-    //         if (err) throw err;
-    //         profileData.password = hash;
-    //         User.findByIdAndUpdate(
-    //           req.user._id,
-    //           { $set: profileData },
-    //           { new: true }
-    //         ).then(user => res.json(user));
-    //       });
-    //     });
-    //   })
-    // });
-
-
-
   }
 );
 
@@ -457,7 +403,7 @@ router.post("/forgotpassword",
   });
 
 // @routes  POST api/users/register
-// @desc    Register/Edit a User
+// @desc    Add / Update User
 // @access  private
 router.post(
   "/register",
@@ -575,7 +521,27 @@ router.post("/login", (req, res) => {
                   invitedBy: user.invitedBy,
                   college: user.college,
                   date: user.date
-                }; //Create JWT Payload
+                };
+
+                const newUser = new UserLog({
+                  name: {
+                    firstName: user.name.firstName,
+                    middleName: user.name.middleName,
+                    lastName: user.name.lastName
+                  },
+                  email: user.email,
+                  avatar: user.avatar,
+                  isBlock: user.isBlock,
+                  userType: user.usertype,
+                  college: user.college,
+                  contact: user.contact
+                });
+
+                newUser
+                  .save()
+                  .catch(err => console.log(err));
+
+                //Create JWT Payload
                 //Sign the Token
                 jwt.sign(payload, keys.secretOrKey, (err, token) => {
                   res.json({
@@ -619,8 +585,27 @@ router.post("/login", (req, res) => {
               invitedBy: user.invitedBy,
               college: user.college,
               date: user.date
-            }; //Create JWT Payload
+            };
 
+            const newUser = new UserLog({
+              name: {
+                firstName: user.name.firstName,
+                middleName: user.name.middleName,
+                lastName: user.name.lastName
+              },
+              email: user.email,
+              avatar: user.avatar,
+              isBlock: user.isBlock,
+              userType: user.usertype,
+              college: user.college,
+              contact: user.contact
+            });
+
+            newUser
+              .save()
+              .catch(err => console.log(err));
+
+            //Create JWT Payload
             //Sign the Token
             jwt.sign(payload, keys.secretOrKey, (err, token) => {
               res.json({
@@ -668,6 +653,7 @@ router.get(
     });
   }
 );
+
 // @route   GET api/users/      
 // @desc    Get activities
 // @access  Public
@@ -675,12 +661,45 @@ router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+
+
     User.find()
       .sort({ date: -1 })
-      .then(user => res.json(user))
-      .catch(err =>
-        res.status(404).json({ noActivitiesFound: "No User found" })
-      );
+      .then(user => {
+        const payload = []
+        const list = user
+        list.map((currentElement, index) => {
+          payload.push({
+
+            _id: currentElement._id,
+            userName: currentElement.userName,
+            email: currentElement.email,
+            contact: currentElement.contact,
+            name: {
+              firstName: currentElement.name.firstName,
+              middleName: currentElement.name.middleName,
+              lastName: currentElement.name.lastName
+            },
+            avatar: currentElement.avatar,
+            userType: currentElement.userType,
+            isLock: currentElement.isLock,
+            isBlock: currentElement.isBlock,
+            invitedBy: currentElement.invitedBy,
+            college: currentElement.college,
+            date: currentElement.date
+
+
+          })
+
+        });
+        res.json(payload)
+
+
+      }
+
+      )
+
+
   }
 );
 
@@ -696,8 +715,26 @@ router.get("/:id", (req, res) => {
         errors.nouser = "There is no data for this research";
         res.status(404).json(errors);
       }
+      const payload = {
+        _id: user._id,
+        userName: user.userName,
+        email: user.email,
+        contact: user.contact,
+        name: {
+          firstName: user.name.firstName,
+          middleName: user.name.middleName,
+          lastName: user.name.lastName
+        },
+        avatar: user.avatar,
+        userType: user.userType,
+        isLock: user.isLock,
+        isBlock: user.isBlock,
+        invitedBy: user.invitedBy,
+        college: user.college,
+        date: user.date
+      };
 
-      res.json(user);
+      res.json(payload);
     })
     .catch(err => res.status(404).json(err));
 });

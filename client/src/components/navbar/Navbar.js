@@ -108,9 +108,9 @@ class Navbar extends Component {
     }
     if (
       "/myaccount/" +
-        this.props.auth.user.id +
-        "/myaccount/" +
-        this.props.auth.user.id ===
+      this.props.auth.user.id +
+      "/myaccount/" +
+      this.props.auth.user.id ===
       mylink.substring(
         0,
         (

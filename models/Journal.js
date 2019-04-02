@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const ResearchSchema = new Schema({
+const JournalSchema = new Schema({
   title: {
     type: String,
     require: true
@@ -91,4 +91,4 @@ const ResearchSchema = new Schema({
 });
 
 
-module.exports = Journal = mongoose.model("journal", ResearchSchema);
+module.exports = Journal = mongoose.model("journal", JournalSchema);

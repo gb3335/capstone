@@ -16,6 +16,7 @@ const researches = require("./routes/api/researches");
 const activities = require("./routes/api/activities");
 const journals = require("./routes/api/journals");
 const grammar = require("./routes/api/grammar");
+const userlogs = require("./routes/api/userlogs");
 
 //DB Config
 const db = require("./config/keys").mongoURI;
@@ -43,11 +44,11 @@ app.use(passport.initialize());
 // Passport Config
 require("./config/passport.js")(passport);
 
-app.all('/', function(req, res, next) {
+app.all('/', function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
- });
+});
 
 //Use Routes
 app.use("/api/plagiarism", plagiarism);
@@ -57,6 +58,7 @@ app.use("/api/researches", researches);
 app.use("/api/activities", activities);
 app.use("/api/journals", journals);
 app.use("/api/grammar", grammar);
+app.use("/api/userlogs", userlogs);
 
 // Server static assests if in production
 if (process.env.NODE_ENV === "production") {

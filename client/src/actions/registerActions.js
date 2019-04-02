@@ -1,8 +1,9 @@
 import axios from "axios";
 
-import { GET_ERRORS, SET_CURRENT_USER, GET_USER } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
+import { getUsers, getUserById } from "./userActions";
 // Register
 export const createAccount = (userData, history) => dispatch => {
   axios
@@ -143,9 +144,11 @@ export const editPassword = (userData, history) => dispatch => {
 };
 
 export const changeStatus = (userData, history) => dispatch => {
+  dispatch(setUserLoading());
   axios
     .post("/api/users/profile/changestatus", userData)
     .then(res => {
+      dispatch(getUserById(userData.id));
       if (userData.id === userData.loginid) {
 
         localStorage.removeItem("jwtToken");
@@ -164,4 +167,18 @@ export const changeStatus = (userData, history) => dispatch => {
         payload: err.response.data
       })
     );
+};
+
+// set loading state
+export const setUserLoading = () => {
+  return {
+    type: USER_LOADING
+  };
+};
+
+// Clear errors
+export const clearErrors = () => {
+  return {
+    type: CLEAR_ERRORS
+  };
 };

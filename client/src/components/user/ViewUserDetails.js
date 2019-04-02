@@ -8,9 +8,9 @@ class ViewUserDetails extends Component {
     const { user } = this.props;
     const status =
       user.isBlock === 0 ? (
-        <span className="badge badge-success">Active</span>
+        <span className="badge badge-success">Unblocked</span>
       ) : (
-          <span className="badge badge-danger">Not Active</span>
+          <span className="badge badge-danger">Blocked</span>
         );
 
 
@@ -37,23 +37,28 @@ class ViewUserDetails extends Component {
                   <i className="fas fa-phone" />{" "}
                   <span>Contact number: {user.contact}</span>
                 </p>
-
-              </div>
-              <div className="col md-4">
                 <p className="infoText">
                   <i className="fas fa-check-circle" />{" "}
                   <span>
                     Status: {status}
                   </span>
                 </p>
+              </div>
+              <div className="col md-4">
                 <p className="infoText">
                   <i className="fas fa-plus" />{" "}
                   <span>
-                    Created at :{" "}
+                    Created at:{" "}
                     <Moment format="MMM. DD, YYYY">{user.date}</Moment>
                     {" at "}
                     <Moment format="h:mm A">{user.date}</Moment>
 
+                  </span>
+                </p>
+                <p className="infoText">
+                  <i className="fas fa-check-circle" />{" "}
+                  <span>
+                    Invited by: {user.invitedBy}
                   </span>
                 </p>
               </div>
