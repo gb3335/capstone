@@ -9,7 +9,7 @@ import Highlighter from "react-highlight-words";
 
 import { Spring, Transition, animated } from 'react-spring/renderprops';
 
-import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern } from "../../actions/localPlagiarismActions";
+import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern, clearLocalPlagiarismState } from "../../actions/localPlagiarismActions";
 
 import LocalHighlightedResult from './LocalHighlightedResult';
 import ResultStatistics from './ResultStatistics';
@@ -35,56 +35,70 @@ class LocalResult extends Component {
   }
 
   componentWillMount() {
-    this.props.setPlagiarismLocalHideDetails();
-    const { docuId } = this.props.localPlagiarism;
-    const { researches, research } = this.props.research;
-
-    // let newob = researches.find(obj => obj._id === docuId);
-    const input = {
-      docuId: docuId,
-      docuFile: research.document,
-      abstract: this.props.localPlagiarism.abstract
+    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+      this.props.history.push("/dashboard");
+    }else{
+      this.props.setPlagiarismLocalHideDetails();
+      const { docuId } = this.props.localPlagiarism;
+      const { researches, research } = this.props.research;
+  
+      // let newob = researches.find(obj => obj._id === docuId);
+      const input = {
+        docuId: docuId,
+        docuFile: research.document,
+        abstract: this.props.localPlagiarism.abstract
+      }
+      this.props.getPattern(input);
     }
-    this.props.getPattern(input);
+    
   }
 
   componentDidMount() {
-    const { output } = this.props.localPlagiarism;
-    let little = 0, moderate = 0, heavy = 0;
-    let score = []
-    output.forEach(out => {
-      if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
-        little++;
-      } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
-        moderate++;
-      }
-      else if (out.SimilarityScore > 70) {
-        heavy++;
-      }
-    })
-
-    score.push(little);
-    score.push(moderate);
-    score.push(heavy);
-
-    this.setState({ little, moderate, heavy, score })
-
-    const words = [];
-
-    output.forEach((out) => {
-      out.Index.forEach((index) => {
-        let obj = JSON.parse(index);
-        words.push(obj.Pattern)
+    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+      this.props.history.push("/dashboard");
+    }else{
+      const { output } = this.props.localPlagiarism;
+      let little = 0, moderate = 0, heavy = 0;
+      let score = []
+      output.forEach(out => {
+        if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
+          little++;
+        } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
+          moderate++;
+        }
+        else if (out.SimilarityScore > 70) {
+          heavy++;
+        }
       })
-    })
-    var uniqueItems = [...new Set(words)]
+
+      score.push(little);
+      score.push(moderate);
+      score.push(heavy);
+
+      this.setState({ little, moderate, heavy, score })
+
+      const words = [];
+
+      output.forEach((out) => {
+        out.Index.forEach((index) => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+      })
+      var uniqueItems = [...new Set(words)]
 
 
-    const word = uniqueItems.join(' ');
+      const word = uniqueItems.join(' ');
 
-    var splited = word.split(' ');
-    this.setState({ words: splited });
+      var splited = word.split(' ');
+      this.setState({ words: splited });
+    }
+    
 
+  }
+
+  componentWillUnmount(){
+    this.props.clearLocalPlagiarismState();
   }
 
   onClickShowDetails = (id) => {
@@ -391,7 +405,8 @@ LocalResult.propTypes = {
   setPlagiarismGenerateReportLoading: PropTypes.func.isRequired,
   getTextPattern: PropTypes.func.isRequired,
   getPattern: PropTypes.func.isRequired,
-  createLocalPlagiarismReport: PropTypes.func.isRequired
+  createLocalPlagiarismReport: PropTypes.func.isRequired,
+  clearLocalPlagiarismState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -400,4 +415,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern })(LocalResult);
+export default connect(mapStateToProps, { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern,clearLocalPlagiarismState })(LocalResult);

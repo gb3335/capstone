@@ -71,7 +71,6 @@ class OnlineCheck extends Component {
     }
 
     onClickHideDetails = () =>{
-        console.log("wer")
         this.props.setPlagiarismOnlineHideDetails();
       }
 
@@ -245,36 +244,36 @@ class OnlineCheck extends Component {
         
         return (
             <div className="container-fluid">
-            <div className="row">
-              <div className="col-md-8">
-              { generateReport ? <button
-                  className="btn btn-light mb-3 float-right disabled"
-                >
-                  <i className="fas fa-flag text-danger" /> Generating Report...
-                </button>
+                <div className="row">
+                    <div className="col-md-8">
+                    { generateReport ? <button
+                        className="btn btn-light mb-3 float-right disabled"
+                        >
+                        <i className="fas fa-flag text-danger" /> Generating Report...
+                        </button>
 
-                : original==="" || (Object.entries(output).length === 0 && output.constructor === Object) ? 
-                <button
-                    className="btn btn-light mb-3 float-right disabled"
-                >
-                    <i className="fas fa-flag text-danger" /> Generate Report
-                </button> 
-                :
-                <button
-                  onClick={this.onClickGenerateReport}
-                  className="btn btn-light mb-3 float-right"
-                >
-                  <i className="fas fa-flag text-danger" /> Generate Report
-                </button>}
-              </div>
-            </div>
+                        : original==="" || (Object.entries(output).length === 0 && output.constructor === Object) ? 
+                        <button
+                            className="btn btn-light mb-3 float-right disabled"
+                        >
+                            <i className="fas fa-flag text-danger" /> Generate Report
+                        </button> 
+                        :
+                        <button
+                        onClick={this.onClickGenerateReport}
+                        className="btn btn-light mb-3 float-right"
+                        >
+                        <i className="fas fa-flag text-danger" /> Generate Report
+                        </button>}
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-md-8">
                         {highlightItems}
                     </div>
                     <div className="col-md-4">
-                    <div className="container-fluid">
-                        <div className="sourceHeader">Result List</div>
+                        <div className="container-fluid">
+                            <div className="sourceHeader">Result List</div>
                             <Spring
                                     from={{ opacity: 0}}
                                     to={{  opacity: 1}}
@@ -285,7 +284,7 @@ class OnlineCheck extends Component {
                                     </div>
                                 )}
                             </Spring>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>

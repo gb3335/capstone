@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT } from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE } from "./types";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
@@ -50,13 +50,19 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
-            console.log("test")
-            if (input.fromFlag) {
-              history.push(`/localResultSideBySide/research`);
-            } else {
-              history.push(`/localresult/research`);
+            if(input.abstract){
+              if (input.fromFlag) {
+                history.push(`/localResultSideBySide/research/abstract`);
+              } else {
+                history.push(`/localresult/research/abstract`);
+              }
+            }else{
+              if (input.fromFlag) {
+                history.push(`/localResultSideBySide/research`);
+              } else {
+                history.push(`/localresult/research`);
+              }
             }
-
           })
           .catch(err => {
             dispatch({
@@ -334,5 +340,12 @@ export const getOnlinePlagiarismInput = output => {
   return {
     type: PLAGIARISM_ONLINE_INPUT,
     payload: output
+  };
+};
+
+// Clear local plagiarism state
+export const clearLocalPlagiarismState = output => {
+  return {
+    type: PLAGIARISM_LOCAL_CLEAR_STATE,
   };
 };
