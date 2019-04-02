@@ -15,6 +15,8 @@ import { getColleges } from "../../actions/collegeActions";
 import { getResearches } from "../../actions/researchActions";
 import { changePageTitle } from "../../actions/sidebarActions";
 import { getActivities } from "../../actions/activityActions";
+import { getUsers } from "../../actions/userActions";
+import { getJournals } from "../../actions/journalActions";
 
 class Dashboard extends Component {
   constructor() {
@@ -31,6 +33,8 @@ class Dashboard extends Component {
     this.props.getColleges();
     this.props.getResearches();
     this.props.getActivities();
+    this.props.getUsers();
+    this.props.getJournals();
     this.props.changePageTitle("Dashboard");
   }
 
@@ -497,6 +501,8 @@ Dashboard.propTypes = {
   getColleges: PropTypes.func.isRequired,
   getResearches: PropTypes.func.isRequired,
   getActivities: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  getJournals: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -510,5 +516,12 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changePageTitle, getColleges, getActivities, getResearches }
+  {
+    changePageTitle,
+    getColleges,
+    getActivities,
+    getResearches,
+    getUsers,
+    getJournals
+  }
 )(Dashboard);

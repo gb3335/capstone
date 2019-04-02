@@ -5,10 +5,16 @@ import PropTypes from "prop-types";
 import moment from "moment";
 import { Parallax, Background } from "react-parallax";
 
-import { getColleges } from "../../actions/collegeActions";
+import {
+  getColleges,
+  getCollegeByInitials
+} from "../../actions/collegeActions";
 import { getResearches } from "../../actions/researchActions";
+import { getUsers } from "../../actions/userActions";
+import { getJournals } from "../../actions/journalActions";
 
 import "./Landing.css";
+
 class Landing extends Component {
   constructor(props) {
     super(props);
@@ -19,10 +25,14 @@ class Landing extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.getColleges();
     this.props.getResearches();
+    this.props.getUsers();
+    this.props.getJournals();
+  }
 
+  componentDidMount() {
     let currentHour = moment().format("HH");
     currentHour = parseInt(currentHour, 10);
 
@@ -49,6 +59,10 @@ class Landing extends Component {
 
   render() {
     let name;
+
+    try {
+      this.props.getCollegeByInitials(this.props.colleges[0].name.initials);
+    } catch (error) {}
 
     if (this.props.auth.isAuthenticated) {
       name = ", " + this.props.auth.user.firstName;
@@ -149,15 +163,19 @@ class Landing extends Component {
 
 Landing.propTypes = {
   getColleges: PropTypes.func.isRequired,
+  getCollegeByInitials: PropTypes.func.isRequired,
   getResearches: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
+  getJournals: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  colleges: state.college.colleges
 });
 
 export default connect(
   mapStateToProps,
-  { getResearches, getColleges }
+  { getResearches, getColleges, getUsers, getJournals, getCollegeByInitials }
 )(Landing);

@@ -16,7 +16,8 @@ import { emphasize } from "@material-ui/core/styles/colorManipulator";
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250
+    height: 250,
+    fontSize: 12
   },
   input: {
     display: "flex",
@@ -32,7 +33,8 @@ const styles = theme => ({
     overflow: "hidden"
   },
   chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
+    fontSize: 12
   },
   chipFocused: {
     backgroundColor: emphasize(
@@ -40,10 +42,12 @@ const styles = theme => ({
         ? theme.palette.grey[300]
         : theme.palette.grey[700],
       0.08
-    )
+    ),
+    fontSize: 12
   },
   noOptionsMessage: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
+    fontSize: 12
   },
   singleValue: {
     display: "flex",
@@ -62,10 +66,12 @@ const styles = theme => ({
     zIndex: 1,
     marginTop: theme.spacing.unit,
     left: 0,
-    right: 0
+    right: 0,
+    fontSize: 12
   },
   divider: {
-    height: theme.spacing.unit * 2
+    height: theme.spacing.unit * 2,
+    fontSize: 12
   }
 });
 
@@ -196,13 +202,27 @@ class SearchBar extends Component {
   }
 
   handleChange = name => value => {
+    let port = "";
+
+    if (window.location.port !== null) {
+      port = ":" + window.location.port;
+    }
+
     this.setState(
       {
         [name]: value
       },
       () => {
         if (this.state.single !== null) {
-          window.open(this.state.single.link, "_blank");
+          window.open(
+            window.location.protocol +
+              "//" +
+              window.location.hostname +
+              port +
+              "/" +
+              this.state.single.link,
+            "_blank"
+          );
         }
       }
     );
@@ -213,54 +233,54 @@ class SearchBar extends Component {
     const { isAuthenticated } = this.props.auth;
     let suggestions = [];
 
-    if (this.props.colleges !== null) {
-      // Add Colleges
-      this.props.colleges.map(college => {
-        suggestions.push({
-          label: "College: " + college.name.fullName,
-          link: `colleges/${college.name.initials}`
-        });
-      });
-
-      // Add Researches
-      this.props.researches.map(research => {
-        suggestions.push({
-          label: "Research: " + research.title,
-          link: `researches/${research._id}`
-        });
-      });
-
-      // Add Journals
-      this.props.journals.map(journal => {
-        suggestions.push({
-          label: "Journal: " + journal.title,
-          link: `journals/${journal._id}`
-        });
-      });
-
-      // Add Users
-      if (isAuthenticated) {
-        this.props.users.map(user => {
+    try {
+      if (this.props.colleges !== null) {
+        // Add Colleges
+        this.props.colleges.map(college => {
           suggestions.push({
-            label:
-              "User: " +
-              user.name.firstName +
-              " " +
-              user.name.middleName +
-              " " +
-              user.name.lastName,
-            link: `viewusers/${user._id}`
+            label: college.name.fullName,
+            link: `colleges/${college.name.initials}`
           });
         });
+
+        // Add Researches
+        this.props.researches.map(research => {
+          suggestions.push({
+            label: research.title,
+            link: `researches/${research._id}`
+          });
+        });
+
+        // Add Journals
+        this.props.journals.map(journal => {
+          suggestions.push({
+            label: journal.title,
+            link: `journals/${journal._id}`
+          });
+        });
+
+        // Add Users
+        if (isAuthenticated) {
+          this.props.users.map(user => {
+            suggestions.push({
+              label:
+                user.name.firstName +
+                " " +
+                user.name.middleName +
+                " " +
+                user.name.lastName,
+              link: `viewusers/${user._id}`
+            });
+          });
+        }
+
+        suggestions.map(suggestion => ({
+          value: suggestion.label,
+          label: suggestion.label,
+          link: suggestion.link
+        }));
       }
-
-      suggestions.map(suggestion => ({
-        value: suggestion.label,
-        label: suggestion.label,
-        link: suggestion.link
-      }));
-    }
-
+    } catch (error) {}
     const selectStyles = {
       input: base => ({
         ...base,
@@ -282,6 +302,7 @@ class SearchBar extends Component {
           onChange={this.handleChange("single")}
           placeholder="Search"
           isClearable
+          isDisabled={suggestions === null ? true : false}
         />
       </NoSsr>
     );
@@ -291,10 +312,6 @@ class SearchBar extends Component {
 SearchBar.propTypes = {
   classes: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired,
-  colleges: PropTypes.object.isRequired,
-  researches: PropTypes.object.isRequired,
-  journals: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
 };
 
