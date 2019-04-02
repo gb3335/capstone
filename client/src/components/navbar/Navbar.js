@@ -143,7 +143,7 @@ class Navbar extends Component {
             onMouseLeave={this.onMouseLeave}
           >
             <img className="user_img" src={path} alt="" />
-            <p>{user.firstName}</p>
+            <p>{user.firstName} {user.lastName}</p>
           </a>
           <div
             id="userMenu"
@@ -152,13 +152,15 @@ class Navbar extends Component {
             className={this.state.forcol}
             aria-expanded="false"
           >
+          <div className="csstriangleForNavbar" />
+          <div className="invisibleNavbarDiv"/>
             <ul className="account_submenus">
               <li>
-                <Link to={oldlink}>My Account</Link>
+                  <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
               </li>
               <li>
-                <Link to="#" onClick={this.onLogoutClick.bind(this)}>
-                  Logout
+                <Link to="#" onClick={this.onLogoutClick.bind(this)} className="logoutNavBarBtn">
+                <i className="fa fa-power-off pl-2 pr-2"></i> Logout
                 </Link>
               </li>
             </ul>

@@ -2,6 +2,7 @@
   height: 100%;
   top: 0;
   left: 0;
+  width: 100%;
 }
 
 .navmain {
@@ -27,6 +28,7 @@
 
 .main {
   height: 100%;
+  width: 100%;
   background: rgb(248, 244, 244);
   margin: 20px 0 20px 0;
 }

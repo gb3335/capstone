@@ -301,7 +301,7 @@ class Sidebar extends Component {
             href="#accountClick"
             aria-expanded="false"
           >
-            <i className="fa fa-user-alt" />
+            <i className="fa fa-users" />
             <p className="pr-2">Accounts</p>
             <b id="rotate" className={this.state.accountRotate} />
           </a>
@@ -348,7 +348,7 @@ class Sidebar extends Component {
           aria-expanded={this.state.accountAria}
 
         >
-          <i className="fa fa-user-alt" />
+          <i className="fa fa-users" />
           <p className="pr-2">Accounts</p>
           <b id="rotate" className={this.state.rotate} />
         </a>
@@ -386,6 +386,59 @@ class Sidebar extends Component {
       </li>)
     }
 
+    const replaceString = require("replace-string");
+    let strstart = 0;
+    let a = window.location.href;
+    let oldpath;
+    let oldid;
+
+    let mylink;
+
+    let b = replaceString(a, "http://localhost:3000/", "");
+    if (b.includes("/")) {
+      strstart = b.indexOf("/");
+      oldpath = b.substring(0, strstart);
+      oldid = b.substring(strstart + 1, b.length);
+      mylink =
+        "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+    } else {
+      if (b === "") {
+        mylink =
+          "/myaccount/" +
+          this.props.auth.user.id +
+          "/" +
+          "undefined" +
+          "/" +
+          oldid;
+      } else {
+        mylink =
+          "/myaccount/" + this.props.auth.user.id + "/" + b + "/" + oldid;
+      }
+    }
+    if (
+      "/myaccount/" +
+      this.props.auth.user.id +
+      "/myaccount/" +
+      this.props.auth.user.id ===
+      mylink.substring(
+        0,
+        (
+          "/myaccount/" +
+          this.props.auth.user.id +
+          "/myaccount/" +
+          this.props.auth.user.id
+        ).length
+      )
+    ) {
+      mylink = mylink.substring(
+        ("/myaccount/" + this.props.auth.user.id).length,
+        mylink.length
+      );
+    }
+
+    let oldlink = mylink;
+    mylink = "";
+
 
     const authLinks = (
       <nav className="sidebar_navigation">
@@ -402,7 +455,7 @@ class Sidebar extends Component {
             <img src={path} alt="Your Avatar" />
           </div>
           <div className="sidebar_user_name">
-            <Link to="/account">{user.firstName}</Link>
+            <Link to={oldlink}>{user.firstName}  {user.lastName}</Link>
           </div>
         </div>
 

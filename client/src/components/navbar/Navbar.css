@@ -1,5 +1,6 @@
 .navbar-size {
   top: 0;
+  width:100%;
   left: 0;
   height: 59px;
   padding: 0 1rem;
@@ -35,6 +36,7 @@
 }
 
 .navbar_items .mainUL {
+  width: 100%;
   list-style: none;
   display: flex;
   padding: 0;
@@ -42,6 +44,8 @@
 }
 
 .navbar_items .mainUL .mainLI {
+  position: relative;
+  width: 100%;
   padding: 0px 0.2rem;
 }
 
@@ -80,19 +84,88 @@
 }
 
 .navbar_items a:hover {
-  background: rgba(94, 94, 95, 0.432);
+  background: rgba(174, 174, 177, 0.432);
+}
+
+.mainLI:hover #account{
+  background: rgba(174, 174, 177, 0.432);
+}
+
+#userMenu{
+  position: absolute;
+  width: 100%;
+  top:75px;
+  -webkit-box-shadow: 0px 0px 3px 0px rgba(242,19,19,1);
+  -moz-box-shadow: 0px 0px 3px 0px rgba(242,19,19,1);
+  box-shadow: 0px 0px 3px 0px rgba(242,19,19,1);
+}
+
+.csstriangleForNavbar {
+  position: absolute;
+  display: block;
+  top: -20px;
+  left: calc(50% - 20px);
+  
+  border-right: 15px solid transparent;
+  border-bottom: 20px solid rgba(241, 123, 123, 0.644);
+  border-left: 15px solid transparent;
+}
+
+.invisibleNavbarDiv{
+  position: absolute;
+  top: -20px;
+  width: 100%;
+  height: 20px;
+  background: transparent;
 }
 
 .navbar_items .account_submenus {
-  list-style-type: none;
-  background: rgb(255, 255, 255);
-  border: 2px solid rgb(197, 193, 193);
-  border-radius: 4px;
-  z-index: 2000;
   display: table;
-  width: 80%;
+  list-style-type: none;
+  background: rgba(255, 255, 255, 0.900);
+  /* border: 2px solid rgb(197, 193, 193); */
+  border-radius: 4px;
+  text-align: left;
+  z-index: 2000;
+  width: 100%;
   padding: 0;
   margin: 0 0;
+}
+
+.navbar_items .account_submenus li {
+  width: 100%;
+  padding: 5px;
+}
+
+.navbar_items .account_submenus li a{
+  width: 100%;
+  padding: 7px;
+  padding-bottom: 9px;
+  text-decoration: none;
+  display: table;
+}
+
+.account_submenus span{
+  padding-left: 35px;
+  font-size: 12px;
+  font-style: italic;
+}
+
+.accountNavBarBtn{
+  color: black;
+}
+
+.accountNavBarBtn:hover{
+  color:black;
+}
+
+.logoutNavBarBtn{
+  border-top: 2px solid rgb(170, 166, 166);
+  color:rgb(252, 52, 52);
+}
+
+.logoutNavBarBtn:hover{
+  color:rgb(252, 52, 52);
 }
 
 .navbar_items .collapsing {
@@ -125,6 +198,12 @@
 }
 
 @media (max-width: 962px) {
+
+  #userMenu{
+    top:55px;
+    
+  }
+
   .navbar-size {
     height: 39px;
     padding: 0 0.5rem;
@@ -141,6 +220,7 @@
   }
 
   .navbar_items .mainUL .mainLI {
+    width: 100%;
     padding: 0px 0.1rem;
   }
 

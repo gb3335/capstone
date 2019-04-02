@@ -5,7 +5,7 @@ const RegisterActions = () => {
   return (
     <div className="btn-group mb-3 btn-group-sm" role="group">
       <Link to="/register" className="btn btn-light">
-        <i className="fas fa-plus text-info mr-1" /> Add Account
+        <i className="fas fa-user-plus text-info mr-1" /> Add Account
       </Link>
     </div>
   );
