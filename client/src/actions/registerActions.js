@@ -4,6 +4,7 @@ import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS } fr
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { getUserById } from "./userActions";
+
 // Register
 export const createAccount = (userData, history) => dispatch => {
   axios
@@ -27,6 +28,17 @@ export const editAccount = (userData, history) => dispatch => {
   axios
     .post("/api/users/profile/update", userData)
     .then(res => {
+
+      const { token } = res.data;
+      // Set token to local storage
+      localStorage.setItem("jwtToken", token);
+      // Set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      // Set current user
+      dispatch(setCurrentUser(decoded));
+
       if (userData.id) {
         history.push(`/viewusers`);
       } else {
@@ -114,6 +126,16 @@ export const editUsername = (userData, history) => dispatch => {
   axios
     .post("/api/users/profile/updateusername", userData)
     .then(res => {
+      const { token } = res.data;
+      // Set token to local storage
+      localStorage.setItem("jwtToken", token);
+      // Set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      // Set current user
+      dispatch(setCurrentUser(decoded));
+
       if (userData.id) {
         history.push(`/viewusers/${userData.id}`);
       } else {

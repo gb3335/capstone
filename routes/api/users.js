@@ -156,7 +156,33 @@ router.post(
           req.user._id,
           { $set: profileData },
           { new: true }
-        ).then(user => res.json(user));
+        ).then(user => {
+          const payload = {
+            id: user._id,
+            userName: user.userName,
+            email: user.email,
+            contact: user.contact,
+            name: {
+              firstName: user.name.firstName,
+              middleName: user.name.middleName,
+              lastName: user.name.lastName
+            },
+            avatar: user.avatar,
+            userType: user.userType,
+            isLock: user.isLock,
+            isBlock: user.isBlock,
+            invitedBy: user.invitedBy,
+            college: user.college,
+            date: user.date
+          };
+          jwt.sign(payload, keys.secretOrKey, (err, token) => {
+            res.json({
+              success: true,
+              token: "Bearer " + token
+            });
+          });
+        
+        });
 
       }
 
@@ -196,7 +222,32 @@ router.post(
         req.user._id,
         { $set: profileData },
         { new: true }
-      ).then(user => res.json(user));
+      ).then(user => {
+        const payload = {
+          id: user._id,
+          userName: user.userName,
+          email: user.email,
+          contact: user.contact,
+          name: {
+            firstName: user.name.firstName,
+            middleName: user.name.middleName,
+            lastName: user.name.lastName
+          },
+          avatar: user.avatar,
+          userType: user.userType,
+          isLock: user.isLock,
+          isBlock: user.isBlock,
+          invitedBy: user.invitedBy,
+          college: user.college,
+          date: user.date
+        };
+        jwt.sign(payload, keys.secretOrKey, (err, token) => {
+          res.json({
+            success: true,
+            token: "Bearer " + token
+          });
+        });
+      });
 
     })
 
@@ -533,9 +584,11 @@ router.post("/login", (req, res) => {
                   userName: user.userName,
                   email: user.email,
                   contact: user.contact,
-                  firstName: user.name.firstName,
-                  middleName: user.name.middleName,
-                  lastName: user.name.lastName,
+                  name: {
+                    firstName: user.name.firstName,
+                    middleName: user.name.middleName,
+                    lastName: user.name.lastName
+                  },
                   avatar: user.avatar,
                   userType: user.userType,
                   isLock: user.isLock,
@@ -598,9 +651,11 @@ router.post("/login", (req, res) => {
               userName: user.userName,
               email: user.email,
               contact: user.contact,
-              firstName: user.name.firstName,
-              middleName: user.name.middleName,
-              lastName: user.name.lastName,
+              name: {
+                firstName: user.name.firstName,
+                middleName: user.name.middleName,
+                lastName: user.name.lastName
+              },
               avatar: user.avatar,
               userType: user.userType,
               isLock: user.isLock,
@@ -844,9 +899,11 @@ router.post(
                 userName: user.userName,
                 email: user.email,
                 contact: user.contact,
-                firstName: user.name.firstName,
-                middleName: user.name.middleName,
-                lastName: user.name.lastName,
+                name: {
+                  firstName: user.name.firstName,
+                  middleName: user.name.middleName,
+                  lastName: user.name.lastName
+                },
                 avatar: user.avatar,
                 userType: user.userType,
                 isLock: user.isLock,
@@ -879,9 +936,11 @@ router.post(
             userName: user.userName,
             email: user.email,
             contact: user.contact,
-            firstName: user.name.firstName,
-            middleName: user.name.middleName,
-            lastName: user.name.lastName,
+            name: {
+              firstName: user.name.firstName,
+              middleName: user.name.middleName,
+              lastName: user.name.lastName
+            },
             avatar: user.avatar,
             userType: user.userType,
             isLock: user.isLock,

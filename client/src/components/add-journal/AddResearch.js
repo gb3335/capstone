@@ -72,11 +72,11 @@ class AddResearch extends Component {
 
 
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
 
     const replaceString = require('replace-string');

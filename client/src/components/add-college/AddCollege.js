@@ -34,11 +34,11 @@ class CreateCollege extends Component {
     const logo = this.state.logo;
     const logoname = logo.replace(/^.*\\/, "");
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const collegeData = {
       fullName: this.state.fullName,

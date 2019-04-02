@@ -65,7 +65,7 @@ class Landing extends Component {
     } catch (error) {}
 
     if (this.props.auth.isAuthenticated) {
-      name = ", " + this.props.auth.user.firstName;
+      name = ", " + this.props.auth.user.name.firstName;
     }
 
     const styles = {

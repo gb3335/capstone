@@ -106,11 +106,11 @@ class CollegesActions extends Component {
         this.setState({ checkOneAlert: true });
       } else {
         const name =
-          this.props.auth.user.firstName +
+          this.props.auth.user.name.firstName +
           " " +
-          this.props.auth.user.middleName +
+          this.props.auth.user.name.middleName +
           " " +
-          this.props.auth.user.lastName;
+          this.props.auth.user.name.lastName;
 
         const collegesReportData = {
           status: this.state.status,

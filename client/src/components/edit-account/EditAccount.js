@@ -15,18 +15,18 @@ class EditAccount extends Component {
     super(props);
     this.state = {
 
-      firstName: this.props.users.user.name.firstName,
-      email: this.props.users.user.email,
-      lastName: this.props.users.user.name.lastName,
-      middleName: this.props.users.user.name.middleName,
-      contact: this.props.users.user.contact,
-      userType: this.props.users.user.userType,
-      college: this.props.users.user.college,
+      firstName: this.props.auth.user.name.firstName,
+      email: this.props.auth.user.email,
+      lastName: this.props.auth.user.name.lastName,
+      middleName: this.props.auth.user.name.middleName,
+      contact: this.props.auth.user.contact,
+      userType: this.props.auth.user.userType,
+      college: this.props.auth.user.college,
       newpassword2: '',
       password: '',
       newpassword: '',
 
-      userName: this.props.users.user.userName,
+      userName: this.props.auth.user.userName,
       errors: {}
 
     };
@@ -49,7 +49,7 @@ class EditAccount extends Component {
       lastname: this.state.lastName,
       middlename: this.state.middleName,
       contact: this.state.contact,
-      id: this.props.users.user._id
+      id: this.props.auth.user.id
     };
 
 
@@ -64,7 +64,7 @@ class EditAccount extends Component {
 
     const userData = {
       userName: this.state.userName,
-      id: this.props.users.user._id
+      id: this.props.auth.user.id
     };
 
     this.refs.resBtn1.setAttribute('disabled', 'disabled');
@@ -80,7 +80,7 @@ class EditAccount extends Component {
       password: this.state.password,
       newpassword: this.state.newpassword,
       newpassword2: this.state.newpassword2,
-      id: this.props.users.user._id
+      id: this.props.auth.user.id
     };
 
 

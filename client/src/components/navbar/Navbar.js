@@ -53,9 +53,9 @@ class Navbar extends Component {
 
     const userData = {
       name: {
-        firstName: this.props.auth.user.firstName,
-        middleName: this.props.auth.user.middleName,
-        lastName: this.props.auth.user.lastName
+        firstName: this.props.auth.user.name.firstName,
+        middleName: this.props.auth.user.name.middleName,
+        lastName: this.props.auth.user.name.lastName
       },
       email: this.props.auth.user.email,
       avatar: this.props.auth.user.avatar,
@@ -162,45 +162,49 @@ class Navbar extends Component {
     mylink = "";
 
 
+    let authLinks;
 
-    const authLinks = (
-      <ul className="mainUL">
-        <li className="mainLI">
-          <a
-            className="collapsed account_button"
-            id="account"
-            data-toggle="collapse"
-            href="#userMenu"
-            aria-expanded={this.state.aria}
-            onMouseEnter={this.onMouseEnter}
-            onMouseLeave={this.onMouseLeave}
-          >
-            <img className="user_img" src={path} alt="" />
-            <p>{user.firstName} {user.lastName}</p>
-          </a>
-          <div
-            id="userMenu"
-            onMouseEnter={this.onMouseEnter}
-            onMouseLeave={this.onMouseLeave}
-            className={this.state.forcol}
-            aria-expanded="false"
-          >
-          <div className="csstriangleForNavbar" />
-          <div className="invisibleNavbarDiv"/>
-            <ul className="account_submenus">
-              <li>
-                  <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
-              </li>
-              <li>
-                <Link to="#" onClick={this.onLogoutClick.bind(this)} className="logoutNavBarBtn">
-                <i className="fa fa-power-off pl-2 pr-2"></i> Logout
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    );
+    if(isAuthenticated){
+      authLinks = (
+        <ul className="mainUL">
+          <li className="mainLI">
+            <a
+              className="collapsed account_button"
+              id="account"
+              data-toggle="collapse"
+              href="#userMenu"
+              aria-expanded={this.state.aria}
+              onMouseEnter={this.onMouseEnter}
+              onMouseLeave={this.onMouseLeave}
+            >
+              <img className="user_img" src={path} alt="" />
+              <p>{user.name.firstName} {user.name.lastName}</p>
+            </a>
+            <div
+              id="userMenu"
+              onMouseEnter={this.onMouseEnter}
+              onMouseLeave={this.onMouseLeave}
+              className={this.state.forcol}
+              aria-expanded="false"
+            >
+            <div className="csstriangleForNavbar" />
+            <div className="invisibleNavbarDiv"/>
+              <ul className="account_submenus">
+                <li>
+                    <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
+                </li>
+                <li>
+                  <Link to="#" onClick={this.onLogoutClick.bind(this)} className="logoutNavBarBtn">
+                  <i className="fa fa-power-off pl-2 pr-2"></i> Logout
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      );
+    }
+    
 
     return (
       <nav className="navbar navbar-size">

@@ -283,7 +283,8 @@ class ViewUsers extends Component {
 
 ViewUsers.protoTypes = {
   getUsers: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  user: PropTypes.object.isRequired,
+  auth : PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({

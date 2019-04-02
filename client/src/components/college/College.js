@@ -67,11 +67,11 @@ class College extends Component {
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.college.college._id,
@@ -107,11 +107,11 @@ class College extends Component {
   onRemoveRestoreOkay = () => {
     this.setState({ restoreAlertOkay: false });
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.college.college._id,

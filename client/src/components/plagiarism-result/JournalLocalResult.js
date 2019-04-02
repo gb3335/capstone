@@ -116,11 +116,11 @@ class LocalResult extends Component {
     let word = child.innerHTML.toString()
 
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     let subTypeOfReport = "Checked in the System Database";
     if (abstract) {

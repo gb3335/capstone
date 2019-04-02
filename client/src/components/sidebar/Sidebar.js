@@ -439,196 +439,199 @@ class Sidebar extends Component {
     let oldlink = mylink;
     mylink = "";
 
-
-    const authLinks = (
-      <nav className="sidebar_navigation">
-        <div className="sidebar_logo">
-          <Link
-            to="/"
-            onClick={() => this.changeTitle("Welcome to our Website")}
-          >
-            BSU
-          </Link>
-        </div>
-        <div className="sidebar_user">
-          <div className="sidebar_user_image">
-            <img src={path} alt="Your Avatar" />
+    let authLinks;
+    if(isAuthenticated){
+      authLinks = (
+        <nav className="sidebar_navigation">
+          <div className="sidebar_logo">
+            <Link
+              to="/"
+              onClick={() => this.changeTitle("Welcome to our Website")}
+            >
+              BSU
+            </Link>
           </div>
-          <div className="sidebar_user_name">
-            <Link to={oldlink}>{user.firstName}  {user.lastName}</Link>
+          <div className="sidebar_user">
+            <div className="sidebar_user_image">
+              <img src={path} alt="Your Avatar" />
+            </div>
+            <div className="sidebar_user_name">
+              <Link to={oldlink}>{user.name.firstName}  {user.name.lastName}</Link>
+            </div>
           </div>
-        </div>
-
-        <div className="sidebar_navigation_items">
-          <ul>
-            <li>
-              <Link
-                to="/dashboard"
-                onClick={() => this.changeTitle("Dashboard")}
-                className="parentA"
-              >
-                <i className="fa fa-chart-line" />
-                <p>Dashboard</p>
-              </Link>
-            </li>
-            {adminShowBig}
-            {adminShowSmall}
-            <li>
-              <Link
-                to="/colleges"
-                onClick={() => this.changeTitle("Colleges")}
-                className="parentA"
-              >
-                <i className="fa fa-graduation-cap" />
-                <p>Colleges</p>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/researches"
-                onClick={() => this.changeTitle("Researches")}
-                className="parentA"
-              >
-                <i className="fa fa-book" />
-                <p>Researches</p>
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/journals"
-                onClick={() => this.changeTitle("Journals")}
-                className="parentA"
-              >
-                <i className="fa fa-journal-whills" />
-                <p>Journals</p>
-              </Link>
-            </li>
-            <li className="multimenus forlarge">
-              <a
-                onClick={this.updateClass}
-                className="parentA"
-                id="plagiarism"
-                data-toggle="collapse"
-                href="#checkPlagiarism"
-                aria-expanded="false"
-              >
-                <i className="fa fa-search" />
-                <p className="pr-2">Check Plagiarism</p>
-                <b id="rotate" className={this.state.rotate} />
-              </a>
-
-              <div
-                id="checkPlagiarism"
-                className="collapse"
-                aria-expanded="false"
-              >
-                <div className="csstriangle" />
-                <ul className="submenus nav">
-                  <li>
-                    <Link
-                      to="/onlinecheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Online")
-                      }
-                    >
-                      Online Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/localcheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Locally")
-                      }
-                    >
-                      Local Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/sidebyside"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Side by Side")
-                      }
-                    >
-                      Side by side
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li className="multimenus formini">
-              <a
-                onClick={this.updateClass}
-                onMouseEnter={this.onMouseEnter}
-                onMouseLeave={this.onMouseLeave}
-                className="parentA"
-                id="plagiarism"
-                data-toggle="collapse"
-                href="#checkPlagiarism"
-                aria-expanded={this.state.aria}
-              >
-                <i className="fa fa-search" />
-                <p className="pr-2">Check Plagiarism</p>
-                <b id="rotate" className={this.state.rotate} />
-              </a>
-
-              <div
-                id="checkPlagiarism"
-                onMouseEnter={this.onMouseEnter}
-                onMouseLeave={this.onMouseLeave}
-                className={this.state.forcol}
-                aria-expanded="false"
-              >
-                <div className="csstriangle" />
-                <ul className="submenus nav">
-                  <li>
-                    <Link
-                      to="/onlinecheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Online")
-                      }
-                    >
-                      Online Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/localcheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Locally")
-                      }
-                    >
-                      Local Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/sidebyside"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Side by Side")
-                      }
-                    >
-                      Side by side
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li>
-              <Link
-                to="/grammar"
-                onClick={() => this.changeTitle("Grammar")}
-                className="parentA"
-              >
-                <i className="fa fa-book-reader" />
-                <p>Check Grammar</p>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    );
+  
+          <div className="sidebar_navigation_items">
+            <ul>
+              <li>
+                <Link
+                  to="/dashboard"
+                  onClick={() => this.changeTitle("Dashboard")}
+                  className="parentA"
+                >
+                  <i className="fa fa-chart-line" />
+                  <p>Dashboard</p>
+                </Link>
+              </li>
+              {adminShowBig}
+              {adminShowSmall}
+              <li>
+                <Link
+                  to="/colleges"
+                  onClick={() => this.changeTitle("Colleges")}
+                  className="parentA"
+                >
+                  <i className="fa fa-graduation-cap" />
+                  <p>Colleges</p>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/researches"
+                  onClick={() => this.changeTitle("Researches")}
+                  className="parentA"
+                >
+                  <i className="fa fa-book" />
+                  <p>Researches</p>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/journals"
+                  onClick={() => this.changeTitle("Journals")}
+                  className="parentA"
+                >
+                  <i className="fa fa-journal-whills" />
+                  <p>Journals</p>
+                </Link>
+              </li>
+              <li className="multimenus forlarge">
+                <a
+                  onClick={this.updateClass}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded="false"
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
+  
+                <div
+                  id="checkPlagiarism"
+                  className="collapse"
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/onlinecheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Online")
+                        }
+                      >
+                        Online Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li className="multimenus formini">
+                <a
+                  onClick={this.updateClass}
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded={this.state.aria}
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
+  
+                <div
+                  id="checkPlagiarism"
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className={this.state.forcol}
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/onlinecheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Online")
+                        }
+                      >
+                        Online Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <Link
+                  to="/grammar"
+                  onClick={() => this.changeTitle("Grammar")}
+                  className="parentA"
+                >
+                  <i className="fa fa-book-reader" />
+                  <p>Check Grammar</p>
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      );
+    }
+    
 
     return (
       <div>

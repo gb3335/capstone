@@ -77,11 +77,11 @@ class Research extends Component {
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.research.research._id,
@@ -106,11 +106,11 @@ class Research extends Component {
   onRemoveRestoreOkay = () => {
     this.setState({ restoreAlertOkay: false });
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.research.research._id,
@@ -137,11 +137,11 @@ class Research extends Component {
   onRemoveHideOkay = () => {
     this.setState({ hideAlertOkay: false });
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.research.research._id,
@@ -171,11 +171,11 @@ class Research extends Component {
     this.setState({ showAlertOkay: false });
 
     const name =
-      this.props.auth.user.firstName +
+      this.props.auth.user.name.firstName +
       " " +
-      this.props.auth.user.middleName +
+      this.props.auth.user.name.middleName +
       " " +
-      this.props.auth.user.lastName;
+      this.props.auth.user.name.lastName;
 
     const data = {
       id: this.props.research.research._id,

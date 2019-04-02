@@ -36,7 +36,8 @@ class MyAccount extends Component {
 
 
 
-    const { user, loading } = this.props.users;
+    const { loading } = this.props.users;
+    const { user } = this.props.auth;
     const auth = this.props.auth;
     const isAuthenticated = this.props.auth.isAuthenticated;
 
