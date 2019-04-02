@@ -28,7 +28,6 @@ export const loginUser = userData => dispatch => {
 };
 //forgotuser
 export const forgotUser = (userData, history) => dispatch => {
-  console.log(userData)
   axios
     .post("/api/users/forgotpassword", userData)
     .then(res => {
@@ -51,14 +50,20 @@ export const setCurrentUser = decoded => {
 };
 
 // Log user out
-export const logoutUser = () => dispatch => {
+export const logoutUser = (userData, history) => dispatch => {
   // Remove the token from the localStorage
+  axios
+    .post("/api/users/logout", userData)
 
   localStorage.removeItem("jwtToken");
   // Remove the auth header for future request
   setAuthToken(false);
   // Set the current to an empty object which will also set isAuthenticated FALSE
   dispatch(setCurrentUser({}));
+
+
+
+
 
 
 };

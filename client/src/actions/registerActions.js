@@ -3,7 +3,7 @@ import axios from "axios";
 import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
-import { getUsers, getUserById } from "./userActions";
+import { getUserById } from "./userActions";
 // Register
 export const createAccount = (userData, history) => dispatch => {
   axios
@@ -93,8 +93,8 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
               })
             )
 
-          if (userData.id) {
-            history.push(`/viewusers/${Data.id}`);
+          if (userData.oldlink) {
+            history.push(userData.oldlink);
           } else {
             history.push(`/viewusers/${Data.id}`);
           }
@@ -104,6 +104,8 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
     })
     .catch(err =>
       dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
       })
     );
 };

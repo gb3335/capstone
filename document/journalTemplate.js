@@ -1,23 +1,6 @@
 const moment = require("moment");
 
 module.exports = ({
-
-  // const reportData = {
-  // basic info
-  //   college: this.state.college,
-  //   course: this.state.course,
-  //   issn: this.state.issn,
-  //   pages: this.state.pages,
-  //   yearPublished: this.state.yearPublished,
-  //   lastUpdate: this.state.lastUpdate,
-  //   description: this.state.description,
-  //   authors: this.state.authors,
-  //   journal: this.props.journal.journal,
-  //   typeOfReport: "Journal Report",
-  //   printedBy: name
-  // };
-
-
   college,
   course,
   issn,

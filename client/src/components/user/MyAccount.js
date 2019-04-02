@@ -7,7 +7,7 @@ import Spinner from "../common/Spinner";
 import { getUserById } from "../../actions/userActions";
 import ViewUserHeader from "./ViewUserHeader";
 import ViewUserDetails from "./ViewUserDetails";
-import UserAction from './UserAction'
+import MyAccountAction from './MyAccountAction'
 // import CollegeHeader from "./CollegeHeader";
 // import CollegeDetails from "./CollegeDetails";
 // import CollegeCourses from "./CollegeCourses";
@@ -45,7 +45,7 @@ class MyAccount extends Component {
     let userstatus;
 
     if (isAuthenticated) {
-      useraction = <UserAction user={user} auth={auth} />
+      useraction = <MyAccountAction user={user} auth={auth} />
     }
 
     // if (user.__id === authuser.__id) {

@@ -10,6 +10,7 @@ import activityReducer from "./activityReducer";
 import userReducer from "./userReducer";
 import journalReducer from "./journalReducer";
 import grammarReducer from "./grammarReducer";
+import userlogsReducer from "./userlogsReducer";
 
 export default combineReducers({
   sidebar: sidebarReducer,
@@ -22,5 +23,7 @@ export default combineReducers({
   journal: journalReducer,
   activity: activityReducer,
   users: userReducer,
-  grammar: grammarReducer
+  grammar: grammarReducer,
+  userlogs: userlogsReducer
+
 });

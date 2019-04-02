@@ -16,75 +16,29 @@ class ViewUsers extends Component {
   constructor() {
     super();
     this.state = {
-      delPanel: null,
-      delItems: [],
-      passwordField: '',
-      blockPanel: null
+
     };
   }
-
 
   componentDidMount() {
     this.props.getUsers();
   }
+
   componentWillMount() {
     this.props.getUsers();
 
   }
 
-
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-
-  };
-
-
-
-
   render() {
-
-
 
     const { users, loading } = this.props.users;
     let userItems;
-
+    const usersData = [];
     if (users === null || loading) {
       userItems = <Spinner />
     } else {
 
-
-
-
       if (users.length > 0) {
-
-        const styles = {
-          avatar: {
-            margin: 10,
-          },
-          bigAvatar: {
-            margin: 10,
-            width: 60,
-            height: 60,
-          },
-        };
-
-        const whenBlock = users.map(user => {
-
-
-          if (user.isBlock === 0) {
-            return (<div className="badge badge-success btn-sm">Unblocked</div >
-            )
-          }
-          else if (user.isBlock === 1) {
-            return (<div className="badge badge-danger btn-sm " >
-              Blocked</div >
-            )
-          }
-
-
-        })
-
-
 
 
         // const userData = users.map((user, index) => ({
@@ -93,17 +47,15 @@ class ViewUsers extends Component {
         //   type: user.userType,
         //   view: (
         //     <Link to={/viewusers/ + user._id} ><div className="btn btn-info btn-sm ">View Account</div> </Link>
-
         //   ),
         //   blocked: whenBlock[index],
         //   college: user.college ? user.college : <div>None</div>
-
-
         // }));
 
-        const usersData = [];
 
-        users.map((user, index) => {
+
+
+        users.map(user => {
           let path;
           if (user.avatar === "/images/User.png") {
             path = "/images/User.png"
@@ -121,7 +73,8 @@ class ViewUsers extends Component {
                 <Link to={/viewusers/ + user._id} ><div className="btn btn-outline-info btn-sm ">View Account</div> </Link>
 
               ),
-              blocked: whenBlock[index],
+              blocked: user.isBlock === 0 ? <div className="badge badge-success btn-sm">Unblocked</div > : <div className="badge badge-danger btn-sm " >
+                Blocked</div>,
               college: user.college ? user.college : <div>None</div>
 
             })
@@ -323,9 +276,6 @@ class ViewUsers extends Component {
           </div>
         </div>
       </div>
-
-
-
 
     )
   }
