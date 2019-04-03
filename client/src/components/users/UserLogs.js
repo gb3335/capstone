@@ -65,7 +65,7 @@ class UserLogs extends Component {
                 moment(userlog.date).format(
                   "MMMM Do YYYY, h:mm A"
                 ),
-              user: userlog.firstName + " " + userlog.middleName.getInitials() + ". " + userlog.lastName,
+              user: userlog.name.firstName + " " + userlog.name.middleName.getInitials() + ". " + userlog.name.lastName,
               type: userlog.type,
               userType: userlog.userType
             }

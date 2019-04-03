@@ -40,9 +40,11 @@ router.get(
             userName: currentElement.userName,
             email: currentElement.email,
             contact: currentElement.contact,
-            firstName: currentElement.name.firstName,
-            middleName: currentElement.name.middleName,
-            lastName: currentElement.name.lastName,
+            name: {
+              firstName: currentElement.name.firstName,
+              middleName: currentElement.name.middleName,
+              lastName: currentElement.name.lastName
+            },
             avatar: currentElement.avatar,
             userType: currentElement.userType,
             isLock: currentElement.isLock,

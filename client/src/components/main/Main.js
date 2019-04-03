@@ -34,8 +34,8 @@ import EditResearch from "../edit-research/EditResearch";
 //Journal Import
 import Journals from "../journals/Journals";
 import Journal from "../journal/Journal";
-import AddJournal from "../add-journal/AddResearch";
-import EditJournal from "../edit-journal/EditResearch";
+import AddJournal from "../add-journal/AddJournal";
+import EditJournal from "../edit-journal/EditJournal";
 import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
 
 //register and user
