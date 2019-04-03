@@ -66,12 +66,7 @@ class College extends Component {
   };
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.college.college._id,
@@ -106,12 +101,7 @@ class College extends Component {
   };
   onRemoveRestoreOkay = () => {
     this.setState({ restoreAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.college.college._id,
@@ -185,7 +175,14 @@ class College extends Component {
               </a>
             );
           }
-          if (college.course.length !== 0) {
+          let delCtr = 0;
+          college.course.map(cou => {
+            if (cou.deleted === 0) {
+              delCtr++;
+            }
+          });
+
+          if (delCtr !== 0) {
             deletedAction = "";
           }
         } catch (error) {}

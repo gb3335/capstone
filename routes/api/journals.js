@@ -8,12 +8,12 @@ const fs = require("fs");
 const uuid = require("uuid");
 const Tokenizer = require("sentence-tokenizer");
 const download = require("download-pdf");
-const pdfUtil = require('pdf-to-text');
+const pdfUtil = require("pdf-to-text");
 const path = require("path");
 const pdf = require("html-pdf");
 
 // Text Processor
-const processor = require('../../validation/plagiarism/processor');
+const processor = require("../../validation/plagiarism/processor");
 
 // report templates
 let pdfJournalsTemplate;
@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/journalDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -112,7 +112,6 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-
     const { errors, isValid } = validateJournalInput(req.body);
 
     // Check Validation
@@ -138,7 +137,8 @@ router.post(
           } else {
             // add activity
             const newActivity = {
-              title: "Journal " + req.body.title + " updated",
+              title: "Journal: " + req.body.title + " updated",
+              type: "Journal",
               by: req.body.username
             };
             new Activity(newActivity).save();
@@ -149,13 +149,12 @@ router.post(
               role: "Author One"
             });
 
-
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                  name: aut.name,
-                  role: "Author"
-                })
+                    name: aut.name,
+                    role: "Author"
+                  })
                 : "";
             });
 
@@ -183,7 +182,7 @@ router.post(
             )
               .then(journal => {
                 delete journal.content;
-                res.json(journal)
+                res.json(journal);
               })
               .catch(err => console.log(err));
           }
@@ -201,7 +200,8 @@ router.post(
                   if (college) {
                     // add activity
                     const newActivity = {
-                      title: "Journal " + req.body.title + " added",
+                      title: "Journal: " + req.body.title + " added",
+                      type: "Journal",
                       by: req.body.username
                     };
                     new Activity(newActivity).save();
@@ -244,7 +244,6 @@ router.post(
                       name: req.body.authorOne,
                       role: "Author One"
                     });
-
 
                     let newJournal = {
                       title: req.body.title,
@@ -307,10 +306,7 @@ router.post(
       // add activity
       const newActivity = {
         title:
-          "Journal: " +
-          req.body.name +
-          " added as Author in " +
-          journal.title,
+          "Journal: " + req.body.name + " added as Author in " + journal.title,
         by: req.body.username,
         type: "Journal"
       };
@@ -331,7 +327,7 @@ router.post(
 
       journal.save().then(journal => {
         delete journal.content;
-        res.json(journal)
+        res.json(journal);
       });
     });
   }
@@ -353,7 +349,8 @@ router.delete(
 
         // add activity
         const newActivity = {
-          title: "Journal: " +
+          title:
+            "Journal: " +
             journal.author[removeIndex].name +
             " removed as " +
             journal.author[removeIndex].role +
@@ -381,7 +378,7 @@ router.delete(
         // Save
         journal.save().then(journal => {
           delete journal.content;
-          res.json(journal)
+          res.json(journal);
         });
       })
       .catch(err => res.status(404).json(err));
@@ -492,7 +489,7 @@ router.post(
         Key: `journalDocuments/${req.body.oldFile}`
       };
 
-      s3.deleteObject(params, function (err, data) {
+      s3.deleteObject(params, function(err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -531,50 +528,50 @@ router.post(
         directory: "./routes/downloadedDocu",
         filename: req.body.journalId + ".pdf"
       };
-      download(docPath, options, function (err) {
+      download(docPath, options, function(err) {
         if (err) console.log(err);
         console.log("Document successfully downloaded.");
-        pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+        pdfUtil.pdfToText(
+          `./routes/downloadedDocu/${options.filename}`,
+          function(err, data) {
+            fs.unlink(`./routes/downloadedDocu/${options.filename}`, err => {
+              if (err) throw err;
+              console.log("successfully deleted");
+            });
 
-          fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-            if (err) throw err;
-            console.log('successfully deleted');
-          });
+            let { text, len } = processor.textProcess(
+              data.toString().toLowerCase()
+            );
 
-          let { text, len } = processor.textProcess(data.toString().toLowerCase());
-
-          const newDocument = {
-            document: filename,
-            content: {
-              text,
-              sentenceLength: len
-            },
-            lastUpdate: Date.now()
-          };
-          Journal.findOne({ _id: req.body.journalId }).then(journal => {
-            // add activity
-            const newActivity = {
-              title: "Document added to " + journal.title,
-              by: req.body.username
+            const newDocument = {
+              document: filename,
+              content: {
+                text,
+                sentenceLength: len
+              },
+              lastUpdate: Date.now()
             };
-            new Activity(newActivity).save();
-          });
+            Journal.findOne({ _id: req.body.journalId }).then(journal => {
+              // add activity
+              const newActivity = {
+                title: "Document added to " + journal.title,
+                by: req.body.username
+              };
+              new Activity(newActivity).save();
+            });
 
-          Journal.findOneAndUpdate(
-            { _id: req.body.journalId },
-            { $set: newDocument },
-            { new: true }
-          ).then(journal => {
-            delete journal.content
-            res.json(journal)
-          });
-
-        });
+            Journal.findOneAndUpdate(
+              { _id: req.body.journalId },
+              { $set: newDocument },
+              { new: true }
+            ).then(journal => {
+              delete journal.content;
+              res.json(journal);
+            });
+          }
+        );
       });
-
-
     });
-
   }
 );
 
@@ -593,11 +590,10 @@ router.delete(
       Key: `journalDocuments/${req.params.filename}`
     };
 
-    s3.deleteObject(params, function (err, data) {
+    s3.deleteObject(params, function(err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
-
 
     const newDocument = {
       document: "",
@@ -635,7 +631,6 @@ router.post(
   "/createReport/journals",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-
     const printedBy = req.body.printedBy;
     const options = {
       border: {
@@ -675,11 +670,11 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/journalsPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/journalsPdf.pdf`, (err) => {
+      fs.unlink(`${reqPath}/journalsPdf.pdf`, err => {
         if (err) throw err;
-        console.log('successfully deleted');
+        console.log("successfully deleted");
       });
-    })
+    });
   }
 );
 
@@ -729,11 +724,11 @@ router.get(
   (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     res.sendFile(`${reqPath}/journalPdf.pdf`, () => {
-      fs.unlink(`${reqPath}/journalPdf.pdf`, (err) => {
+      fs.unlink(`${reqPath}/journalPdf.pdf`, err => {
         if (err) throw err;
-        console.log('successfully deleted');
+        console.log("successfully deleted");
       });
-    })
+    });
   }
 );
 

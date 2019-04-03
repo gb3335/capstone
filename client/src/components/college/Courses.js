@@ -78,12 +78,7 @@ class Courses extends Component {
     let noCourses;
     let columnButton;
     try {
-      name =
-        this.props.auth.user.name.firstName +
-        " " +
-        this.props.auth.user.name.middleName +
-        " " +
-        this.props.auth.user.name.lastName;
+      name = this.props.auth.user.id;
     } catch (error) {}
 
     try {
@@ -173,6 +168,7 @@ class Courses extends Component {
               )
             );
           } else {
+            columnButton = null;
             // college deleted no buttons
             course = sortedCourse.map(cou =>
               cou.deleted === 0 ? (

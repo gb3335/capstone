@@ -50,7 +50,6 @@ class Navbar extends Component {
     //   type: "Login"
     // });
 
-
     const userData = {
       name: {
         firstName: this.props.auth.user.name.firstName,
@@ -62,9 +61,8 @@ class Navbar extends Component {
       isBlock: this.props.auth.user.isBlock,
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
-      contact: this.props.auth.user.contact,
+      contact: this.props.auth.user.contact
     };
-
 
     e.preventDefault();
     this.props.clearCurrentProfile();
@@ -162,7 +160,6 @@ class Navbar extends Component {
     let oldlink = mylink;
     mylink = "";
 
-
     let authLinks;
 
     if (isAuthenticated) {
@@ -179,7 +176,9 @@ class Navbar extends Component {
               onMouseLeave={this.onMouseLeave}
             >
               <img className="user_img" src={path} alt="" />
-              <p>{user.name.firstName} {user.name.lastName}</p>
+              <p>
+                {user.name.firstName} {user.name.lastName}
+              </p>
             </a>
             <div
               id="userMenu"
@@ -192,11 +191,18 @@ class Navbar extends Component {
               <div className="invisibleNavbarDiv" />
               <ul className="account_submenus">
                 <li>
-                  <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
+                  <Link to={oldlink} className="accountNavBarBtn">
+                    <i className="fa fa-user-tie pl-2 pr-2" /> My Account <br />
+                    <span>{user.userType}</span>
+                  </Link>
                 </li>
                 <li>
-                  <Link to="#" onClick={this.onLogoutClick.bind(this)} className="logoutNavBarBtn">
-                    <i className="fa fa-power-off pl-2 pr-2"></i> Logout
+                  <Link
+                    to="#"
+                    onClick={this.onLogoutClick.bind(this)}
+                    className="logoutNavBarBtn"
+                  >
+                    <i className="fa fa-power-off pl-2 pr-2" /> Logout
                   </Link>
                 </li>
               </ul>
@@ -205,7 +211,6 @@ class Navbar extends Component {
         </ul>
       );
     }
-
 
     return (
       <nav className="navbar navbar-size">
@@ -218,7 +223,7 @@ class Navbar extends Component {
             <i className="fa fa-grip-vertical" />
           </Link>
         </div>
-        <div className="ml-3" style={{ width: "40vw" }}>
+        <div className="ml-3" style={{ width: "30%" }}>
           <SearchBar />
         </div>
 

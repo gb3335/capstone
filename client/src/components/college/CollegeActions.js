@@ -31,12 +31,7 @@ class CollegeActions extends Component {
 
     this.setState({ ext: fileExtension });
 
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const collegeData = {
       initials: this.state.initials,

@@ -50,15 +50,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === this.props.journal.journal.college
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
 
@@ -82,29 +82,20 @@ class EditResearch extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
-
-    const replaceString = require('replace-string');
+    const replaceString = require("replace-string");
 
     let a = this.state.description;
-    let b = replaceString(a, '<p>', '')
-    let c = replaceString(b, '</p>', '')
-    require('str-trim');
-    let d = c.trim()
+    let b = replaceString(a, "<p>", "");
+    let c = replaceString(b, "</p>", "");
+    require("str-trim");
+    let d = c.trim();
     let mystring;
     if (d.length === 0) {
-      mystring = ""
-
-    }
-    else {
+      mystring = "";
+    } else {
       mystring = this.state.description;
-
     }
     const researchData = {
       title: this.state.title,
@@ -121,7 +112,6 @@ class EditResearch extends Component {
       username: name,
       oldTitle: this.state.oldTitle
     };
-
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.createResearch(researchData, this.props.history);
@@ -145,15 +135,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
   };
@@ -201,12 +191,12 @@ class EditResearch extends Component {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-            label: college.name.fullName,
-            value: college.name.fullName
-          })
+              label: college.name.fullName,
+              value: college.name.fullName
+            })
           : ""
       );
-    } catch (error) { }
+    } catch (error) {}
 
     return (
       <div className="create-research">

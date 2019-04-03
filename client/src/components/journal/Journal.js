@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { Spring, Transition, animated } from 'react-spring/renderprops';
+import { Spring, Transition, animated } from "react-spring/renderprops";
 
 import {
   getJournalById,
@@ -22,7 +22,7 @@ import JournalImageAction from "./JournalImageActions";
 import JournalDocument from "./JournalDocument";
 import JournalDocumentAction from "./JournalDocumentActions";
 import Report from "./Report";
-import JournalSideBySide from "./JournalSideBySide"
+import JournalSideBySide from "./JournalSideBySide";
 
 class Journal extends Component {
   constructor(props) {
@@ -46,8 +46,6 @@ class Journal extends Component {
       showAlertOkay: false
     };
   }
-
-
 
   componentWillMount() {
     if (this.props.match.params.id) {
@@ -78,12 +76,7 @@ class Journal extends Component {
   };
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.journal.journal._id,
@@ -107,12 +100,7 @@ class Journal extends Component {
   };
   onRemoveRestoreOkay = () => {
     this.setState({ restoreAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.journal.journal._id,
@@ -138,12 +126,7 @@ class Journal extends Component {
 
   onRemoveHideOkay = () => {
     this.setState({ hideAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.journal.journal._id,
@@ -171,13 +154,7 @@ class Journal extends Component {
 
   onRemoveShowOkay = () => {
     this.setState({ showAlertOkay: false });
-
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.journal.journal._id,
@@ -190,7 +167,6 @@ class Journal extends Component {
   onShowResearch = e => {
     this.setState({ showAlertOkay: true, showAlert: false });
   };
-
 
   render() {
     const { journal, loading } = this.props.journal;
@@ -312,39 +288,48 @@ class Journal extends Component {
       let docuOrSideItems;
 
       if (this.props.journal.onSideBySide) {
-        docuOrSideItems = (<Transition
-          items={this.props.journal.onSideBySide}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}
-        >
-          {show => show && (props => (
-            <animated.div style={props}>
-              <Spring from={{ opacity: 0 }}
-                to={{ opacity: 1 }}
-                config={{ delay: 100, duration: 800 }}>
-                {props => (
-                  <div style={props}>
-                    <JournalSideBySide />
-                  </div>
-                )}
-              </Spring>
-
-
-            </animated.div>
-          ))}
-
-        </Transition>)
+        docuOrSideItems = (
+          <Transition
+            items={this.props.journal.onSideBySide}
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0 }}
+          >
+            {show =>
+              show &&
+              (props => (
+                <animated.div style={props}>
+                  <Spring
+                    from={{ opacity: 0 }}
+                    to={{ opacity: 1 }}
+                    config={{ delay: 100, duration: 800 }}
+                  >
+                    {props => (
+                      <div style={props}>
+                        <JournalSideBySide />
+                      </div>
+                    )}
+                  </Spring>
+                </animated.div>
+              ))
+            }
+          </Transition>
+        );
       } else {
-        docuOrSideItems = (<Spring from={{ opacity: 0 }}
-          to={{ opacity: 1 }}
-          config={{ delay: 100, duration: 800 }}>
-          {props => (
-            <div style={props}>
-              {docAction}{doc}
-            </div>
-          )}
-        </Spring>)
+        docuOrSideItems = (
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={{ delay: 100, duration: 800 }}
+          >
+            {props => (
+              <div style={props}>
+                {docAction}
+                {doc}
+              </div>
+            )}
+          </Spring>
+        );
       }
 
       if (journal === null || loading) {
@@ -485,12 +470,11 @@ class Journal extends Component {
               </div>
             </div>
           );
-        } catch (error) { }
+        } catch (error) {}
       }
-    } catch (error) { }
+    } catch (error) {}
     return (
       <div className="research">
-
         {/* ALERTS */}
         {/* DELETE ALERT */}
         <SweetAlert

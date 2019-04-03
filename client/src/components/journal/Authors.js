@@ -38,11 +38,7 @@ class Authors extends Component {
 
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
-    this.props.deleteAuthor(
-      this.state.journal,
-      this.state.id,
-      this.state.name
-    );
+    this.props.deleteAuthor(this.state.journal, this.state.id, this.state.name);
   };
 
   onDeleteAuthor = () => {
@@ -56,13 +52,8 @@ class Authors extends Component {
     let columnButton;
 
     try {
-      name =
-        this.props.auth.user.name.firstName +
-        " " +
-        this.props.auth.user.name.middleName +
-        " " +
-        this.props.auth.user.name.lastName;
-    } catch (error) { }
+      name = this.props.auth.user.id;
+    } catch (error) {}
     if (this.props.auth.isAuthenticated === true) {
       // Sorted Authors
       let sortedAuthor = sort(this.props.author).asc(u => u.name);
@@ -81,20 +72,20 @@ class Authors extends Component {
                 </button>
               </td>
             ) : (
-                <td>
-                  <button
-                    onClick={this.onDeleteAlert.bind(
-                      this,
-                      journal._id,
-                      author._id,
-                      name
-                    )}
-                    className="btn btn-danger"
-                  >
-                    Remove
+              <td>
+                <button
+                  onClick={this.onDeleteAlert.bind(
+                    this,
+                    journal._id,
+                    author._id,
+                    name
+                  )}
+                  className="btn btn-danger"
+                >
+                  Remove
                 </button>
-                </td>
-              )}
+              </td>
+            )}
           </tr>
         ));
       } else {

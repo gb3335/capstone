@@ -56,12 +56,7 @@ class Authors extends Component {
     let columnButton;
 
     try {
-      name =
-        this.props.auth.user.name.firstName +
-        " " +
-        this.props.auth.user.name.middleName +
-        " " +
-        this.props.auth.user.name.lastName;
+      name = this.props.auth.user.id;
     } catch (error) {}
     if (this.props.auth.isAuthenticated === true) {
       // Sorted Authors

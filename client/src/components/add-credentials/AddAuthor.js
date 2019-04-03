@@ -25,12 +25,7 @@ class AddAuthor extends Component {
   onSubmit = e => {
     e.preventDefault();
 
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const authorData = {
       name: this.state.name,
