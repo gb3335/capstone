@@ -61,7 +61,8 @@ class Navbar extends Component {
       isBlock: this.props.auth.user.isBlock,
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
-      contact: this.props.auth.user.contact
+      contact: this.props.auth.user.contact,
+      by: this.props.auth.user.id,
     };
 
     e.preventDefault();

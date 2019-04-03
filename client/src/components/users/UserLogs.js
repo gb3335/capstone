@@ -49,23 +49,38 @@ class UserLogs extends Component {
 
 
     const { userlogs, loading } = this.props.userlogs;
+    const { users } = this.props.users;
     let userlogData;
     let userlogItems;
+    let names = [];
 
     if (userlogs === null || loading) {
       userlogItems = <Spinner />
     } else {
-
-
+      userlogs.map((log, index) => {
+        users.map(user => {
+          if (log.by === user._id) {
+            names[index] =
+              user.name.firstName +
+              " " +
+              user.name.middleName.getInitials() +
+              " " +
+              user.name.lastName;
+          }
+        });
+      });
+      console.log(names)
       if (userlogs.length > 0) {
         if (this.props.auth.isAuthenticated) {
-          userlogData = userlogs.map(userlog => {
+          userlogData = userlogs.map((userlog, index) => {
             return {
               date:
                 moment(userlog.date).format(
                   "MMMM Do YYYY, h:mm A"
                 ),
-              user: userlog.name.firstName + " " + userlog.name.middleName.getInitials() + ". " + userlog.name.lastName,
+              user: names[index]
+              ,
+              //userlog.name.firstName + " " + userlog.name.middleName.getInitials() + ". " + userlog.name.lastName,
               type: userlog.type,
               userType: userlog.userType
             }
@@ -141,13 +156,15 @@ class UserLogs extends Component {
 
 UserLogs.protoTypes = {
   getUserLogs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  userlogs: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
 
   userlogs: state.userlogs,
   auth: state.auth,
+  users: state.users,
 })
 
 export default connect(mapStateToProps, { getUserLogs })(UserLogs);

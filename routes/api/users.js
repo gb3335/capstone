@@ -539,6 +539,7 @@ router.post("/logout", (req, res) => {
     userType: req.body.userType,
     college: req.body.college,
     contact: req.body.contact,
+    by: req.body.by,
     type: "Logout"
   });
 
@@ -597,11 +598,7 @@ router.post("/login", (req, res) => {
                 };
 
                 const newUser = new UserLog({
-                  name: {
-                    firstName: user.name.firstName,
-                    middleName: user.name.middleName,
-                    lastName: user.name.lastName
-                  },
+                  by: user._id,
                   email: user.email,
                   avatar: user.avatar,
                   isBlock: user.isBlock,
@@ -664,6 +661,7 @@ router.post("/login", (req, res) => {
             };
 
             const newUser = new UserLog({
+              by: user._id,
               name: {
                 firstName: user.name.firstName,
                 middleName: user.name.middleName,

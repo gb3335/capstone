@@ -52,13 +52,13 @@ router.get(
             invitedBy: currentElement.invitedBy,
             college: currentElement.college,
             date: currentElement.date,
-            type: currentElement.type
-
+            type: currentElement.type,
+            by: currentElement.by
 
           })
 
         });
-        res.json(payload)
+        res.json(user)
 
 
       }
