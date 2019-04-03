@@ -68,17 +68,15 @@ class DetailedActivities extends Component {
       );
     } else {
       // Add Names to array
-      activities.map(activity => {
+      activities.map((activity, index) => {
         users.map(user => {
           if (activity.by === user._id) {
-            names.push(
-              (name =
-                user.name.firstName +
-                " " +
-                user.name.middleName +
-                " " +
-                user.name.lastName)
-            );
+            names[index] =
+              user.name.firstName +
+              " " +
+              user.name.middleName +
+              " " +
+              user.name.lastName;
           }
         });
       });
