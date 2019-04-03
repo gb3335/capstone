@@ -181,11 +181,9 @@ router.post(
               token: "Bearer " + token
             });
           });
-        
+
         });
-
       }
-
     });
   }
 );

@@ -440,7 +440,7 @@ class Sidebar extends Component {
     mylink = "";
 
     let authLinks;
-    if(isAuthenticated){
+    if (isAuthenticated) {
       authLinks = (
         <nav className="sidebar_navigation">
           <div className="sidebar_logo">
@@ -459,7 +459,7 @@ class Sidebar extends Component {
               <Link to={oldlink}>{user.name.firstName}  {user.name.lastName}</Link>
             </div>
           </div>
-  
+
           <div className="sidebar_navigation_items">
             <ul>
               <li>
@@ -517,7 +517,7 @@ class Sidebar extends Component {
                   <p className="pr-2">Check Plagiarism</p>
                   <b id="rotate" className={this.state.rotate} />
                 </a>
-  
+
                 <div
                   id="checkPlagiarism"
                   className="collapse"
@@ -573,7 +573,7 @@ class Sidebar extends Component {
                   <p className="pr-2">Check Plagiarism</p>
                   <b id="rotate" className={this.state.rotate} />
                 </a>
-  
+
                 <div
                   id="checkPlagiarism"
                   onMouseEnter={this.onMouseEnter}
@@ -631,7 +631,7 @@ class Sidebar extends Component {
         </nav>
       );
     }
-    
+
 
     return (
       <div>

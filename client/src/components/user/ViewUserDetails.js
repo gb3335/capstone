@@ -8,7 +8,7 @@ class ViewUserDetails extends Component {
     const { user } = this.props;
     const status =
       user.isBlock === 0 ? (
-        <span className="badge badge-success">Unblocked</span>
+        <span className="badge badge-success">Active</span>
       ) : (
           <span className="badge badge-danger">Blocked</span>
         );

@@ -147,6 +147,11 @@ class Journals extends Component {
             title = <h1 className="display-4 text-center">Journals</h1>;
             info = "See all journal and it's informations";
           }
+          journalData.map((data, index) => {
+            if (data.title === null) {
+              journalData.splice(index, 1);
+            }
+          });
         } else {
           // Journal list not logged in
           journalData = journals.map(journal =>
@@ -225,11 +230,7 @@ class Journals extends Component {
           });
         }
 
-        journalData.map((data, index) => {
-          if (data.title === null) {
-            journalData.splice(index, 1);
-          }
-        });
+
 
         journalItems = (
           <MaterialTable

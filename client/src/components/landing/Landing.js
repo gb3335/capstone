@@ -62,7 +62,7 @@ class Landing extends Component {
 
     try {
       this.props.getCollegeByInitials(this.props.colleges[0].name.initials);
-    } catch (error) {}
+    } catch (error) { }
 
     if (this.props.auth.isAuthenticated) {
       name = ", " + this.props.auth.user.name.firstName;

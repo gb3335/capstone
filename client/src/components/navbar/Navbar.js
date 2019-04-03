@@ -110,21 +110,29 @@ class Navbar extends Component {
 
     const replaceString = require("replace-string");
     let strstart = 0;
-    let a = window.location.href;
+    let currentLink = window.location.href;
     let oldpath;
     let oldid;
+    let linkCutted;
 
     let mylink;
+    if (currentLink.includes("http://34.229.6.94/")) {
+      linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
+    }
+    else {
+      linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
+    }
 
-    let b = replaceString(a, "http://localhost:3000/", "");
-    if (b.includes("/")) {
-      strstart = b.indexOf("/");
-      oldpath = b.substring(0, strstart);
-      oldid = b.substring(strstart + 1, b.length);
-      mylink =
-        "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+
+
+    if (linkCutted.includes("/")) {
+      strstart = linkCutted.indexOf("/");
+      oldpath = linkCutted.substring(0, strstart);
+      oldid = linkCutted.substring(strstart + 1, linkCutted.length);
+      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+
     } else {
-      if (b === "") {
+      if (linkCutted === "") {
         mylink =
           "/myaccount/" +
           this.props.auth.user.id +
@@ -133,24 +141,16 @@ class Navbar extends Component {
           "/" +
           oldid;
       } else {
+
+
         mylink =
-          "/myaccount/" + this.props.auth.user.id + "/" + b + "/" + oldid;
+          "/myaccount/" + this.props.auth.user.id + "/" + linkCutted + "/" + oldid;
+
       }
     }
     if (
-      "/myaccount/" +
-      this.props.auth.user.id +
-      "/myaccount/" +
-      this.props.auth.user.id ===
-      mylink.substring(
-        0,
-        (
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/myaccount/" +
-          this.props.auth.user.id
-        ).length
-      )
+      "/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id ===
+      mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)
     ) {
       mylink = mylink.substring(
         ("/myaccount/" + this.props.auth.user.id).length,
@@ -158,13 +158,14 @@ class Navbar extends Component {
       );
     }
 
+
     let oldlink = mylink;
     mylink = "";
 
 
     let authLinks;
 
-    if(isAuthenticated){
+    if (isAuthenticated) {
       authLinks = (
         <ul className="mainUL">
           <li className="mainLI">
@@ -187,15 +188,15 @@ class Navbar extends Component {
               className={this.state.forcol}
               aria-expanded="false"
             >
-            <div className="csstriangleForNavbar" />
-            <div className="invisibleNavbarDiv"/>
+              <div className="csstriangleForNavbar" />
+              <div className="invisibleNavbarDiv" />
               <ul className="account_submenus">
                 <li>
-                    <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
+                  <Link to={oldlink} className="accountNavBarBtn"><i className="fa fa-user-tie pl-2 pr-2"></i> My Account <br /><span>{user.userType}</span></Link>
                 </li>
                 <li>
                   <Link to="#" onClick={this.onLogoutClick.bind(this)} className="logoutNavBarBtn">
-                  <i className="fa fa-power-off pl-2 pr-2"></i> Logout
+                    <i className="fa fa-power-off pl-2 pr-2"></i> Logout
                   </Link>
                 </li>
               </ul>
@@ -204,7 +205,7 @@ class Navbar extends Component {
         </ul>
       );
     }
-    
+
 
     return (
       <nav className="navbar navbar-size">
