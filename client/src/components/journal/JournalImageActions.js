@@ -39,12 +39,7 @@ class JournalImageActions extends Component {
         ctr++;
 
         if (ctr === len) {
-          const name =
-            this.props.auth.user.name.firstName +
-            " " +
-            this.props.auth.user.name.middleName +
-            " " +
-            this.props.auth.user.name.lastName;
+          const name = this.props.auth.user.id;
           const data = {
             images: upImages,
             id: this.props.journal.journal._id,
@@ -82,7 +77,7 @@ JournalImageActions.propTypes = {
   journal: PropTypes.object.isRequired,
   addImages: PropTypes.func.isRequired,
   errors: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({

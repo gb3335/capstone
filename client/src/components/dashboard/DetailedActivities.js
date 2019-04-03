@@ -51,9 +51,12 @@ class DetailedActivities extends Component {
 
   render() {
     const { activities } = this.props.activity;
+    const { users } = this.props.users;
     const actLoading = this.props.activity.loading;
     let activityItems;
     let activityData;
+    let name = "";
+    let names = [];
 
     if (activities === null || actLoading || activities === undefined) {
       activityItems = (
@@ -64,11 +67,28 @@ class DetailedActivities extends Component {
         </div>
       );
     } else {
-      activityData = activities.map(activity =>
+      // Add Names to array
+      activities.map(activity => {
+        users.map(user => {
+          if (activity.by === user._id) {
+            names.push(
+              (name =
+                user.name.firstName +
+                " " +
+                user.name.middleName +
+                " " +
+                user.name.lastName)
+            );
+          }
+        });
+      });
+      console.log(names);
+
+      activityData = activities.map((activity, index) =>
         true
           ? {
               activity: activity.title,
-              user: activity.by,
+              user: names[index],
               type: activity.type,
               date:
                 activity.date +
@@ -144,12 +164,14 @@ DetailedActivities.propTypes = {
   getActivities: PropTypes.func.isRequired,
   createReportForActivity: PropTypes.func.isRequired,
   activity: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   activity: state.activity,
-  auth: state.auth
+  auth: state.auth,
+  users: state.users
 });
 
 export default connect(

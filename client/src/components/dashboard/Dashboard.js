@@ -41,6 +41,7 @@ class Dashboard extends Component {
   render() {
     const { colleges, loading } = this.props.college;
     const { activities } = this.props.activity;
+    const { users } = this.props.users;
     const actLoading = this.props.activity.loading;
     let researchData;
     let journalData;
@@ -66,6 +67,7 @@ class Dashboard extends Component {
     );
 
     let recentActivities = [];
+    let name;
 
     if (activities === null || actLoading || activities === undefined) {
       activityItems = (
@@ -81,7 +83,18 @@ class Dashboard extends Component {
           recentActivities.push(
             <p key={activity._id}>
               <b>
-                {activity.title} {`by ${activity.by}`}
+                {activity.title}{" "}
+                {users.map(user => {
+                  if (activity.by === user._id) {
+                    name =
+                      user.name.firstName +
+                      " " +
+                      user.name.middleName +
+                      " " +
+                      user.name.lastName;
+                  }
+                })}
+                {`by ${name}${(name = "")}`}
               </b>{" "}
               <Moment fromNow>{activity.date}</Moment>
             </p>
@@ -505,13 +518,15 @@ Dashboard.propTypes = {
   getJournals: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   activity: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
   college: state.college,
   activity: state.activity,
-  auth: state.auth
+  auth: state.auth,
+  users: state.users
 });
 
 export default connect(

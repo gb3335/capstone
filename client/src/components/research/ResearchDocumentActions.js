@@ -3,11 +3,15 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument, onSideBySide } from "../../actions/researchActions";
+import {
+  addDocument,
+  deleteDocument,
+  onSideBySide
+} from "../../actions/researchActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
 import Spinner from "../common/Spinner";
 
-import './ResearchDocumentActions.css'
+import "./ResearchDocumentActions.css";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -33,12 +37,7 @@ class ResearchImageActions extends Component {
         this.setState({
           file: e.target.result
         });
-        const name =
-          this.props.auth.user.name.firstName +
-          " " +
-          this.props.auth.user.name.middleName +
-          " " +
-          this.props.auth.user.name.lastName;
+        const name = this.props.auth.user.id;
 
         const docuData = {
           researchId: this.props.research.research._id,
@@ -55,12 +54,7 @@ class ResearchImageActions extends Component {
   };
 
   onDeleteDocument = e => {
-    const name =
-      this.props.auth.user.firstName +
-      " " +
-      this.props.auth.user.middleName +
-      " " +
-      this.props.auth.user.lastName;
+    const name = this.props.auth.user.id;
 
     const researchId = this.props.research.research._id;
     const filename = this.props.research.research.document;
@@ -86,7 +80,7 @@ class ResearchImageActions extends Component {
     const input = {
       fromFlag: true,
       abstract: false
-  }
+    };
     this.props.onSideBySide(input);
   };
 
@@ -103,7 +97,11 @@ class ResearchImageActions extends Component {
             <i className="fas fa-database text-info mr-1 ml-1" />
             <b>All </b>
           </label>
-          <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
+          <label
+            to="#"
+            onClick={this.onSidebySideFlagTrue}
+            className="btn btn-light"
+          >
             <i className="fas fa-search text-info mr-1" />
             Check Document |
             <i className="fas fa-copy text-info mr-1 ml-1" />

@@ -757,11 +757,13 @@ router.post(
     let newResearch;
     if (req.body.hidden) {
       newResearch = {
-        hidden: 1
+        hidden: 1,
+        lastUpdate: Date.now()
       };
     } else {
       newResearch = {
-        deleted: 1
+        deleted: 1,
+        lastUpdate: Date.now()
       };
     }
 
@@ -834,11 +836,13 @@ router.post(
     let newResearch;
     if (req.body.hidden) {
       newResearch = {
-        hidden: 0
+        hidden: 0,
+        lastUpdate: Date.now()
       };
     } else {
       newResearch = {
-        deleted: 0
+        deleted: 0,
+        lastUpdate: Date.now()
       };
     }
 

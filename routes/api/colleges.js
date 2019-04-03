@@ -106,7 +106,7 @@ router.post(
       Key: `collegeLogos/${req.body.oldLogo}`
     };
 
-    s3.deleteObject(params, function (err, data) {
+    s3.deleteObject(params, function(err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
@@ -673,7 +673,10 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newCollege = {
-      deleted: 1
+      deleted: 1,
+      lastUpdate: {
+        date: Date.now()
+      }
     };
 
     College.findOneAndUpdate(
@@ -702,7 +705,10 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const newCollege = {
-      deleted: 0
+      deleted: 0,
+      lastUpdate: {
+        date: Date.now()
+      }
     };
 
     College.findOneAndUpdate(
@@ -724,33 +730,25 @@ router.post(
 );
 
 // @route   POST api/colleges/restore/:id
-// @desc    Resotre college
+// @desc    Restore college
 // @access  Private
 router.post(
   "/edit/count",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-
-    console.log(req.body)
+    console.log(req.body);
 
     const newCollege = {
       researchTotal: req.body.researchCount,
       journalTotal: req.body.journalCount
     };
     const _id = req.body.id;
-    College.findOneAndUpdate(
-      { _id },
-      { $set: newCollege },
-      { new: true }
-    ).then(college => {
-      res.json(college);
-    });
+    College.findOneAndUpdate({ _id }, { $set: newCollege }, { new: true }).then(
+      college => {
+        res.json(college);
+      }
+    );
   }
 );
-
-
-
-
-
 
 module.exports = router;

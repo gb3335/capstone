@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
 import SweetAlert from "react-bootstrap-sweetalert";
-import { Spring, Transition, animated } from 'react-spring/renderprops';
+import { Spring, Transition, animated } from "react-spring/renderprops";
 
 import {
   getResearchById,
@@ -23,7 +23,7 @@ import ResearchDocument from "./ResearchDocument";
 import ResearchDocumentActions from "./ResearchDocumentActions";
 import ResearchAbstractActions from "./ResearchAbstractActions";
 import Report from "./Report";
-import ResearchSideBySide from "./ResearchSideBySide"
+import ResearchSideBySide from "./ResearchSideBySide";
 
 class Research extends Component {
   constructor(props) {
@@ -64,7 +64,7 @@ class Research extends Component {
       this.props.history.push("/not-found");
     }
   }
-  // Delete alerts
+  // Delete research alerts
   onDeleteAlert = () => {
     this.setState({ deleteAlert: true });
   };
@@ -76,12 +76,7 @@ class Research extends Component {
   };
   onRemoveDeleteOkay = () => {
     this.setState({ deleteAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.research.research._id,
@@ -93,7 +88,7 @@ class Research extends Component {
     this.setState({ deleteAlertOkay: true, deleteAlert: false });
   };
 
-  // Restore alerts
+  // Restore research alerts
   onRestoreAlert = () => {
     this.setState({ restoreAlert: true });
   };
@@ -105,12 +100,7 @@ class Research extends Component {
   };
   onRemoveRestoreOkay = () => {
     this.setState({ restoreAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.research.research._id,
@@ -123,7 +113,7 @@ class Research extends Component {
     this.setState({ restoreAlertOkay: true, restoreAlert: false });
   };
 
-  // Hide Alerts
+  // Hide research Alerts
   onHideAlert = () => {
     this.setState({ hideAlert: true });
   };
@@ -136,12 +126,7 @@ class Research extends Component {
 
   onRemoveHideOkay = () => {
     this.setState({ hideAlertOkay: false });
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.research.research._id,
@@ -168,14 +153,7 @@ class Research extends Component {
   };
 
   onRemoveShowOkay = () => {
-    this.setState({ showAlertOkay: false });
-
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const data = {
       id: this.props.research.research._id,
@@ -309,78 +287,99 @@ class Research extends Component {
       let abstractDocuOrSideItems;
 
       if (this.props.research.onSideBySide && this.props.research.abstract) {
-        abstractDocuOrSideItems = (<Transition
-          items={this.props.research.onSideBySide && this.props.research.abstract}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}
-        >
-          {show => show && (props => (
-            <animated.div style={props}>
-              <Spring from={{ opacity: 0 }}
-                to={{ opacity: 1 }}
-                config={{ delay: 100, duration: 800 }}>
-                {props => (
-                  <div style={props}>
-                    <ResearchSideBySide />
-                  </div>
-                )}
-              </Spring>
-
-
-            </animated.div>
-          ))}
-
-        </Transition>)
+        abstractDocuOrSideItems = (
+          <Transition
+            items={
+              this.props.research.onSideBySide && this.props.research.abstract
+            }
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0 }}
+          >
+            {show =>
+              show &&
+              (props => (
+                <animated.div style={props}>
+                  <Spring
+                    from={{ opacity: 0 }}
+                    to={{ opacity: 1 }}
+                    config={{ delay: 100, duration: 800 }}
+                  >
+                    {props => (
+                      <div style={props}>
+                        <ResearchSideBySide />
+                      </div>
+                    )}
+                  </Spring>
+                </animated.div>
+              ))
+            }
+          </Transition>
+        );
       } else {
-        abstractDocuOrSideItems = (<Spring from={{ opacity: 0 }}
-          to={{ opacity: 1 }}
-          config={{ delay: 100, duration: 800 }}>
-          {props => (
-            <div style={props}>
-              <ResearchAbstractActions research={research} /><ResearchAbstract research={research} />
-            </div>
-          )}
-        </Spring>)
+        abstractDocuOrSideItems = (
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={{ delay: 100, duration: 800 }}
+          >
+            {props => (
+              <div style={props}>
+                <ResearchAbstractActions research={research} />
+                <ResearchAbstract research={research} />
+              </div>
+            )}
+          </Spring>
+        );
       }
-
 
       let docuOrSideItems;
 
-      if (this.props.research.onSideBySide  && !this.props.research.abstract) {
-        docuOrSideItems = (<Transition
-          items={this.props.research.onSideBySide  && !this.props.research.abstract}
-          from={{ opacity: 0 }}
-          enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}
-        >
-          {show => show && (props => (
-            <animated.div style={props}>
-              <Spring from={{ opacity: 0 }}
-                to={{ opacity: 1 }}
-                config={{ delay: 100, duration: 800 }}>
-                {props => (
-                  <div style={props}>
-                    <ResearchSideBySide/>
-                  </div>
-                )}
-              </Spring>
-
-
-            </animated.div>
-          ))}
-
-        </Transition>)
+      if (this.props.research.onSideBySide && !this.props.research.abstract) {
+        docuOrSideItems = (
+          <Transition
+            items={
+              this.props.research.onSideBySide && !this.props.research.abstract
+            }
+            from={{ opacity: 0 }}
+            enter={{ opacity: 1 }}
+            leave={{ opacity: 0 }}
+          >
+            {show =>
+              show &&
+              (props => (
+                <animated.div style={props}>
+                  <Spring
+                    from={{ opacity: 0 }}
+                    to={{ opacity: 1 }}
+                    config={{ delay: 100, duration: 800 }}
+                  >
+                    {props => (
+                      <div style={props}>
+                        <ResearchSideBySide />
+                      </div>
+                    )}
+                  </Spring>
+                </animated.div>
+              ))
+            }
+          </Transition>
+        );
       } else {
-        docuOrSideItems = (<Spring from={{ opacity: 0 }}
-          to={{ opacity: 1 }}
-          config={{ delay: 100, duration: 800 }}>
-          {props => (
-            <div style={props}>
-              {docAction}{doc}
-            </div>
-          )}
-        </Spring>)
+        docuOrSideItems = (
+          <Spring
+            from={{ opacity: 0 }}
+            to={{ opacity: 1 }}
+            config={{ delay: 100, duration: 800 }}
+          >
+            {props => (
+              <div style={props}>
+                {docAction}
+                {doc}
+              </div>
+            )}
+          </Spring>
+        );
       }
 
       if (research === null || loading) {
@@ -521,10 +520,9 @@ class Research extends Component {
               </div>
             </div>
           );
-        } catch (error) { }
+        } catch (error) {}
       }
-    } catch (error) { }
-
+    } catch (error) {}
 
     return (
       <div className="research">

@@ -3,11 +3,15 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { addDocument, deleteDocument, onSideBySide } from "../../actions/researchActions";
+import {
+  addDocument,
+  deleteDocument,
+  onSideBySide
+} from "../../actions/researchActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
 import Spinner from "../common/Spinner";
 
-import './ResearchDocumentActions.css'
+import "./ResearchDocumentActions.css";
 
 class ResearchImageActions extends Component {
   constructor(props) {
@@ -33,12 +37,7 @@ class ResearchImageActions extends Component {
         this.setState({
           file: e.target.result
         });
-        const name =
-          this.props.auth.user.name.firstName +
-          " " +
-          this.props.auth.user.name.middleName +
-          " " +
-          this.props.auth.user.name.lastName;
+        const name = this.props.auth.user.id;
 
         const docuData = {
           researchId: this.props.research.research._id,
@@ -55,12 +54,7 @@ class ResearchImageActions extends Component {
   };
 
   onDeleteDocument = e => {
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+    const name = this.props.auth.user.id;
 
     const researchId = this.props.research.research._id;
     const filename = this.props.research.research.document;
@@ -84,9 +78,9 @@ class ResearchImageActions extends Component {
 
   onSidebySideFlagTrue = e => {
     const input = {
-        fromFlag: true,
-        abstract: true
-    }
+      fromFlag: true,
+      abstract: true
+    };
     this.props.onSideBySide(input);
   };
 
@@ -94,22 +88,26 @@ class ResearchImageActions extends Component {
     const { research } = this.props.research;
     let docuItem;
 
-      docuItem = (
-        <div className="docuItem btn-group-sm">
-          <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
-            <i className="fas fa-search text-info mr-1" />
-            Check Abstract |
-            <i className="fas fa-database text-info mr-1 ml-1" />
-            <b>All </b>
-          </label>
-          <label to="#" onClick={this.onSidebySideFlagTrue} className="btn btn-light">
-            <i className="fas fa-search text-info mr-1" />
-            Check Abstract |
-            <i className="fas fa-copy text-info mr-1 ml-1" />
-            <b>Side By Side</b>
-          </label>
-        </div>
-      );
+    docuItem = (
+      <div className="docuItem btn-group-sm">
+        <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
+          <i className="fas fa-search text-info mr-1" />
+          Check Abstract |
+          <i className="fas fa-database text-info mr-1 ml-1" />
+          <b>All </b>
+        </label>
+        <label
+          to="#"
+          onClick={this.onSidebySideFlagTrue}
+          className="btn btn-light"
+        >
+          <i className="fas fa-search text-info mr-1" />
+          Check Abstract |
+          <i className="fas fa-copy text-info mr-1 ml-1" />
+          <b>Side By Side</b>
+        </label>
+      </div>
+    );
 
     return (
       <div>
