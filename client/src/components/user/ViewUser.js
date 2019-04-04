@@ -35,7 +35,7 @@ class ViewUser extends Component {
 
 
 
-    const { user, loading } = this.props.users;
+    const { user, loading, users } = this.props.users;
     const auth = this.props.auth;
     const isAuthenticated = this.props.auth.isAuthenticated;
 
@@ -47,23 +47,32 @@ class ViewUser extends Component {
       useraction = <UserAction user={user} auth={auth} />
     }
 
-    // if (user.__id === authuser.__id) {
-    //   useraction = (
-    //     <label htmlFor="imageUpload" className="btn btn-light">
-    //       <i className="fas fa-pen text-info mr-1" />
-    //       Edit User
-    //     </label>
-    //   )
-    // }
+    String.prototype.getInitials = function (glue) {
+      if (typeof glue == "undefined") {
+        var glue = true;
+      }
 
+      var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
+      if (glue) {
+        return initials.join('.');
+      }
 
-    // if (this.props.auth.isAuthenticated) {
-    //   if (college.deleted === 0) {
-    //     courseAction = <CollegeCourseActions />;
-    //   }
-    //   colAction = <CollegeActions />;
-    // }
+      return initials;
+    };
+    let invitedBy;
+    users.map(user => {
+
+      if (user._id === this.props.auth.user.invitedBy) {
+        invitedBy =
+          user.name.firstName +
+          " " +
+          user.name.middleName.getInitials() +
+          ". " +
+          user.name.lastName;
+      }
+
+    });
 
     if (user === null || loading) {
       userContent = <Spinner />;
@@ -85,7 +94,7 @@ class ViewUser extends Component {
             <ViewUserHeader user={user} />
             {useraction}
 
-            <ViewUserDetails user={user} />
+            <ViewUserDetails user={user} invitedBy={invitedBy} />
 
           </div>
         );

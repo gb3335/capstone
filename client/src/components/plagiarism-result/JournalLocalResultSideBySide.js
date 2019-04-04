@@ -127,13 +127,23 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-    const { output } = this.props.localPlagiarism
+    const { output, textId } = this.props.localPlagiarism
 
     this.props.setPlagiarismGenerateReportLoading(true);
 
     const node = ReactDOM.findDOMNode(this);
 
     // Get child nodes
+    const { journals } = this.props.journal;
+
+    let comparedJournal;
+    journals.map(journal => {
+      if (textId === journal._id) {
+        comparedJournal = journal;
+
+      }
+    })
+    console.log(comparedJournal)
 
     let pattern = node.querySelector('#highlightPat');
     let text = node.querySelector('#highlightText');
@@ -147,20 +157,24 @@ class LocalResultSideBySide extends Component {
       " " +
       this.props.auth.user.name.lastName;
 
+
     const input = {
       printedBy: name,
       pattern,
       text,
       typeOfReport: "Plagiarism Check Result",
       subTypeOfReport: "Side by Side Comparison",
-      output
+      output,
+      journal: this.props.journal.journal,
+      comparedJournal,
+      reportFor: "Journal"
     }
     this.props.createLocalSideBySidePlagiarismReport(input);
   }
 
   render() {
 
-    const { output, patternLoading, textLoading, pattern, text } = this.props.localPlagiarism;
+    const { output, patternLoading, textLoading, pattern, text, textId } = this.props.localPlagiarism;
 
     let patternItem;
     let textItem;

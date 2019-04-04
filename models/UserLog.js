@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const UserLogSchema = new Schema({
   by: {
     type: String,
-
+    required: true
   },
   username: {
     type: String,

@@ -64,12 +64,12 @@ class UserLogs extends Component {
               user.name.firstName +
               " " +
               user.name.middleName.getInitials() +
-              " " +
+              ". " +
               user.name.lastName;
           }
         });
       });
-      console.log(names)
+
       if (userlogs.length > 0) {
         if (this.props.auth.isAuthenticated) {
           userlogData = userlogs.map((userlog, index) => {

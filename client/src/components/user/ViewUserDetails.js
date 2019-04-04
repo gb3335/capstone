@@ -5,7 +5,7 @@ import "moment-timezone";
 
 class ViewUserDetails extends Component {
   render() {
-    const { user } = this.props;
+    const { user, invitedBy } = this.props;
     const status =
       user.isBlock === 0 ? (
         <span className="badge badge-success">Active</span>
@@ -58,7 +58,7 @@ class ViewUserDetails extends Component {
                 <p className="infoText">
                   <i className="fas fa-check-circle" />{" "}
                   <span>
-                    Invited by: {user.invitedBy}
+                    Invited by: {invitedBy}
                   </span>
                 </p>
               </div>

@@ -484,7 +484,7 @@ router.post(
           contact: req.body.contact,
           userType: req.body.usertype,
           college: req.body.college,
-          invitedBy: `${req.user.name.firstName} ${req.user.name.lastName}`
+          invitedBy: req.user._id
         });
 
         const mailOptions = {
@@ -599,6 +599,11 @@ router.post("/login", (req, res) => {
 
                 const newUser = new UserLog({
                   by: user._id,
+                  name: {
+                    firstName: user.name.firstName,
+                    middleName: user.name.middleName,
+                    lastName: user.name.lastName
+                  },
                   email: user.email,
                   avatar: user.avatar,
                   isBlock: user.isBlock,

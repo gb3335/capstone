@@ -3,34 +3,51 @@ const moment = require("moment");
 const moment_timezone = require('moment-timezone');
 
 module.exports = (input) => {
-  
-const {typeOfReport, subTypeOfReport , output, pattern, text} = input;
 
-  let docuFound="";
+  const { typeOfReport, subTypeOfReport, output, pattern, text, comparedJournal, journal, reportFor } = input;
+
+  let docuFound = "";
   let title = "";
-  let score="[";
+  let score = "[";
 
   const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
-  let level="";
+  let level = "";
 
-      if(output[0].SimilarityScore>0 && output[0].SimilarityScore<30){
-        level="<span class='little-text'>Little Plagiarism</span";
-      }else if(output[0].SimilarityScore>=30 && output[0].SimilarityScore<=70){
-        level="<span class='moderate-text'>Moderate Plagiarism</span";
-      }
-      else if(output[0].SimilarityScore>70){
-        level="<span class='heavy-text'>Heavy Plagiarism</span";
-      }else{
-        level="<span>Clean</span";
-      }
-let plagiarised = output[0].SimilarityScore;
+  if (output[0].SimilarityScore > 0 && output[0].SimilarityScore < 30) {
+    level = "<span class='little-text'>Little Plagiarism</span";
+  } else if (output[0].SimilarityScore >= 30 && output[0].SimilarityScore <= 70) {
+    level = "<span class='moderate-text'>Moderate Plagiarism</span";
+  }
+  else if (output[0].SimilarityScore > 70) {
+    level = "<span class='heavy-text'>Heavy Plagiarism</span";
+  } else {
+    level = "<span>Clean</span";
+  }
+  let plagiarised = output[0].SimilarityScore;
 
-let clean = 100 - plagiarised;
+  let clean = 100 - plagiarised;
 
-
-
-  score+=clean+','+plagiarised+']'
+  let journalDetailString = reportFor === "Journal" ? `<div class="context" style="margin-top:-10px">
+  <h6>
+  <p>Type: Journal</p>
+   
+    <p>Volume #: ${journal.volume}</p>
+    <p>ISSN: ${journal.issn}</p>
+    <p>Year Published: ${journal.yearPublished}</p>
+    </h6>
+</div>`: `<div> </div>`;
+  let journalComparedString = reportFor === "Journal" ? `<div class="context" style="margin-top:-10px">
+<h6>
+<p>Type: Journal</p>
   
+  <p>Volume #: ${comparedJournal.volume}</p>
+  <p>ISSN: ${comparedJournal.issn}</p>
+  <p>Year Published: ${comparedJournal.yearPublished}</p>
+  </h6>
+</div>`: `<div> </div>`;
+
+  score += clean + ',' + plagiarised + ']'
+
 
 
   return `<!DOCTYPE html>
@@ -197,12 +214,12 @@ mark {
             <br />
             <br />
             <br />
-            <h4 style="font-size: 10px">Source Document for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
+            <h4 style="font-size: 10px">Source Document for Plagiarism: ${output[0].Document.Pattern.Name}${journalDetailString}</h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
             <br />
-            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}</h4>
+            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}${journalDetailString}</h4>
             <div class="context2">
                 <p>${text}</p>
             </div>
