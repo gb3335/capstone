@@ -2,4 +2,5 @@
 /package-lock.json
 /config/keys_dev.js
 /config/s3keys_dev.js
+/config/googlekeys_dev.js
 *.config
