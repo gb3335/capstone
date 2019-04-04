@@ -290,21 +290,14 @@ router.post("/online", (req, res) => {
       q: options.q,
       auth: options.apiKey,
     });
-    if(ress.status==200){
-      res.json({
-        onlinePlagiarism: {
-          success: true,
-          data: ress.data
-        }
-      });
-    }else{
-      res.status(400).json({
-        onlinePlagiarism: {
-          success: false,
-          error: "Something went wrong :( , please contact the developer!"
-        }
-      });
-    }
+    
+    res.json({
+      onlinePlagiarism: {
+        success: true,
+        data: ress.data
+      }
+    });
+    
   }
   
     const options = {
@@ -313,12 +306,13 @@ router.post("/online", (req, res) => {
       cx: googleKeys.cx
     };
     runSample(options).catch((err) => {
-      res.status(err.status).json({
-        onlinePlagiarism: {
-          success: false,
-          error: err
-        }
-      });
+      errors.q = err.errors[0].message;
+      if(err.response.status==403){
+        errors.q = "Daily Request Limit Exceeds! Please try again tomorrow."
+      }
+      return res.status(err.response.status).json(
+        errors
+      );
     });
 
   // request.get(
