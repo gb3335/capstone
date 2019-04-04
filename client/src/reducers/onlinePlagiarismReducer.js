@@ -1,4 +1,4 @@
-import { PLAGIARISM_ONLINE, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_ONLINE_LOADING, PLAGIARISM_ONLINE_DISABLE_BUTTON, PLAGIARISM_ONLINE_SHOW_DETAILS, PLAGIARISM_ONLINE_HIDE_DETAILS, PLAGIARISM_ONLINE_GOOGLE, PLAGIARISM_ONLINE_GENERATE_REPORT} from '../actions/types'
+import { PLAGIARISM_ONLINE, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_ONLINE_LOADING, PLAGIARISM_ONLINE_DISABLE_BUTTON, PLAGIARISM_ONLINE_SHOW_DETAILS, PLAGIARISM_ONLINE_HIDE_DETAILS, PLAGIARISM_ONLINE_GOOGLE, PLAGIARISM_ONLINE_GENERATE_REPORT, PLAGIARISM_ONLINE_CLEAR_OUTPUT} from '../actions/types'
 
 
 const initialState = {
@@ -56,6 +56,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 generateReport: action.payload
+            }
+        case PLAGIARISM_ONLINE_CLEAR_OUTPUT:
+            return {
+                ...state,
+                output: {}
             }
         default:
             return state;

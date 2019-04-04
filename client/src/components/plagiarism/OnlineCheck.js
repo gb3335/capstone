@@ -3,8 +3,9 @@ import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Spinner from "../common/Spinner";
 import { Link } from "react-router-dom";
-import {removeStopwords} from 'stopword';
 import TextAreaFieldGroup from '../common/TextAreaFieldGroup'
+
+import { Tesseract } from "tesseract.ts";
 
 import {Spring, Transition, animated} from 'react-spring/renderprops';
 
@@ -27,7 +28,8 @@ class OnlineCheck extends Component {
             disableClassname: "btn btn-primary btn-block btn-flat disabled",
             index: 0,
             words: [],
-            errors: {}
+            errors: {},
+            ocrProgress: ""
         }
 
         this.onChange = this.onChange.bind(this);
@@ -44,11 +46,11 @@ class OnlineCheck extends Component {
         e.preventDefault();
         if(!this.props.onlinePlagiarism.buttonDisable){
             
-            let old = this.state.q.toString().split(' ');
-            old = removeStopwords(old)
-            const q = old.join(' ');
+            let old = this.state.q.toString();
+            // let q = old.join(' ');
+            // q = q.replace(/\s+/g," ");
             const input = {
-                q,
+                q: old,
                 original: this.state.q
             }
             // console.log(input)
@@ -60,11 +62,14 @@ class OnlineCheck extends Component {
     onClickShowDetails(index){
         const {output} = this.props.onlinePlagiarism;
         let words=[];
-        output[index].Index.forEach(word => {
-            let obj = JSON.parse(word);
-
-            words.push.apply(words,obj.Pattern.split(' '))
-        })
+        
+            output[index].Index.forEach(word => {
+                let obj = JSON.parse(word);
+    
+                words.push.apply(words,obj.Pattern.split(' '))
+            })
+        
+        
 
         this.setState({index, words})
         this.props.setPlagiarismOnlineShowDetails();
@@ -112,6 +117,25 @@ class OnlineCheck extends Component {
         }
         this.props.createOnlinePlagiarismReport(input);
       }
+
+      onOCR = e => {
+        let files = e.target.files;
+    
+        Tesseract.recognize(files[0])
+          .progress(data => {
+            let dataProg = data.progress * 100;
+            dataProg = dataProg.toString();
+            dataProg = dataProg.substring(0, 5);
+    
+            this.setState({
+              ocrProgress: data.status + " at " + dataProg + "%"
+            });
+          })
+          .then(data => {
+            this.setState({ q: data.text, ocrProgress:"" });
+          })
+          .catch(console.error);
+      };
 
     
 
@@ -241,11 +265,39 @@ class OnlineCheck extends Component {
             
 
         const {generateReport, original} = this.props.onlinePlagiarism;
-        
+        const {ocrProgress} = this.state;
         return (
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-md-8">
+                    {ocrProgress !== ""? <div className="float-left"><button className="btn btn-light disabled mb-2" title="Use Image to Text"><i className="fas fa-file-image mr-1" />
+                    Image to Text</button> <span className="pl-3" style={{ fontSize: "12px" }}>{ocrProgress}</span></div>
+                    
+                        : 
+                        <div className="float-left"><label
+                                to="#"
+                                htmlFor="ocr"
+                                className="btn btn-light"
+                                title="Use Image to Text"
+                                >
+                                <i className="fas fa-file-image mr-1" />
+                                    Image to Text
+                            
+                            </label>
+                            <input  
+                                type="file"
+                                style={{
+                                border: 0,
+                                opacity: 0,
+                                position: "absolute",
+                                pointerEvents: "none",
+                                }}
+                                onChange={this.onOCR}
+                                name="name"
+                                id="ocr"
+                                accept=".png, .jpg, .jpeg"
+                                /> 
+                        </div>}
                     { generateReport ? <button
                         className="btn btn-light mb-3 float-right disabled"
                         >

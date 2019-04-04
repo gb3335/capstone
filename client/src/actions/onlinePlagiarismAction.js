@@ -7,7 +7,8 @@ import {
   PLAGIARISM_ONLINE_SHOW_DETAILS,
   PLAGIARISM_ONLINE_HIDE_DETAILS,
   PLAGIARISM_ONLINE_GOOGLE,
-  PLAGIARISM_ONLINE_GENERATE_REPORT
+  PLAGIARISM_ONLINE_GENERATE_REPORT,
+  PLAGIARISM_ONLINE_CLEAR_OUTPUT
 } from "./types";
 import axios from "axios";
 
@@ -19,10 +20,14 @@ export const checkPlagiarismOnline = input => dispatch => {
     .post("/api/plagiarism/online", input)
     .then(res => {
       //dispatch(outputOnlinePlagiarism(res.data));
+      dispatch(clearOnlinePlagiarismOutput());
       dispatch(outputOnlinePlagiarismGoogle(res.data));
       dispatch(getOnlinePlagiarismInput(input.original));
-      dispatch(setPlagiarismOnlineLoading());
-      dispatch(getOnlinePlagiarismResult({text:res.data , pattern: input.q}));
+      if(res.data.onlinePlagiarism.data.items.length>0 && res.data.onlinePlagiarism.data.items){
+        dispatch(setPlagiarismOnlineLoading());
+        dispatch(getOnlinePlagiarismResult({text:res.data , pattern: input.q}));
+      }
+      
     })
     .catch(err => {
       dispatch(getOnlinePlagiarismInput(input.original));
@@ -83,6 +88,11 @@ export const setPlagiarismGenerateReportLoading = (input) =>{
   };
 }
 
+export const clearOnlinePlagiarismOutput = () =>{
+  return {
+    type: PLAGIARISM_ONLINE_CLEAR_OUTPUT
+  };
+}
 
 export const createOnlinePlagiarismReport = (input) => dispatch => {
   axios.post('/api/plagiarism/create/report/online', input)
