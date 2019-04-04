@@ -16,8 +16,12 @@ const { gzip, ungzip } = require('node-gzip');
 const jsscompress = require("js-string-compression");
 const hm = new jsscompress.Hauffman();
 
-const ApiKey = "AIzaSyD0F2qi9T0GNtkgcpaw7Ah7WArFKsTE9pg";
-const cx = "014684295069765089744:fvoycnmgzio";
+const sw = require('../../stopword');
+
+const {google} = require('googleapis');
+const customsearch = google.customsearch('v1');
+
+const googleKeys = require('../../config/googlekeys')
 
 // Load Plagiarism Checker
 const plagiarism = require("../../krishield-kyle-plagiarism");
@@ -47,14 +51,27 @@ let fontFooter = "7px";
 // @access  public
 router.get("/test", (req, res) => {
 
-
-  console.log(req.body.text)
-  let result = processor.textProcess(stripHtml(req.body.text).toString());
-  //result.text = result.text.split(' ');
-  res.json({
-    success: true,
-    data: result
-  })
+  async function runSample(options) {
+    console.log(options);
+    const ress = await customsearch.cse.list({
+      cx: options.cx,
+      q: options.q,
+      auth: options.apiKey,
+    });
+    res.send(ress);
+  }
+  
+  
+    // You can get a custom search engine id at
+    // https://www.google.com/cse/create/new
+    const options = {
+      q: "rabin karp",
+      apiKey: ApiKey,
+      cx
+    };
+    runSample(options).catch(console.error);
+  
+  
 
   // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
   // const newString = processor.textProcess(oldString);
@@ -110,10 +127,8 @@ router.get("/test", (req, res) => {
 
   // })
 
-  // scraping("https://www.linkedin.com/in/cathleen-krishield-urbano-b25347164", function (response) {
-  //   console.log(response)
-  //   let data = response.join('');
-  //   console.log(data.length)
+  // scraping("https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm", function (response) {
+  //   let data = response.join(' ');
   //   res.send(data);//Returns text
   // });
 
@@ -126,7 +141,8 @@ router.get("/test", (req, res) => {
 router.post("/online/initialize/pattern", (req, res) => {
   let pattern = req.body.pattern;
 
-  const { arr, len } = processor.arrayProcess(pattern.toString().toLowerCase());
+  const { text, len } = processor.textProcess(pattern.toString().toLowerCase());
+  const arr = text.split(' ');
   plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
   res.json({
     success: true
@@ -258,28 +274,73 @@ router.post("/online", (req, res) => {
 
   let q = req.body.q;
 
-  q = encodeURI(q);
+  q = q.replace(/\s+/g," ");
+  q = q.replace(/\s+/g," ");
 
-  request.get(
-    `https://www.googleapis.com/customsearch/v1?q=${q}&cx=${cx}&num=10&key=${ApiKey}`,
-    (error, response, body) => {
-      if (!error && response.statusCode == 200) {
-        res.json({
-          onlinePlagiarism: {
-            success: true,
-            data: JSON.parse(body)
-          }
-        });
-      } else {
-        res.status(400).json({
-          onlinePlagiarism: {
-            success: false,
-            error: "Something went wrong :( , please contact the developer!"
-          }
-        });
-      }
+  let qarr = q.split(' ');
+
+  qarr = sw.removeStopwords(qarr);
+
+  q = qarr.join(' ');
+  // q = encodeURI(q);
+
+  async function runSample(options) {
+    const ress = await customsearch.cse.list({
+      cx: options.cx,
+      q: options.q,
+      auth: options.apiKey,
+    });
+    if(ress.status==200){
+      res.json({
+        onlinePlagiarism: {
+          success: true,
+          data: ress.data
+        }
+      });
+    }else{
+      res.status(400).json({
+        onlinePlagiarism: {
+          success: false,
+          error: "Something went wrong :( , please contact the developer!"
+        }
+      });
     }
-  );
+  }
+  
+    const options = {
+      q,
+      apiKey: googleKeys.ApiKey,
+      cx: googleKeys.cx
+    };
+    runSample(options).catch((err) => {
+      res.status(err.status).json({
+        onlinePlagiarism: {
+          success: false,
+          error: err
+        }
+      });
+    });
+
+  // request.get(
+  //   `https://www.googleapis.com/customsearch/v1?q=${q}&cx=${cx}&num=10&key=${ApiKey}`,
+  //   (error, response, body) => {
+  //     if (!error && response.statusCode == 200) {
+  //       res.json({
+  //         onlinePlagiarism: {
+  //           success: true,
+  //           data: JSON.parse(body)
+  //         }
+  //       });
+  //     } else {
+  //       res.status(400).json({
+  //         onlinePlagiarism: {
+  //           success: false,
+  //           error: "Something went wrong :( , please contact the developer!"
+  //         }
+  //       });
+  //     }
+  //   }
+  // );
 });
 
 // @routes  POST api/extract/pattern
