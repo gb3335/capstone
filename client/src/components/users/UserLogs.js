@@ -7,7 +7,7 @@ import './ViewUsers.css';
 import moment from "moment";
 
 
-import { getUserLogs } from "../../actions/userActions";
+import { getUserLogs, createReportForUserlogs } from "../../actions/userActions";
 import UserLogsAction from "./UserLogsAction";
 
 class UserLogs extends Component {
@@ -28,7 +28,25 @@ class UserLogs extends Component {
 
   }
 
+  onGenerateReport = rows => {
 
+    const name =
+      this.props.auth.user.name.firstName +
+      " " +
+      this.props.auth.user.name.middleName +
+      " " +
+      this.props.auth.user.name.lastName;
+
+    const userlogsRepor = {
+      activities: rows,
+      typeOfReport: "User Logs Report",
+      printedBy: name
+    };
+
+    this.props.createReportForUserlogs(userlogsRepor);
+    // show generate alert
+    this.setState({ generateAlert: true });
+  };
 
 
   render() {
@@ -114,6 +132,15 @@ class UserLogs extends Component {
             grouping: true,
             selection: true
           }}
+          actions={[
+            {
+              icon: "print",
+              tooltip: "Generate Report",
+              onClick: (event, rows) => {
+                this.onGenerateReport(rows);
+              }
+            }
+          ]}
           data={userlogData}
           title="Userlogs"
         />
@@ -155,6 +182,7 @@ class UserLogs extends Component {
 }
 
 UserLogs.protoTypes = {
+  createReportForUserlogs: PropTypes.func.isRequired,
   getUserLogs: PropTypes.func.isRequired,
   userlogs: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired
@@ -167,4 +195,4 @@ const mapStateToProps = state => ({
   users: state.users,
 })
 
-export default connect(mapStateToProps, { getUserLogs })(UserLogs);
+export default connect(mapStateToProps, { getUserLogs, createReportForUserlogs })(UserLogs);

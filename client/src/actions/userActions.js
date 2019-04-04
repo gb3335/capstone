@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { saveAs } from "file-saver";
 import {
   GET_USER,
   GET_USERS,
@@ -72,6 +72,25 @@ export const getUserById = id => dispatch => {
       dispatch({
         type: GET_ERRORS,
         payload: err.response.data
+      })
+    );
+};
+
+export const createReportForUserlogs = reportData => dispatch => {
+  axios
+    .post("/api/userlogs/createReport", reportData)
+    .then(() =>
+      axios
+        .get("/api/userlogs/fetchReport", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          saveAs(pdfBlob, "UserlogsReport.pdf");
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_USERLOGS,
+        payload: null
       })
     );
 };

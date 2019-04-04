@@ -75,16 +75,6 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
 
-
-
-
-
-    // Add new Author One and existing
-
-    // update college
-
-
-
     const newUser = new UserLog({
       name: {
         firstName: req.body.firstName,
@@ -102,16 +92,58 @@ router.post(
       .then(user => res.json(user))
       .catch(err => console.log(err));
 
-
-
-
-
-
-
-
-
-
   })
+
+router.post(
+  "/createReport",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+            <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+            <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+          </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfActivityTemplate(req.body), options)
+      .toFile("userlogsPdf.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/activities/fetchReport
+// @desc    Send the generated pdf to client - list of colleges
+// @access  Private
+router.get(
+  "/fetchReport",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/userlogsPdf.pdf`, () => {
+      fs.unlink(`${reqPath}/userlogsPdf.pdf`, err => {
+        if (err) throw err;
+        console.log("successfully deleted");
+      });
+    });
+  }
+);
 
 
 

@@ -85,19 +85,19 @@ class DetailedActivities extends Component {
       activityData = activities.map((activity, index) =>
         true
           ? {
-              activity: activity.title,
-              user: names[index],
-              type: activity.type,
-              date:
-                activity.date +
-                moment(activity.date).format("MMMM Do YYYY, h:mm A")
-            }
+            activity: activity.title,
+            user: names[index],
+            type: activity.type,
+            date:
+              activity.date +
+              moment(activity.date).format("MMMM Do YYYY, h:mm A")
+          }
           : {
-              activity: null,
-              user: null,
-              type: null,
-              date: null
-            }
+            activity: null,
+            user: null,
+            type: null,
+            date: null
+          }
       );
 
       activityItems = (
