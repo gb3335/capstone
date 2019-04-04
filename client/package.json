@@ -45,7 +45,6 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "replace-string": "^2.0.0",
-    "stopword": "^0.1.13",
     "str-trim": "^1.2.0",
     "tesseract.js": "^1.0.14",
     "tesseract.ts": "^1.1.1"
