@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable'
-import stripHtml from "string-strip-html";
 
 import {checkGrammar, clearError} from '../../actions/grammarActions';
 
@@ -124,10 +123,9 @@ class Grammar extends Component {
     }
 
     onGrammarCheck = () => {
-        let html = stripHtml(this.state.html);
-        html = html.replace(/\s+/g," ");
+        let html = this.contentEditable.current.innerText;
+        // html = html.replace(/\s+/g," ");
         this.setState({original:html})
-        console.log(html);
         const input = {
             input: html
         }
