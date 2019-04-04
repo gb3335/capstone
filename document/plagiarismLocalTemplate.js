@@ -14,9 +14,9 @@ module.exports = (input) => {
 
   journalDetailsString = reportFor === "Journal" ? `<div class="context" style="margin-top:-15px">
   <h6>
-    <p>Volume #: ${journal.volume}</p>
-    <p>ISSN: ${journal.issn}</p>
-    <p>Year Published: ${journal.yearPublished}</p>
+    <p>Volume #: ${journal.volume ? journal.volume : `<div>No volume defined.</div>`}</p>
+    <p>ISSN: ${journal.issn ? journal.issn : `<div>No ISSN defined.</div>`}</p>
+    <p>Year Published: ${journal.yearPublished ? journal.yearPublished : `<div>No year published defined.</div>`}</p>
     </h6>
 </div>`: `<div> </div>`;
 
