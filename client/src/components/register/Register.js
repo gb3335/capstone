@@ -1,27 +1,26 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import { getColleges } from '../../actions/collegeActions';
-import { createAccount } from '../../actions/registerActions';
+import { getColleges } from "../../actions/collegeActions";
+import { createAccount } from "../../actions/registerActions";
 
-import TextFieldGroup from '../common/TextFieldGroup';
-import SelectListGroup from '../common/SelectListGroup';
+import TextFieldGroup from "../common/TextFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
 
 class Register extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
-      firstName: '',
-      email: '',
-      lastName: '',
-      middleName: '',
-      contact: '',
-      userType: 'ADMINISTRATOR',
-      college: '',
+      firstName: "",
+      email: "",
+      lastName: "",
+      middleName: "",
+      contact: "",
+      userType: "LIBRARIAN",
+      college: "",
       errors: {}
     };
   }
@@ -47,22 +46,21 @@ class Register extends Component {
       usertype: this.state.userType
     };
 
-    this.refs.resBtn.setAttribute('disabled', 'disabled');
+    this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.createAccount(userData, this.props.history);
   };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-    this.refs.resBtn.removeAttribute('disabled');
+    this.refs.resBtn.removeAttribute("disabled");
   };
 
   render() {
     const { college, errors } = this.props;
-    let collegeOptions = [{ label: '* Select College', value: '' }];
+    let collegeOptions = [{ label: "* Select College", value: "" }];
     let typeOptions = [
-
-      { label: 'ADMINISTRATOR', value: 'ADMINISTRATOR' },
-      { label: 'LIBRARIAN', value: 'LIBRARIAN' }
+      { label: "ADMINISTRATOR", value: "ADMINISTRATOR" },
+      { label: "LIBRARIAN", value: "LIBRARIAN" }
     ];
     try {
       college.colleges.map(college =>
@@ -71,19 +69,17 @@ class Register extends Component {
           value: college.name.fullName
         })
       );
-    } catch (error) { }
+    } catch (error) {}
 
-    if (this.state.userType === 'ADMINISTRATOR') {
+    if (this.state.userType === "ADMINISTRATOR") {
       return (
         <div className="register">
-
           <div className="container">
-
             <div className="row">
               <div className="col-md-8 m-auto">
                 <Link to="/viewusers" className="btn btn-light mb-3 float-left">
                   <i className="fas fa-angle-left" /> Back to Users
-              </Link>
+                </Link>
                 <br />
                 <br />
                 <br />
@@ -153,17 +149,15 @@ class Register extends Component {
           </div>
         </div>
       );
-    }
-    else if (this.state.userType === 'LIBRARIAN') {
+    } else if (this.state.userType === "LIBRARIAN") {
       return (
         <div className="register">
           <div className="container">
             <div className="row">
               <div className="col-md-8 m-auto">
-
                 <Link to="/viewusers" className="btn btn-light mb-3 float-left">
                   <i className="fas fa-angle-left" /> Back to Users
-              </Link>
+                </Link>
                 <br />
                 <br />
                 <br />
@@ -247,14 +241,11 @@ class Register extends Component {
         </div>
       );
     }
-
   }
 }
 Register.propTypes = {
   getColleges: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired,
-
-
+  college: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,

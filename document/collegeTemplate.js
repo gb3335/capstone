@@ -1,3 +1,4 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
@@ -55,7 +56,9 @@ module.exports = ({
   let researchesListNoComma = "";
   let researchesListHeader;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   // course table
   if (courseStatus === true) {

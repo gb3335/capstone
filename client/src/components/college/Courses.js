@@ -85,7 +85,11 @@ class Courses extends Component {
       // Sorted Course
       let sortedCourse = sort(this.props.course).asc(u => u.name);
 
-      if (this.props.auth.isAuthenticated === true) {
+      if (
+        this.props.auth.isAuthenticated === true &&
+        (this.props.auth.user.userType === "ADMINISTRATOR" ||
+          this.props.auth.user.id === this.props.college.college.librarianId)
+      ) {
         columnButton = <th />;
         if (this.state.coursebin) {
           if (college.deleted === 0) {

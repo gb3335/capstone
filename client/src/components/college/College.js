@@ -134,20 +134,25 @@ class College extends Component {
             courseAction = <CollegeCourseActions />;
           }
           colAction = <CollegeActions />;
-          collegeReports = <Report />;
-          collegeReportButton = (
-            <a
-              className="list-group-item list-group-item-action"
-              id="list-reports-list"
-              data-toggle="list"
-              href="#list-reports"
-              role="tab"
-              aria-controls="reports"
-            >
-              <i className="fas fa-poll-h mr-2" />
-              Create Report
-            </a>
-          );
+          if (
+            this.props.auth.user.userType === "ADMINISTRATOR" ||
+            this.props.auth.user.id === this.props.college.college.librarianId
+          ) {
+            collegeReports = <Report />;
+            collegeReportButton = (
+              <a
+                className="list-group-item list-group-item-action"
+                id="list-reports-list"
+                data-toggle="list"
+                href="#list-reports"
+                role="tab"
+                aria-controls="reports"
+              >
+                <i className="fas fa-poll-h mr-2" />
+                Create Report
+              </a>
+            );
+          }
 
           // delete / restore college action
           if (college.deleted === 1) {

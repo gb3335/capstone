@@ -1,37 +1,34 @@
-const moment = require("moment");
+const moment_timezone = require("moment-timezone");
 
-const moment_timezone = require('moment-timezone');
+module.exports = input => {
+  const { typeOfReport, subTypeOfReport, output, pattern, text } = input;
 
-module.exports = (input) => {
-  
-const {typeOfReport, subTypeOfReport , output, pattern, text} = input;
-
-  let docuFound="";
+  let docuFound = "";
   let title = "";
-  let score="[";
+  let score = "[";
 
-  const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
-  let level="";
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
+  let level = "";
 
-      if(output[0].SimilarityScore>0 && output[0].SimilarityScore<30){
-        level="<span class='little-text'>Little Plagiarism</span";
-      }else if(output[0].SimilarityScore>=30 && output[0].SimilarityScore<=70){
-        level="<span class='moderate-text'>Moderate Plagiarism</span";
-      }
-      else if(output[0].SimilarityScore>70){
-        level="<span class='heavy-text'>Heavy Plagiarism</span";
-      }else{
-        level="<span>Clean</span";
-      }
-let plagiarised = output[0].SimilarityScore;
+  if (output[0].SimilarityScore > 0 && output[0].SimilarityScore < 30) {
+    level = "<span class='little-text'>Little Plagiarism</span";
+  } else if (
+    output[0].SimilarityScore >= 30 &&
+    output[0].SimilarityScore <= 70
+  ) {
+    level = "<span class='moderate-text'>Moderate Plagiarism</span";
+  } else if (output[0].SimilarityScore > 70) {
+    level = "<span class='heavy-text'>Heavy Plagiarism</span";
+  } else {
+    level = "<span>Clean</span";
+  }
+  let plagiarised = output[0].SimilarityScore;
 
-let clean = 100 - plagiarised;
+  let clean = 100 - plagiarised;
 
-
-
-  score+=clean+','+plagiarised+']'
-  
-
+  score += clean + "," + plagiarised + "]";
 
   return `<!DOCTYPE html>
   <html>
@@ -197,12 +194,16 @@ mark {
             <br />
             <br />
             <br />
-            <h4 style="font-size: 10px">Source Document for Plagiarism: ${output[0].Document.Pattern.Name}</h4>
+            <h4 style="font-size: 10px">Source Document for Plagiarism: ${
+              output[0].Document.Pattern.Name
+            }</h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
             <br />
-            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}</h4>
+            <h4 style="font-size: 10px">Target Document for Plagiarism: ${
+              output[0].Document.Text.Name
+            }</h4>
             <div class="context2">
                 <p>${text}</p>
             </div>
@@ -218,7 +219,9 @@ mark {
         const canvas = document.getElementById('pie');
 
         const data = {
-            labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(2)}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
+            labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(
+              2
+            )}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
             datasets : [
                 {
                     data : ${score},

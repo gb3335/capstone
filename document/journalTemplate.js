@@ -1,3 +1,4 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
@@ -12,7 +13,7 @@ module.exports = ({
   authors,
   journal,
   typeOfReport,
-  volume,
+  volume
 }) => {
   let collegeString = "";
   let courseString = "";
@@ -27,7 +28,10 @@ module.exports = ({
   let authorsHeader = "";
   let authorsTitle = "";
   let volumeString = "";
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   if (college) {
     collegeString = `<li>College: ${journal.college}</li>`;
@@ -68,9 +72,9 @@ module.exports = ({
     authorsList = journal.author.map(
       (auth, index) =>
         `<tr><td>${++index}</td><td>${
-        auth.role === "Author One"
-          ? `${auth.name} (Author One)`
-          : `${auth.name}`
+          auth.role === "Author One"
+            ? `${auth.name} (Author One)`
+            : `${auth.name}`
         }</td></tr>`
     );
     authorsHeader = "<tr><th>NO</th><th>NAME</th></tr>";

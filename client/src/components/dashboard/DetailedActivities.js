@@ -3,20 +3,57 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
+import { Link } from "react-router-dom";
 import moment from "moment";
 import SweetAlert from "react-bootstrap-sweetalert";
+import "date-fns";
+import Grid from "@material-ui/core/Grid";
+import { withStyles } from "@material-ui/core/styles";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  MuiPickersUtilsProvider,
+  TimePicker,
+  DatePicker
+} from "material-ui-pickers";
+import Modal from "react-modal";
 
 import {
   getActivities,
   createReportForActivity
 } from "../../actions/activityActions";
 
+const customStyles = {
+  content: {
+    top: "53%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "10px",
+    width: "55%",
+    height: "440px"
+  }
+};
+
+Modal.setAppElement("#root");
+
+const styles = {
+  grid: {
+    width: "60%"
+  }
+};
+
 class DetailedActivities extends Component {
   constructor(props) {
     super(props);
     this.state = {
       // for alerts
-      generateAlert: false
+      generateAlert: false,
+      dateAlert: false,
+      // Date
+      startDate: new Date("2019-01-01T12:00:00"),
+      endDate: new Date("2019-01-01T12:00:00"),
+      modalIsOpen: false
     };
   }
 
@@ -26,6 +63,7 @@ class DetailedActivities extends Component {
     }
   }
 
+  // Alerts
   onGenerateAlert = () => {
     this.setState({ generateAlert: false });
   };
@@ -49,13 +87,37 @@ class DetailedActivities extends Component {
     this.setState({ generateAlert: true });
   };
 
+  // Date Picker
+  handleDateChangeStart = date => {
+    this.setState({ startDate: date });
+  };
+
+  handleDateChangeEnd = date => {
+    this.setState({ endDate: date });
+  };
+
+  // Modal
+  openModal = () => {
+    this.setState({ modalIsOpen: true });
+  };
+
+  afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = "#2874A6";
+  };
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  };
+
   render() {
     const { activities } = this.props.activity;
     const { users } = this.props.users;
+    const { classes } = this.props;
+    const { startDate, endDate } = this.state;
     const actLoading = this.props.activity.loading;
     let activityItems;
     let activityData;
-    let name = "";
     let names = [];
 
     if (activities === null || actLoading || activities === undefined) {
@@ -80,7 +142,6 @@ class DetailedActivities extends Component {
           }
         });
       });
-      console.log(names);
 
       activityData = activities.map((activity, index) =>
         true
@@ -138,6 +199,7 @@ class DetailedActivities extends Component {
         />
       );
     }
+
     return (
       <div>
         {/* ALERTS */}
@@ -150,9 +212,105 @@ class DetailedActivities extends Component {
         >
           Please wait for the report to generate
         </SweetAlert>
+        {/* DATE ALERT */}
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <div>
+            <h3 ref={subtitle => (this.subtitle = subtitle)}>Pick Dates</h3>
+            <div>
+              <h6>Choose dates to filter in-between</h6>
+            </div>
+            <div className="row">
+              <div className="col-sm-12 col-md-6 col-lg-6">
+                <div className="card">
+                  <h5 className="card-header">Start Date</h5>
+                  <div className="card-body">
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid container className={classes.grid}>
+                        <DatePicker
+                          margin="normal"
+                          label="Date picker"
+                          value={startDate}
+                          onChange={this.handleDateChangeStart}
+                          style={{ fontSize: "10px" }}
+                        />
+                        <TimePicker
+                          margin="normal"
+                          label="Time picker"
+                          value={startDate}
+                          onChange={this.handleDateChangeStart}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                  </div>
+                </div>
+                <br />
+              </div>
+              <div className="col-sm-12 col-md-6 col-lg-6">
+                <div className="card">
+                  <h5 className="card-header">End Date</h5>
+                  <div className="card-body">
+                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                      <Grid
+                        container
+                        className={classes.grid}
+                        justify="space-around"
+                      >
+                        <DatePicker
+                          margin="normal"
+                          label="Date picker"
+                          value={endDate}
+                          onChange={this.handleDateChangeEnd}
+                        />
+                        <TimePicker
+                          margin="normal"
+                          label="Time picker"
+                          value={endDate}
+                          onChange={this.handleDateChangeEnd}
+                        />
+                      </Grid>
+                    </MuiPickersUtilsProvider>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br />
+            <input
+              type="button"
+              value="Okay"
+              onClick={() =>
+                console.log(
+                  "Start: ",
+                  this.state.startDate,
+                  " End: ",
+                  this.state.endDate
+                )
+              }
+              className="btn btn-info"
+            />
+          </div>
+        </Modal>
+        {/* MAIN */}
         <h1 className="display-4 text-center">Recent Activites</h1>
         <p className="lead text-center">Detailed View of Recent Activities</p>
-        <div style={{ margin: "15px" }}>{activityItems}</div>
+        <div style={{ margin: "15px" }}>
+          <div className="btn-group mb-3 btn-group-sm" role="group">
+            <Link
+              to="#"
+              onClick={this.openModal}
+              // onClick={() => this.setState({ dateAlert: true })}
+              className="btn btn-light"
+            >
+              <i className="fas fa-poll-h text-info mr-1" /> Pick Dates
+            </Link>
+          </div>
+          {activityItems}
+        </div>
       </div>
     );
   }
@@ -163,7 +321,8 @@ DetailedActivities.propTypes = {
   createReportForActivity: PropTypes.func.isRequired,
   activity: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  users: PropTypes.object.isRequired
+  users: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -175,4 +334,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   { getActivities, createReportForActivity }
-)(DetailedActivities);
+)(withStyles(styles)(DetailedActivities));

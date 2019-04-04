@@ -234,7 +234,11 @@ class SearchBar extends Component {
     let suggestions = [];
 
     try {
-      if (this.props.colleges !== null) {
+      if (
+        this.props.colleges !== null &&
+        this.props.researches !== null &&
+        this.props.journals !== null
+      ) {
         // Add Colleges
         this.props.colleges.map(college => {
           suggestions.push({

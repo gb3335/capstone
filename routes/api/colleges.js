@@ -193,6 +193,7 @@ router.post(
         initials: req.body.initials
       },
       librarian: req.body.librarian,
+      librarianId: req.body.librarianId,
       logo: logoName,
       courseTotal,
       researchTotal,
