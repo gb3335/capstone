@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -32,6 +31,8 @@ class LocalResult extends Component {
       showDetails: false,
       words: []
     };
+
+    this.forHide = React.createRef();
   }
 
   componentWillMount() {
@@ -121,13 +122,13 @@ class LocalResult extends Component {
     const { output, abstract } = this.props.localPlagiarism;
     this.props.setPlagiarismGenerateReportLoading(true);
 
-    const node = ReactDOM.findDOMNode(this);
+    // const node = ReactDOM.findDOMNode(this);
 
-    // Get child nodes
-    let child = "";
-    child = node.querySelector('.forhidehighlightSpan');
+    // // Get child nodes
+    // let child = "";
+    // child = node.querySelector('.forhidehighlightSpan');
 
-    let word = child.innerHTML.toString()
+    let word = this.forHide.current.children[0].innerHTML.toString();
 
     const name =
       this.props.auth.user.name.firstName +
@@ -350,7 +351,7 @@ class LocalResult extends Component {
 
     return (
       <div className="research">
-        <div className="forHide">
+        <div className="forHide" ref={this.forHide}>
           {forhide};
         </div>
         <div className="container-fluid" style={{ padding: "1em" }}>
