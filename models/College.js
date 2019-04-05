@@ -18,8 +18,7 @@ const CollegeSchema = new Schema({
     required: true
   },
   librarianId: {
-    type: String,
-    required: true
+    type: String
   },
   logo: {
     type: String,

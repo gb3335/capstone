@@ -81,10 +81,11 @@ class DetailedActivities extends Component {
       typeOfReport: "Activities Report",
       printedBy: name
     };
+    console.log(rows);
 
-    this.props.createReportForActivity(researchesReportData);
+    //this.props.createReportForActivity(researchesReportData);
     // show generate alert
-    this.setState({ generateAlert: true });
+    //this.setState({ generateAlert: true });
   };
 
   // Date Picker
@@ -133,12 +134,7 @@ class DetailedActivities extends Component {
       activities.map((activity, index) => {
         users.map(user => {
           if (activity.by === user._id) {
-            names[index] =
-              user.name.firstName +
-              " " +
-              user.name.middleName +
-              " " +
-              user.name.lastName;
+            names[index] = user.userName;
           }
         });
       });
@@ -164,8 +160,8 @@ class DetailedActivities extends Component {
       activityItems = (
         <MaterialTable
           columns={[
-            { title: "Activity", field: "activity" },
-            { title: "User", field: "user" },
+            { title: "Action", field: "activity" },
+            { title: "Username", field: "user" },
             { title: "Type", field: "type" },
             {
               title: "Date",
@@ -296,7 +292,7 @@ class DetailedActivities extends Component {
           </div>
         </Modal>
         {/* MAIN */}
-        <h1 className="display-4 text-center">Recent Activites</h1>
+        <h1 className="display-4 text-center">Audit Trail</h1>
         <p className="lead text-center">Detailed View of Recent Activities</p>
         <div style={{ margin: "15px" }}>
           <div className="btn-group mb-3 btn-group-sm" role="group">

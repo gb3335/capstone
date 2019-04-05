@@ -7,6 +7,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "chart.js": "^2.7.3",
+    "chartjs-plugin-labels": "^1.1.0",
     "classnames": "^2.2.6",
     "downshift": "^3.2.7",
     "fast-sort": "^1.5.6",

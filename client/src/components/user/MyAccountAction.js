@@ -1,12 +1,9 @@
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ImageFieldGroup from "../common/ImageFieldGroup";
-import { changeStatus, changeAvatar } from '../../actions/registerActions';
-
-
+import { changeStatus, changeAvatar } from "../../actions/registerActions";
 
 import SweetAlert from "react-bootstrap-sweetalert";
 class MyAccountAction extends Component {
@@ -50,9 +47,6 @@ class MyAccountAction extends Component {
       ctr = 1;
 
       if (ctr === len) {
-
-
-
         const replaceString = require("replace-string");
         let strstart = 0;
         let a = window.location.href;
@@ -67,7 +61,12 @@ class MyAccountAction extends Component {
           oldpath = b.substring(0, strstart);
           oldid = b.substring(strstart + 1, b.length);
           mylink =
-            "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+            "/myaccount/" +
+            this.props.auth.user.id +
+            "/" +
+            oldpath +
+            "/" +
+            oldid;
         } else {
           if (b === "") {
             mylink =
@@ -84,9 +83,9 @@ class MyAccountAction extends Component {
         }
         if (
           "/myaccount/" +
-          this.props.auth.user.id +
-          "/myaccount/" +
-          this.props.auth.user.id ===
+            this.props.auth.user.id +
+            "/myaccount/" +
+            this.props.auth.user.id ===
           mylink.substring(
             0,
             (
@@ -109,17 +108,16 @@ class MyAccountAction extends Component {
         const data = {
           images: upImages,
           id: this.props.users.user._id,
-          oldlink,
+          oldlink
         };
 
         this.props.changeAvatar(data, this.props.history);
         this.setState({
           image: "",
           images: []
-        })
+        });
       }
     };
-
   };
 
   onDeleteAlert = () => {
@@ -133,64 +131,54 @@ class MyAccountAction extends Component {
   };
   onRemoveDeleteOkay = () => {
     const userData = {
-
       id: this.props.users.user._id,
       isBlock: this.props.users.user.isBlock,
       loginid: this.props.auth.user.id
-
     };
 
-
     this.props.changeStatus(userData, this.props.history);
-    this.setState({ deleteAlertOkay: false })
-
-
+    this.setState({ deleteAlertOkay: false });
   };
   onDeleteResearch = () => {
     this.setState({ deleteAlertOkay: true, deleteAlert: false });
   };
 
   render() {
-
-
-    const { user, auth } = this.props
-
-
-
-
+    const { user, auth } = this.props;
 
     let editAction;
     let imageAction;
     let blockAction;
 
     if (auth.isAuthenticated) {
-
       if (user.email === auth.user.email) {
         editAction = (
-
-          <Link to="/edit-account" className="btn btn-light"> <i className="fas fa-pen text-info mr-1" />Edit User</Link>
-
-
-
-
+          <Link to="/edit-account" className="btn btn-light">
+            {" "}
+            <i className="fas fa-pen text-info mr-1" />
+            Edit User
+          </Link>
         );
         imageAction = (
-
           <label to="#" htmlFor="imageUpload" className="btn btn-light">
             <i className="fas fa-circle-notch text-info mr-1" />
             Change avatar
           </label>
-
-
-        )
-
+        );
       }
-      if (auth.user.userType == 'ADMINISTRATOR') {
-        blockAction = (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
-          <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
-        </Link>)
+      if (auth.user.userType == "ADMINISTRATOR") {
+        blockAction = (
+          <Link
+            to="#"
+            htmlFor="imageUpload"
+            className="btn btn-light"
+            onClick={this.onDeleteAlert}
+          >
+            <i className="fas fa-exchange-alt text-info mr-1" />
+            &nbsp;Change Status
+          </Link>
+        );
       }
-
     }
     return (
       <div>
@@ -227,12 +215,8 @@ class MyAccountAction extends Component {
         >
           Status Changed.
         </SweetAlert>
-        <div className="btn-group mb-3 btn-group-sm" >
-          {editAction}
-        </div>
-        <div className="btn-group mb-3 btn-group-sm" >
-          {blockAction}
-        </div>
+        <div className="btn-group mb-3 btn-group-sm">{editAction}</div>
+        <div className="btn-group mb-3 btn-group-sm">{blockAction}</div>
         <div className="btn-group mb-2 btn-group-sm" role="group">
           {imageAction}
           <ImageFieldGroup
@@ -243,7 +227,6 @@ class MyAccountAction extends Component {
             id="imageUpload"
           />
         </div>
-
       </div>
     );
   }

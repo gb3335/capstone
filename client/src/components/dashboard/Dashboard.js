@@ -50,7 +50,7 @@ class Dashboard extends Component {
     let researchDiv;
     let journalDiv;
     let graphsDiv;
-    let activityDiv = "col-md-12";
+    let activityDiv = "col-md-12 mb-4";
     let recactDiv;
     let summaryDiv;
     let graphDiv = "row";
@@ -108,7 +108,7 @@ class Dashboard extends Component {
         );
 
         activityItems = (
-          <div style={{ overflow: "auto", height: "450px", fontSize: "13px" }}>
+          <div style={{ overflow: "auto", height: "900px", fontSize: "13px" }}>
             {recentActivities}
           </div>
         );
@@ -151,15 +151,10 @@ class Dashboard extends Component {
           };
 
           let div;
-          if (journalCtr > 0) {
-            div = "col-md-6";
-            graphsDiv = "col-md-9";
-            activityDiv = "col-md-3";
-          } else {
-            div = "col-md-12";
-            graphsDiv = "col-md-7";
-            activityDiv = "col-md-5";
-          }
+
+          div = "col-md-12";
+          graphsDiv = "col-md-7 mb-4";
+          activityDiv = "col-md-5 mb-4";
 
           const labelsFiltered = researchData.labels.filter(function(el) {
             return el != null;
@@ -216,15 +211,10 @@ class Dashboard extends Component {
           };
 
           let div;
-          if (researchCtr > 0) {
-            div = "col-md-6";
-            graphsDiv = "col-md-9";
-            activityDiv = "col-md-3";
-          } else {
-            div = "col-md-12";
-            graphsDiv = "col-md-7";
-            activityDiv = "col-md-5";
-          }
+
+          div = "col-md-12";
+          graphsDiv = "col-md-7 mb-4";
+          activityDiv = "col-md-5 mb-4";
 
           const labelsFiltered1 = journalData.labels.filter(function(el) {
             return el != null;
@@ -264,8 +254,8 @@ class Dashboard extends Component {
 
         if (this.props.auth.isAuthenticated) {
           recactDiv = (
-            <div className={activityDiv}>
-              <div className="card">
+            <div className="col-md-3 mb-4">
+              <div className="card shadow h-100 py-2">
                 <div className="card-body pr-0">
                   {detailedAct}
                   {activityItems}
@@ -275,8 +265,8 @@ class Dashboard extends Component {
             </div>
           );
         } else {
-          graphDiv = "container";
-          graphsDiv = "col-md-12";
+          graphDiv = "col-md-12";
+          graphsDiv = "col-md-12 mb-4";
         }
 
         // SUMMARY CHART
@@ -370,8 +360,7 @@ class Dashboard extends Component {
             <div className="row">
               {/* Colleges */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-primary">
-                  <div className="card-header bg-primary" />
+                <div className="card border-primary shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -397,8 +386,7 @@ class Dashboard extends Component {
               </div>
               {/* Courses */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-success">
-                  <div className="card-header bg-success" />
+                <div className="card border-success shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -424,8 +412,7 @@ class Dashboard extends Component {
               </div>
               {/* Researches */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-danger">
-                  <div className="card-header bg-danger" />
+                <div className="card border-danger shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -451,8 +438,7 @@ class Dashboard extends Component {
               </div>
               {/* Journals */}
               <div className="col-xl-3 col-md-6 mb-4">
-                <div className="card border-warning">
-                  <div className="card-header bg-warning" />
+                <div className="card border-warning shadow h-100 py-2">
                   <div className="card-body">
                     <div className="row no-gutters align-items-center">
                       <div className="col mr-2">
@@ -479,15 +465,14 @@ class Dashboard extends Component {
             </div>
             {/* Graphs */}
             <div>
-              <div className={graphDiv}>
-                <div className={graphsDiv}>
-                  <div className="card">
+              <div className="row">
+                <div className="col-md-9 mb-4">
+                  <div className="card shadow h-100 py-2">
                     <div className="row">
                       {researchDiv}
                       {journalDiv}
                     </div>
                   </div>
-                  <br />
                 </div>
                 {recactDiv}
                 {/* {summaryDiv} */}

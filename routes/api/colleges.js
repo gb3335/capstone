@@ -367,7 +367,7 @@ router.post(
         // Add to exp array
         college.course.unshift(newCourse);
 
-        college.save();
+        college.save().catch(err => console.log(err));
 
         const newCollege = {
           lastUpdate: {
@@ -448,7 +448,7 @@ router.post(
         // Add to exp array
         college.course.unshift(newCourse);
 
-        college.save();
+        college.save().catch(err => console.log(err));
 
         const newCollege = {
           lastUpdate: {
