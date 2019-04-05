@@ -84,7 +84,11 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            dispatch(setAxiosProgress(0));
+            const axiosProgress ={
+              tag:"",
+              axiosProgress: 0
+            }
+            dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
             if(input.abstract){
@@ -182,7 +186,11 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
             });
             total=0;
             comFlag=0;
-            dispatch(setAxiosProgress(0));
+            const axiosProgress ={
+              tag:"",
+              axiosProgress: 0
+            }
+            dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
             console.log("test")
