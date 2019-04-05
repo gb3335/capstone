@@ -8,13 +8,49 @@ import {
   PLAGIARISM_ONLINE_HIDE_DETAILS,
   PLAGIARISM_ONLINE_GOOGLE,
   PLAGIARISM_ONLINE_GENERATE_REPORT,
-  PLAGIARISM_ONLINE_CLEAR_OUTPUT
+  PLAGIARISM_ONLINE_CLEAR_OUTPUT,
+  PLAGIARISM_ONLINE_AXIOS_PROGRESS
 } from "./types";
 import axios from "axios";
 
 import { saveAs } from "file-saver";
+let promises = [];
+let total=0;
+let comFlag=0;
+
+const setAxiosProgress = (input) => {
+  return {
+    type: PLAGIARISM_ONLINE_AXIOS_PROGRESS,
+    payload: input
+  };
+}
 // Check Plagiarism Online
 export const checkPlagiarismOnline = input => dispatch => {
+  total=0;
+  comFlag=0;
+  let config = {
+    onUploadProgress: progressEvent =>{
+      const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
+      let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
+      // console.log(percentCompleted);
+      
+      if(percentCompleted===100){
+        comFlag++;
+        let progress = parseFloat((comFlag/total)*100).toFixed(2).toString().replace(/\.00$/,'');
+        let tag = "Scanning for plagiarism..."
+        if(progress==="100"){
+          tag="Generating Results..."
+        }
+        const axiosProgress ={
+          tag,
+          axiosProgress: progress
+        }
+        // console.log(progress)
+        dispatch(setAxiosProgress(axiosProgress));
+      }
+      
+    }
+  }
   dispatch(setPlagiarismOnlineDisableButton());
   axios
     .post("/api/plagiarism/online", input)
@@ -25,7 +61,57 @@ export const checkPlagiarismOnline = input => dispatch => {
       dispatch(getOnlinePlagiarismInput(input.original));
       if(res.data.onlinePlagiarism.data.items.length>0 && res.data.onlinePlagiarism.data.items){
         dispatch(setPlagiarismOnlineLoading());
-        dispatch(getOnlinePlagiarismResult({text:res.data , pattern: input.q}));
+        const input2 = {
+          text:res.data , pattern: input.q
+        }
+        /// SECOND BATCH START
+          console.time("Initialize")
+          dispatch(setPlagiarismOnlineDisableButton());
+          axios
+          .post("/api/plagiarism/online/initialize/pattern", input2)
+          .then(res => {
+            console.log(res.data);
+            if(res.data.success){
+              promises = []
+              input2.text.onlinePlagiarism.data.items.forEach(function(item, index){
+                  let mime = item.mime || "not_pdf";
+                  promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, title: item.title, mime, index},config))
+                  total++;
+              })
+              axios
+                .all(promises)
+                .then(res => {
+                  let newres = [];
+                  res.forEach(function(r, index){
+                    //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
+                    //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
+                    newres.push(r.data.onlinePlagiarism.data)
+                  })
+                  newres.sort(function(obj1, obj2) {
+                    // Ascending: first age less than the previous
+                    return obj2.SimilarityScore - obj1.SimilarityScore;
+                  });
+                  // console.log(newres);
+                  total=0;
+                  comFlag=0;
+                  const axiosProgress ={
+                    tag:"",
+                    axiosProgress: 0
+                  }
+                  dispatch(setAxiosProgress(axiosProgress));
+                  dispatch(outputOnlinePlagiarism(newres));
+                  console.timeEnd("Initialize")
+                })
+                .catch(err => {
+                  dispatch({
+                    type: GET_ERRORS,
+                    payload: err.response.data
+                  });
+                });
+            }
+          })
+        /// SECOND BATCH END
+        // dispatch(getOnlinePlagiarismResult({text:res.data , pattern: input.q}));
       }
       
     })
@@ -38,48 +124,46 @@ export const checkPlagiarismOnline = input => dispatch => {
     });
 };
 
-let promises = [];
+// export const getOnlinePlagiarismResult = input => dispatch =>{
+//   console.time("Initialize")
+//   dispatch(setPlagiarismOnlineDisableButton());
+//   axios
+//   .post("/api/plagiarism/online/initialize/pattern", input)
+//   .then(res => {
+//     console.log(res.data);
+//     if(res.data.success){
+//       promises = []
+//       input.text.onlinePlagiarism.data.items.forEach(function(item, index){
+//           let mime = item.mime || "not_pdf";
+//           promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, title: item.title, mime, index}))
+//       })
+//       axios
+//         .all(promises)
+//         .then(res => {
+//           let newres = [];
+//           res.forEach(function(r, index){
+//             //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
+//             //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
+//             newres.push(r.data.onlinePlagiarism.data)
+//           })
+//           newres.sort(function(obj1, obj2) {
+//             // Ascending: first age less than the previous
+//             return obj2.SimilarityScore - obj1.SimilarityScore;
+//           });
+//           // console.log(newres);
 
-export const getOnlinePlagiarismResult = input => dispatch =>{
-  console.time("Initialize")
-  dispatch(setPlagiarismOnlineDisableButton());
-  axios
-  .post("/api/plagiarism/online/initialize/pattern", input)
-  .then(res => {
-    console.log(res.data);
-    if(res.data.success){
-      promises = []
-      input.text.onlinePlagiarism.data.items.forEach(function(item, index){
-          let mime = item.mime || "not_pdf";
-          promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, title: item.title, mime, index}))
-      })
-      axios
-        .all(promises)
-        .then(res => {
-          let newres = [];
-          res.forEach(function(r, index){
-            //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
-            //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
-            newres.push(r.data.onlinePlagiarism.data)
-          })
-          newres.sort(function(obj1, obj2) {
-            // Ascending: first age less than the previous
-            return obj2.SimilarityScore - obj1.SimilarityScore;
-          });
-          // console.log(newres);
-
-          dispatch(outputOnlinePlagiarism(newres));
-          console.timeEnd("Initialize")
-        })
-        .catch(err => {
-          dispatch({
-            type: GET_ERRORS,
-            payload: err.response.data
-          });
-        });
-    }
-  })
-}
+//           dispatch(outputOnlinePlagiarism(newres));
+//           console.timeEnd("Initialize")
+//         })
+//         .catch(err => {
+//           dispatch({
+//             type: GET_ERRORS,
+//             payload: err.response.data
+//           });
+//         });
+//     }
+//   })
+// }
 
 export const setPlagiarismGenerateReportLoading = (input) =>{
   return {

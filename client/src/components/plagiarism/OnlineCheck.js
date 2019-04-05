@@ -16,6 +16,9 @@ import OnlineHighlightedResult from './OnlineHighlightedResult'
 import Output from '../plagiarism-result/Output';
 import './OnlineCheck.css'
 
+import { Progress } from 'react-sweet-progress';
+import "react-sweet-progress/lib/style.css";
+
 import {checkPlagiarismOnline , setPlagiarismOnlineShowDetails, setPlagiarismOnlineHideDetails ,createOnlinePlagiarismReport, setPlagiarismGenerateReportLoading} from '../../actions/onlinePlagiarismAction'
 
  
@@ -150,9 +153,13 @@ class OnlineCheck extends Component {
 
         if(loading){
             outputItems = (<div className="spinnerMainDiv">
-            <div className="spinner">
-            <Spinner />
-            </div>
+                <p>{this.props.onlinePlagiarism.axiosProgress.tag}</p>
+                <Progress
+                    type="circle"
+                    percent={this.props.onlinePlagiarism.axiosProgress.axiosProgress}
+                    
+                    /> 
+                    {/* <Spinner /> */}
         </div>)
         }else{
             if (Object.keys(output).length > 0) {
