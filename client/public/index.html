@@ -1,21 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta http-equiv="Content-Security-Policy" content="">
+    <!-- <meta http-equiv="Content-Security-Policy" content=""> -->
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/weblogo.ico" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <!-- <meta http-equiv="Content-Security-Policy"
-        content="default-src *  data: blob: 'unsafe-inline' 'unsafe-eval'; 
-        script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; 
-        connect-src * data: blob: 'unsafe-inline'; 
-        img-src * data: blob: 'unsafe-inline'; 
-        frame-src * data: blob: ; 
-        style-src * data: blob: 'unsafe-inline';
-        font-src * data: blob: 'unsafe-inline';"> -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'  data: blob: 'unsafe-inline' 'unsafe-eval' cdn.quilljs.com code.jquery.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com stackpath.bootstrapcdn.com use.fontawesome.com fonts.googleapis.com npmcdn.com https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/ fonts.gstatic.com; 
+        base-uri 'self';
+        object-src 'none';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' code.jquery.com cdnjs.cloudflare.com stackpath.bootstrapcdn.com; 
+        style-src 'self' 'unsafe-inline' stackpath.bootstrapcdn.com use.fontawesome.com fonts.googleapis.com npmcdn.com cdn.quilljs.com;">
     <meta name="theme-color" content="#000000" />
     <!--
       manifest.json provides metadata used when your web app is added to the
