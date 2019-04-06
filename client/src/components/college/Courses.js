@@ -109,8 +109,8 @@ class Courses extends Component {
                       <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                   <td>
                     <div className="btn-group">
                       <Link
@@ -183,11 +183,11 @@ class Courses extends Component {
                     {cou.status === 0 ? (
                       <span className="badge badge-success">Active</span>
                     ) : (
-                      <span className="badge badge-danger">Not Active</span>
+                      <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                 </tr>
               ) : (
                 ""
@@ -213,8 +213,8 @@ class Courses extends Component {
                       <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                   <td>
                     <div className="btn-group">
                       <Link
@@ -330,11 +330,11 @@ class Courses extends Component {
                     {cou.status === 0 ? (
                       <span className="badge badge-success">Active</span>
                     ) : (
-                      <span className="badge badge-danger">Not Active</span>
+                      <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                 </tr>
               ) : (
                 ""
@@ -354,11 +354,11 @@ class Courses extends Component {
                 {cou.status === 0 ? (
                   <span className="badge badge-success">Active</span>
                 ) : (
-                  <span className="badge badge-danger">Not Active</span>
+                  <span className="badge badge-danger">Inactive</span>
                 )}
               </td>
-              <td>{cou.researchTotal}</td>
-              <td>{cou.journalTotal}</td>
+              <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+              <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
             </tr>
           ) : (
             ""

@@ -9,7 +9,8 @@ import {
   onSideBySide
 } from "../../actions/journalActions";
 import { journalPlagiarismLocal } from "../../actions/localPlagiarismActions";
-import Spinner from "../common/Spinner";
+import { Progress } from 'react-sweet-progress';
+import "react-sweet-progress/lib/style.css";
 
 import "./JournalDocumentAction.css";
 
@@ -135,7 +136,15 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading ? <Spinner /> : docuItem}
+        {this.props.localPlagiarism.loading ? <div>
+          <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+          <Progress
+              
+              percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
+              
+            /> 
+
+        </div>: docuItem}
 
         <div hidden>
           <FileFieldGroup

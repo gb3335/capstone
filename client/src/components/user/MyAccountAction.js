@@ -49,17 +49,22 @@ class MyAccountAction extends Component {
       if (ctr === len) {
         const replaceString = require("replace-string");
         let strstart = 0;
-        let a = window.location.href;
+        let currentLink = window.location.href;
         let oldpath;
         let oldid;
+        let linkCutted;
 
         let mylink;
+        if (currentLink.includes("http://34.229.6.94/")) {
+          linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
+        } else {
+          linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
+        }
 
-        let b = replaceString(a, "http://localhost:3000/", "");
-        if (b.includes("/")) {
-          strstart = b.indexOf("/");
-          oldpath = b.substring(0, strstart);
-          oldid = b.substring(strstart + 1, b.length);
+        if (linkCutted.includes("/")) {
+          strstart = linkCutted.indexOf("/");
+          oldpath = linkCutted.substring(0, strstart);
+          oldid = linkCutted.substring(strstart + 1, linkCutted.length);
           mylink =
             "/myaccount/" +
             this.props.auth.user.id +
@@ -68,7 +73,7 @@ class MyAccountAction extends Component {
             "/" +
             oldid;
         } else {
-          if (b === "") {
+          if (linkCutted === "") {
             mylink =
               "/myaccount/" +
               this.props.auth.user.id +
@@ -78,7 +83,12 @@ class MyAccountAction extends Component {
               oldid;
           } else {
             mylink =
-              "/myaccount/" + this.props.auth.user.id + "/" + b + "/" + oldid;
+              "/myaccount/" +
+              this.props.auth.user.id +
+              "/" +
+              linkCutted +
+              "/" +
+              oldid;
           }
         }
         if (
@@ -175,7 +185,7 @@ class MyAccountAction extends Component {
             onClick={this.onDeleteAlert}
           >
             <i className="fas fa-exchange-alt text-info mr-1" />
-            &nbsp;Change Status
+            &nbsp;TODO deactivate account
           </Link>
         );
       }

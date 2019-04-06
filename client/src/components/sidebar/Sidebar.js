@@ -332,7 +332,10 @@ class Sidebar extends Component {
           </div>
           <div className="sidebar_user">
             <div className="sidebar_user_image">
-              <img src={path} alt="Your Avatar" />
+              <div
+                className="squareSide"
+                style={{ backgroundImage: `url('${path}')` }}
+              />
             </div>
             <div className="sidebar_user_name">
               <Link to={oldlink}>

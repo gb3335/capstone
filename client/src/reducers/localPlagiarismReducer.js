@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE, PLAGIARISM_LOCAL_AXIOS_PROGRESS } from "../actions/types";
 
 const initialState = {
   output: {},
@@ -12,7 +12,8 @@ const initialState = {
   loading: false,
   fromFlag: false,
   generateReport: false,
-  abstract: false
+  abstract: false,
+  axiosProgress: {}
 };
 
 export default function (state = initialState, action) {
@@ -86,6 +87,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         generateReport: action.payload
+      };
+    case PLAGIARISM_LOCAL_AXIOS_PROGRESS:
+      return {
+        ...state,
+        axiosProgress: action.payload
       };
     case PLAGIARISM_LOCAL_CLEAR_STATE:
       return {

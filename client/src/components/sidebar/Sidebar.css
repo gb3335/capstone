@@ -387,3 +387,12 @@
 .submenus a:hover {
   background-color: rgb(253, 253, 253, 0.2);
 }
+.squareSide {
+  width: 60%;
+  padding-bottom: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50%;
+}

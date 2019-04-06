@@ -22,7 +22,7 @@ module.exports = ({
   let yearPublishedString = "";
   let lastUpdateString = "";
   let typeString = "";
-  let abstractString = "";
+  let descriptionString = "";
   let authorsList = "";
   let authorsListNoComma = "";
   let authorsHeader = "";
@@ -49,7 +49,7 @@ module.exports = ({
     pagesString = `<li>Pages: ${journal.pages}</li>`;
   }
   if (yearPublished) {
-    yearPublishedString = `<li>Academic Year: ${journal.schoolYear}</li>`;
+    yearPublishedString = `<li>Academic Year: ${journal.yearPublished}</li>`;
   }
   if (lastUpdate) {
     lastUpdateString = `<li>Last Update: ${moment(journal.lastUpdate).format(
@@ -60,12 +60,17 @@ module.exports = ({
     typeString = `<li>Type: ${journal.type}</li>`;
   }
   if (description) {
-    abstractString = `<div class="details" style="font-size: 7px">
-                        <h4 style="font-size: 7px">College Abstract:</h4>
+    descriptionString = journal.description === null | journal.description === "" | journal.description === "undefined" ? `<div class="details" style="font-size: 7px">
+                        <h4 style="font-size: 7px">Jounal Details:</h4>
                         <div>
                           <p>${journal.description}</p>
                         </div>
-                      </div>`;
+                      </div>`: `<div class="details" style="font-size: 7px">
+                      <h4 style="font-size: 7px">Jounal Details:</h4>
+                      <div>
+                        <p>No details</p>
+                      </div>
+                    </div>`;
   }
 
   if (authors) {
@@ -192,7 +197,7 @@ module.exports = ({
           <br />
           <hr />
         <div class="details" style="font-size: 7px">
-          <h4 style="font-size: 7px">College Details:</h4>
+          <h4 style="font-size: 7px">Journal Details:</h4>
           <div>
             <ul style="list-style-type:circle; text-align: left">
               ${collegeString}
@@ -206,7 +211,7 @@ module.exports = ({
             </ul>
           </div>
         </div>
-         ${abstractString}
+         ${descriptionString}
         <br/>
         <div class="authors" style="font-size: 7px">
             ${authorsTitle}

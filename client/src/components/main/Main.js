@@ -34,8 +34,8 @@ import EditResearch from "../edit-research/EditResearch";
 //Journal Import
 import Journals from "../journals/Journals";
 import Journal from "../journal/Journal";
-import AddJournal from "../add-journal/AddResearch";
-import EditJournal from "../edit-journal/EditResearch";
+import AddJournal from "../add-journal/AddJournal";
+import EditJournal from "../edit-journal/EditJournal";
 import AddJournalAuthor from "../add-credentials/AddJournalAuthor";
 
 //register and user
@@ -96,156 +96,186 @@ class Main extends Component {
           <div className={this.state.sideclass}>
             <Navbar />
             <div className="main" style={{ backgroundColor: "white" }}>
-              <Route exact path="/" component={Landing} />
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route exact path="/onlinecheck" component={OnlineCheck} />
-              <Route exact path="/login" component={Login} />
-              <Route exact path="/forgotpassword" component={Forgot} />
-              <Route exact path="/colleges" component={Colleges} />
-              <Route exact path="/colleges/:initials" component={College} />
-              <Route exact path="/researches" component={Researches} />
-              <Route exact path="/researches/:id" component={Research} />
-              <Route exact path="/journals" component={Journals} />
-              <Route exact path="/journals/:id" component={Journal} />
-              <Route exact path="/not-found" component={NotFound} />
-              <Route exact path="/localresult/research/abstract" component={LocalResult} />
-              <Route exact path="/localResultSideBySide/research/abstract" component={LocalResultSideBySide} />
-              <Switch>
-                <PrivateRoute exact path="/add-course" component={AddCourse} />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/edit-course"
-                  component={EditCourse}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute exact path="/viewusers" component={ViewUsers} />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/viewusers/:id"
-                  component={ViewUser}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/userlogs"
-                  component={UserLogs}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/myaccount/:id/:oldurl/:oldid"
-                  component={MyAccount}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute exact path="/register" component={Register} />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/edit-account"
-                  component={EditAccount}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute exact path="/add-author" component={AddAuthor} />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/add-journal-author"
-                  component={AddJournalAuthor}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/add-college"
-                  component={AddCollege}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/edit-college"
-                  component={EditCollege}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/add-research"
-                  component={AddResearch}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/add-journal"
-                  component={AddJournal}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/edit-research"
-                  component={EditResearch}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/edit-journal"
-                  component={EditJournal}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/activities"
-                  component={DetailedActivities}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/localresult/research"
-                  component={LocalResult}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/localresult/journal"
-                  component={JournalLocalResult}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/localResultSideBySide/research"
-                  component={LocalResultSideBySide}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute
-                  exact
-                  path="/localResultSideBySide/journal"
-                  component={JournalLocalResultSideBySide}
-                />
-              </Switch>
-              <Switch>
-                <PrivateRoute exact path="/grammar" component={Grammar} />
-              </Switch>
+              <div id="page-container">
+                <div id="content-wrap">
+                  <Route exact path="/" component={Landing} />
+                  <Route exact path="/dashboard" component={Dashboard} />
+                  <Route exact path="/onlinecheck" component={OnlineCheck} />
+                  <Route exact path="/login" component={Login} />
+                  <Route exact path="/forgotpassword" component={Forgot} />
+                  <Route exact path="/colleges" component={Colleges} />
+                  <Route exact path="/colleges/:initials" component={College} />
+                  <Route exact path="/researches" component={Researches} />
+                  <Route exact path="/researches/:id" component={Research} />
+                  <Route exact path="/journals" component={Journals} />
+                  <Route exact path="/journals/:id" component={Journal} />
+                  <Route exact path="/not-found" component={NotFound} />
+                  <Route
+                    exact
+                    path="/localresult/research/abstract"
+                    component={LocalResult}
+                  />
+                  <Route
+                    exact
+                    path="/localResultSideBySide/research/abstract"
+                    component={LocalResultSideBySide}
+                  />
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-course"
+                      component={AddCourse}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-course"
+                      component={EditCourse}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/viewusers"
+                      component={ViewUsers}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/viewusers/:id"
+                      component={ViewUser}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute exact path="/userlogs" component={UserLogs} />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/myaccount/:id/:oldurl/:oldid"
+                      component={MyAccount}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute exact path="/register" component={Register} />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-account"
+                      component={EditAccount}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-author"
+                      component={AddAuthor}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-journal-author"
+                      component={AddJournalAuthor}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-college"
+                      component={AddCollege}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-college"
+                      component={EditCollege}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-research"
+                      component={AddResearch}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/add-journal"
+                      component={AddJournal}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-research"
+                      component={EditResearch}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-journal"
+                      component={EditJournal}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/activities"
+                      component={DetailedActivities}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/localresult/research"
+                      component={LocalResult}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/localresult/journal"
+                      component={JournalLocalResult}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/localResultSideBySide/research"
+                      component={LocalResultSideBySide}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/localResultSideBySide/journal"
+                      component={JournalLocalResultSideBySide}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute exact path="/grammar" component={Grammar} />
+                  </Switch>
+                </div>
+              </div>
             </div>
-            <Footer />
+            <footer id="footer">
+              <p>
+                <img
+                  src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/logo.png"
+                  alt="website-logo"
+                  style={{ width: "25px" }}
+                />{" "}
+                Copyright © {new Date().getFullYear()}. BulSU Plagiarism and
+                Grammar Checker
+              </p>
+            </footer>
           </div>
         </div>
       </Router>

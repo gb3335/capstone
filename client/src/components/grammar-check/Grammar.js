@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import ContentEditable from 'react-contenteditable'
-import stripHtml from "string-strip-html";
+import { Tesseract } from "tesseract.ts";
 
 import {checkGrammar, clearError} from '../../actions/grammarActions';
 
@@ -23,7 +23,8 @@ class Grammar extends Component {
             display: "none",
             visible: false,
             broHeight: 0,
-            broWidth: 0
+            broWidth: 0,
+            ocrProgress: ""
         }
         this.menuRef = React.createRef();
         this.contentEditable = React.createRef();
@@ -124,10 +125,9 @@ class Grammar extends Component {
     }
 
     onGrammarCheck = () => {
-        let html = stripHtml(this.state.html);
-        html = html.replace(/\s+/g," ");
+        let html = this.contentEditable.current.innerText;
+        // html = html.replace(/\s+/g," ");
         this.setState({original:html})
-        console.log(html);
         const input = {
             input: html
         }
@@ -138,6 +138,25 @@ class Grammar extends Component {
     handleChange = evt => {
         this.setState({html: evt.target.value});
     };
+
+    onOCR = e => {
+        let files = e.target.files;
+    
+        Tesseract.recognize(files[0])
+          .progress(data => {
+            let dataProg = data.progress * 100;
+            dataProg = dataProg.toString();
+            dataProg = dataProg.substring(0, 5);
+    
+            this.setState({
+              ocrProgress: data.status + " at " + dataProg + "%"
+            });
+          })
+          .then(data => {
+            this.setState({ html: data.text, ocrProgress:"" });
+          })
+          .catch(console.error);
+      };
 
 
   render() {
@@ -156,11 +175,49 @@ class Grammar extends Component {
     
     const {loading} = this.props.grammar
     
-
+    const {ocrProgress} = this.state;
 
 
     return (
       <div className="container">
+        <div className="row">
+            <div className="col-md-8">
+            {ocrProgress !== ""? <div><button className="btn btn-light disabled mb-2" title="Use Image to Text" style={{ fontSize: "12px" }}><i className="fas fa-file-image mr-1" />
+                    Image to Text</button> <span className="pl-3" style={{ fontSize: "12px" }}>{ocrProgress}</span></div>
+                    
+            : <div><label
+                    to="#"
+                    htmlFor="ocr"
+                    className="btn btn-light"
+                    style={{ fontSize: "12px" }}
+                    title="Use Image to Text"
+                >
+                <i className="fas fa-file-image mr-1" />
+                    Image to Text
+            
+            </label>
+            <input
+                    type="file"
+                    style={{
+                    border: 0,
+                    opacity: 0,
+                    position: "absolute",
+                    pointerEvents: "none",
+                    width: "1px",
+                    height: "1px"
+                    }}
+                    onChange={this.onOCR}
+                    name="name"
+                    id="ocr"
+                    accept=".png, .jpg, .jpeg"
+                /> </div>}
+                
+                
+                {/* <div className="progress-bar progress-bar-striped progress-bar-animated" style={{width:"40%"}}></div> */}
+            </div>
+            
+          </div>
+
         <div className="sourceResearch">
         
             <ul className="menu" style={{display: this.state.display, top: this.state.top, left: this.state.left}}>
@@ -177,7 +234,7 @@ class Grammar extends Component {
                         spellCheck="false"
                         className="editableDiv"
                         innerRef={this.contentEditable}
-                        html={this.state.html} // innerHTML of the editable div
+                        html={this.state.html} // innerHTML of the editable div 
                         disabled={false}       // use true to disable editing
                         onChange={this.handleChange} // handle innerHTML change
                         tagName='p'

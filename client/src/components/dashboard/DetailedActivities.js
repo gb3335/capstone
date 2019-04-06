@@ -292,6 +292,14 @@ class DetailedActivities extends Component {
           </div>
         </Modal>
         {/* MAIN */}
+        <div className="row" style={{ margin: "5px" }}>
+          <div className="col-md-6">
+            <Link to="/dashboard" className="btn btn-light mb-3 float-left">
+              <i className="fas fa-angle-left" /> Back to Dashboard
+            </Link>
+          </div>
+          <div className="col-md-6" />
+        </div>
         <h1 className="display-4 text-center">Audit Trail</h1>
         <p className="lead text-center">Detailed View of Recent Activities</p>
         <div style={{ margin: "15px" }}>

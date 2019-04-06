@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const UserLogSchema = new Schema({
+  by: {
+    type: String,
+    required: true
+  },
   username: {
     type: String,
   },
@@ -39,6 +43,7 @@ const UserLogSchema = new Schema({
   college: {
     type: String,
   },
+
   avatar: {
     type: String,
     default: './default.jpg'
@@ -51,6 +56,7 @@ const UserLogSchema = new Schema({
     type: Date,
     default: Date.now
   },
+
 
 
 });

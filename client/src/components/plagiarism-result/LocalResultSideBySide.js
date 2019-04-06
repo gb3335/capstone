@@ -20,6 +20,9 @@ class LocalResultSideBySide extends Component {
      level: 0,
       words: []
     };
+
+    this.textItem = React.createRef();
+    this.patternItem = React.createRef();
   }
 
   componentWillUnmount(){
@@ -138,14 +141,13 @@ class LocalResultSideBySide extends Component {
     
     this.props.setPlagiarismGenerateReportLoading(true);
 
-    const node = ReactDOM.findDOMNode(this);
+    // const node = ReactDOM.findDOMNode(this);
 
       // Get child nodes
-      
-      let pattern = node.querySelector('#highlightPat');
-      let text = node.querySelector('#highlightText');
-      pattern = pattern.innerHTML.toString()
-      text = text.innerHTML.toString()
+      let pattern = this.patternItem.current.children[0].innerHTML.toString();
+      let text = this.textItem.current.children[0].innerHTML.toString();
+      // pattern = pattern.innerHTML.toString()
+      // text = text.innerHTML.toString()
 
       const name =
           this.props.auth.user.name.firstName +
@@ -189,7 +191,7 @@ class LocalResultSideBySide extends Component {
     }else{
       patternItem = (
         <div className="hightlightSpanDivSbS">
-          <div className="highlightComponentDiv">
+          <div className="highlightComponentDiv" ref={this.patternItem}>
             <Highlighter
               id="highlightPat"
               className="highlightSpan"
@@ -216,7 +218,7 @@ class LocalResultSideBySide extends Component {
     }else{
       textItem = (
         <div className="hightlightSpanDivSbS">
-          <div className="highlightComponentDiv">
+          <div className="highlightComponentDiv" ref={this.textItem}>
             <Highlighter
               id="highlightText"
               className="highlightSpan"
@@ -238,9 +240,37 @@ class LocalResultSideBySide extends Component {
         {Object.entries(this.props.localPlagiarism.output).length !== 0 && this.props.localPlagiarism.output.constructor !== Object ?
         <div className="container-fluid" style={{ padding: "1em" }}>
         <div className="row">
+                    <div className="col-md-12">
+                      
+                        <Link
+                            to={`/researches/${this.props.localPlagiarism.docuId}`}
+                            className="btn btn-light mb-1"
+                          >
+                            <i className="fas fa-angle-left" /> Back
+                        </Link>
+                        {generateReport ? <button
+                          className="btn btn-light mb-1 disabled float-right"
+                        >
+                          <i className="fas fa-flag text-danger" /> Generating Report...
+                        </button>: 
+                        textLoading || patternLoading ? <button
+                        className="btn btn-light mb-1 disabled float-right"
+                      >
+                        <i className="fas fa-flag text-danger" /> Generating Report
+                      </button>: 
+                        <button
+                          onClick={this.onClickGenerateReport}
+                          className="btn btn-light mb-1 float-right"
+                        >
+                          <i className="fas fa-flag text-danger" /> Generate Report
+                        </button>}
+                    
+                    </div>
+                  </div>
+        <div className="row">
             <div className="container-fluid">
                 <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <div className="sourceResearch">
                       <div className="sourceHeader">Side By Side Similarity Score</div>
                       <div className="sourceContent">
@@ -259,22 +289,6 @@ class LocalResultSideBySide extends Component {
                       </div>
                   </div>
                 </div>
-                <div className="col-md-4">
-                  <div className="row">
-                    <div className="col-md-4">
-                      
-                        <Link
-                            to={`/researches/${this.props.localPlagiarism.docuId}`}
-                            className="btn btn-light mb-1"
-                          >
-                            <i className="fas fa-angle-left" /> Back
-                        </Link>
-                      
-                    
-                    </div>
-                  </div>
-                  
-                </div>
                 </div>
                 <div className="row">
                   <div className="col-md-6">
@@ -287,19 +301,7 @@ class LocalResultSideBySide extends Component {
                   </div>
                   <div className="col-md-6">
                   <div className="sourceResearch">
-                        <div className="sourceHeader forRelative">{output[0].Document.Text.Name}</div>
-                        {generateReport ? <button
-                          className="btn btn-light mb-1 genButtonSideBySide disabled"
-                        >
-                          <i className="fas fa-flag text-danger" /> Generating Report...
-                        </button>: 
-                        <button
-                          onClick={this.onClickGenerateReport}
-                          className="btn btn-light mb-1 genButtonSideBySide"
-                        >
-                          <i className="fas fa-flag text-danger" /> Generate Report
-                        </button>}
-                        
+                        <div className="sourceHeader">{output[0].Document.Text.Name}</div>
                         <div className="sourceContent">
                           {textItem}
                         </div>

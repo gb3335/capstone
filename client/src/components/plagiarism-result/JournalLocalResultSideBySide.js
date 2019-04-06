@@ -9,7 +9,7 @@ import './LocalResultSideBySide.css'
 
 import ResultPie from './ResultPie';
 
-import { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading } from "../../actions/localPlagiarismActions";
+import { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading,clearLocalPlagiarismState } from "../../actions/localPlagiarismActions";
 
 import Highlighter from "react-highlight-words";
 
@@ -20,10 +20,18 @@ class LocalResultSideBySide extends Component {
       level: 0,
       words: []
     };
+    this.textItem = React.createRef();
+    this.patternItem = React.createRef();
+  }
+
+  componentWillUnmount(){
+    this.props.clearLocalPlagiarismState();
   }
 
   componentWillMount() {
-
+    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+      this.props.history.push("/dashboard");
+    }else{
     const { output, docuId } = this.props.localPlagiarism;
     const { journals } = this.props.journal
 
@@ -71,7 +79,7 @@ class LocalResultSideBySide extends Component {
 
     this.setState({ words })
 
-
+    }
   }
 
   // Complex example
@@ -127,18 +135,28 @@ class LocalResultSideBySide extends Component {
   };
 
   onClickGenerateReport = () => {
-    const { output } = this.props.localPlagiarism
+    const { output, textId } = this.props.localPlagiarism
 
     this.props.setPlagiarismGenerateReportLoading(true);
 
-    const node = ReactDOM.findDOMNode(this);
+    // const node = ReactDOM.findDOMNode(this);
 
     // Get child nodes
+    const { journals } = this.props.journal;
 
-    let pattern = node.querySelector('#highlightPat');
-    let text = node.querySelector('#highlightText');
-    pattern = pattern.innerHTML.toString()
-    text = text.innerHTML.toString()
+    let comparedJournal;
+    journals.map(journal => {
+      if (textId === journal._id) {
+        comparedJournal = journal;
+
+      }
+    })
+    console.log(comparedJournal)
+
+    let pattern = this.patternItem.current.children[0].innerHTML.toString();
+    let text = this.textItem.current.children[0].innerHTML.toString();
+    // pattern = pattern.innerHTML.toString()
+    // text = text.innerHTML.toString()
 
     const name =
       this.props.auth.user.name.firstName +
@@ -147,20 +165,24 @@ class LocalResultSideBySide extends Component {
       " " +
       this.props.auth.user.name.lastName;
 
+
     const input = {
       printedBy: name,
       pattern,
       text,
       typeOfReport: "Plagiarism Check Result",
       subTypeOfReport: "Side by Side Comparison",
-      output
+      output,
+      journal: this.props.journal.journal,
+      comparedJournal,
+      reportFor: "Journal"
     }
     this.props.createLocalSideBySidePlagiarismReport(input);
   }
 
   render() {
 
-    const { output, patternLoading, textLoading, pattern, text } = this.props.localPlagiarism;
+    const { output, patternLoading, textLoading, pattern, text, textId } = this.props.localPlagiarism;
 
     let patternItem;
     let textItem;
@@ -176,7 +198,7 @@ class LocalResultSideBySide extends Component {
     } else {
       patternItem = (
         <div className="hightlightSpanDiv">
-          <div className="highlightComponentDiv">
+          <div className="highlightComponentDiv" ref={this.patternItem}>
             <Highlighter
               id="highlightPat"
               className="highlightSpan"
@@ -203,7 +225,7 @@ class LocalResultSideBySide extends Component {
     } else {
       textItem = (
         <div className="hightlightSpanDiv">
-          <div className="highlightComponentDiv">
+          <div className="highlightComponentDiv" ref={this.textItem}>
             <Highlighter
               id="highlightText"
               className="highlightSpan"
@@ -222,11 +244,40 @@ class LocalResultSideBySide extends Component {
     const { generateReport } = this.props.localPlagiarism
     return (
       <div className="research">
+      {Object.entries(this.props.localPlagiarism.output).length !== 0 && this.props.localPlagiarism.output.constructor !== Object ?
         <div className="container-fluid" style={{ padding: "1em" }}>
+        <div className="row">
+                    <div className="col-md-12">
+                      
+                        <Link
+                            to={`/researches/${this.props.localPlagiarism.docuId}`}
+                            className="btn btn-light mb-1"
+                          >
+                            <i className="fas fa-angle-left" /> Back
+                        </Link>
+                        {generateReport ? <button
+                          className="btn btn-light mb-1 disabled float-right"
+                        >
+                          <i className="fas fa-flag text-danger" /> Generating Report...
+                        </button>: 
+                        textLoading || patternLoading ? <button
+                        className="btn btn-light mb-1 disabled float-right"
+                      >
+                        <i className="fas fa-flag text-danger" /> Generating Report
+                      </button>: 
+                        <button
+                          onClick={this.onClickGenerateReport}
+                          className="btn btn-light mb-1 float-right"
+                        >
+                          <i className="fas fa-flag text-danger" /> Generate Report
+                        </button>}
+                    
+                    </div>
+                  </div>
           <div className="row">
             <div className="container-fluid">
               <div className="row">
-                <div className="col-md-6">
+                <div className="col-md-12">
                   <div className="sourceResearch">
                     <div className="sourceHeader">Side By Side Similarity Score</div>
                     <div className="sourceContent">
@@ -245,22 +296,6 @@ class LocalResultSideBySide extends Component {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-4">
-                  <div className="row">
-                    <div className="col-md-4">
-
-                      <Link
-                        to={`/journals/${this.props.localPlagiarism.docuId}`}
-                        className="btn btn-light mb-1"
-                      >
-                        <i className="fas fa-angle-left" /> Back
-                          </Link>
-
-
-                    </div>
-                  </div>
-
-                </div>
               </div>
               <div className="row">
                 <div className="col-md-6">
@@ -274,17 +309,7 @@ class LocalResultSideBySide extends Component {
                 <div className="col-md-6">
                   <div className="sourceResearch">
                     <div className="sourceHeader forRelative">{output[0].Document.Text.Name}</div>
-                    {generateReport ? <button
-                      className="btn btn-light mb-1 genButtonSideBySide disabled"
-                    >
-                      <i className="fas fa-flag text-danger" /> Generating Report...
-                          </button> :
-                      <button
-                        onClick={this.onClickGenerateReport}
-                        className="btn btn-light mb-1 genButtonSideBySide"
-                      >
-                        <i className="fas fa-flag text-danger" /> Generate Report
-                          </button>}
+                    
 
                     <div className="sourceContent">
                       {textItem}
@@ -295,6 +320,7 @@ class LocalResultSideBySide extends Component {
             </div>
           </div>
         </div>
+        : ""}
       </div>
     )
   }
@@ -306,7 +332,8 @@ LocalResultSideBySide.propTypes = {
   getJournalSourcePattern: PropTypes.func.isRequired,
   createLocalSideBySidePlagiarismReport: PropTypes.func.isRequired,
   getJournalTargetText: PropTypes.func.isRequired,
-  setPlagiarismGenerateReportLoading: PropTypes.func.isRequired
+  setPlagiarismGenerateReportLoading: PropTypes.func.isRequired,
+  clearLocalPlagiarismState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -315,4 +342,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading })(LocalResultSideBySide)
+export default connect(mapStateToProps, { getJournalSourcePattern, getJournalTargetText, createLocalSideBySidePlagiarismReport, setPlagiarismGenerateReportLoading,clearLocalPlagiarismState })(LocalResultSideBySide)

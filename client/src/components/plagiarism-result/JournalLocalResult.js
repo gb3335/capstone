@@ -8,8 +8,8 @@ import Spinner from "../common/Spinner";
 import Highlighter from "react-highlight-words";
 
 import { Spring, Transition, animated } from 'react-spring/renderprops';
-
-import { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern } from "../../actions/localPlagiarismActions";
+// import { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern } from "../../actions/localPlagiarismActions";
+import { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern, clearLocalPlagiarismState } from "../../actions/localPlagiarismActions";
 
 import LocalHighlightedResult from './LocalHighlightedResult';
 import ResultStatistics from './ResultStatistics';
@@ -32,59 +32,75 @@ class LocalResult extends Component {
       showDetails: false,
       words: []
     };
+
+    this.forHide = React.createRef();
   }
 
   componentWillMount() {
-    this.props.setPlagiarismLocalHideDetails();
-    const { docuId } = this.props.localPlagiarism;
-    const { journals, journal } = this.props.journal;
+    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+      this.props.history.push("/dashboard");
+    } else {
+      this.props.setPlagiarismLocalHideDetails();
+      const { docuId } = this.props.localPlagiarism;
+      const { journals, journal } = this.props.journal;
 
-    // let newob = journals.find(obj => obj._id === docuId);
-    const input = {
-      docuId: docuId,
-      docuFile: journal.document,
-      abstract: this.props.localPlagiarism.abstract
+      // let newob = journals.find(obj => obj._id === docuId);
+      const input = {
+        docuId: docuId,
+        docuFile: journal.document,
+        abstract: this.props.localPlagiarism.abstract
+      }
+      this.props.getJournalPattern(input);
     }
-    this.props.getJournalPattern(input);
+
   }
 
   componentDidMount() {
-    const { output } = this.props.localPlagiarism;
-    let little = 0, moderate = 0, heavy = 0;
-    let score = []
-    output.forEach(out => {
-      if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
-        little++;
-      } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
-        moderate++;
-      }
-      else if (out.SimilarityScore > 70) {
-        heavy++;
-      }
-    })
-
-    score.push(little);
-    score.push(moderate);
-    score.push(heavy);
-
-    this.setState({ little, moderate, heavy, score })
-
-    const words = [];
-
-    output.forEach((out) => {
-      out.Index.forEach((index) => {
-        let obj = JSON.parse(index);
-        words.push(obj.Pattern)
+    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+      this.props.history.push("/dashboard");
+    } else {
+      const { output } = this.props.localPlagiarism;
+      let little = 0, moderate = 0, heavy = 0;
+      let score = []
+      output.forEach(out => {
+        if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
+          little++;
+        } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
+          moderate++;
+        }
+        else if (out.SimilarityScore > 70) {
+          heavy++;
+        }
       })
-    })
-    var uniqueItems = [...new Set(words)]
+
+      score.push(little);
+      score.push(moderate);
+      score.push(heavy);
+
+      this.setState({ little, moderate, heavy, score })
+
+      const words = [];
+
+      output.forEach((out) => {
+        out.Index.forEach((index) => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+      })
+      var uniqueItems = [...new Set(words)]
 
 
-    const word = uniqueItems.join(' ');
+      const word = uniqueItems.join(' ');
 
-    var splited = word.split(' ');
-    this.setState({ words: splited });
+      var splited = word.split(' ');
+      this.setState({ words: splited });
+    }
 
+
+  }
+
+  componentWillUnmount() {
+    this.props.clearLocalPlagiarismState();
   }
 
   onClickShowDetails = (id) => {
@@ -107,13 +123,13 @@ class LocalResult extends Component {
     const { output, abstract } = this.props.localPlagiarism;
     this.props.setPlagiarismGenerateReportLoading(true);
 
-    const node = ReactDOM.findDOMNode(this);
+    // const node = ReactDOM.findDOMNode(this);
 
-    // Get child nodes
-    let child = "";
-    child = node.querySelector('.forhidehighlightSpan');
+    // // Get child nodes
+    // let child = "";
+    // child = node.querySelector('.forhidehighlightSpan');
 
-    let word = child.innerHTML.toString()
+    let word = this.forHide.current.children[0].innerHTML.toString();
 
     const name =
       this.props.auth.user.name.firstName +
@@ -126,14 +142,14 @@ class LocalResult extends Component {
     if (abstract) {
       subTypeOfReport = "Checked in the System Database (ABSTRACT)"
     }
-    
     const input = {
       reportFor: "Journal",
       printedBy: name,
       word,
       typeOfReport: "Plagiarism Check Result",
       subTypeOfReport,
-      output
+      output,
+      journal: this.props.journal.journal
     }
     this.props.createLocalPlagiarismReport(input);
 
@@ -280,18 +296,17 @@ class LocalResult extends Component {
                         <span>Course: </span>
                         {journal.course}
                       </div>
-
                       <div>
                         <span>Pages: </span>
                         {journal.pages}
                       </div>
                       <div>
-                        <span>Year Published: </span>
-                        {journal.yearPublished}
+                        <span>Volume #: </span>
+                        {journal.volume}
                       </div>
                       <div>
-                        <span>Publisher: </span>
-                        {journal.publisher}
+                        <span>Year Published: </span>
+                        {journal.yearPublished}
                       </div>
                       <div>
                         <span>Last Update: </span>
@@ -337,8 +352,8 @@ class LocalResult extends Component {
     const { generateReport } = this.props.localPlagiarism;
 
     return (
-      <div className="research">
-        <div className="forHide">
+      <div className="journal">
+        <div className="forHide" ref={this.forHide}>
           {forhide};
         </div>
         <div className="container-fluid" style={{ padding: "1em" }}>
@@ -393,7 +408,8 @@ LocalResult.propTypes = {
   setPlagiarismGenerateReportLoading: PropTypes.func.isRequired,
   getJournalTextPattern: PropTypes.func.isRequired,
   getJournalPattern: PropTypes.func.isRequired,
-  createLocalPlagiarismReport: PropTypes.func.isRequired
+  createLocalPlagiarismReport: PropTypes.func.isRequired,
+  clearLocalPlagiarismState: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -402,4 +418,4 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern })(LocalResult);
+export default connect(mapStateToProps, { getJournalTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getJournalPattern, clearLocalPlagiarismState })(LocalResult);

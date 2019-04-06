@@ -7,13 +7,13 @@ import ReactQuill from "react-quill";
 
 import "react-quill/dist/quill.snow.css";
 
-import { createResearch } from "../../actions/journalActions";
+import { createJournal } from "../../actions/journalActions";
 import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 
-class EditResearch extends Component {
+class EditJournal extends Component {
   constructor(props) {
     super(props);
 
@@ -50,15 +50,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === this.props.journal.journal.college
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
 
@@ -97,7 +97,7 @@ class EditResearch extends Component {
     } else {
       mystring = this.state.description;
     }
-    const researchData = {
+    const journalData = {
       title: this.state.title,
       id: this.props.journal.journal._id,
       volume: this.state.volume,
@@ -114,7 +114,7 @@ class EditResearch extends Component {
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
-    this.props.createResearch(researchData, this.props.history);
+    this.props.createJournal(journalData, this.props.history);
   };
 
   onChange = e => {
@@ -135,15 +135,15 @@ class EditResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
   };
@@ -191,12 +191,12 @@ class EditResearch extends Component {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-              label: college.name.fullName,
-              value: college.name.fullName
-            })
+            label: college.name.fullName,
+            value: college.name.fullName
+          })
           : ""
       );
-    } catch (error) {}
+    } catch (error) { }
 
     return (
       <div className="create-research">
@@ -353,9 +353,9 @@ class EditResearch extends Component {
     );
   }
 }
-EditResearch.propTypes = {
+EditJournal.propTypes = {
   getColleges: PropTypes.func.isRequired,
-  createResearch: PropTypes.func.isRequired,
+  createJournal: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   journal: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
@@ -369,5 +369,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { createResearch, getColleges }
-)(withRouter(EditResearch));
+  { createJournal, getColleges }
+)(withRouter(EditJournal));

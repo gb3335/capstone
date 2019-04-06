@@ -4,12 +4,22 @@ const moment_timezone = require('moment-timezone');
 
 module.exports = (input) => {
 
-  const { typeOfReport, subTypeOfReport, output, word, reportFor } = input;
+  const { typeOfReport, subTypeOfReport, output, word, reportFor, journal } = input;
 
   let little = 0, moderate = 0, heavy = 0;
   let docuFound = "";
   let title = "";
   let words = "\"" + word + "\"";
+  let journalDetailsString;
+
+  journalDetailsString = reportFor === "Journal" ? `<div class="context" style="margin-top:-15px">
+  <h6>
+    <p>Volume #: ${journal.volume ? journal.volume : `<div>No volume defined.</div>`}</p>
+    <p>ISSN: ${journal.issn ? journal.issn : `<div>No ISSN defined.</div>`}</p>
+    <p>Year Published: ${journal.yearPublished ? journal.yearPublished : `<div>No year published defined.</div>`}</p>
+    </h6>
+</div>`: `<div> </div>`;
+
   const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
   let score = "[";
   output.forEach((out, index) => {
@@ -203,6 +213,7 @@ mark {
           <h5>University Research Office</h5>
         </div>
         <h6>${reportFor} Title: ${title}</h6>
+        ${journalDetailsString}
         <div class="courses" style="font-size: 7px">
             <div class="pie-container">
                 <canvas id="pie"></canvas>
@@ -212,7 +223,7 @@ mark {
                 <p>${word}</p>
             </div>
             <div class="courses" style="font-size: 7px">
-                <h4 style="font-size: 10px">Documents Found: ${little+moderate+heavy}</h4>
+                <h4 style="font-size: 10px">Documents Found: ${little + moderate + heavy}</h4>
                 <table>
                     <tr>
                     <th>#</th>

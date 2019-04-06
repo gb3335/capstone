@@ -26,7 +26,7 @@ class EditAccount extends Component {
       password: '',
       newpassword: '',
 
-      userName: this.props.auth.user.userName,
+      userName: this.props.auth.user.userName ? this.props.auth.user.userName : '',
       errors: {}
 
     };

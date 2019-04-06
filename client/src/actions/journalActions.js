@@ -48,7 +48,7 @@ export const getJournals = () => dispatch => {
     );
 };
 
-// Create Report for all Researches
+// Create Report for all Journals
 export const createReportForJournals = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
   axios
@@ -85,7 +85,7 @@ export const createReportForJournals = reportData => dispatch => {
     );
 };
 
-// Toggle Research Bin
+// Toggle Journal Bin
 export const toggleJournalBin = toggle => {
   if (toggle === 1) {
     return {
@@ -98,7 +98,7 @@ export const toggleJournalBin = toggle => {
   }
 };
 
-// Get research by id
+// Get Journal by id
 export const getJournalById = id => dispatch => {
   dispatch(clearErrors());
   dispatch(setJournalLoading());
@@ -118,13 +118,13 @@ export const getJournalById = id => dispatch => {
     );
 };
 
-// Create / Update Research
-export const createResearch = (researchData, history) => dispatch => {
+// Create / Update Journal
+export const createJournal = (journalData, history) => dispatch => {
   axios
-    .post("/api/journals", researchData)
+    .post("/api/journals", journalData)
     .then(res => {
-      if (researchData.id) {
-        history.push(`/journals/${researchData.id}`);
+      if (journalData.id) {
+        history.push(`/journals/${journalData.id}`);
       } else {
         history.push(`/journals`);
       }
@@ -150,7 +150,7 @@ export const addAuthor = (authorData, history) => dispatch => {
       })
     );
 };
-// Create Report for specific Research
+// Create Report for specific Journal
 export const createReportForJournal = reportData => dispatch => {
   dispatch(changeButtonStatus(true));
   axios
@@ -266,7 +266,7 @@ export const deleteDocument = (journalId, filename, name) => dispatch => {
   }
 };
 
-// Move to bin Research
+// Move to bin Journal
 export const deleteJournal = (data, history) => dispatch => {
   dispatch(setJournalLoading());
   axios
@@ -285,7 +285,7 @@ export const deleteJournal = (data, history) => dispatch => {
     );
 };
 
-// Restore Research
+// Restore Journal
 export const restoreJournal = (data, history) => dispatch => {
   dispatch(setJournalLoading());
   axios

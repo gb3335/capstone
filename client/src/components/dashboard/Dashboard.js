@@ -151,9 +151,11 @@ class Dashboard extends Component {
           };
 
           let div;
-
-          div = "col-md-12";
-          graphsDiv = "col-md-7 mb-4";
+          div = "col-md-6";
+          if (this.props.auth.isAuthenticated) {
+            div = "col-md-12";
+          }
+          graphsDiv = "col-md-9 mb-4";
           activityDiv = "col-md-5 mb-4";
 
           const labelsFiltered = researchData.labels.filter(function(el) {
@@ -212,8 +214,11 @@ class Dashboard extends Component {
 
           let div;
 
-          div = "col-md-12";
-          graphsDiv = "col-md-7 mb-4";
+          div = "col-md-6";
+          if (this.props.auth.isAuthenticated) {
+            div = "col-md-12";
+          }
+          graphsDiv = "col-md-9 mb-4";
           activityDiv = "col-md-5 mb-4";
 
           const labelsFiltered1 = journalData.labels.filter(function(el) {
@@ -466,7 +471,7 @@ class Dashboard extends Component {
             {/* Graphs */}
             <div>
               <div className="row">
-                <div className="col-md-9 mb-4">
+                <div className={graphsDiv}>
                   <div className="card shadow h-100 py-2">
                     <div className="row">
                       {researchDiv}

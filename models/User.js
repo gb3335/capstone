@@ -52,7 +52,8 @@ const UserSchema = new Schema({
   },
   invitedBy: {
     type: String,
-    default: "NONE"
+    default: "NONE",
+    required: true
   },
   date: {
     type: Date,

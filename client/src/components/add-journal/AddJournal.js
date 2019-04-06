@@ -7,13 +7,13 @@ import { Tesseract } from "tesseract.ts";
 
 import "react-quill/dist/quill.snow.css";
 
-import { createResearch } from "../../actions/journalActions";
+import { createJournal } from "../../actions/journalActions";
 import { getColleges } from "../../actions/collegeActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import SelectListGroup from "../common/SelectListGroup";
 
-class AddResearch extends Component {
+class AddJournal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -43,22 +43,22 @@ class AddResearch extends Component {
       this.props.college.colleges.map(college =>
         college.name.fullName === courseData.collegeName
           ? college.course.map(course =>
-              course.deleted === 0
-                ? course.status === 0
-                  ? this.state.courseOptions.push({
-                      label: course.name,
-                      value: course.name
-                    })
-                  : ""
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                  label: course.name,
+                  value: course.name
+                })
                 : ""
-            )
+              : ""
+          )
           : ""
       );
 
       this.setState({ course: courseData.courseName });
       this.setState({ college: courseData.collegeName });
       this.setState({ flagFromCollege: courseData.fromCollege });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -85,7 +85,7 @@ class AddResearch extends Component {
     } else {
       mystring = this.state.description;
     }
-    const researchData = {
+    const journalData = {
       title: this.state.title,
       volume: this.state.volume,
       publisher: this.state.publisher,
@@ -100,7 +100,7 @@ class AddResearch extends Component {
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
-    this.props.createResearch(researchData, this.props.history);
+    this.props.createJournal(journalData, this.props.history);
   };
 
   onChange = e => {
@@ -121,15 +121,15 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
   };
@@ -172,12 +172,12 @@ class AddResearch extends Component {
       college.colleges.map(college =>
         college.deleted === 0
           ? collegeOptions.push({
-              label: college.name.fullName,
-              value: college.name.fullName
-            })
+            label: college.name.fullName,
+            value: college.name.fullName
+          })
           : ""
       );
-    } catch (error) {}
+    } catch (error) { }
 
     return (
       <div className="create-research">
@@ -345,9 +345,9 @@ class AddResearch extends Component {
     );
   }
 }
-AddResearch.propTypes = {
+AddJournal.propTypes = {
   getColleges: PropTypes.func.isRequired,
-  createResearch: PropTypes.func.isRequired,
+  createJournal: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
@@ -359,5 +359,5 @@ const mapStateToProps = state => ({
 });
 export default connect(
   mapStateToProps,
-  { createResearch, getColleges }
-)(withRouter(AddResearch));
+  { createJournal, getColleges }
+)(withRouter(AddJournal));

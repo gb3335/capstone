@@ -181,11 +181,9 @@ router.post(
               token: "Bearer " + token
             });
           });
-        
+
         });
-
       }
-
     });
   }
 );
@@ -486,7 +484,7 @@ router.post(
           contact: req.body.contact,
           userType: req.body.usertype,
           college: req.body.college,
-          invitedBy: `${req.user.name.firstName} ${req.user.name.lastName}`
+          invitedBy: req.user._id
         });
 
         const mailOptions = {
@@ -541,6 +539,7 @@ router.post("/logout", (req, res) => {
     userType: req.body.userType,
     college: req.body.college,
     contact: req.body.contact,
+    by: req.body.by,
     type: "Logout"
   });
 
@@ -599,6 +598,7 @@ router.post("/login", (req, res) => {
                 };
 
                 const newUser = new UserLog({
+                  by: user._id,
                   name: {
                     firstName: user.name.firstName,
                     middleName: user.name.middleName,
@@ -666,6 +666,7 @@ router.post("/login", (req, res) => {
             };
 
             const newUser = new UserLog({
+              by: user._id,
               name: {
                 firstName: user.name.firstName,
                 middleName: user.name.middleName,

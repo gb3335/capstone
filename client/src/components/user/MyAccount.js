@@ -36,7 +36,7 @@ class MyAccount extends Component {
 
 
 
-    const { loading } = this.props.users;
+    const { loading, users } = this.props.users;
     const { user } = this.props.auth;
     const auth = this.props.auth;
     const isAuthenticated = this.props.auth.isAuthenticated;
@@ -66,8 +66,11 @@ class MyAccount extends Component {
     //   }
     //   colAction = <CollegeActions />;
     // }
+
+    let recentUrl = this.props.match.params.oldurl;
     let backurl;
-    if (this.props.match.params.oldurl) {
+
+    if (recentUrl) {
 
       if (this.props.match.params.oldid === "undefined" | this.props.match.params.oldid === null | this.props.match.params.oldid === "") {
         if (this.props.match.params.oldurl === "undefined" | this.props.match.params.oldurl === null | this.props.match.params.oldurl === "") {
@@ -82,10 +85,40 @@ class MyAccount extends Component {
       }
     }
 
+    String.prototype.getInitials = function (glue) {
+      if (typeof glue == "undefined") {
+        var glue = true;
+      }
+
+      var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
+
+      if (glue) {
+        return initials.join('.');
+      }
+
+      return initials;
+    };
+    let invitedBy;
+    users.map(user => {
+
+      if (user._id === this.props.auth.user.invitedBy) {
+        invitedBy =
+          user.name.firstName +
+          " " +
+          user.name.middleName.getInitials() +
+          ". " +
+          user.name.lastName;
+      }
+
+    });
+
+
     if (user === null || loading) {
       userContent = <Spinner />;
     } else {
       try {
+
+
         userContent = (
           <div>
             <div hidden>
@@ -102,7 +135,7 @@ class MyAccount extends Component {
             <ViewUserHeader user={user} />
             {useraction}
 
-            <ViewUserDetails user={user} />
+            <ViewUserDetails user={user} invitedBy={invitedBy} />
 
           </div>
         );

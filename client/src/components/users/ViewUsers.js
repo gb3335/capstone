@@ -73,7 +73,7 @@ class ViewUsers extends Component {
                 <Link to={/viewusers/ + user._id} ><div className="btn btn-outline-info btn-sm ">View Account</div> </Link>
 
               ),
-              blocked: user.isBlock === 0 ? <div className="badge badge-success btn-sm">Unblocked</div > : <div className="badge badge-danger btn-sm " >
+              blocked: user.isBlock === 0 ? <div className="badge badge-success btn-sm">Active</div > : <div className="badge badge-danger btn-sm " >
                 Blocked</div>,
               college: user.college ? user.college : <div>None</div>
 
@@ -284,7 +284,7 @@ class ViewUsers extends Component {
 ViewUsers.protoTypes = {
   getUsers: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
-  auth : PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({

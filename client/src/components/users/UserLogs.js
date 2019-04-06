@@ -7,7 +7,7 @@ import './ViewUsers.css';
 import moment from "moment";
 
 
-import { getUserLogs } from "../../actions/userActions";
+import { getUserLogs, createReportForUserlogs } from "../../actions/userActions";
 import UserLogsAction from "./UserLogsAction";
 
 class UserLogs extends Component {
@@ -28,7 +28,25 @@ class UserLogs extends Component {
 
   }
 
+  onGenerateReport = rows => {
 
+    const name =
+      this.props.auth.user.name.firstName +
+      " " +
+      this.props.auth.user.name.middleName +
+      " " +
+      this.props.auth.user.name.lastName;
+
+    const userlogsRepor = {
+      activities: rows,
+      typeOfReport: "User Logs Report",
+      printedBy: name
+    };
+
+    this.props.createReportForUserlogs(userlogsRepor);
+    // show generate alert
+    this.setState({ generateAlert: true });
+  };
 
 
   render() {
@@ -49,23 +67,38 @@ class UserLogs extends Component {
 
 
     const { userlogs, loading } = this.props.userlogs;
+    const { users } = this.props.users;
     let userlogData;
     let userlogItems;
+    let names = [];
 
     if (userlogs === null || loading) {
       userlogItems = <Spinner />
     } else {
-
+      userlogs.map((log, index) => {
+        users.map(user => {
+          if (log.by === user._id) {
+            names[index] =
+              user.name.firstName +
+              " " +
+              user.name.middleName.getInitials() +
+              ". " +
+              user.name.lastName;
+          }
+        });
+      });
 
       if (userlogs.length > 0) {
         if (this.props.auth.isAuthenticated) {
-          userlogData = userlogs.map(userlog => {
+          userlogData = userlogs.map((userlog, index) => {
             return {
               date:
                 moment(userlog.date).format(
                   "MMMM Do YYYY, h:mm A"
                 ),
-              user: userlog.firstName + " " + userlog.middleName.getInitials() + ". " + userlog.lastName,
+              user: names[index]
+              ,
+              //userlog.name.firstName + " " + userlog.name.middleName.getInitials() + ". " + userlog.name.lastName,
               type: userlog.type,
               userType: userlog.userType
             }
@@ -99,6 +132,15 @@ class UserLogs extends Component {
             grouping: true,
             selection: true
           }}
+          actions={[
+            {
+              icon: "print",
+              tooltip: "Generate Report",
+              onClick: (event, rows) => {
+                this.onGenerateReport(rows);
+              }
+            }
+          ]}
           data={userlogData}
           title="Userlogs"
         />
@@ -140,14 +182,17 @@ class UserLogs extends Component {
 }
 
 UserLogs.protoTypes = {
+  createReportForUserlogs: PropTypes.func.isRequired,
   getUserLogs: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
+  userlogs: PropTypes.object.isRequired,
+  users: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
 
   userlogs: state.userlogs,
   auth: state.auth,
+  users: state.users,
 })
 
-export default connect(mapStateToProps, { getUserLogs })(UserLogs);
+export default connect(mapStateToProps, { getUserLogs, createReportForUserlogs })(UserLogs);
