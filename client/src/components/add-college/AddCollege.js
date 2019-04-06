@@ -340,7 +340,7 @@ class CreateCollege extends Component {
               <p className="lead text-center">
                 Let's get some information for your college
               </p>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* College Name"

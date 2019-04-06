@@ -19,8 +19,8 @@ import { getUsers } from "../../actions/userActions";
 import { getJournals } from "../../actions/journalActions";
 
 class Dashboard extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       hide: false,
       sideclass: "navmain",

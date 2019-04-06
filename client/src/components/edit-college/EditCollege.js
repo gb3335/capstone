@@ -326,7 +326,7 @@ class CreateCollege extends Component {
               <br />
               <br />
               <h1 className="display-4 text-center">Edit College</h1>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* College Name"

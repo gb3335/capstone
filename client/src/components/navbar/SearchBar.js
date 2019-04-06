@@ -197,6 +197,7 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      typed: "",
       single: null
     };
   }
@@ -232,6 +233,7 @@ class SearchBar extends Component {
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     let suggestions = [];
+    let realSuggestions = [];
 
     try {
       if (
@@ -295,18 +297,23 @@ class SearchBar extends Component {
       })
     };
 
+    if (this.state.typed !== "") {
+      realSuggestions = suggestions;
+    }
+
     return (
       <NoSsr>
         <Select
           classes={classes}
           styles={selectStyles}
-          options={suggestions}
+          options={realSuggestions}
+          getOptionValue={option => option.value}
           components={components}
           value={this.state.single}
           onChange={this.handleChange("single")}
+          onInputChange={e => this.setState({ typed: e })}
           placeholder="Search"
           isClearable
-          isDisabled={suggestions === null ? true : false}
         />
       </NoSsr>
     );

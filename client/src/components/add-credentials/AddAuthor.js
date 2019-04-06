@@ -58,7 +58,7 @@ class AddAuthor extends Component {
                 Add Author to {this.props.research.research.title}
               </h1>
               <p className="lead text-center">Add author for this research</p>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* Name"
