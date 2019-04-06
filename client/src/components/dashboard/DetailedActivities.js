@@ -35,6 +35,19 @@ const customStyles = {
   }
 };
 
+const customStylesFilter = {
+  content: {
+    top: "50%",
+    left: "50%",
+    right: "auto",
+    bottom: "auto",
+    transform: "translate(-50%, -50%)",
+    borderRadius: "10px",
+    width: "340px",
+    height: "320px"
+  }
+};
+
 Modal.setAppElement("#root");
 
 const styles = {
@@ -50,10 +63,25 @@ class DetailedActivities extends Component {
       // for alerts
       generateAlert: false,
       dateAlert: false,
+      checkOneAlert: false,
+
+      // Modals
+      modalIsOpen: false,
+      filterModal: false,
+
       // Date
-      startDate: new Date("2019-01-01T12:00:00"),
-      endDate: new Date("2019-01-01T12:00:00"),
-      modalIsOpen: false
+      startDate: new Date("2019-01-01T00:00:00"),
+      endDate: new Date("2019-01-01T23:59:00"),
+      dates: [],
+      times: [],
+
+      // Filter
+      action: true,
+      username: true,
+      type: true,
+      date: true,
+      time: true,
+      selectedRows: []
     };
   }
 
@@ -65,27 +93,46 @@ class DetailedActivities extends Component {
 
   // Alerts
   onGenerateAlert = () => {
-    this.setState({ generateAlert: false });
+    this.setState({ generateAlert: false, filterModal: false });
   };
 
-  onGenerateReport = rows => {
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
+  // alert confirms
+  onCheckOneAlert = () => {
+    this.setState({ checkOneAlert: false });
+  };
 
-    const researchesReportData = {
-      activities: rows,
-      typeOfReport: "Activities Report",
-      printedBy: name
-    };
-    console.log(rows);
+  onGenerateReport = () => {
+    if (
+      this.state.action === false &&
+      this.state.username === false &&
+      this.state.type === false &&
+      this.state.date === false &&
+      this.state.time === false
+    ) {
+      this.setState({ checkOneAlert: true });
+    } else {
+      const name =
+        this.props.auth.user.name.firstName +
+        " " +
+        this.props.auth.user.name.middleName +
+        " " +
+        this.props.auth.user.name.lastName;
 
-    //this.props.createReportForActivity(researchesReportData);
-    // show generate alert
-    //this.setState({ generateAlert: true });
+      const researchesReportData = {
+        activities: this.state.selectedRows,
+        typeOfReport: "Activities Report",
+        printedBy: name,
+        action: this.state.action,
+        username: this.state.username,
+        type: this.state.type,
+        date: this.state.date,
+        time: this.state.time
+      };
+
+      this.props.createReportForActivity(researchesReportData);
+      //show generate alert
+      this.setState({ generateAlert: true });
+    }
   };
 
   // Date Picker
@@ -108,7 +155,37 @@ class DetailedActivities extends Component {
   };
 
   closeModal = () => {
-    this.setState({ modalIsOpen: false });
+    this.setState({ modalIsOpen: false, filterModal: false });
+  };
+
+  getDates = () => {
+    var dateArray = [];
+    var startDate = moment(this.state.startDate);
+    var stopDate = moment(this.state.endDate);
+    while (startDate <= stopDate) {
+      dateArray.push(moment(startDate).format("YYYY-MM-DD"));
+      startDate = moment(startDate).add(1, "days");
+    }
+
+    var timeArray = [];
+    var startTime = moment(this.state.startDate);
+    var stopTime = moment(this.state.endDate);
+    while (startTime <= stopTime) {
+      timeArray.push(moment(startTime).format("H:mm"));
+      startTime = moment(startTime).add(1, "minutes");
+    }
+
+    this.setState({ dates: dateArray, times: timeArray, modalIsOpen: false });
+  };
+
+  onChange = e => {
+    let bool;
+    if (e.target.value === "false") {
+      bool = true;
+    } else {
+      bool = false;
+    }
+    this.setState({ [e.target.name]: bool });
   };
 
   render() {
@@ -118,7 +195,7 @@ class DetailedActivities extends Component {
     const { startDate, endDate } = this.state;
     const actLoading = this.props.activity.loading;
     let activityItems;
-    let activityData;
+    let activityData = [];
     let names = [];
 
     if (activities === null || actLoading || activities === undefined) {
@@ -139,23 +216,44 @@ class DetailedActivities extends Component {
         });
       });
 
-      activityData = activities.map((activity, index) =>
-        true
-          ? {
+      if (this.state.dates.length >= 1) {
+        activities.map((activity, index) => {
+          if (
+            this.state.dates.includes(
+              moment(activity.date).format("YYYY-MM-DD")
+            ) &&
+            this.state.times.includes(moment(activity.date).format("H:mm"))
+          ) {
+            activityData.push({
               activity: activity.title,
               user: names[index],
               type: activity.type,
               date:
-                activity.date +
-                moment(activity.date).format("MMMM Do YYYY, h:mm A")
-            }
-          : {
-              activity: null,
-              user: null,
-              type: null,
-              date: null
-            }
-      );
+                activity.date + moment(activity.date).format("MMM. DD, YYYY"),
+              time: moment(activity.date).format("h:mm A")
+            });
+          }
+        });
+      } else {
+        activityData = activities.map((activity, index) =>
+          true
+            ? {
+                activity: activity.title,
+                user: names[index],
+                type: activity.type,
+                date:
+                  activity.date + moment(activity.date).format("MMM. DD, YYYY"),
+                time: moment(activity.date).format("h:mm A")
+              }
+            : {
+                activity: null,
+                user: null,
+                type: null,
+                date: null,
+                time: null
+              }
+        );
+      }
 
       activityItems = (
         <MaterialTable
@@ -168,17 +266,20 @@ class DetailedActivities extends Component {
               field: "date",
               render: rowData => {
                 const date = moment(rowData.date.substr(0, 24)).format(
-                  "MMMM Do YYYY, h:mm A"
+                  "MMM. DD, YYYY"
                 );
                 return date;
               }
+            },
+            {
+              title: "Time",
+              field: "time"
             }
           ]}
           options={{
             pageSizeOptions: [10, 20, 30, 50, 100],
             emptyRowsWhenPaging: false,
             pageSize: 30,
-            columnsButton: true,
             selection: true
           }}
           actions={[
@@ -186,7 +287,8 @@ class DetailedActivities extends Component {
               icon: "print",
               tooltip: "Generate Report",
               onClick: (event, rows) => {
-                this.onGenerateReport(rows);
+                this.setState({ selectedRows: rows, filterModal: true });
+                // this.onGenerateReport(rows);
               }
             }
           ]}
@@ -199,6 +301,16 @@ class DetailedActivities extends Component {
     return (
       <div>
         {/* ALERTS */}
+        {/* PLEASE CHECK ONE ALERT */}
+        <SweetAlert
+          show={this.state.checkOneAlert}
+          warning
+          title="Oops!"
+          onConfirm={this.onCheckOneAlert}
+        >
+          Please check at least one
+        </SweetAlert>
+
         {/* GENERATE REPORT ALERT */}
         <SweetAlert
           show={this.state.generateAlert}
@@ -208,7 +320,8 @@ class DetailedActivities extends Component {
         >
           Please wait for the report to generate
         </SweetAlert>
-        {/* DATE ALERT */}
+
+        {/* DATE MODAL */}
         <Modal
           isOpen={this.state.modalIsOpen}
           onAfterOpen={this.afterOpenModal}
@@ -278,19 +391,125 @@ class DetailedActivities extends Component {
             <br />
             <input
               type="button"
+              value="Cancel"
+              onClick={() => this.setState({ modalIsOpen: false })}
+              className="btn btn-danger"
+            />{" "}
+            <input
+              type="button"
               value="Okay"
-              onClick={() =>
-                console.log(
-                  "Start: ",
-                  this.state.startDate,
-                  " End: ",
-                  this.state.endDate
-                )
-              }
+              onClick={() => this.getDates()}
               className="btn btn-info"
             />
           </div>
         </Modal>
+
+        {/* FILTER MODAL */}
+
+        <Modal
+          isOpen={this.state.filterModal}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStylesFilter}
+          contentLabel="Example Modal"
+        >
+          <div className="row">
+            <div className="col-12">
+              <h2 ref={subtitle => (this.subtitle = subtitle)}>
+                Create Report
+              </h2>
+              <div>
+                <h4>Filter</h4>
+              </div>
+              <form>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="action"
+                    id="action"
+                    value={this.state.action}
+                    onChange={this.onChange}
+                    checked={this.state.action}
+                  />
+                  <label className="form-check-label" htmlFor="action">
+                    Action
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="username"
+                    id="username"
+                    value={this.state.username}
+                    onChange={this.onChange}
+                    checked={this.state.username}
+                  />
+                  <label className="form-check-label" htmlFor="username">
+                    Username
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="type"
+                    id="type"
+                    value={this.state.type}
+                    onChange={this.onChange}
+                    checked={this.state.type}
+                  />
+                  <label className="form-check-label" htmlFor="type">
+                    Type
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="date"
+                    id="date"
+                    value={this.state.date}
+                    onChange={this.onChange}
+                    checked={this.state.date}
+                  />
+                  <label className="form-check-label" htmlFor="date">
+                    Date
+                  </label>
+                </div>
+                <div className="form-check">
+                  <input
+                    className="form-check form-check-inline"
+                    type="checkbox"
+                    name="time"
+                    id="time"
+                    value={this.state.time}
+                    onChange={this.onChange}
+                    checked={this.state.time}
+                  />
+                  <label className="form-check-label" htmlFor="time">
+                    Time
+                  </label>
+                </div>
+                <br />
+                <input
+                  type="button"
+                  value="Cancel"
+                  onClick={this.closeModal}
+                  className="btn btn-danger"
+                />{" "}
+                <input
+                  type="button"
+                  value="Generate Report"
+                  onClick={this.onGenerateReport}
+                  className="btn btn-info"
+                />
+              </form>
+            </div>
+          </div>
+        </Modal>
+
         {/* MAIN */}
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-6">
@@ -310,7 +529,21 @@ class DetailedActivities extends Component {
               // onClick={() => this.setState({ dateAlert: true })}
               className="btn btn-light"
             >
-              <i className="fas fa-poll-h text-info mr-1" /> Pick Dates
+              <i className="fas fa-calendar-alt text-info mr-1" /> Pick Dates
+            </Link>
+            <Link
+              to="#"
+              onClick={() =>
+                this.setState({
+                  dates: [],
+                  startDate: new Date("2019-01-01T00:00:00"),
+                  endDate: new Date("2019-01-01T23:59:00")
+                })
+              }
+              // onClick={() => this.setState({ dateAlert: true })}
+              className="btn btn-light"
+            >
+              <i className="fas fa-redo-alt text-info mr-1" /> Reset Dates
             </Link>
           </div>
           {activityItems}

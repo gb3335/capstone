@@ -206,7 +206,7 @@ class CollegesActions extends Component {
           Please check at least one
         </SweetAlert>
 
-        {/* PLEASE CHECK ONE ALERT */}
+        {/* SUCCESS ALERT */}
         <SweetAlert
           show={this.state.generateAlert}
           success

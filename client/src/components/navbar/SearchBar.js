@@ -234,6 +234,7 @@ class SearchBar extends Component {
     const { isAuthenticated } = this.props.auth;
     let suggestions = [];
     let realSuggestions = [];
+    let loadFlag = true;
 
     try {
       if (
@@ -301,6 +302,10 @@ class SearchBar extends Component {
       realSuggestions = suggestions;
     }
 
+    if (suggestions.length >= 1) {
+      loadFlag = false;
+    }
+
     return (
       <NoSsr>
         <Select
@@ -314,6 +319,7 @@ class SearchBar extends Component {
           onInputChange={e => this.setState({ typed: e })}
           placeholder="Search"
           isClearable
+          isLoading={loadFlag}
         />
       </NoSsr>
     );
