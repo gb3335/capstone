@@ -63,7 +63,7 @@ class ViewUser extends Component {
     let invitedBy;
     users.map(user => {
 
-      if (user._id === this.props.auth.user.invitedBy) {
+      if (user._id === this.props.users.user.invitedBy) {
         invitedBy =
           user.name.firstName +
           " " +

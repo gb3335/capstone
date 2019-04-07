@@ -204,7 +204,7 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <h5>${typeOfReport}</h5>
+          <h5>${reportFor === "Journal" ? `Journal Plagiarism Check Result` : typeOfReport}</h5>
           <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
@@ -219,15 +219,13 @@ mark {
             <br />
             <br />
             <h4 style="font-size: 10px">Source Document for Plagiarism: ${
-              output[0].Document.Pattern.Name
-            }${journalDetailString}</h4>
+    output[0].Document.Pattern.Name
+    }${journalDetailString}</h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
             <br />
-            <h4 style="font-size: 10px">Target Document for Plagiarism: ${
-              output[0].Document.Text.Name
-            }${journalDetailString}</h4>
+            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}${journalComparedString}</h4>
             <div class="context2">
                 <p>${text}</p>
             </div>
@@ -240,8 +238,8 @@ mark {
         const canvas = document.getElementById('pie');
         const data = {
             labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(
-              2
-            )}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
+      2
+    )}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
             datasets : [
                 {
                     data : ${score},

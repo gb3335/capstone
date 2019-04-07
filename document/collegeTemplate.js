@@ -172,21 +172,21 @@ module.exports = ({
             `<td>${indCourse.name}</td>` +
             `<td>${indCourse.initials}</td>` +
             `${
-              courseStatus
-                ? indCourse.deleted === 1
-                  ? "<td>Deleted</td>"
-                  : indCourse.status === 0
+            courseStatus
+              ? indCourse.deleted === 1
+                ? "<td>Deleted</td>"
+                : indCourse.status === 0
                   ? "<td>Active</td>"
                   : "<td>Inactive</td>"
-                : ""
+              : ""
             }` +
             `${
-              courseResearch === true
-                ? `<td>${indCourse.researchTotal}</td>`
-                : ""
+            courseResearch === true
+              ? `<td>${indCourse.researchTotal}</td>`
+              : ""
             }` +
             `${
-              courseJournal === true ? `<td>${indCourse.journalTotal}</td>` : ""
+            courseJournal === true ? `<td>${indCourse.journalTotal}</td>` : ""
             }` +
             "</tr>"
         );
@@ -228,29 +228,29 @@ module.exports = ({
         coursesList = college.course.map((indCourse, index) =>
           indCourse.deleted === 0
             ? "<tr>" +
-              `<td>${++ind}</td>` +
-              `<td>${indCourse.name}</td>` +
-              `<td>${indCourse.initials}</td>` +
-              `${
-                courseStatus
-                  ? indCourse.deleted === 1
-                    ? "<td>Deleted</td>"
-                    : indCourse.status === 0
-                    ? "<td>Active</td>"
-                    : "<td>Inactive</td>"
-                  : ""
-              }` +
-              `${
-                courseResearch === true
-                  ? `<td>${indCourse.researchTotal}</td>`
-                  : ""
-              }` +
-              `${
-                courseJournal === true
-                  ? `<td>${indCourse.journalTotal}</td>`
-                  : ""
-              }` +
-              "</tr>"
+            `<td>${++ind}</td>` +
+            `<td>${indCourse.name}</td>` +
+            `<td>${indCourse.initials}</td>` +
+            `${
+            courseStatus
+              ? indCourse.deleted === 1
+                ? "<td>Deleted</td>"
+                : indCourse.status === 0
+                  ? "<td>Active</td>"
+                  : "<td>Inactive</td>"
+              : ""
+            }` +
+            `${
+            courseResearch === true
+              ? `<td>${indCourse.researchTotal}</td>`
+              : ""
+            }` +
+            `${
+            courseJournal === true
+              ? `<td>${indCourse.journalTotal}</td>`
+              : ""
+            }` +
+            "</tr>"
             : ""
         );
 
@@ -303,41 +303,41 @@ module.exports = ({
         researchesList = researches.map((research, index) =>
           research.college === college.name.fullName
             ? "<tr>" +
-              `<td>${++ind}</td>` +
-              `<td>${research.title}</td>` +
-              `${
-                researchCollege === true ? `<td>${research.college}</td>` : ""
-              }` +
-              `${
-                researchCourse === true ? `<td>${research.course}</td>` : ""
-              }` +
-              `${
-                researchStatus === true
-                  ? research.deleted === 1
-                    ? "<td>Deleted</td>"
-                    : research.hidden === 0
-                    ? "<td>Active</td>"
-                    : "<td>Hidden</td>"
-                  : ""
-              }` +
-              `${researchType === true ? `<td>${research.type}</td>` : ""}` +
-              `${
-                researchResId === true ? `<td>${research.researchID}</td>` : ""
-              }` +
-              `${researchPages === true ? `<td>${research.pages}</td>` : ""}` +
-              `${
-                researchAcademicYear === true
-                  ? `<td>${research.schoolYear}</td>`
-                  : ""
-              }` +
-              `${
-                researchLastUpdate === true
-                  ? `<td>${moment(research.lastUpdate).format(
-                      "MMMM Do YYYY, h:mm A"
-                    )}</td>`
-                  : ""
-              }` +
-              "</tr>"
+            `<td>${++ind}</td>` +
+            `<td>${research.title}</td>` +
+            `${
+            researchCollege === true ? `<td>${research.college}</td>` : ""
+            }` +
+            `${
+            researchCourse === true ? `<td>${research.course}</td>` : ""
+            }` +
+            `${
+            researchStatus === true
+              ? research.deleted === 1
+                ? "<td>Deleted</td>"
+                : research.hidden === 0
+                  ? "<td>Active</td>"
+                  : "<td>Hidden</td>"
+              : ""
+            }` +
+            `${researchType === true ? `<td>${research.type}</td>` : ""}` +
+            `${
+            researchResId === true ? `<td>${research.researchID}</td>` : ""
+            }` +
+            `${researchPages === true ? `<td>${research.pages}</td>` : ""}` +
+            `${
+            researchAcademicYear === true
+              ? `<td>${research.schoolYear}</td>`
+              : ""
+            }` +
+            `${
+            researchLastUpdate === true
+              ? `<td>${moment(research.lastUpdate).format(
+                "MMMM Do YYYY, h:mm A"
+              )}</td>`
+              : ""
+            }` +
+            "</tr>"
             : ""
         );
         researchesList.map(item => {
@@ -381,45 +381,45 @@ module.exports = ({
           research.college === college.name.fullName
             ? research.deleted === 0
               ? "<tr>" +
-                `<td>${++ind}</td>` +
-                `<td>${research.title}</td>` +
-                `${
-                  researchCollege === true ? `<td>${research.college}</td>` : ""
-                }` +
-                `${
-                  researchCourse === true ? `<td>${research.course}</td>` : ""
-                }` +
-                `${
-                  researchStatus === true
-                    ? research.deleted === 1
-                      ? "<td>Deleted</td>"
-                      : research.hidden === 0
-                      ? "<td>Active</td>"
-                      : "<td>Hidden</td>"
-                    : ""
-                }` +
-                `${researchType === true ? `<td>${research.type}</td>` : ""}` +
-                `${
-                  researchResId === true
-                    ? `<td>${research.researchID}</td>`
-                    : ""
-                }` +
-                `${
-                  researchPages === true ? `<td>${research.pages}</td>` : ""
-                }` +
-                `${
-                  researchAcademicYear === true
-                    ? `<td>${research.schoolYear}</td>`
-                    : ""
-                }` +
-                `${
-                  researchLastUpdate === true
-                    ? `<td>${moment(research.lastUpdate).format(
-                        "MMMM Do YYYY, h:mm A"
-                      )}</td>`
-                    : ""
-                }` +
-                "</tr>"
+              `<td>${++ind}</td>` +
+              `<td>${research.title}</td>` +
+              `${
+              researchCollege === true ? `<td>${research.college}</td>` : ""
+              }` +
+              `${
+              researchCourse === true ? `<td>${research.course}</td>` : ""
+              }` +
+              `${
+              researchStatus === true
+                ? research.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : research.hidden === 0
+                    ? "<td>Active</td>"
+                    : "<td>Hidden</td>"
+                : ""
+              }` +
+              `${researchType === true ? `<td>${research.type}</td>` : ""}` +
+              `${
+              researchResId === true
+                ? `<td>${research.researchID}</td>`
+                : ""
+              }` +
+              `${
+              researchPages === true ? `<td>${research.pages}</td>` : ""
+              }` +
+              `${
+              researchAcademicYear === true
+                ? `<td>${research.schoolYear}</td>`
+                : ""
+              }` +
+              `${
+              researchLastUpdate === true
+                ? `<td>${moment(research.lastUpdate).format(
+                  "MMMM Do YYYY, h:mm A"
+                )}</td>`
+                : ""
+              }` +
+              "</tr>"
               : ""
             : ""
         );
@@ -523,8 +523,8 @@ module.exports = ({
           />
           <img
             src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
-              college.logo
-            }"
+    college.logo
+    }"
             alt="college-logo"
             class="rep-logo"
           />
@@ -535,8 +535,8 @@ module.exports = ({
         />
         <img
           src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/collegeLogos/${
-            college.logo
-          }"
+    college.logo
+    }"
           alt="college-logo"
           class="hidden-logo"
         />

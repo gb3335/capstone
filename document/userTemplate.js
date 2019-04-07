@@ -2,97 +2,71 @@ const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
-  college,
-  course,
-  issn,
-  pages,
-  yearPublished,
-  lastUpdate,
-  type,
-  description,
-  authors,
-  journal,
+
+  user,
   typeOfReport,
-  volume
 }) => {
+  let nameString = "";
+  let userNameString = "";
+  let emailString = "";
   let collegeString = "";
-  let courseString = "";
-  let issnString = "";
-  let pagesString = "";
-  let yearPublishedString = "";
+  let statusString = "";
   let lastUpdateString = "";
-  let typeString = "";
-  let abstractString = "";
-  let authorsList = "";
-  let authorsListNoComma = "";
-  let authorsHeader = "";
-  let authorsTitle = "";
-  let volumeString = "";
+  let dateCreatedString = "";
 
-  const currentDate = moment_timezone()
-    .tz("Asia/Manila")
-    .format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  // name: this.state.name,
+  // userName: this.state.userName,
+  // email: this.state.email,
+  // type: this.state.type,
+  // type: this.state.type,
+  // college: this.state.college,
+  // status: this.state.status,
+  // dateCreated: this.state.dateCreated,
+  // blockedUsers: this.state.blockedUsers,
+  // users: this.props.users.users,
+  String.prototype.getInitials = function (glue) {
+    if (typeof glue == "undefined") {
+      var glue = true;
+    }
 
-  if (college) {
-    collegeString = `<li>College: ${journal.college}</li>`;
-  }
-  if (course) {
-    courseString = `<li>Course: ${journal.course}</li>`;
-  }
-  if (issn) {
-    issnString = `<li>ISSN: ${journal.issn}</li>`;
-  }
-  if (volume) {
-    volumeString = `<li>Volume: ${journal.volume}</li>`;
-  }
-  if (pages) {
-    pagesString = `<li>Pages: ${journal.pages}</li>`;
-  }
-  if (yearPublished) {
-    yearPublishedString = `<li>Academic Year: ${journal.schoolYear}</li>`;
-  }
-  if (lastUpdate) {
-    lastUpdateString = `<li>Last Update: ${moment(journal.lastUpdate).format(
+    var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
+
+    if (glue) {
+      return initials.join('.');
+    }
+
+    return initials;
+  };
+
+
+  if (user) {
+
+
+    nameString = `<li>Name: ${user.name.lastName}, ${user.name.firstName} ${user.name.middleName.getInitials()}.</li>`;
+
+
+    userNameString = `<li>Username: ${user.userName ? user.userName : `No username yet.`}</li>`;
+
+
+    emailString = `<li>Email: ${user.email}</li>`;
+
+
+    collegeString = `<li>College: ${user.colleg ? user.college : "None"}</li>`;
+
+
+    statusString = `<li>User Status: ${user.isBlock === 0 ? `Active` : `Deactivated`}</li>`;
+
+
+    dateCreatedString = `<li>Date Created: ${moment(user.date).format(
       "MMMM Do YYYY, h:mm A"
     )}</li>`;
   }
-  if (type) {
-    typeString = `<li>Type: ${journal.type}</li>`;
-  }
-  if (description) {
-    abstractString = `<div class="details" style="font-size: 7px">
-                        <h4 style="font-size: 7px">College Abstract:</h4>
-                        <div>
-                          <p>${journal.description}</p>
-                        </div>
-                      </div>`;
-  }
 
-  if (authors) {
-    authorsList = journal.author.map(
-      (auth, index) =>
-        `<tr><td>${++index}</td><td>${
-          auth.role === "Author One"
-            ? `${auth.name} (Author One)`
-            : `${auth.name}`
-        }</td></tr>`
-    );
-    authorsHeader = "<tr><th>NO</th><th>NAME</th></tr>";
+  let path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
 
-    authorsTitle = `<h4 style="font-size: 7px">Authors:</h4>`;
 
-    authorsList.map(item => {
-      authorsListNoComma = authorsListNoComma + item;
-    });
 
-    authorsListNoComma =
-      authorsListNoComma +
-      `<tr class="blank_row"><td colspan="2" style="text-align:center;">- Nothing Follows -</td></tr>`;
-  } else {
-    authorsList = "";
-    authorsHeader = "";
-    authorsTitle = "";
-  }
 
   return `<!DOCTYPE html>
   <html>
@@ -106,6 +80,7 @@ module.exports = ({
           display: grid;
           grid-template-areas:
             "header header header header header header"
+            "header "
             "menu main main main right right"
             "menu footer footer footer footer footer";
           grid-gap: 10px;
@@ -126,6 +101,19 @@ module.exports = ({
         .cict-logo {
           width: 5rem;
           height: 5rem;
+          float: right;
+          visibility:hidden;
+        }
+
+        .user-logo {
+          width: 8rem;
+          height: 8rem;
+          float: left;
+        }
+  
+        .users-logo {
+          width: 8rem;
+          height: 8rem;
           float: right;
           visibility:hidden;
         }
@@ -168,7 +156,7 @@ module.exports = ({
             alt="bulsu-logo"
             class="cict-logo"
           />
-         
+          <h4>
           <br />
           Republic of the Philippines
           <br />
@@ -178,43 +166,45 @@ module.exports = ({
           <br />
           <br />
           <br />
-          <h4>${typeOfReport}</h4>
-          <h4>University Research Office</h4>
+          </h4>
+          <h2>${typeOfReport}</h2>
+          <h2>University Research Office</h2>
+        
         </div>
         <div style="font-size: 7px;">
             <p style="float: left;">
-              <b>Research Title: </b>${journal.title}
+             
               <br />
-              <b>Date Printed: </b>${currentDate}
+              <h4><b>Date Printed: </b>${currentDate}</h4>
             </p>
           </div>
-          <br />
-          <br />
+         
           <hr />
+         <div class"logo" style="margin-top:30px;margin-left:275px"> 
+          <img src="${path}"
+          alt="user-logo"
+          class="user-logo"
+            />
+          
+          </div>
         <div class="details" style="font-size: 7px">
-          <h4 style="font-size: 7px">College Details:</h4>
+         
+          <h4 style="font-size: 13px; margin-top:180px">User Details:</h4>
           <div>
-            <ul style="list-style-type:circle; text-align: left">
+            <ul style="list-style-type:circle; text-align: left;font-size: 11px">
+              ${nameString}
+              ${userNameString}
+              ${emailString}
               ${collegeString}
-              ${courseString}
-              ${issnString}
-              ${volumeString}
-              ${pagesString}
-              ${yearPublishedString}
+              ${statusString}
               ${lastUpdateString}
-              ${typeString}
+              ${dateCreatedString}
             </ul>
           </div>
         </div>
-         ${abstractString}
+         
         <br/>
-        <div class="authors" style="font-size: 7px">
-            ${authorsTitle}
-            <table>
-              ${authorsHeader}
-              ${authorsListNoComma}
-            </table>
-        </div>
+       
       </div>
     </body>
   </html>

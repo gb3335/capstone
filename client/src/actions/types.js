@@ -89,6 +89,9 @@ export const GET_USERS = "GET_USERS";
 export const GET_USER = "GET_USER";
 export const USER_LOADING = "USER_LOADING";
 export const GET_USERLOGS = "GET_USERLOGS";
+export const TOGGLE_USERS_BLOCK = "TOGGLE_USERS_BLOCK";
+export const TOGGLE_USERS_LIST = "TOGGLE_USERS_LIST";
+export const CHANGE_USER_BUTTON_STATUS = "CHANGE_USER_BUTTON_STATUS";
 
 
 // Grammar 

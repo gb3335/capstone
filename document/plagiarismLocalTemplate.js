@@ -12,12 +12,12 @@ module.exports = (input) => {
   let words = "\"" + word + "\"";
   let journalDetailsString;
 
-  journalDetailsString = reportFor === "Journal" ? `<div class="context" style="margin-top:-15px">
-  <h6>
+  journalDetailsString = reportFor === "Journal" ? `<div class="context" style="margin-top:-15px; font-size:10px" >
+  
     <p>Volume #: ${journal.volume ? journal.volume : `<div>No volume defined.</div>`}</p>
     <p>ISSN: ${journal.issn ? journal.issn : `<div>No ISSN defined.</div>`}</p>
     <p>Year Published: ${journal.yearPublished ? journal.yearPublished : `<div>No year published defined.</div>`}</p>
-    </h6>
+ 
 </div>`: `<div> </div>`;
 
   const currentDate = moment_timezone().tz('Asia/Manila').format("MMMM Do YYYY, h:mm A");
@@ -208,7 +208,7 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <h5>${typeOfReport}</h5>
+          <h5>${reportFor === "Journal" ? `Journal Plagiarism Check Result` : typeOfReport}</h5>
           <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>

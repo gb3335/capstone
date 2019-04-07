@@ -12,15 +12,16 @@ import SelectListGroup from "../common/SelectListGroup";
 
 class Register extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      firstName: "",
-      email: "",
-      lastName: "",
-      middleName: "",
-      contact: "",
-      userType: "LIBRARIAN",
-      college: "",
+
+      firstName: '',
+      email: '',
+      lastName: '',
+      middleName: '',
+      contact: '',
+      userType: 'ADMINISTRATOR',
+
       errors: {}
     };
   }
@@ -42,8 +43,9 @@ class Register extends Component {
       lastname: this.state.lastName,
       middlename: this.state.middleName,
       contact: this.state.contact,
-      college: this.state.college,
-      usertype: this.state.userType
+
+      usertype: this.state.userType,
+      createdBy: this.props.auth.user.id
     };
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
@@ -62,14 +64,6 @@ class Register extends Component {
       { label: "ADMINISTRATOR", value: "ADMINISTRATOR" },
       { label: "LIBRARIAN", value: "LIBRARIAN" }
     ];
-    try {
-      college.colleges.map(college =>
-        collegeOptions.push({
-          label: college.name.fullName,
-          value: college.name.fullName
-        })
-      );
-    } catch (error) {}
 
     if (this.state.userType === "ADMINISTRATOR") {
       return (
@@ -181,19 +175,6 @@ class Register extends Component {
                     options={typeOptions}
                     info="Select your account type."
                   />
-
-                  <div className="form-group">
-                    <SelectListGroup
-                      placeholder="College"
-                      name="college"
-                      value={this.state.college}
-                      onChange={this.onChange}
-                      options={collegeOptions}
-                      error={errors.college}
-                      info="Select your college"
-                    />
-                  </div>
-
                   <TextFieldGroup
                     placeholder="* First Name"
                     name="firstName"
@@ -245,11 +226,14 @@ class Register extends Component {
 }
 Register.propTypes = {
   getColleges: PropTypes.func.isRequired,
-  college: PropTypes.object.isRequired
+  college: PropTypes.object.isRequired,
+  auth: PropTypes.object.isRequired,
+
 };
 const mapStateToProps = state => ({
   college: state.college,
-  errors: state.errors
+  errors: state.errors,
+  auth: state.auth,
 });
 export default connect(
   mapStateToProps,
