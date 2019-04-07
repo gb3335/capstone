@@ -270,8 +270,8 @@ class LocalCheck extends Component {
                                     onChange={this.onChange}
                                     rows="10"
                                     value={this.state.q}
-                                    maxLength="2500"
-                                    minLength="100"
+                                    maxLength="10000"
+                                    minLength="200"
                                     error={errors.q}
                                     extraClass="onlineTextarea"
                                 />

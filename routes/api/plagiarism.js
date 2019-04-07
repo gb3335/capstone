@@ -266,12 +266,13 @@ router.post("/online/result", (req, res) => {
 // @desc    search online route
 // @access  public
 router.post("/online", (req, res) => {
-  const { errors, isValid } = validateOnlineInput(req.body);
+  const { errors, isValid } = validateOnlineInput(req.body.q);
   //Check Validation
   if (!isValid) {
+    console.log(123)
     return res.status(400).json(errors);
   }
-
+  
   let q = req.body.q;
 
   q = q.replace(/\s+/g," ");
@@ -307,6 +308,9 @@ router.post("/online", (req, res) => {
     };
     runSample(options).catch((err) => {
       errors.q = err.errors[0].message;
+      if(err.response.status==500 && errors.q === "Internal Error"){
+        errors.q ="Please input 100 - 2500 characters only.";
+      }
       if(err.response.status==403){
         errors.q = "Daily Request Limit Exceeds! Please try again tomorrow."
       }
@@ -589,7 +593,7 @@ router.post("/local/initialize/pattern", (req, res) => {
 
   if(raw){
 
-    const { errors, isValid } = validateOnlineInput(req.body);
+    const { errors, isValid } = validateLocalInput(req.body.q);
     //Check Validation
     if (!isValid) {
       return res.status(400).json(errors);
@@ -741,11 +745,6 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
 // @desc    search local route
 // @access  public
 router.post("/local/result", (req, res) => {
-  // const { errors, isValid } = validateLocalInput(req.body);
-  // //Check Validation
-  // if (!isValid) {
-  //   return res.status(400).json(errors);
-  // }
 
 
   let textId = req.body.textId;

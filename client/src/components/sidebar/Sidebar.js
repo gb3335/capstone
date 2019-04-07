@@ -201,7 +201,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -210,7 +210,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>
@@ -249,7 +249,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -258,7 +258,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>
@@ -522,7 +522,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -531,7 +531,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>
@@ -580,7 +580,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -589,7 +589,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>
