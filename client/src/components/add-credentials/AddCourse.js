@@ -60,7 +60,7 @@ class AddCourse extends Component {
                 Add Course to {this.props.college.college.name.initials}
               </h1>
               <p className="lead text-center">Add course to this college</p>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* Course Name"

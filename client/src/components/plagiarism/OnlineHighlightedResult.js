@@ -24,7 +24,6 @@ import "./OnlineHighlightedResult.css"
 
   componentDidMount(){
     
-    
     this.setState({words: this.props.words, pattern: this.props.pattern})
   }
 
@@ -92,7 +91,7 @@ import "./OnlineHighlightedResult.css"
               highlightClassName="hightlight"
               searchWords={this.state.words}
               autoEscape={true}
-              textToHighlight={this.props.onlinePlagiarism.original}
+              textToHighlight={this.state.pattern}
               findChunks={this.findChunksAtBeginningOfWords}
             />
           </div>

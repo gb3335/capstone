@@ -54,12 +54,18 @@ class ResearchImageActions extends Component {
   };
 
   render() {
+    let addImage = "";
+
+    addImage = (
+      <label to="#" htmlFor="imageUpload" className="btn btn-light">
+        <i className="fas fa-plus text-info mr-1" />
+        Add Image
+      </label>
+    );
+
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
-        <label to="#" htmlFor="imageUpload" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" />
-          Add Image
-        </label>
+        {addImage}
 
         <ImageFieldGroup
           placeholder="* Images"

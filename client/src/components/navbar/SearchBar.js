@@ -197,6 +197,7 @@ class SearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      typed: "",
       single: null
     };
   }
@@ -232,9 +233,15 @@ class SearchBar extends Component {
     const { classes, theme } = this.props;
     const { isAuthenticated } = this.props.auth;
     let suggestions = [];
+    let realSuggestions = [];
+    let loadFlag = true;
 
     try {
-      if (this.props.colleges !== null) {
+      if (
+        this.props.colleges !== null &&
+        this.props.researches !== null &&
+        this.props.journals !== null
+      ) {
         // Add Colleges
         this.props.colleges.map(college => {
           suggestions.push({
@@ -291,18 +298,28 @@ class SearchBar extends Component {
       })
     };
 
+    if (this.state.typed !== "") {
+      realSuggestions = suggestions;
+    }
+
+    if (suggestions.length >= 1) {
+      loadFlag = false;
+    }
+
     return (
       <NoSsr>
         <Select
           classes={classes}
           styles={selectStyles}
-          options={suggestions}
+          options={realSuggestions}
+          getOptionValue={option => option.value}
           components={components}
           value={this.state.single}
           onChange={this.handleChange("single")}
+          onInputChange={e => this.setState({ typed: e })}
           placeholder="Search"
           isClearable
-          isDisabled={suggestions === null ? true : false}
+          isLoading={loadFlag}
         />
       </NoSsr>
     );

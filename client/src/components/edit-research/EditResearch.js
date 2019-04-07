@@ -169,14 +169,27 @@ class EditResearch extends Component {
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
-      college.colleges.map(college =>
-        college.deleted === 0
-          ? collegeOptions.push({
-              label: college.name.fullName,
-              value: college.name.fullName
-            })
-          : ""
-      );
+      if (this.props.auth.user.userType === "LIBRARIAN") {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? college.name.fullName === this.props.auth.user.college
+              ? collegeOptions.push({
+                  label: college.name.fullName,
+                  value: college.name.fullName
+                })
+              : ""
+            : ""
+        );
+      } else {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? collegeOptions.push({
+                label: college.name.fullName,
+                value: college.name.fullName
+              })
+            : ""
+        );
+      }
     } catch (error) {}
 
     return (
@@ -194,7 +207,7 @@ class EditResearch extends Component {
               <p className="lead text-center">
                 Let's get some information for your research
               </p>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <div className="form-group" style={{ textAlign: "center" }}>
                   <div className="form-check form-check-inline">

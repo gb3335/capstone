@@ -178,17 +178,19 @@ class CollegesActions extends Component {
     }
 
     if (this.props.auth.isAuthenticated) {
-      addAction = (
-        <Link to="/add-college" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" /> Add College
-        </Link>
-      );
-      reportAction = (
-        <Link to="#" onClick={this.openModal} className="btn btn-light">
-          <i className="fas fa-poll-h text-info mr-1" /> Create Report
-        </Link>
-      );
-      binActionForAuth = binAction;
+      if (this.props.auth.user.userType === "ADMINISTRATOR") {
+        addAction = (
+          <Link to="/add-college" className="btn btn-light">
+            <i className="fas fa-plus text-info mr-1" /> Add College
+          </Link>
+        );
+        reportAction = (
+          <Link to="#" onClick={this.openModal} className="btn btn-light">
+            <i className="fas fa-poll-h text-info mr-1" /> Create Report
+          </Link>
+        );
+        binActionForAuth = binAction;
+      }
     }
 
     return (
@@ -204,7 +206,7 @@ class CollegesActions extends Component {
           Please check at least one
         </SweetAlert>
 
-        {/* PLEASE CHECK ONE ALERT */}
+        {/* SUCCESS ALERT */}
         <SweetAlert
           show={this.state.generateAlert}
           success

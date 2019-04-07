@@ -85,7 +85,11 @@ class Courses extends Component {
       // Sorted Course
       let sortedCourse = sort(this.props.course).asc(u => u.name);
 
-      if (this.props.auth.isAuthenticated === true) {
+      if (
+        this.props.auth.isAuthenticated === true &&
+        (this.props.auth.user.userType === "ADMINISTRATOR" ||
+          this.props.auth.user.id === this.props.college.college.librarianId)
+      ) {
         columnButton = <th />;
         if (this.state.coursebin) {
           if (college.deleted === 0) {
@@ -105,8 +109,8 @@ class Courses extends Component {
                       <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                   <td>
                     <div className="btn-group">
                       <Link
@@ -179,11 +183,11 @@ class Courses extends Component {
                     {cou.status === 0 ? (
                       <span className="badge badge-success">Active</span>
                     ) : (
-                      <span className="badge badge-danger">Not Active</span>
+                      <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                 </tr>
               ) : (
                 ""
@@ -209,8 +213,8 @@ class Courses extends Component {
                       <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                   <td>
                     <div className="btn-group">
                       <Link
@@ -326,11 +330,11 @@ class Courses extends Component {
                     {cou.status === 0 ? (
                       <span className="badge badge-success">Active</span>
                     ) : (
-                      <span className="badge badge-danger">Not Active</span>
+                      <span className="badge badge-danger">Inactive</span>
                     )}
                   </td>
-                  <td>{cou.researchTotal}</td>
-                  <td>{cou.journalTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+                  <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
                 </tr>
               ) : (
                 ""
@@ -350,11 +354,11 @@ class Courses extends Component {
                 {cou.status === 0 ? (
                   <span className="badge badge-success">Active</span>
                 ) : (
-                  <span className="badge badge-danger">Not Active</span>
+                  <span className="badge badge-danger">Inactive</span>
                 )}
               </td>
-              <td>{cou.researchTotal}</td>
-              <td>{cou.journalTotal}</td>
+              <td style={{ paddingLeft: "3%" }}>{cou.researchTotal}</td>
+              <td style={{ paddingLeft: "3%" }}>{cou.journalTotal}</td>
             </tr>
           ) : (
             ""

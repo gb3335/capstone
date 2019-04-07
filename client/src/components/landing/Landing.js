@@ -62,7 +62,7 @@ class Landing extends Component {
 
     try {
       this.props.getCollegeByInitials(this.props.colleges[0].name.initials);
-    } catch (error) { }
+    } catch (error) {}
 
     if (this.props.auth.isAuthenticated) {
       name = ", " + this.props.auth.user.name.firstName;
@@ -73,12 +73,13 @@ class Landing extends Component {
       textAlign: "center"
     };
     const insideStyles = {
-      backgroundColor: "rgba(0, 0, 0, 0.7)",
+      backgroundColor: "rgba(0, 0, 0, 0.3)",
       color: "white",
       fontFamily: "ABeeZee",
       fontSize: "30px",
-      padding: 20,
+      //padding: 20,
       position: "absolute",
+      width: "100%",
       zIndex: "1",
       top: "50%",
       left: "50%",
@@ -86,13 +87,13 @@ class Landing extends Component {
     };
 
     const image1 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsumaingate.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bsumaingate.jpg";
     const image2 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg4.png";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/law.jpg";
     const image3 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg2.png";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/heroespark.jpg";
     const image4 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bg3.png";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsu114.jpg";
 
     return (
       <div>
@@ -101,43 +102,37 @@ class Landing extends Component {
           <Parallax bgImage={image1} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>
-                BulSU Plagiarism & Grammar Checker <br />
-                <i
-                  className={this.state.day}
-                  style={{ color: this.state.color }}
-                />{" "}
-                {this.state.greet}
-                {name}
+                <img
+                  src="./images/3dlogo.gif"
+                  alt="logo-3d"
+                  style={{ width: "120px" }}
+                />
+                <div className="hide">
+                  <br />
+                </div>
+                Plagiarism and Grammar Checker System for Bulacan State
+                University Research Materials
               </div>
             </div>
           </Parallax>
           <br />
-          <h1>Features</h1>
           <br />
-          <Parallax bgImage={image2} strength={-300}>
+          <Parallax bgImage={image2} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>Plagiarism Checker</div>
-              <div id="books">
-                <img id="bookimg" src="./images/books.png" alt="books" />
-              </div>
             </div>
           </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
+          <br />
+          <br />
 
           <Parallax bgImage={image3} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>Grammar Checker</div>
-              <div id="books">
-                <img id="writeimg" src="./images/writing.png" alt="books" />
-              </div>
             </div>
           </Parallax>
-          <h1>
-            {"\u25CC"} {"\u25CC"} {"\u25CC"}
-          </h1>
-          <Parallax bgImage={image4} strength={-300}>
+          <br />
+          <br />
+          <Parallax bgImage={image4} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>
                 Android App
@@ -150,12 +145,11 @@ class Landing extends Component {
                   Download here
                 </a>
               </div>
-              <div id="books">
-                <img id="androidimg" src="./images/android.png" alt="books" />
-              </div>
             </div>
           </Parallax>
         </div>
+        <br />
+        <br />
       </div>
     );
   }

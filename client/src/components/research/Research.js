@@ -186,8 +186,15 @@ class Research extends Component {
 
       if (this.props.auth.isAuthenticated) {
         if (deleted === 0) {
-          authorAction = <ResearchAuthorActions />;
-          imageAction = <ResearchImageActions />;
+          if (
+            (this.props.auth.user.userType === "LIBRARIAN" &&
+              this.props.auth.user.college === research.college) ||
+            this.props.auth.user.userType === "ADMINISTRATOR"
+          ) {
+            authorAction = <ResearchAuthorActions />;
+            imageAction = <ResearchImageActions />;
+          }
+
           docAction = <ResearchDocumentActions research={research} />;
         }
         // check if research is deleted
@@ -255,7 +262,15 @@ class Research extends Component {
             </a>
           );
         }
-        researchAction = <ResearchActions />;
+
+        if (
+          (this.props.auth.user.userType === "LIBRARIAN" &&
+            this.props.auth.user.college === research.college) ||
+          this.props.auth.user.userType === "ADMINISTRATOR"
+        ) {
+          researchAction = <ResearchActions />;
+        }
+
         doc = <ResearchDocument research={research} />;
         docSideAction = (
           <a
@@ -386,6 +401,17 @@ class Research extends Component {
         researchContent = <Spinner />;
       } else {
         try {
+          if (
+            this.props.auth.user.userType === "LIBRARIAN" &&
+            this.props.auth.user.college !==
+              this.props.research.research.college
+          ) {
+            docSideAction = "";
+            reportSideAction = "";
+            hideAction = "";
+            deletedAction = "";
+          }
+
           researchContent = (
             <div>
               {/* <div hidden>
@@ -428,7 +454,6 @@ class Research extends Component {
                       <i className="fas fa-file-alt mr-2" />
                       Abstract
                     </a>
-
                     <a
                       className="list-group-item list-group-item-action"
                       id="list-authors-list"

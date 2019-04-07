@@ -1,3 +1,4 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
@@ -19,7 +20,9 @@ module.exports = ({
   let numberOfColForEndRow = 0;
   let totalcol = journals.length;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -56,24 +59,25 @@ module.exports = ({
           `${college === true ? `<td>${journal.college}</td>` : ""}` +
           `${course === true ? `<td>${journal.course}</td>` : ""}` +
           `${
-          status === true
-            ? journal.deleted === 1
-              ? "<td>Deleted</td>"
-              : journal.hidden === 0
+            status === true
+              ? journal.deleted === 1
+                ? "<td>Deleted</td>"
+                : journal.hidden === 0
                 ? "<td>Active</td>"
                 : "<td>Hidden</td>"
-            : ""
+              : ""
           }` +
-
           `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
           `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
-          `${yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""}` +
           `${
-          lastUpdate === true
-            ? `<td>${moment(journal.lastUpdate).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
+            yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
+          }` +
+          `${
+            lastUpdate === true
+              ? `<td>${moment(journal.lastUpdate).format(
+                  "MMMM Do YYYY, h:mm A"
+                )}</td>`
+              : ""
           }` +
           "</tr>"
       );
@@ -83,33 +87,32 @@ module.exports = ({
       journalsList = journals.map((journal, index) =>
         journal.deleted === 0
           ? "<tr>" +
-          `<td>${++ind}</td>` +
-          `<td>${journal.title}</td>` +
-          `${college === true ? `<td>${journal.college}</td>` : ""}` +
-          `${course === true ? `<td>${journal.course}</td>` : ""}` +
-          `${
-          status === true
-            ? journal.deleted === 1
-              ? "<td>Deleted</td>"
-              : journal.hidden === 0
-                ? "<td>Active</td>"
-                : "<td>Hidden</td>"
-            : ""
-          }` +
-
-          `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
-          `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
-          `${
-          yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
-          }` +
-          `${
-          lastUpdate === true
-            ? `<td>${moment(journal.lastUpdate).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
-          }` +
-          "</tr>"
+            `<td>${++ind}</td>` +
+            `<td>${journal.title}</td>` +
+            `${college === true ? `<td>${journal.college}</td>` : ""}` +
+            `${course === true ? `<td>${journal.course}</td>` : ""}` +
+            `${
+              status === true
+                ? journal.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : journal.hidden === 0
+                  ? "<td>Active</td>"
+                  : "<td>Hidden</td>"
+                : ""
+            }` +
+            `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
+            `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
+            `${
+              yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
+            }` +
+            `${
+              lastUpdate === true
+                ? `<td>${moment(journal.lastUpdate).format(
+                    "MMMM Do YYYY, h:mm A"
+                  )}</td>`
+                : ""
+            }` +
+            "</tr>"
           : ""
       );
 
@@ -138,7 +141,6 @@ module.exports = ({
       `${college === true ? "<th>COLLEGE</th>" : ""}` +
       `${course === true ? "<th>COURSE</th>" : ""}` +
       `${status === true ? "<th>STATUS</th>" : ""}` +
-
       `${issn === true ? "<th>ISSN</th>" : ""}` +
       `${pages === true ? "<th>PAGES</th>" : ""}` +
       `${yearPublished === true ? "<th>YEAR PUBLISHED</th>" : ""}` +

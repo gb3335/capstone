@@ -131,49 +131,69 @@ class College extends Component {
       if (this.props.auth.isAuthenticated) {
         try {
           if (college.deleted === 0) {
-            courseAction = <CollegeCourseActions />;
+            if (
+              this.props.auth.user.userType === "ADMINISTRATOR" ||
+              this.props.auth.user.id === this.props.college.college.librarianId
+            ) {
+              courseAction = <CollegeCourseActions />;
+            }
           }
-          colAction = <CollegeActions />;
-          collegeReports = <Report />;
-          collegeReportButton = (
-            <a
-              className="list-group-item list-group-item-action"
-              id="list-reports-list"
-              data-toggle="list"
-              href="#list-reports"
-              role="tab"
-              aria-controls="reports"
-            >
-              <i className="fas fa-poll-h mr-2" />
-              Create Report
-            </a>
-          );
+          if (
+            this.props.auth.user.userType === "ADMINISTRATOR" ||
+            this.props.auth.user.id === this.props.college.college.librarianId
+          ) {
+            colAction = <CollegeActions />;
+          }
+          if (
+            this.props.auth.user.userType === "ADMINISTRATOR" ||
+            this.props.auth.user.id === this.props.college.college.librarianId
+          ) {
+            collegeReports = <Report />;
+            collegeReportButton = (
+              <a
+                className="list-group-item list-group-item-action"
+                id="list-reports-list"
+                data-toggle="list"
+                href="#list-reports"
+                role="tab"
+                aria-controls="reports"
+              >
+                <i className="fas fa-poll-h mr-2" />
+                Create Report
+              </a>
+            );
+          }
 
           // delete / restore college action
-          if (college.deleted === 1) {
-            deletedAction = (
-              <a
-                className="list-group-item list-group-item-action btn btn-success"
-                href="#bin"
-                role="tab"
-                onClick={this.onRestoreAlert}
-              >
-                <i className="fas fa-recycle mr-2" />
-                Restore
-              </a>
-            );
-          } else {
-            deletedAction = (
-              <a
-                className="list-group-item list-group-item-action btn btn-danger"
-                href="#bin"
-                role="tab"
-                onClick={this.onDeleteAlert}
-              >
-                <i className="fas fa-trash mr-2" />
-                Move to Bin
-              </a>
-            );
+          if (
+            this.props.auth.user.userType === "ADMINISTRATOR" ||
+            this.props.auth.user.id === this.props.college.college.librarianId
+          ) {
+            if (college.deleted === 1) {
+              deletedAction = (
+                <a
+                  className="list-group-item list-group-item-action btn btn-success"
+                  href="#bin"
+                  role="tab"
+                  onClick={this.onRestoreAlert}
+                >
+                  <i className="fas fa-recycle mr-2" />
+                  Restore
+                </a>
+              );
+            } else {
+              deletedAction = (
+                <a
+                  className="list-group-item list-group-item-action btn btn-danger"
+                  href="#bin"
+                  role="tab"
+                  onClick={this.onDeleteAlert}
+                >
+                  <i className="fas fa-trash mr-2" />
+                  Move to Bin
+                </a>
+              );
+            }
           }
           let delCtr = 0;
           college.course.map(cou => {

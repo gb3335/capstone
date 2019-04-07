@@ -1,4 +1,5 @@
 const moment = require("moment");
+const moment_timezone = require("moment-timezone");
 
 module.exports = ({
   status,
@@ -19,7 +20,9 @@ module.exports = ({
 
   let totalcol = colleges.length;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;

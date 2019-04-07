@@ -30,7 +30,6 @@ mongoose
 // Body Parser Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json({ limit: "25mb" }));
-app.use(express.static(path.join(__dirname, "client/build"))) // ADDED BY KRISHIELD 3/20/2019
 
 //Passport Middleware
 app.use(passport.initialize());

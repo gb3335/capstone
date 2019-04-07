@@ -3,13 +3,14 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
+import { Progress } from "react-sweet-progress";
+import "react-sweet-progress/lib/style.css";
 import {
   addDocument,
   deleteDocument,
   onSideBySide
 } from "../../actions/researchActions";
 import { checkPlagiarismLocal } from "../../actions/localPlagiarismActions";
-import Spinner from "../common/Spinner";
 
 import "./ResearchDocumentActions.css";
 
@@ -89,7 +90,7 @@ class ResearchImageActions extends Component {
     let docuItem;
 
     docuItem = (
-      <div className="docuItem btn-group-sm">
+      <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
         <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
           <i className="fas fa-search text-info mr-1" />
           Check Abstract |
@@ -111,7 +112,20 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading ? <Spinner /> : docuItem}
+        {this.props.localPlagiarism.loading &&
+        this.props.localPlagiarism.abstract ? (
+          <div>
+            <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+            <Progress
+              percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
+            />
+          </div>
+        ) : this.props.localPlagiarism.loading &&
+          !this.props.localPlagiarism.abstract ? (
+          <p>Plagiarism scan is currently in progress, please wait...</p>
+        ) : (
+          docuItem
+        )}
 
         <div hidden>
           <FileFieldGroup

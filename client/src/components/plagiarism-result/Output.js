@@ -14,33 +14,39 @@ class Output extends Component {
     this.state = {
       color: "" 
     };
-    
   }
 
   render() {
 
+      let outputLen=0;
+      let zeroLen=0;
 
       let output2;
 
       const {output, plagType} = this.props
+      outputLen = output.length;
       if(plagType==="local"){
         output2 = output.map(out => (
           <div key={out.Document.Text.Name}>
             {out.SimilarityScore === 0 ?
-            <div className="resultList">
-              <div className="row">
-                  <div className="col-md-3">
-                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
-                  </div>
-                  <div className="col-md-9">
-                      <p><b>Title: </b>{out.Document.Text.Name}</p>
-                      <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
-                      <p><b>Plagiarism Level: </b>Clean</p>
-                      {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
-                      <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="button button--ghost button--ghost--green">Show Details</button>
-                  </div>
-              </div>
-            </div> : 
+            // <div className="resultList">
+            //   <div className="row">
+            //       <div className="col-md-3">
+            //         <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+            //       </div>
+            //       <div className="col-md-9">
+            //           <p><b>Title: </b>{out.Document.Text.Name}</p>
+            //           <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
+            //           <p><b>Plagiarism Level: </b>Clean</p>
+            //           {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
+            //           <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="button button--ghost button--ghost--green">Show Details</button>
+            //       </div>
+            //   </div>
+            // </div> 
+            
+            <div className="d-none">
+              {zeroLen++}
+            </div>: 
             out.SimilarityScore > 0 && out.SimilarityScore < 30 ? 
             <div className="resultList little">
               <div className="row">
@@ -93,20 +99,23 @@ class Output extends Component {
         output2 = output.map((out, index )=> (
           <div key={out.Document.Text.Name}>
             {out.SimilarityScore === 0 ?
-            <div className="resultList">
-              <div className="row">
-                  <div className="col-md-3">
-                    <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
-                  </div>
-                  <div className="col-md-9">
-                      <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>
-                      <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
-                      <p><b>Plagiarism Level: </b>Clean</p>
-                      {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
-                      <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="button button--ghost button--ghost--green">Show Details</button>
-                  </div>
-              </div>
-            </div> :
+            // <div className="resultList">
+            //   <div className="row">
+            //       <div className="col-md-3">
+            //         <ResultPie legend={false} height={100} similarity={parseFloat(out.SimilarityScore).toFixed(2)}/>
+            //       </div>
+            //       <div className="col-md-9">
+            //           <p><b>Link: </b><a target="_blank" rel="noopener noreferrer" href={out.Document.Text.Id}>{out.Document.Text.Id}</a></p>
+            //           <p><b>Similarity Score: </b>{parseFloat(out.SimilarityScore).toFixed(2)}%</p>
+            //           <p><b>Plagiarism Level: </b>Clean</p>
+            //           {/* <Link to={`/localResult/${out.Document.Text.Id}`}>Show Details</Link> */}
+            //           <button onClick={()=> this.props.onClickShowDetails(out.Document.Text.Id)} className="button button--ghost button--ghost--green">Show Details</button>
+            //       </div>
+            //   </div>
+            // </div>
+            <div className="d-none">
+              {zeroLen++}
+            </div>:
             out.SimilarityScore < 30 ? 
             <div className="resultList little">
               <div className="row">
@@ -159,7 +168,7 @@ class Output extends Component {
       
     return (
       <div>
-          {output2}
+          {/* {output2} */zeroLen===outputLen ? "Nothing to Show" : output2}
       </div>
       
     )

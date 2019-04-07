@@ -96,7 +96,7 @@ class EditCourse extends Component {
                 Edit Course of {this.props.college.college.name.initials}
               </h1>
               <p className="lead text-center">Edit course of this college</p>
-              <small className="d-block pb-3">* = required fields</small>
+              <small className="d-block pb-3">* required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
                   placeholder="* Course Name"

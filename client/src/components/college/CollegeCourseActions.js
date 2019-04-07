@@ -28,6 +28,7 @@ class CollegeCourseActions extends Component {
   render() {
     let courseBinAction;
     let courseBinActionForAuth;
+    let addCourse;
 
     if (this.state.coursebin) {
       courseBinAction = (
@@ -45,13 +46,16 @@ class CollegeCourseActions extends Component {
 
     if (this.props.auth.isAuthenticated) {
       courseBinActionForAuth = courseBinAction;
+      addCourse = (
+        <Link to="/add-course" className="btn btn-light">
+          <i className="fas fa-plus text-info mr-1" /> Add Course
+        </Link>
+      );
     }
 
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
-        <Link to="/add-course" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" /> Add Course
-        </Link>
+        {addCourse}
         {courseBinActionForAuth}
       </div>
     );

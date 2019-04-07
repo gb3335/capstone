@@ -27,6 +27,7 @@ fontFooter = "7px";
 // College model
 const College = require("../../models/College");
 const Activity = require("../../models/Activity");
+const User = require("../../models/User");
 
 //Validator
 const validateCollegeInput = require("../../validation/college");
@@ -193,6 +194,7 @@ router.post(
         initials: req.body.initials
       },
       librarian: req.body.librarian,
+      librarianId: req.body.librarianId,
       logo: logoName,
       courseTotal,
       researchTotal,
@@ -241,6 +243,30 @@ router.post(
                     type: "College"
                   };
                   new Activity(newActivity).save();
+
+                  const newUserOld = {
+                    college: ""
+                  };
+
+                  User.findOneAndUpdate(
+                    { _id: req.body.oldLibId },
+                    { $set: newUserOld },
+                    { new: true }
+                  )
+                    .then(() => {
+                      const newUser = {
+                        college: req.body.fullName
+                      };
+
+                      User.findOneAndUpdate(
+                        { _id: req.body.librarianId },
+                        { $set: newUser },
+                        { new: true }
+                      )
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                    })
+                    .catch(err => console.log(err));
 
                   // update college
                   College.findOneAndUpdate(
@@ -304,6 +330,18 @@ router.post(
                     };
                     new Activity(newActivity).save();
 
+                    const newUser = {
+                      college: req.body.fullName
+                    };
+
+                    User.findOneAndUpdate(
+                      { _id: req.body.librarianId },
+                      { $set: newUser },
+                      { new: true }
+                    )
+                      .then(user => res.json(user))
+                      .catch(err => console.log(err));
+
                     // Save College
                     new College(newCollege)
                       .save()
@@ -366,7 +404,7 @@ router.post(
         // Add to exp array
         college.course.unshift(newCourse);
 
-        college.save();
+        college.save().catch(err => console.log(err));
 
         const newCollege = {
           lastUpdate: {
@@ -447,7 +485,7 @@ router.post(
         // Add to exp array
         college.course.unshift(newCourse);
 
-        college.save();
+        college.save().catch(err => console.log(err));
 
         const newCollege = {
           lastUpdate: {

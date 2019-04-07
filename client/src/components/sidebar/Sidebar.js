@@ -98,13 +98,14 @@ class Sidebar extends Component {
 
   render() {
     const { isAuthenticated, user } = this.props.auth;
-    let path = ""
+    let path = "";
 
     if (user.avatar === "/images/User.png") {
-      path = "/images/User.png"
-    }
-    else {
-      path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+      path = "/images/User.png";
+    } else {
+      path =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+        user.avatar;
     }
 
     const guestLinks = (
@@ -170,117 +171,97 @@ class Sidebar extends Component {
               </Link>
             </li>
             <li className="multimenus forlarge">
-              <a
-                onClick={this.updateClass}
-                className="parentA"
-                id="plagiarism"
-                data-toggle="collapse"
-                href="#checkPlagiarism"
-                aria-expanded="false"
-              >
-                <i className="fa fa-search" />
-                <p className="pr-2">Check Plagiarism</p>
-                <b id="rotate" className={this.state.rotate} />
-              </a>
+                <a
+                  onClick={this.updateClass}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded="false"
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
 
-              <div
-                id="checkPlagiarism"
-                className="collapse"
-                aria-expanded="false"
-              >
-                <div className="csstriangle" />
-                <ul className="submenus nav">
-                  <li>
-                    <Link
-                      to="/onlinecheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Online")
-                      }
-                    >
-                      Online Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/localcheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Locally")
-                      }
-                    >
-                      Local Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/sidebyside"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Side by Side")
-                      }
-                    >
-                      Side by side
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
-            <li className="multimenus formini">
-              <a
-                onClick={this.updateClass}
-                onMouseEnter={this.onMouseEnter}
-                onMouseLeave={this.onMouseLeave}
-                className="parentA"
-                id="plagiarism"
-                data-toggle="collapse"
-                href="#checkPlagiarism"
-                aria-expanded={this.state.aria}
-              >
-                <i className="fa fa-search" />
-                <p className="pr-2">Check Plagiarism</p>
-                <b id="rotate" className={this.state.rotate} />
-              </a>
+                <div
+                  id="checkPlagiarism"
+                  className="collapse"
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+              <li className="multimenus formini">
+                <a
+                  onClick={this.updateClass}
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded={this.state.aria}
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
 
-              <div
-                id="checkPlagiarism"
-                onMouseEnter={this.onMouseEnter}
-                onMouseLeave={this.onMouseLeave}
-                className={this.state.forcol}
-                aria-expanded="false"
-              >
-                <div className="csstriangle" />
-                <ul className="submenus nav">
-                  <li>
-                    <Link
-                      to="/onlinecheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Online")
-                      }
-                    >
-                      Online Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/localcheck"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Locally")
-                      }
-                    >
-                      Local Check
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/sidebyside"
-                      onClick={() =>
-                        this.changeTitle("Check Plagiarism Side by Side")
-                      }
-                    >
-                      Side by side
-                    </Link>
-                  </li>
-                </ul>
-              </div>
-            </li>
+                <div
+                  id="checkPlagiarism"
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className={this.state.forcol}
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              </li>
           </ul>
         </div>
       </nav>
@@ -305,9 +286,51 @@ class Sidebar extends Component {
             <p className="pr-2">Accounts</p>
             <b id="rotate" className={this.state.accountRotate} />
           </a>
+          <div id="accountClick" className="collapse" aria-expanded="false">
+            <div className="csstriangle" />
+            <ul className="submenus nav">
+              <li>
+                <Link
+                  to="/viewusers"
+                  onClick={() => this.changeTitle("Accounts")}
+                >
+                  Accounts
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/userlogs"
+                  onClick={() => this.changeTitle("User Logs")}
+                >
+                  User Logs
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </li>
+      );
+      adminShowSmall = (
+        <li className="multimenus formini">
+          <a
+            onClick={this.updateClass}
+            onMouseEnter={this.onMouseAccountEnter}
+            onMouseLeave={this.onMouseAccountLeave}
+            className="parentA"
+            id="plagiarism"
+            data-toggle="collapse"
+            href="#accountClick"
+            aria-expanded={this.state.accountAria}
+          >
+            <i className="fa fa-users" />
+            <p className="pr-2">Accounts</p>
+            <b id="rotate" className={this.state.rotate} />
+          </a>
+
           <div
             id="accountClick"
-            className="collapse"
+            onMouseEnter={this.onMouseAccountEnter}
+            onMouseLeave={this.onMouseAccountLeave}
+            className={this.state.accountForcol}
             aria-expanded="false"
           >
             <div className="csstriangle" />
@@ -316,93 +339,49 @@ class Sidebar extends Component {
                 <Link
                   to="/viewusers"
                   onClick={() => this.changeTitle("Accounts")}
-
                 >
                   Accounts
-            </Link>
+                </Link>
               </li>
               <li>
                 <Link
                   to="/userlogs"
-                  onClick={() =>
-                    this.changeTitle("User Logs")
-                  }
+                  onClick={() => this.changeTitle("User Logs")}
                 >
                   User Logs
-            </Link>
+                </Link>
               </li>
-
             </ul>
           </div>
         </li>
-      )
-      adminShowSmall = (<li className="multimenus formini">
-        <a
-          onClick={this.updateClass}
-          onMouseEnter={this.onMouseAccountEnter}
-          onMouseLeave={this.onMouseAccountLeave}
-          className="parentA"
-          id="plagiarism"
-          data-toggle="collapse"
-          href="#accountClick"
-          aria-expanded={this.state.accountAria}
-
-        >
-          <i className="fa fa-users" />
-          <p className="pr-2">Accounts</p>
-          <b id="rotate" className={this.state.rotate} />
-        </a>
-
-        <div
-          id="accountClick"
-          onMouseEnter={this.onMouseAccountEnter}
-          onMouseLeave={this.onMouseAccountLeave}
-          className={this.state.accountForcol}
-          aria-expanded="false"
-        >
-          <div className="csstriangle" />
-          <ul className="submenus nav">
-            <li>
-              <Link
-                to="/viewusers"
-                onClick={() => this.changeTitle("Accounts")}
-
-              >
-                Accounts
-                    </Link>
-            </li>
-            <li>
-              <Link
-                to="/userlogs"
-                onClick={() =>
-                  this.changeTitle("User Logs")
-                }
-              >
-                User Logs
-                    </Link>
-            </li>
-          </ul>
-        </div>
-      </li>)
+      );
     }
 
     const replaceString = require("replace-string");
     let strstart = 0;
-    let a = window.location.href;
+    let currentLink = window.location.href;
     let oldpath;
     let oldid;
+    let linkCutted;
 
     let mylink;
+    if (currentLink.includes("http://34.229.6.94/")) {
+      linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
+    }
+    else {
+      linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
+    }
 
-    let b = replaceString(a, "http://localhost:3000/", "");
-    if (b.includes("/")) {
-      strstart = b.indexOf("/");
-      oldpath = b.substring(0, strstart);
-      oldid = b.substring(strstart + 1, b.length);
-      mylink =
-        "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+
+
+    if (linkCutted.includes("/")) {
+      strstart = linkCutted.indexOf("/");
+      oldpath = linkCutted.substring(0, strstart);
+      oldid = linkCutted.substring(strstart + 1, linkCutted.length);
+      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
+
     } else {
-      if (b === "") {
+      if (linkCutted === "") {
         mylink =
           "/myaccount/" +
           this.props.auth.user.id +
@@ -411,30 +390,23 @@ class Sidebar extends Component {
           "/" +
           oldid;
       } else {
+
+
         mylink =
-          "/myaccount/" + this.props.auth.user.id + "/" + b + "/" + oldid;
+          "/myaccount/" + this.props.auth.user.id + "/" + linkCutted + "/" + oldid;
+
       }
     }
     if (
-      "/myaccount/" +
-      this.props.auth.user.id +
-      "/myaccount/" +
-      this.props.auth.user.id ===
-      mylink.substring(
-        0,
-        (
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/myaccount/" +
-          this.props.auth.user.id
-        ).length
-      )
+      "/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id ===
+      mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)
     ) {
       mylink = mylink.substring(
         ("/myaccount/" + this.props.auth.user.id).length,
         mylink.length
       );
     }
+
 
     let oldlink = mylink;
     mylink = "";
@@ -453,15 +425,15 @@ class Sidebar extends Component {
           </div>
           <div className="sidebar_user">
             <div className="sidebar_user_image">
-
               <div
                 className="squareSide"
                 style={{ backgroundImage: `url('${path}')` }}
               />
-
             </div>
             <div className="sidebar_user_name">
-              <Link to={oldlink}>{user.name.firstName}  {user.name.lastName}</Link>
+              <Link to={oldlink}>
+                {user.name.firstName} {user.name.lastName}
+              </Link>
             </div>
           </div>
 
@@ -636,7 +608,6 @@ class Sidebar extends Component {
         </nav>
       );
     }
-
 
     return (
       <div>

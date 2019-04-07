@@ -3,6 +3,7 @@ import sidebarReducer from "./sidebarReducer";
 import authReducer from "./authReducer";
 import onlinePlagiarismReducer from "./onlinePlagiarismReducer";
 import localPlagiarismReducer from "./localPlagiarismReducer";
+import localRawPlagiarismReducer from "./localRawPlagiarismReducer";
 import errorReducer from "./errorReducer";
 import collegeReducer from "./collegeReducer";
 import researchReducer from "./researchReducer";
@@ -18,6 +19,7 @@ export default combineReducers({
   auth: authReducer,
   onlinePlagiarism: onlinePlagiarismReducer,
   localPlagiarism: localPlagiarismReducer,
+  localRawPlagiarism: localRawPlagiarismReducer,
   college: collegeReducer,
   research: researchReducer,
   journal: journalReducer,
@@ -25,5 +27,6 @@ export default combineReducers({
   users: userReducer,
   grammar: grammarReducer,
   userlogs: userlogsReducer
+  
 
 });

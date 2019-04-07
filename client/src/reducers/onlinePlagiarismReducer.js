@@ -1,4 +1,4 @@
-import { PLAGIARISM_ONLINE, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_ONLINE_LOADING, PLAGIARISM_ONLINE_DISABLE_BUTTON, PLAGIARISM_ONLINE_SHOW_DETAILS, PLAGIARISM_ONLINE_HIDE_DETAILS, PLAGIARISM_ONLINE_GOOGLE, PLAGIARISM_ONLINE_GENERATE_REPORT, PLAGIARISM_ONLINE_CLEAR_OUTPUT} from '../actions/types'
+import { PLAGIARISM_ONLINE, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_ONLINE_LOADING, PLAGIARISM_ONLINE_DISABLE_BUTTON, PLAGIARISM_ONLINE_SHOW_DETAILS, PLAGIARISM_ONLINE_HIDE_DETAILS, PLAGIARISM_ONLINE_GOOGLE, PLAGIARISM_ONLINE_GENERATE_REPORT, PLAGIARISM_ONLINE_CLEAR_OUTPUT, PLAGIARISM_ONLINE_AXIOS_PROGRESS} from '../actions/types'
 
 
 const initialState = {
@@ -8,7 +8,8 @@ const initialState = {
     loading: false,
     buttonDisable: false,
     showDetails: false,
-    generateReport: false
+    generateReport: false,
+    axiosProgress: {}
 }
 
 
@@ -57,6 +58,11 @@ export default function (state = initialState, action) {
                 ...state,
                 generateReport: action.payload
             }
+        case PLAGIARISM_ONLINE_AXIOS_PROGRESS:
+            return {
+              ...state,
+              axiosProgress: action.payload
+            };
         case PLAGIARISM_ONLINE_CLEAR_OUTPUT:
             return {
                 ...state,

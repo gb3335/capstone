@@ -1,3 +1,4 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
@@ -22,7 +23,9 @@ module.exports = ({
 
   let totalcol = researches.length;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   if (status === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -65,24 +68,24 @@ module.exports = ({
           `${college === true ? `<td>${research.college}</td>` : ""}` +
           `${course === true ? `<td>${research.course}</td>` : ""}` +
           `${
-          status === true
-            ? research.deleted === 1
-              ? "<td>Deleted</td>"
-              : research.hidden === 0
+            status === true
+              ? research.deleted === 1
+                ? "<td>Deleted</td>"
+                : research.hidden === 0
                 ? "<td>Active</td>"
                 : "<td>Hidden</td>"
-            : ""
+              : ""
           }` +
           `${type === true ? `<td>${research.type}</td>` : ""}` +
           `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
           `${pages === true ? `<td>${research.pages}</td>` : ""}` +
           `${academicYear === true ? `<td>${research.schoolYear}</td>` : ""}` +
           `${
-          lastUpdate === true
-            ? `<td>${moment(research.lastUpdate).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
+            lastUpdate === true
+              ? `<td>${moment(research.lastUpdate).format(
+                  "MMMM Do YYYY, h:mm A"
+                )}</td>`
+              : ""
           }` +
           "</tr>"
       );
@@ -93,33 +96,33 @@ module.exports = ({
       researchesList = researches.map((research, index) =>
         research.deleted === 0
           ? "<tr>" +
-          `<td>${++ind}</td>` +
-          `<td>${research.title}</td>` +
-          `${college === true ? `<td>${research.college}</td>` : ""}` +
-          `${course === true ? `<td>${research.course}</td>` : ""}` +
-          `${
-          status === true
-            ? research.deleted === 1
-              ? "<td>Deleted</td>"
-              : research.hidden === 0
-                ? "<td>Active</td>"
-                : "<td>Hidden</td>"
-            : ""
-          }` +
-          `${type === true ? `<td>${research.type}</td>` : ""}` +
-          `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
-          `${pages === true ? `<td>${research.pages}</td>` : ""}` +
-          `${
-          academicYear === true ? `<td>${research.schoolYear}</td>` : ""
-          }` +
-          `${
-          lastUpdate === true
-            ? `<td>${moment(research.lastUpdate).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
-          }` +
-          "</tr>"
+            `<td>${++ind}</td>` +
+            `<td>${research.title}</td>` +
+            `${college === true ? `<td>${research.college}</td>` : ""}` +
+            `${course === true ? `<td>${research.course}</td>` : ""}` +
+            `${
+              status === true
+                ? research.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : research.hidden === 0
+                  ? "<td>Active</td>"
+                  : "<td>Hidden</td>"
+                : ""
+            }` +
+            `${type === true ? `<td>${research.type}</td>` : ""}` +
+            `${researchId === true ? `<td>${research.researchID}</td>` : ""}` +
+            `${pages === true ? `<td>${research.pages}</td>` : ""}` +
+            `${
+              academicYear === true ? `<td>${research.schoolYear}</td>` : ""
+            }` +
+            `${
+              lastUpdate === true
+                ? `<td>${moment(research.lastUpdate).format(
+                    "MMMM Do YYYY, h:mm A"
+                  )}</td>`
+                : ""
+            }` +
+            "</tr>"
           : ""
       );
 
