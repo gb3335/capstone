@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import FileFieldGroup from "../common/FileFieldGroup";
 import { withRouter } from "react-router-dom";
-import { Progress } from 'react-sweet-progress';
+import { Progress } from "react-sweet-progress";
 import "react-sweet-progress/lib/style.css";
 import {
   addDocument,
@@ -112,16 +112,20 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading && this.props.localPlagiarism.abstract? 
-        <div>
-          <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
-          <Progress
-              
+        {this.props.localPlagiarism.loading &&
+        this.props.localPlagiarism.abstract ? (
+          <div>
+            <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+            <Progress
               percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
-              
-            /> 
-
-        </div> : this.props.localPlagiarism.loading && !this.props.localPlagiarism.abstract? <p>Plagiarism scan is currently in progress, please wait...</p> : docuItem}
+            />
+          </div>
+        ) : this.props.localPlagiarism.loading &&
+          !this.props.localPlagiarism.abstract ? (
+          <p>Plagiarism scan is currently in progress, please wait...</p>
+        ) : (
+          docuItem
+        )}
 
         <div hidden>
           <FileFieldGroup

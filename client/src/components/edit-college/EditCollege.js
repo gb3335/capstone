@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { SketchPicker } from "react-color";
 
 import { createCollege } from "../../actions/collegeActions";
+import { getUsers } from "../../actions/userActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 
@@ -206,6 +207,7 @@ class CreateCollege extends Component {
       background: this.props.college.college.color,
       researchTotal: this.props.college.college.researchTotal,
       journalTotal: this.props.college.college.journalTotal,
+      oldLibId: this.props.college.college.librarianId,
       single: {
         label: this.props.college.college.librarian,
         value: this.props.college.college.librarian,
@@ -213,6 +215,10 @@ class CreateCollege extends Component {
       },
       errors: {}
     };
+  }
+
+  componentWillMount() {
+    this.props.getUsers();
   }
 
   handleChange = name => value => {
@@ -253,6 +259,7 @@ class CreateCollege extends Component {
       researchTotal: this.state.researchTotal,
       journalTotal: this.state.journalTotal,
       id: this.props.college.college._id,
+      oldLibId: this.state.oldLibId,
       librarian: libName,
       librarianId: libId,
       username: name
@@ -281,8 +288,8 @@ class CreateCollege extends Component {
       if (this.props.users !== null) {
         this.props.users.map(user => {
           if (
-            user.userType === "LIBRARIAN" &&
-            user.alreadyHaveCollege !== "true"
+            (user.userType === "LIBRARIAN" && user.college === "") ||
+            user._id === this.props.college.college.librarianId
           ) {
             suggestions.push({
               label:
@@ -408,6 +415,8 @@ class CreateCollege extends Component {
 }
 
 CreateCollege.propTypes = {
+  createCollege: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -425,6 +434,6 @@ const mapStateToProps = state => ({
 export default withStyles(styles, { withTheme: true })(
   connect(
     mapStateToProps,
-    { createCollege }
+    { createCollege, getUsers }
   )(withRouter(CreateCollege))
 );

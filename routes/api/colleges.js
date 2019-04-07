@@ -27,6 +27,7 @@ fontFooter = "7px";
 // College model
 const College = require("../../models/College");
 const Activity = require("../../models/Activity");
+const User = require("../../models/User");
 
 //Validator
 const validateCollegeInput = require("../../validation/college");
@@ -243,6 +244,30 @@ router.post(
                   };
                   new Activity(newActivity).save();
 
+                  const newUserOld = {
+                    college: ""
+                  };
+
+                  User.findOneAndUpdate(
+                    { _id: req.body.oldLibId },
+                    { $set: newUserOld },
+                    { new: true }
+                  )
+                    .then(user => res.json(user))
+                    .catch(err => console.log(err));
+
+                  const newUser = {
+                    college: req.body.fullName
+                  };
+
+                  User.findOneAndUpdate(
+                    { _id: req.body.librarianId },
+                    { $set: newUser },
+                    { new: true }
+                  )
+                    .then(user => res.json(user))
+                    .catch(err => console.log(err));
+
                   // update college
                   College.findOneAndUpdate(
                     { _id: req.body.id },
@@ -304,6 +329,18 @@ router.post(
                       type: "College"
                     };
                     new Activity(newActivity).save();
+
+                    const newUser = {
+                      college: req.body.fullName
+                    };
+
+                    User.findOneAndUpdate(
+                      { _id: req.body.librarianId },
+                      { $set: newUser },
+                      { new: true }
+                    )
+                      .then(user => res.json(user))
+                      .catch(err => console.log(err));
 
                     // Save College
                     new College(newCollege)

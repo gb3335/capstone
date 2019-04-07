@@ -64,34 +64,48 @@ class Authors extends Component {
 
       columnButton = <th />;
       if (research.deleted === 0) {
-        author = sortedAuthor.map(author => (
-          <tr key={author._id}>
-            <td>
-              {author.name} ({author.role})
-            </td>
-            {author.role === "Author One" ? (
+        if (
+          (this.props.auth.user.userType === "LIBRARIAN" &&
+            this.props.auth.user.college === research.college) ||
+          this.props.auth.user.userType === "ADMINISTRATOR"
+        ) {
+          author = sortedAuthor.map(author => (
+            <tr key={author._id}>
               <td>
-                <button className="btn btn-danger" disabled={true}>
-                  Remove
-                </button>
+                {author.name} ({author.role})
               </td>
-            ) : (
+              {author.role === "Author One" ? (
+                <td>
+                  <button className="btn btn-danger" disabled={true}>
+                    Remove
+                  </button>
+                </td>
+              ) : (
+                <td>
+                  <button
+                    onClick={this.onDeleteAlert.bind(
+                      this,
+                      research._id,
+                      author._id,
+                      name
+                    )}
+                    className="btn btn-danger"
+                  >
+                    Remove
+                  </button>
+                </td>
+              )}
+            </tr>
+          ));
+        } else {
+          author = sortedAuthor.map(author => (
+            <tr key={author._id}>
               <td>
-                <button
-                  onClick={this.onDeleteAlert.bind(
-                    this,
-                    research._id,
-                    author._id,
-                    name
-                  )}
-                  className="btn btn-danger"
-                >
-                  Remove
-                </button>
+                {author.name} ({author.role})
               </td>
-            )}
-          </tr>
-        ));
+            </tr>
+          ));
+        }
       } else {
         author = sortedAuthor.map(author => (
           <tr key={author._id}>

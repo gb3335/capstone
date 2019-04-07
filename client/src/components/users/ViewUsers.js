@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
@@ -8,16 +7,12 @@ import MaterialTable from "material-table";
 
 import { getUsers } from "../../actions/userActions";
 import RegisterActions from "./RegisterActions";
-import './ViewUsers.css';
-
+import "./ViewUsers.css";
 
 class ViewUsers extends Component {
-
   constructor() {
     super();
-    this.state = {
-
-    };
+    this.state = {};
   }
 
   componentDidMount() {
@@ -26,21 +21,16 @@ class ViewUsers extends Component {
 
   componentWillMount() {
     this.props.getUsers();
-
   }
 
   render() {
-
     const { users, loading } = this.props.users;
     let userItems;
     const usersData = [];
     if (users === null || loading) {
-      userItems = <Spinner />
+      userItems = <Spinner />;
     } else {
-
       if (users.length > 0) {
-
-
         // const userData = users.map((user, index) => ({
         //   avatar: <img src={user.avatar} alt="" className="img-thumbnail rounded-circle img " />,
         //   username: user.name.firstName + " " + user.name.lastName,
@@ -52,44 +42,42 @@ class ViewUsers extends Component {
         //   college: user.college ? user.college : <div>None</div>
         // }));
 
-
-
-
         users.map(user => {
           let path;
           if (user.avatar === "/images/User.png") {
-            path = "/images/User.png"
-          }
-          else {
-            path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
+            path = "/images/User.png";
+          } else {
+            path =
+              "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+              user.avatar;
           }
 
           if (user._id !== this.props.auth.user.id) {
             usersData.push({
-              avatar: <img src={path} alt="" className="img-thumbnail user_img" />,
+              avatar: (
+                <img src={path} alt="" className="img-thumbnail user_img" />
+              ),
               username: user.name.firstName + " " + user.name.lastName,
               type: user.userType,
               view: (
-                <Link to={/viewusers/ + user._id} ><div className="btn btn-outline-info btn-sm ">View Account</div> </Link>
-
+                <Link to={/viewusers/ + user._id}>
+                  <div className="btn btn-outline-info btn-sm ">
+                    View Account
+                  </div>{" "}
+                </Link>
               ),
-              blocked: user.isBlock === 0 ? <div className="badge badge-success btn-sm">Active</div > : <div className="badge badge-danger btn-sm " >
-                Blocked</div>,
+              blocked:
+                user.isBlock === 0 ? (
+                  <div className="badge badge-success btn-sm">Active</div>
+                ) : (
+                  <div className="badge badge-danger btn-sm ">Blocked</div>
+                ),
               college: user.college ? user.college : <div>None</div>
-
-            })
+            });
           }
-
-        })
-
-
-
-
-
-
+        });
 
         userItems = (
-
           <MaterialTable
             columns={[
               { title: "Avatar", field: "avatar" },
@@ -107,15 +95,10 @@ class ViewUsers extends Component {
             }}
             data={usersData}
             title="User Data"
-
           />
         );
-      }
-
-
-
-      else {
-        userItems = <h4>No users found...</h4>
+      } else {
+        userItems = <h4>No users found...</h4>;
       }
     }
     // <script> {(function fairyDustCursor() {
@@ -254,19 +237,14 @@ class ViewUsers extends Component {
     // })()}
     // </script>
     return (
-
-
       <div className="profiles">
-
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12">
             <div className="usersBg ">
               <div className="light-overlay p-2">
-                <div className="display-4 text-center mb-1">Users
-                <p className="lead text-center ">
-                    User list of Accounts
-                </p>
-
+                <div className="display-4 text-center mb-1">
+                  Users
+                  <p className="lead text-center ">User list of Accounts</p>
                 </div>
               </div>
             </div>
@@ -276,8 +254,7 @@ class ViewUsers extends Component {
           </div>
         </div>
       </div>
-
-    )
+    );
   }
 }
 
@@ -285,12 +262,14 @@ ViewUsers.protoTypes = {
   getUsers: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
   users: state.users,
-  auth: state.auth,
+  auth: state.auth
+});
 
-})
-
-export default connect(mapStateToProps, { getUsers })(ViewUsers);
+export default connect(
+  mapStateToProps,
+  { getUsers }
+)(ViewUsers);

@@ -45,17 +45,12 @@ class CollegeCourseActions extends Component {
     }
 
     if (this.props.auth.isAuthenticated) {
-      if (
-        this.props.auth.user.userType === "ADMINISTRATOR" ||
-        this.props.auth.user.id === this.props.college.college.librarianId
-      ) {
-        courseBinActionForAuth = courseBinAction;
-        addCourse = (
-          <Link to="/add-course" className="btn btn-light">
-            <i className="fas fa-plus text-info mr-1" /> Add Course
-          </Link>
-        );
-      }
+      courseBinActionForAuth = courseBinAction;
+      addCourse = (
+        <Link to="/add-course" className="btn btn-light">
+          <i className="fas fa-plus text-info mr-1" /> Add Course
+        </Link>
+      );
     }
 
     return (

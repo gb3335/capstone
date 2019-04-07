@@ -5,6 +5,7 @@ import PropTypes from "prop-types";
 import { SketchPicker } from "react-color";
 
 import { createCollege } from "../../actions/collegeActions";
+import { getUsers } from "../../actions/userActions";
 
 import TextFieldGroup from "../common/TextFieldGroup";
 import ImageFieldGroup from "../common/ImageFieldGroup";
@@ -210,6 +211,10 @@ class CreateCollege extends Component {
     };
   }
 
+  componentWillMount() {
+    this.props.getUsers();
+  }
+
   handleChange = name => value => {
     this.setState({
       single: value
@@ -291,10 +296,7 @@ class CreateCollege extends Component {
     try {
       if (this.props.users !== null) {
         this.props.users.map(user => {
-          if (
-            user.userType === "LIBRARIAN" &&
-            user.alreadyHaveCollege !== "true"
-          ) {
+          if (user.userType === "LIBRARIAN" && user.college === "") {
             suggestions.push({
               label:
                 user.name.firstName +
@@ -446,6 +448,7 @@ class CreateCollege extends Component {
 }
 CreateCollege.propTypes = {
   createCollege: PropTypes.func.isRequired,
+  getUsers: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
   errors: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
@@ -461,6 +464,6 @@ const mapStateToProps = state => ({
 export default withStyles(styles, { withTheme: true })(
   connect(
     mapStateToProps,
-    { createCollege }
+    { createCollege, getUsers }
   )(withRouter(CreateCollege))
 );

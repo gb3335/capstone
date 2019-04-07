@@ -102,17 +102,16 @@ class Landing extends Component {
           <Parallax bgImage={image1} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>
-                <p>
-                  <img
-                    src="./images/3dlogo.gif"
-                    alt="logo-3d"
-                    style={{ width: "120px" }}
-                  />
-                  <p>
-                    Plagiarism and Grammar Checker System for Bulacan State
-                    University Research Materials
-                  </p>
-                </p>
+                <img
+                  src="./images/3dlogo.gif"
+                  alt="logo-3d"
+                  style={{ width: "120px" }}
+                />
+                <div className="hide">
+                  <br />
+                </div>
+                Plagiarism and Grammar Checker System for Bulacan State
+                University Research Materials
               </div>
             </div>
           </Parallax>

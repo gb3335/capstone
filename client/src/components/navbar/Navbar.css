@@ -2,7 +2,7 @@
   top: 0;
   width: 100%;
   left: 0;
-  height: 50px;
+  height: 59px;
   padding: 0 1rem;
   margin: 0;
   display: flex;
@@ -53,7 +53,7 @@
   text-decoration: none;
   font-size: 1em;
   color: black;
-  height: 50px;
+  height: 59px;
   display: table;
   padding: 15px 15px;
   border-radius: 5px;
@@ -61,7 +61,7 @@
 }
 
 .navbar_items .account_button {
-  height: 49px;
+  height: 58px;
   display: table;
   font-size: 1em;
   text-decoration: none;
