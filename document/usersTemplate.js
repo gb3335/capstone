@@ -1,3 +1,4 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
@@ -19,7 +20,9 @@ module.exports = ({
   let numberOfColForEndRow = 0;
   let totalcol = users.length;
 
-  const currentDate = moment().format("MMMM Do YYYY, h:mm A");
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
 
   String.prototype.getInitials = function (glue) {
     if (typeof glue == "undefined") {
@@ -71,11 +74,33 @@ module.exports = ({
           `${college === true ? `<td>${user.college === null | user.college === "" | user.college === "undefined" ? `None` : user.college}</td>` : ""}` +
           `${status === true ? `<td>${user.isBlock === 0 ? `ACTIVE` : `DEACTIVATED`}</td>` : ""}` +
           `${
+<<<<<<< HEAD
           dateCreated === true
             ? `<td>${moment(user.date).format(
               "MMMM Do YYYY, h:mm A"
             )}</td>`
             : ""
+=======
+            status === true
+              ? journal.deleted === 1
+                ? "<td>Deleted</td>"
+                : journal.hidden === 0
+                ? "<td>Active</td>"
+                : "<td>Hidden</td>"
+              : ""
+          }` +
+          `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
+          `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
+          `${
+            yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
+          }` +
+          `${
+            lastUpdate === true
+              ? `<td>${moment(journal.lastUpdate).format(
+                  "MMMM Do YYYY, h:mm A"
+                )}</td>`
+              : ""
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
           }` +
           "</tr>"
       );
@@ -85,6 +110,7 @@ module.exports = ({
       userList = users.map((user, index) =>
         user.isBlock === 0
           ? "<tr>" +
+<<<<<<< HEAD
           `<td>${++ind}</td>` +
           `<td>${user.name.lastName}, ${user.name.firstName} ${user.name.middleName.getInitials()}.</td>` +
           `${email === true ? `<td>${user.email}</td>` : ""}` +
@@ -100,6 +126,34 @@ module.exports = ({
             : ""
           }` +
           "</tr>"
+=======
+            `<td>${++ind}</td>` +
+            `<td>${journal.title}</td>` +
+            `${college === true ? `<td>${journal.college}</td>` : ""}` +
+            `${course === true ? `<td>${journal.course}</td>` : ""}` +
+            `${
+              status === true
+                ? journal.deleted === 1
+                  ? "<td>Deleted</td>"
+                  : journal.hidden === 0
+                  ? "<td>Active</td>"
+                  : "<td>Hidden</td>"
+                : ""
+            }` +
+            `${issn === true ? `<td>${journal.issn}</td>` : ""}` +
+            `${pages === true ? `<td>${journal.pages}</td>` : ""}` +
+            `${
+              yearPublished === true ? `<td>${journal.yearPublished}</td>` : ""
+            }` +
+            `${
+              lastUpdate === true
+                ? `<td>${moment(journal.lastUpdate).format(
+                    "MMMM Do YYYY, h:mm A"
+                  )}</td>`
+                : ""
+            }` +
+            "</tr>"
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
           : ""
       );
 
@@ -131,7 +185,14 @@ module.exports = ({
       `${type === true ? "<th>TYPE</th>" : ""}` +
       `${college === true ? "<th>COLLEGE</th>" : ""}` +
       `${status === true ? "<th>STATUS</th>" : ""}` +
+<<<<<<< HEAD
       `${dateCreated === true ? "<th>DATE CREATED</th>" : ""}` +
+=======
+      `${issn === true ? "<th>ISSN</th>" : ""}` +
+      `${pages === true ? "<th>PAGES</th>" : ""}` +
+      `${yearPublished === true ? "<th>YEAR PUBLISHED</th>" : ""}` +
+      `${lastUpdate === true ? "<th>UPDATED ON</th>" : ""}` +
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
       "</tr>";
   }
 
