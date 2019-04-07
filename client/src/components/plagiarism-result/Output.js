@@ -14,15 +14,17 @@ class Output extends Component {
     this.state = {
       color: "" 
     };
-    
   }
 
   render() {
 
+      let outputLen=0;
+      let zeroLen=0;
 
       let output2;
 
       const {output, plagType} = this.props
+      outputLen = output.length;
       if(plagType==="local"){
         output2 = output.map(out => (
           <div key={out.Document.Text.Name}>
@@ -41,7 +43,10 @@ class Output extends Component {
             //       </div>
             //   </div>
             // </div> 
-            "": 
+            
+            <div className="d-none">
+              {zeroLen++}
+            </div>: 
             out.SimilarityScore > 0 && out.SimilarityScore < 30 ? 
             <div className="resultList little">
               <div className="row">
@@ -108,7 +113,9 @@ class Output extends Component {
             //       </div>
             //   </div>
             // </div>
-            "" :
+            <div className="d-none">
+              {zeroLen++}
+            </div>:
             out.SimilarityScore < 30 ? 
             <div className="resultList little">
               <div className="row">
@@ -161,7 +168,7 @@ class Output extends Component {
       
     return (
       <div>
-          {output2}
+          {/* {output2} */zeroLen===outputLen ? "Nothing to Show" : output2}
       </div>
       
     )

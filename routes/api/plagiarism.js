@@ -584,50 +584,69 @@ router.post("/local/initialize/pattern", (req, res) => {
   let title = req.body.title;
   let docuFile = req.body.docuFile;
   let abstract = req.body.abstract;
+  let raw = req.body.raw;
+  let q = req.body.q;
 
-  if (abstract) {
-    Research.findOne({ _id: docuId }, { content: 0 })
-      .then(research => {
-        if (!research) {
-          errors.noresearch = "There is no data for this research";
-          res.status(404).json(errors);
-        }
+  if(raw){
 
-        let newtext = stripHtml(research.abstract);
+    const { errors, isValid } = validateOnlineInput(req.body);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
-        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
-        arr = text.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+    const { text, len } = processor.textProcess(q.toString().toLowerCase());
+    const arr = text.split(' ');
+    plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+    res.json({
+      success: true
+    })
+  }else{
+    if (abstract) {
+      Research.findOne({ _id: docuId }, { content: 0 })
+        .then(research => {
+          if (!research) {
+            errors.noresearch = "There is no data for this research";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = stripHtml(research.abstract);
+  
+          let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+          arr = text.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
-  } else {
-    Research.findOne({ _id: docuId })
-      .then(research => {
-        if (!research) {
-          errors.noresearch = "There is no data for this research";
-          res.status(404).json(errors);
-        }
-
-        let newtext = research.content.text;
-        const len = research.content.sentenceLength;
-        let arr = newtext.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+        .catch(err => res.status(404).json(err));
+    } else {
+      Research.findOne({ _id: docuId })
+        .then(research => {
+          if (!research) {
+            errors.noresearch = "There is no data for this research";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = research.content.text;
+          const len = research.content.sentenceLength;
+          let arr = newtext.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
+        .catch(err => res.status(404).json(err));
+    }
+  
   }
-
+  
 
 
   // const docPath =
@@ -760,7 +779,6 @@ router.post("/local/result", (req, res) => {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
-
         let text = research.content.text;
         const len = research.content.sentenceLength;
 

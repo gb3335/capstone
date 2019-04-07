@@ -8,6 +8,7 @@ import Landing from "../landing/Landing";
 
 import Dashboard from "../dashboard/Dashboard";
 import OnlineCheck from "../plagiarism/OnlineCheck";
+import LocalCheck from "../plagiarism/LocalCheck";
 import Login from "../auth/login/Login";
 import Forgot from "../auth/forgotpassword/forgotpassword";
 import Sidebar from "../sidebar/Sidebar";
@@ -100,7 +101,6 @@ class Main extends Component {
                 <div id="content-wrap">
                   <Route exact path="/" component={Landing} />
                   <Route exact path="/dashboard" component={Dashboard} />
-                  <Route exact path="/onlinecheck" component={OnlineCheck} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/forgotpassword" component={Forgot} />
                   <Route exact path="/colleges" component={Colleges} />
@@ -109,6 +109,7 @@ class Main extends Component {
                   <Route exact path="/researches/:id" component={Research} />
                   <Route exact path="/journals" component={Journals} />
                   <Route exact path="/journals/:id" component={Journal} />
+                  <Route exact path="/localcheck" component={LocalCheck} />
                   <Route exact path="/not-found" component={NotFound} />
                   <Route
                     exact
@@ -125,6 +126,11 @@ class Main extends Component {
                       exact
                       path="/add-course"
                       component={AddCourse}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact path="/onlinecheck" component={OnlineCheck}
                     />
                   </Switch>
                   <Switch>

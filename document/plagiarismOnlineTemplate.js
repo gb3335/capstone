@@ -3,8 +3,15 @@ const moment_timezone = require("moment-timezone");
 
 module.exports = (input) => {
   
-const {typeOfReport, subTypeOfReport , output, pattern, word} = input;
+const {typeOfReport, subTypeOfReport , output, pattern, word, from} = input;
 
+  let tag="";
+
+  if(from==="local"){
+    tag="Documents";
+  }else if(from==="online"){
+    tag="Websites";
+  }
   let little= 0, moderate= 0, heavy=0;
   let docuFound="";
   let title = "";
@@ -214,7 +221,7 @@ mark {
                 <p>${pattern}</p>
             </div>
             <div class="courses" style="font-size: 7px">
-                <h4 style="font-size: 10px">Websites Found: ${little+moderate+heavy}</h4>
+                <h4 style="font-size: 10px">${tag} Found: ${little+moderate+heavy}</h4>
                 <table>
                     <tr>
                     <th>#</th>
