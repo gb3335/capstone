@@ -1,10 +1,15 @@
+const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
 module.exports = ({
 
   user,
   typeOfReport,
+<<<<<<< HEAD
 
+=======
+  volume
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 }) => {
   let nameString = "";
   let userNameString = "";
@@ -12,6 +17,7 @@ module.exports = ({
   let collegeString = "";
   let statusString = "";
   let lastUpdateString = "";
+<<<<<<< HEAD
   let dateCreatedString = "";
 
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
@@ -29,6 +35,19 @@ module.exports = ({
     if (typeof glue == "undefined") {
       var glue = true;
     }
+=======
+  let typeString = "";
+  let abstractString = "";
+  let authorsList = "";
+  let authorsListNoComma = "";
+  let authorsHeader = "";
+  let authorsTitle = "";
+  let volumeString = "";
+
+  const currentDate = moment_timezone()
+    .tz("Asia/Manila")
+    .format("MMMM Do YYYY, h:mm A");
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 
     var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
@@ -63,10 +82,38 @@ module.exports = ({
     )}</li>`;
   }
 
+<<<<<<< HEAD
   let path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
 
 
 
+=======
+  if (authors) {
+    authorsList = journal.author.map(
+      (auth, index) =>
+        `<tr><td>${++index}</td><td>${
+          auth.role === "Author One"
+            ? `${auth.name} (Author One)`
+            : `${auth.name}`
+        }</td></tr>`
+    );
+    authorsHeader = "<tr><th>NO</th><th>NAME</th></tr>";
+
+    authorsTitle = `<h4 style="font-size: 7px">Authors:</h4>`;
+
+    authorsList.map(item => {
+      authorsListNoComma = authorsListNoComma + item;
+    });
+
+    authorsListNoComma =
+      authorsListNoComma +
+      `<tr class="blank_row"><td colspan="2" style="text-align:center;">- Nothing Follows -</td></tr>`;
+  } else {
+    authorsList = "";
+    authorsHeader = "";
+    authorsTitle = "";
+  }
+>>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 
   return `<!DOCTYPE html>
   <html>

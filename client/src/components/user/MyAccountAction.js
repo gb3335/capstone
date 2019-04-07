@@ -1,4 +1,3 @@
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
@@ -60,10 +59,9 @@ class MyAccountAction extends Component {
         this.setState({
           image: "",
           images: []
-        })
+        });
       }
     };
-
   };
 
   onGenerateReport = () => {
@@ -146,7 +144,6 @@ class MyAccountAction extends Component {
     let blockAction;
 
     if (auth.isAuthenticated) {
-
       if (user.email === auth.user.email) {
         editAction = (
 
@@ -157,15 +154,11 @@ class MyAccountAction extends Component {
 
         );
         imageAction = (
-
           <label to="#" htmlFor="imageUpload" className="btn btn-light">
             <i className="fas fa-circle-notch text-info mr-1" />
             Change avatar
           </label>
-
-
-        )
-
+        );
       }
 
 
