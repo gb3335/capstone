@@ -170,7 +170,7 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute
                       exact
-                      path="/edit-account"
+                      path="/edit-account/:oldpath/:oldid"
                       component={EditAccount}
                     />
                   </Switch>

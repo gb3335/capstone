@@ -3,8 +3,8 @@ import axios from "axios";
 import { saveAs } from "file-saver";
 
 import jsscompress from "js-string-compression";
-let comFlag=0;
-let total=0;
+let comFlag = 0;
+let total = 0;
 
 const setAxiosProgress = (input) => {
   return {
@@ -16,29 +16,29 @@ let promises = [];
 
 // Check Plagiarism Local
 export const checkPlagiarismLocal = (input, history) => dispatch => {
-  total=0;
-  comFlag=0;
+  total = 0;
+  comFlag = 0;
   let config = {
-    onUploadProgress: progressEvent =>{
+    onUploadProgress: progressEvent => {
       const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
       // console.log(percentCompleted);
-      
-      if(percentCompleted===100){
+
+      if (percentCompleted === 100) {
         comFlag++;
-        let progress = parseFloat((comFlag/total)*100).toFixed(2).toString().replace(/\.00$/,'');
+        let progress = parseFloat((comFlag / total) * 100).toFixed(2).toString().replace(/\.00$/, '');
         let tag = "Scanning for plagiarism..."
-        if(progress==="100"){
-          tag="Generating Results..."
+        if (progress === "100") {
+          tag = "Generating Results..."
         }
-        const axiosProgress ={
+        const axiosProgress = {
           tag,
           axiosProgress: progress
         }
         // console.log(progress)
         dispatch(setAxiosProgress(axiosProgress));
       }
-      
+
     }
   }
   dispatch(setPlagiarismLocalLoading());
@@ -57,12 +57,12 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
             if (input.abstract) {
               if (research.deleted !== 1) {
                 total++;
-                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
+                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }, config))
               }
             } else {
               if (research.document && research.deleted !== 1) {
                 total++;
-                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
+                promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document }, config))
               }
             }
           }
@@ -78,26 +78,26 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
               newres.push(r.data.localPlagiarism.data)
             })
-            total=0;
-            comFlag=0;
+            total = 0;
+            comFlag = 0;
             newres.sort(function (obj1, obj2) {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            const axiosProgress ={
-              tag:"",
+            const axiosProgress = {
+              tag: "",
               axiosProgress: 0
             }
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
-            if(input.abstract){
+            if (input.abstract) {
               if (input.fromFlag) {
-                history.push(`/localResultSideBySide/research/abstract`);
+                history.push(`/localResultSideBySide/abstract`);
               } else {
-                history.push(`/localresult/research/abstract`);
+                history.push(`/localresult/abstract`);
               }
-            }else{
+            } else {
               if (input.fromFlag) {
                 history.push(`/localResultSideBySide/research`);
               } else {
@@ -126,29 +126,29 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
 // Check Plagiarism Local
 export const journalPlagiarismLocal = (input, history) => dispatch => {
-  total=0;
-  comFlag=0;
+  total = 0;
+  comFlag = 0;
   let config = {
-    onUploadProgress: progressEvent =>{
+    onUploadProgress: progressEvent => {
       const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
       // console.log(percentCompleted);
-      
-      if(percentCompleted===100){
+
+      if (percentCompleted === 100) {
         comFlag++;
-        let progress = parseFloat((comFlag/total)*100).toFixed(2).toString().replace(/\.00$/,'');
+        let progress = parseFloat((comFlag / total) * 100).toFixed(2).toString().replace(/\.00$/, '');
         let tag = "Scanning for plagiarism..."
-        if(progress==="100"){
-          tag="Generating Results..."
+        if (progress === "100") {
+          tag = "Generating Results..."
         }
-        const axiosProgress ={
+        const axiosProgress = {
           tag,
           axiosProgress: progress
         }
         // console.log(progress)
         dispatch(setAxiosProgress(axiosProgress));
       }
-      
+
     }
   }
   dispatch(setPlagiarismLocalLoading());
@@ -164,7 +164,7 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
         input.journals.forEach(function (journal) {
           if (journal._id !== input.docuId) {
             if (journal.document && journal.deleted !== 1) {
-              promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document },config))
+              promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }, config))
               total++;
             }
           }
@@ -184,10 +184,10 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
               // Ascending: first age less than the previous
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
-            total=0;
-            comFlag=0;
-            const axiosProgress ={
-              tag:"",
+            total = 0;
+            comFlag = 0;
+            const axiosProgress = {
+              tag: "",
               axiosProgress: 0
             }
             dispatch(setAxiosProgress(axiosProgress));

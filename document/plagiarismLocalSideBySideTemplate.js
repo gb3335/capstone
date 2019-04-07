@@ -219,19 +219,13 @@ mark {
             <br />
             <br />
             <h4 style="font-size: 10px">Source Document for Plagiarism: ${
-              output[0].Document.Pattern.Name
-            }${journalDetailString}</h4>
+    output[0].Document.Pattern.Name
+    }${journalDetailString}</h4>
             <div class="context">
                 <p>${pattern}</p>
             </div>
             <br />
-<<<<<<< HEAD
             <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}${journalComparedString}</h4>
-=======
-            <h4 style="font-size: 10px">Target Document for Plagiarism: ${
-              output[0].Document.Text.Name
-            }${journalDetailString}</h4>
->>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
             <div class="context2">
                 <p>${text}</p>
             </div>
@@ -244,8 +238,8 @@ mark {
         const canvas = document.getElementById('pie');
         const data = {
             labels : ["Uniqueness Percentage ${parseFloat(clean).toFixed(
-              2
-            )}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
+      2
+    )}", "Similarity Percentage ${parseFloat(plagiarised).toFixed(2)}"],
             datasets : [
                 {
                     data : ${score},

@@ -12,9 +12,8 @@ import SelectListGroup from "../common/SelectListGroup";
 
 class Register extends Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-<<<<<<< HEAD
 
       firstName: '',
       email: '',
@@ -23,15 +22,6 @@ class Register extends Component {
       contact: '',
       userType: 'ADMINISTRATOR',
 
-=======
-      firstName: "",
-      email: "",
-      lastName: "",
-      middleName: "",
-      contact: "",
-      userType: "LIBRARIAN",
-      college: "",
->>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
       errors: {}
     };
   }
@@ -74,18 +64,6 @@ class Register extends Component {
       { label: "ADMINISTRATOR", value: "ADMINISTRATOR" },
       { label: "LIBRARIAN", value: "LIBRARIAN" }
     ];
-<<<<<<< HEAD
-
-=======
-    try {
-      college.colleges.map(college =>
-        collegeOptions.push({
-          label: college.name.fullName,
-          value: college.name.fullName
-        })
-      );
-    } catch (error) {}
->>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 
     if (this.state.userType === "ADMINISTRATOR") {
       return (
@@ -248,13 +226,9 @@ class Register extends Component {
 }
 Register.propTypes = {
   getColleges: PropTypes.func.isRequired,
-<<<<<<< HEAD
   college: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
 
-=======
-  college: PropTypes.object.isRequired
->>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 };
 const mapStateToProps = state => ({
   college: state.college,

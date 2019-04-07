@@ -151,75 +151,10 @@ class Navbar extends Component {
       </ul>
     );
 
-<<<<<<< HEAD
 
 
 
 
-=======
-    const replaceString = require("replace-string");
-    let strstart = 0;
-    let currentLink = window.location.href;
-    let oldpath;
-    let oldid;
-    let linkCutted;
-
-    let mylink;
-    if (currentLink.includes("http://34.229.6.94/")) {
-      linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
-    } else {
-      linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
-    }
-
-    if (linkCutted.includes("/")) {
-      strstart = linkCutted.indexOf("/");
-      oldpath = linkCutted.substring(0, strstart);
-      oldid = linkCutted.substring(strstart + 1, linkCutted.length);
-      mylink =
-        "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
-    } else {
-      if (linkCutted === "") {
-        mylink =
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/" +
-          "undefined" +
-          "/" +
-          oldid;
-      } else {
-        mylink =
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/" +
-          linkCutted +
-          "/" +
-          oldid;
-      }
-    }
-    if (
-      "/myaccount/" +
-        this.props.auth.user.id +
-        "/myaccount/" +
-        this.props.auth.user.id ===
-      mylink.substring(
-        0,
-        (
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/myaccount/" +
-          this.props.auth.user.id
-        ).length
-      )
-    ) {
-      mylink = mylink.substring(
-        ("/myaccount/" + this.props.auth.user.id).length,
-        mylink.length
-      );
-    }
-
-    let oldlink = mylink;
-    mylink = "";
->>>>>>> 583833a47f6f5fe857579e013d17f485cf9d1112
 
     let authLinks;
 
