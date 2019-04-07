@@ -33,7 +33,7 @@ const validateForgotInput = require("../../validation/forgot");
 let pdfUsersTemplate;
 let pdfUserTemplate;
 let fontFooter;
-pdfUsersTemplate = require("../../document/usersTemplate");
+// pdfUsersTemplate = require("../../document/usersTemplate");
 pdfUserTemplate = require("../../document/userTemplate");
 fontFooter = "7px";
 // Load User Model
