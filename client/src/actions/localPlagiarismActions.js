@@ -50,13 +50,13 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
-            if(input.abstract){
+            if (input.abstract) {
               if (input.fromFlag) {
-                history.push(`/localResultSideBySide/research/abstract`);
+                history.push(`/localResultSideBySide/abstract`);
               } else {
-                history.push(`/localresult/research/abstract`);
+                history.push(`/localresult/abstract`);
               }
-            }else{
+            } else {
               if (input.fromFlag) {
                 history.push(`/localResultSideBySide/research`);
               } else {

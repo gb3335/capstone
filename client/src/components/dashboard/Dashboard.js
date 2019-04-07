@@ -94,7 +94,8 @@ class Dashboard extends Component {
                       user.name.lastName;
                   }
                 })}
-                {`by ${name}${(name = "")}`}
+
+                {activity.type == `User` ? "" : `by ${name}${(name = "")}`}
               </b>{" "}
               <Moment fromNow>{activity.date}</Moment>
             </p>
@@ -112,7 +113,7 @@ class Dashboard extends Component {
             {recentActivities}
           </div>
         );
-      } catch (error) {}
+      } catch (error) { }
     }
 
     if (colleges === null || loading) {
@@ -161,16 +162,16 @@ class Dashboard extends Component {
             activityDiv = "col-md-5";
           }
 
-          const labelsFiltered = researchData.labels.filter(function(el) {
+          const labelsFiltered = researchData.labels.filter(function (el) {
             return el != null;
           });
           const datasetsDataFiltered = researchData.datasets[0].data.filter(
-            function(el) {
+            function (el) {
               return el != null;
             }
           );
           const datasetsColorFiltered = researchData.datasets[0].backgroundColor.filter(
-            function(el) {
+            function (el) {
               return el != null;
             }
           );
@@ -226,16 +227,16 @@ class Dashboard extends Component {
             activityDiv = "col-md-5";
           }
 
-          const labelsFiltered1 = journalData.labels.filter(function(el) {
+          const labelsFiltered1 = journalData.labels.filter(function (el) {
             return el != null;
           });
           const datasetsDataFiltered1 = journalData.datasets[0].data.filter(
-            function(el) {
+            function (el) {
               return el != null;
             }
           );
           const datasetsColorFiltered1 = journalData.datasets[0].backgroundColor.filter(
-            function(el) {
+            function (el) {
               return el != null;
             }
           );
@@ -289,7 +290,7 @@ class Dashboard extends Component {
               data: colleges.map(college =>
                 college.deleted === 0
                   ? `${parseInt(college.journalTotal, 10) +
-                      parseInt(college.researchTotal, 10)}`
+                  parseInt(college.researchTotal, 10)}`
                   : null
               ),
               backgroundColor: colleges.map(college =>
@@ -299,16 +300,16 @@ class Dashboard extends Component {
           ]
         };
 
-        const sumlabelsFiltered1 = summaryData.labels.filter(function(el) {
+        const sumlabelsFiltered1 = summaryData.labels.filter(function (el) {
           return el != null;
         });
         const sumdatasetsDataFiltered1 = summaryData.datasets[0].data.filter(
-          function(el) {
+          function (el) {
             return el != null;
           }
         );
         const sumdatasetsColorFiltered1 = summaryData.datasets[0].backgroundColor.filter(
-          function(el) {
+          function (el) {
             return el != null;
           }
         );
@@ -363,7 +364,7 @@ class Dashboard extends Component {
             }
           }
         }
-      } catch (error) {}
+      } catch (error) { }
       dashboardItems = (
         <div className="row">
           <div className="col-12">

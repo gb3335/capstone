@@ -25,6 +25,8 @@ class EditAccount extends Component {
       newpassword2: '',
       password: '',
       newpassword: '',
+      oldlink: `/myaccount/${this.props.auth.user.id}/${this.props.match.params.oldpath}/${this.props.match.params.oldid}`,
+
 
       userName: this.props.auth.user.userName ? this.props.auth.user.userName : '',
       errors: {}
@@ -49,7 +51,8 @@ class EditAccount extends Component {
       lastname: this.state.lastName,
       middlename: this.state.middleName,
       contact: this.state.contact,
-      id: this.props.auth.user.id
+      id: this.props.auth.user.id,
+      oldlink: this.state.oldlink
     };
 
 
@@ -64,7 +67,8 @@ class EditAccount extends Component {
 
     const userData = {
       userName: this.state.userName,
-      id: this.props.auth.user.id
+      id: this.props.auth.user.id,
+      oldlink: this.state.oldlink
     };
 
     this.refs.resBtn1.setAttribute('disabled', 'disabled');
@@ -80,7 +84,8 @@ class EditAccount extends Component {
       password: this.state.password,
       newpassword: this.state.newpassword,
       newpassword2: this.state.newpassword2,
-      id: this.props.auth.user.id
+      id: this.props.auth.user.id,
+      oldlink: this.state.oldlink
     };
 
 
@@ -99,7 +104,7 @@ class EditAccount extends Component {
 
   render() {
     const { errors } = this.props;
-
+    
     return (
 
       <div className="research">
@@ -110,7 +115,7 @@ class EditAccount extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <Link
-                      to={/viewusers/ + this.props.auth.user.id}
+                      to={this.state.oldlink}
                       className="btn btn-light mb-3 float-left"
                     >
                       <i className="fas fa-angle-left" /> Back to Accounts

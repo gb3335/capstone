@@ -10,6 +10,7 @@ module.exports = ({ activities, typeOfReport }) => {
       `<tr>
         <td>${++index}</td>
         <td>${activity.date}</td>
+        <td>${activity.time}</td>
         <td>${activity.user}</td>
         <td>${activity.type}</td>
        
@@ -120,6 +121,7 @@ module.exports = ({ activities, typeOfReport }) => {
           <tr>
             <th>NO</th>
             <th>DATE</th>
+            <th>TIME</th>
             <th>USER</th>
             <th>TYPE</th>
             

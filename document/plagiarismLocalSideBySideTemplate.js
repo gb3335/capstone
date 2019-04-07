@@ -200,7 +200,7 @@ mark {
           City of Malolos, Bulacan
           <br />
           <br />
-          <h5>${typeOfReport}</h5>
+          <h5>${reportFor === "Journal" ? `Journal Plagiarism Check Result` : typeOfReport}</h5>
           <h6>${subTypeOfReport} ${currentDate}</h6>
           <h5>University Research Office</h5>
         </div>
@@ -219,7 +219,7 @@ mark {
                 <p>${pattern}</p>
             </div>
             <br />
-            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}${journalDetailString}</h4>
+            <h4 style="font-size: 10px">Target Document for Plagiarism: ${output[0].Document.Text.Name}${journalComparedString}</h4>
             <div class="context2">
                 <p>${text}</p>
             </div>

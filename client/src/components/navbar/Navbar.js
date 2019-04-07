@@ -83,6 +83,49 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
     let path = "";
 
+    let currentLink = window.location.href;
+    let firstOccurencePath;
+    let firstOccurence = currentLink.indexOf("/");
+    firstOccurencePath = currentLink.substring(firstOccurence + 1, currentLink.length);
+    let secondOccurencePath;
+    let secondOccurence = firstOccurencePath.indexOf("/");
+    secondOccurencePath = firstOccurencePath.substring(secondOccurence + 1, firstOccurencePath.length);
+    let thirdOccurencePath;
+    let thirdOccurence = secondOccurencePath.indexOf("/");
+    thirdOccurencePath = secondOccurencePath.substring(thirdOccurence + 1, secondOccurencePath.length);
+    let oldid;
+    let oldlink;
+    let fourthOccurencePath;
+    let fourthOccurence;
+    let backlink;
+    if (thirdOccurencePath.includes("/")) {
+      fourthOccurence = thirdOccurencePath.indexOf("/");
+      fourthOccurencePath = thirdOccurencePath.substring(fourthOccurence + 1, thirdOccurencePath.length);
+      oldid = fourthOccurencePath;
+      oldlink = thirdOccurencePath.substring(0, fourthOccurence);
+      backlink = `${oldlink}/${oldid}`
+    }
+    else {
+      oldid = thirdOccurencePath;
+      oldlink = thirdOccurencePath;
+      backlink = `${oldlink}/${oldid}`
+    }
+    let toCompare = (`myaccount/${this.props.auth.user.id}`).length;
+    let thisOldLink = (`myaccount/${this.props.auth.user.id}/${oldlink}/${oldid}`).length;
+
+
+    if (thirdOccurencePath.substring(0, toCompare) === `myaccount/${this.props.auth.user.id}`) {
+
+      backlink = thirdOccurencePath.substring(toCompare + 1, thisOldLink)
+    }
+
+    if (backlink === '/') {
+      backlink = `0000/0000`;
+
+    }
+
+
+
     if (user.avatar === "/images/User.png") {
       path = "/images/User.png";
     } else {
@@ -90,6 +133,7 @@ class Navbar extends Component {
         "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
         user.avatar;
     }
+
 
     // const { pageTitle } = this.props.sidebar;
 
@@ -107,59 +151,10 @@ class Navbar extends Component {
       </ul>
     );
 
-    const replaceString = require("replace-string");
-    let strstart = 0;
-    let currentLink = window.location.href;
-    let oldpath;
-    let oldid;
-    let linkCutted;
-
-    let mylink;
-    if (currentLink.includes("http://34.229.6.94/")) {
-      linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
-    }
-    else {
-      linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
-    }
 
 
 
-    if (linkCutted.includes("/")) {
-      strstart = linkCutted.indexOf("/");
-      oldpath = linkCutted.substring(0, strstart);
-      oldid = linkCutted.substring(strstart + 1, linkCutted.length);
-      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
 
-    } else {
-      if (linkCutted === "") {
-        mylink =
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/" +
-          "undefined" +
-          "/" +
-          oldid;
-      } else {
-
-
-        mylink =
-          "/myaccount/" + this.props.auth.user.id + "/" + linkCutted + "/" + oldid;
-
-      }
-    }
-    if (
-      "/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id ===
-      mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)
-    ) {
-      mylink = mylink.substring(
-        ("/myaccount/" + this.props.auth.user.id).length,
-        mylink.length
-      );
-    }
-
-
-    let oldlink = mylink;
-    mylink = "";
 
     let authLinks;
 
@@ -192,7 +187,7 @@ class Navbar extends Component {
               <div className="invisibleNavbarDiv" />
               <ul className="account_submenus">
                 <li>
-                  <Link to={oldlink} className="accountNavBarBtn">
+                  <Link to={`/myaccount/${this.props.auth.user.id}/${backlink}`} className="accountNavBarBtn">
                     <i className="fa fa-user-tie pl-2 pr-2" /> My Account <br />
                     <span>{user.userType}</span>
                   </Link>

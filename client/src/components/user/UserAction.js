@@ -130,7 +130,7 @@ class UserAction extends Component {
         )
 
       }
-      if (auth.user.userType === 'ADMINISTRATOR') {
+      if (this.props.users.user.userType !== 'ADMINISTRATOR') {
         blockAction = (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
           <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
         </Link>)
@@ -172,13 +172,13 @@ class UserAction extends Component {
         >
           Status Changed.
         </SweetAlert>
-        <div className="btn-group mb-3 btn-group-sm" >
+        <div className="btn-group mb-3 btn-group-sm" role="group">
           {editAction}
         </div>
-        <div className="btn-group mb-3 btn-group-sm" >
+        <div className="btn-group mb-3 btn-group-sm" role="group">
           {blockAction}
         </div>
-        <div className="btn-group mb-2 btn-group-sm" role="group">
+        <div className="btn-group mb-3 btn-group-sm" role="group">
           {imageAction}
           <ImageFieldGroup
             placeholder="* Images"
@@ -188,6 +188,7 @@ class UserAction extends Component {
             id="imageUpload"
           />
         </div>
+
 
       </div>
     );

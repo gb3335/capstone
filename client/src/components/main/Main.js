@@ -108,8 +108,8 @@ class Main extends Component {
               <Route exact path="/journals" component={Journals} />
               <Route exact path="/journals/:id" component={Journal} />
               <Route exact path="/not-found" component={NotFound} />
-              <Route exact path="/localresult/research/abstract" component={LocalResult} />
-              <Route exact path="/localResultSideBySide/research/abstract" component={LocalResultSideBySide} />
+              <Route exact path="/localresult/abstract" component={LocalResult} />
+              <Route exact path="/localResultSideBySide/abstract" component={LocalResultSideBySide} />
               <Switch>
                 <PrivateRoute exact path="/add-course" component={AddCourse} />
               </Switch>
@@ -140,7 +140,7 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/myaccount/:id/:oldurl/:oldid"
+                  path="/myaccount/:id/:oldpath/:oldid"
                   component={MyAccount}
                 />
               </Switch>
@@ -150,7 +150,7 @@ class Main extends Component {
               <Switch>
                 <PrivateRoute
                   exact
-                  path="/edit-account"
+                  path="/edit-account/:oldpath/:oldid"
                   component={EditAccount}
                 />
               </Switch>

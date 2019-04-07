@@ -1,6 +1,6 @@
 import axios from "axios";
-
-import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS } from "./types";
+import { saveAs } from "file-saver";
+import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS, CHANGE_USER_BUTTON_STATUS, GET_USERS } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { getUserById } from "./userActions";
@@ -40,7 +40,7 @@ export const editAccount = (userData, history) => dispatch => {
       dispatch(setCurrentUser(decoded));
 
       if (userData.id) {
-        history.push(`/viewusers`);
+        history.push(`${userData.oldlink}`);
       } else {
         history.push(`/viewusers`);
       }
@@ -67,7 +67,7 @@ export const setCurrentUser = decoded => {
 
 
 export const changeAvatar = (userData, history) => (dispatch, decoded) => {
-
+  dispatch(setUserLoading());
   axios
     .post("/api/users/avatar", userData)
     .then(res => {
@@ -95,6 +95,7 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
           const decoded = jwt_decode(token);
           // Set current user
           dispatch(setCurrentUser(decoded));
+          dispatch(getUserById(userData.id));
           axios
             .get(`/api/users/${userData.id}`)
             .then(res =>
@@ -106,9 +107,9 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
             )
 
           if (userData.oldlink) {
-            history.push(userData.oldlink);
+            history.push(`/${userData.oldlink}`);
           } else {
-            history.push(`/viewusers/${Data.id}`);
+            history.push(`/myaccount/${userData.id}`);
           }
         })
 
@@ -137,9 +138,9 @@ export const editUsername = (userData, history) => dispatch => {
       dispatch(setCurrentUser(decoded));
 
       if (userData.id) {
-        history.push(`/viewusers/${userData.id}`);
+        history.push(`${userData.oldlink}`);
       } else {
-        history.push(`/viewusers/${userData.id}`);
+        history.push(`/viewusers`);
       }
     })
     .catch(err =>
@@ -154,7 +155,7 @@ export const editPassword = (userData, history) => dispatch => {
     .post("/api/users/profile/updatepassword", userData)
     .then(res => {
       if (userData.id) {
-        history.push(`/viewusers`);
+        history.push(`${userData.oldlink}`);
       } else {
         history.push(`/viewusers`);
       }
@@ -173,17 +174,8 @@ export const changeStatus = (userData, history) => dispatch => {
     .post("/api/users/profile/changestatus", userData)
     .then(res => {
       dispatch(getUserById(userData.id));
-      if (userData.id === userData.loginid) {
+      history.push(`/viewusers/${userData.id}`);
 
-        localStorage.removeItem("jwtToken");
-        // Remove the auth header for future request
-        setAuthToken(false);
-        // Set the current to an empty object which will also set isAuthenticated FALSE
-        dispatch(setCurrentUser({}));
-
-      } else {
-        history.push(`/viewusers/${userData.id}`);
-      }
     })
     .catch(err =>
       dispatch({
@@ -193,6 +185,86 @@ export const changeStatus = (userData, history) => dispatch => {
     );
 };
 
+
+// Create Report for all Journals
+export const createReportForUsers = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/users/createReport/users", reportData)
+    .then(() =>
+      axios
+        .get("/api/users/fetchReport/users", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "UsersReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function () {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_USERS,
+        payload: null
+      })
+    );
+};
+
+export const createReportForUser = reportData => dispatch => {
+  dispatch(changeButtonStatus(true));
+  axios
+    .post("/api/users/createReport/user", reportData)
+    .then(() =>
+      axios
+        .get("/api/users/fetchReport/user", { responseType: "blob" })
+        .then(res => {
+          const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+          dispatch(changeButtonStatus(false));
+          saveAs(pdfBlob, "UserReport.pdf");
+
+          // send base64 to api for s3 upload -FOR ANDROID-
+          if (reportData.android) {
+            const reader = new FileReader();
+            reader.readAsDataURL(pdfBlob);
+            reader.onloadend = function () {
+              const pdfData = {
+                base64: reader.result
+              };
+              axios
+                .post("/api/colleges/uploadS3/android", pdfData)
+                .then()
+                .catch(err => console.log(err));
+            };
+          }
+        })
+    )
+    .catch(err =>
+      dispatch({
+        type: GET_USER,
+        payload: null
+      })
+    );
+};
+
+export const changeButtonStatus = flag => {
+  return {
+    type: CHANGE_USER_BUTTON_STATUS,
+    payload: flag
+  };
+};
 // set loading state
 export const setUserLoading = () => {
   return {

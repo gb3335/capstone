@@ -5,7 +5,7 @@ import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
 import './ViewUsers.css';
 import moment from "moment";
-
+import SweetAlert from "react-bootstrap-sweetalert";
 
 import { getUserLogs, createReportForUserlogs } from "../../actions/userActions";
 import UserLogsAction from "./UserLogsAction";
@@ -15,10 +15,12 @@ class UserLogs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
+      generateAlert: false
     };
   }
-
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
+  };
   componentDidMount() {
     this.props.getUserLogs();
   }
@@ -37,13 +39,13 @@ class UserLogs extends Component {
       " " +
       this.props.auth.user.name.lastName;
 
-    const userlogsRepor = {
+    const userlogsReport = {
       activities: rows,
       typeOfReport: "User Logs Report",
       printedBy: name
     };
 
-    this.props.createReportForUserlogs(userlogsRepor);
+    this.props.createReportForUserlogs(userlogsReport);
     // show generate alert
     this.setState({ generateAlert: true });
   };
@@ -78,12 +80,7 @@ class UserLogs extends Component {
       userlogs.map((log, index) => {
         users.map(user => {
           if (log.by === user._id) {
-            names[index] =
-              user.name.firstName +
-              " " +
-              user.name.middleName.getInitials() +
-              ". " +
-              user.name.lastName;
+            names[index] = user.userName ? user.userName : user.email;
           }
         });
       });
@@ -94,7 +91,11 @@ class UserLogs extends Component {
             return {
               date:
                 moment(userlog.date).format(
-                  "MMMM Do YYYY, h:mm A"
+                  "MMMM Do YYYY "
+                ),
+              time:
+                moment(userlog.date).format(
+                  "h:mm A"
                 ),
               user: names[index]
               ,
@@ -118,10 +119,11 @@ class UserLogs extends Component {
       userlogItems = (
         <MaterialTable
           columns={[
-            { title: "Date", field: "date", defaultGroupSort: "desc" },
-            { title: "Name", field: "user", defaultGroupSort: "desc" },
-            { title: "Type of user", field: "userType", defaultGroupSort: "desc" },
-            { title: "Activity", field: "type", defaultGroupSort: "desc" },
+            { title: "Date", field: "date" },
+            { title: "Time", field: "time" },
+            { title: "Name", field: "user" },
+            { title: "Type of user", field: "userType" },
+            { title: "Activity", field: "type" },
             // defaultGroupOrder: 0, defaultGroupSort: "desc"
           ]}
           options={{
@@ -129,7 +131,6 @@ class UserLogs extends Component {
             emptyRowsWhenPaging: false,
             columnsButton: true,
             pageSize: 30,
-            grouping: true,
             selection: true
           }}
           actions={[
@@ -154,14 +155,23 @@ class UserLogs extends Component {
 
     return (
       <div className="userlogs">
-
+        {/* ALERTS */}
+        {/* GENERATE REPORT ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12">
             <div className="usersBg ">
               <div className="light-overlay p-2">
                 <div className="display-4 text-center mb-1">User Log
                 <p className="lead text-center ">
-                    List of all users login
+                    List of all users login and logout
                 </p>
 
                 </div>
