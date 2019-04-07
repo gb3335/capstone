@@ -62,7 +62,7 @@ class Navbar extends Component {
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
       contact: this.props.auth.user.contact,
-      by: this.props.auth.user.id,
+      by: this.props.auth.user.id
     };
 
     e.preventDefault();
@@ -117,19 +117,16 @@ class Navbar extends Component {
     let mylink;
     if (currentLink.includes("http://34.229.6.94/")) {
       linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
-    }
-    else {
+    } else {
       linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
     }
-
-
 
     if (linkCutted.includes("/")) {
       strstart = linkCutted.indexOf("/");
       oldpath = linkCutted.substring(0, strstart);
       oldid = linkCutted.substring(strstart + 1, linkCutted.length);
-      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
-
+      mylink =
+        "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
     } else {
       if (linkCutted === "") {
         mylink =
@@ -140,23 +137,35 @@ class Navbar extends Component {
           "/" +
           oldid;
       } else {
-
-
         mylink =
-          "/myaccount/" + this.props.auth.user.id + "/" + linkCutted + "/" + oldid;
-
+          "/myaccount/" +
+          this.props.auth.user.id +
+          "/" +
+          linkCutted +
+          "/" +
+          oldid;
       }
     }
     if (
-      "/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id ===
-      mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)
+      "/myaccount/" +
+        this.props.auth.user.id +
+        "/myaccount/" +
+        this.props.auth.user.id ===
+      mylink.substring(
+        0,
+        (
+          "/myaccount/" +
+          this.props.auth.user.id +
+          "/myaccount/" +
+          this.props.auth.user.id
+        ).length
+      )
     ) {
       mylink = mylink.substring(
         ("/myaccount/" + this.props.auth.user.id).length,
         mylink.length
       );
     }
-
 
     let oldlink = mylink;
     mylink = "";
@@ -224,16 +233,18 @@ class Navbar extends Component {
             <i className="fa fa-grip-vertical" />
           </Link>
         </div>
-        <div className="ml-3" style={{ width: "30%" }}>
+
+        <div className="ml-3" style={{ width: "27%" }}>
           <SearchBar />
         </div>
-
-        <div className="head-title">
-          {/* <span>{pageTitle}</span> */}
-          {/* <Link to="/">{pageTitle}</Link> */}
-        </div>
         <div className="spacer" />
-        <div className="navbar_items" id="pangcol" aria-expanded="true">
+
+        <div
+          className="navbar_items"
+          id="pangcol"
+          aria-expanded="true"
+          style={{ fontSize: "14px" }}
+        >
           {isAuthenticated ? authLinks : guestLinks}
         </div>
       </nav>
