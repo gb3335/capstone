@@ -253,19 +253,19 @@ router.post(
                     { $set: newUserOld },
                     { new: true }
                   )
-                    .then(user => res.json(user))
-                    .catch(err => console.log(err));
+                    .then(() => {
+                      const newUser = {
+                        college: req.body.fullName
+                      };
 
-                  const newUser = {
-                    college: req.body.fullName
-                  };
-
-                  User.findOneAndUpdate(
-                    { _id: req.body.librarianId },
-                    { $set: newUser },
-                    { new: true }
-                  )
-                    .then(user => res.json(user))
+                      User.findOneAndUpdate(
+                        { _id: req.body.librarianId },
+                        { $set: newUser },
+                        { new: true }
+                      )
+                        .then(user => res.json(user))
+                        .catch(err => console.log(err));
+                    })
                     .catch(err => console.log(err));
 
                   // update college

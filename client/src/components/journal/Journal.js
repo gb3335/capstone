@@ -186,8 +186,14 @@ class Journal extends Component {
 
       if (this.props.auth.isAuthenticated) {
         if (deleted === 0) {
-          authorAction = <JournalAuthorAction />;
-          imageAction = <JournalImageAction />;
+          if (
+            (this.props.auth.user.userType === "LIBRARIAN" &&
+              this.props.auth.user.college === journal.college) ||
+            this.props.auth.user.userType === "ADMINISTRATOR"
+          ) {
+            authorAction = <JournalAuthorAction />;
+            imageAction = <JournalImageAction />;
+          }
           docAction = <JournalDocumentAction journal={journal} />;
         }
         // check if journal is deleted
@@ -255,7 +261,13 @@ class Journal extends Component {
             </a>
           );
         }
-        journalAction = <JournalActions />;
+        if (
+          (this.props.auth.user.userType === "LIBRARIAN" &&
+            this.props.auth.user.college === journal.college) ||
+          this.props.auth.user.userType === "ADMINISTRATOR"
+        ) {
+          journalAction = <JournalActions />;
+        }
         doc = <JournalDocument journal={journal} />;
         docSideAction = (
           <a
@@ -336,6 +348,16 @@ class Journal extends Component {
         journalContent = <Spinner />;
       } else {
         try {
+          if (
+            this.props.auth.user.userType === "LIBRARIAN" &&
+            this.props.auth.user.college !== this.props.journal.journal.college
+          ) {
+            docSideAction = "";
+            reportSideAction = "";
+            hideAction = "";
+            deletedAction = "";
+          }
+
           journalContent = (
             <div>
               {/* <div hidden>

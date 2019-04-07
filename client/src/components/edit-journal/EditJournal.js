@@ -50,15 +50,15 @@ class EditJournal extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === this.props.journal.journal.college
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
 
@@ -135,15 +135,15 @@ class EditJournal extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-          course.deleted === 0
-            ? course.status === 0
-              ? this.state.courseOptions.push({
-                label: course.name,
-                value: course.name
-              })
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                    label: course.name,
+                    value: course.name
+                  })
+                : ""
               : ""
-            : ""
-        )
+          )
         : ""
     );
   };
@@ -188,15 +188,28 @@ class EditJournal extends Component {
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
-      college.colleges.map(college =>
-        college.deleted === 0
-          ? collegeOptions.push({
-            label: college.name.fullName,
-            value: college.name.fullName
-          })
-          : ""
-      );
-    } catch (error) { }
+      if (this.props.auth.user.userType === "LIBRARIAN") {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? college.name.fullName === this.props.auth.user.college
+              ? collegeOptions.push({
+                  label: college.name.fullName,
+                  value: college.name.fullName
+                })
+              : ""
+            : ""
+        );
+      } else {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? collegeOptions.push({
+                label: college.name.fullName,
+                value: college.name.fullName
+              })
+            : ""
+        );
+      }
+    } catch (error) {}
 
     return (
       <div className="create-research">

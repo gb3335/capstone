@@ -90,7 +90,7 @@ class ResearchImageActions extends Component {
     let docuItem;
 
     docuItem = (
-      <div className="docuItem btn-group-sm">
+      <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
         <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
           <i className="fas fa-search text-info mr-1" />
           Check Abstract |

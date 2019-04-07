@@ -9,7 +9,7 @@ import {
   onSideBySide
 } from "../../actions/journalActions";
 import { journalPlagiarismLocal } from "../../actions/localPlagiarismActions";
-import { Progress } from 'react-sweet-progress';
+import { Progress } from "react-sweet-progress";
 import "react-sweet-progress/lib/style.css";
 
 import "./JournalDocumentAction.css";
@@ -91,7 +91,7 @@ class ResearchImageActions extends Component {
 
     if (journal.document) {
       docuItem = (
-        <div className="docuItem btn-group-sm">
+        <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
             Check Document |
@@ -125,7 +125,11 @@ class ResearchImageActions extends Component {
       );
     } else {
       docuItem = (
-        <div className="btn-group mb-3 btn-group-sm" role="group">
+        <div
+          className="btn-group mb-3 btn-group-sm"
+          role="group"
+          style={{ overflow: "auto" }}
+        >
           <label to="#" htmlFor="docUpload" className="btn btn-light">
             <i className="fas fa-plus text-info mr-1" />
             Add Document
@@ -136,15 +140,16 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading ? <div>
-          <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
-          <Progress
-              
+        {this.props.localPlagiarism.loading ? (
+          <div>
+            <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+            <Progress
               percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
-              
-            /> 
-
-        </div>: docuItem}
+            />
+          </div>
+        ) : (
+          docuItem
+        )}
 
         <div hidden>
           <FileFieldGroup

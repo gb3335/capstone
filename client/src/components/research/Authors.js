@@ -62,13 +62,14 @@ class Authors extends Component {
       // Sorted Authors
       let sortedAuthor = sort(this.props.author).asc(u => u.name);
 
-      columnButton = <th />;
       if (research.deleted === 0) {
         if (
           (this.props.auth.user.userType === "LIBRARIAN" &&
             this.props.auth.user.college === research.college) ||
           this.props.auth.user.userType === "ADMINISTRATOR"
         ) {
+          columnButton = <th />;
+
           author = sortedAuthor.map(author => (
             <tr key={author._id}>
               <td>

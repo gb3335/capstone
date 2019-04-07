@@ -169,14 +169,27 @@ class EditResearch extends Component {
     let collegeOptions = [{ label: "* Select College", value: "" }];
 
     try {
-      college.colleges.map(college =>
-        college.deleted === 0
-          ? collegeOptions.push({
-              label: college.name.fullName,
-              value: college.name.fullName
-            })
-          : ""
-      );
+      if (this.props.auth.user.userType === "LIBRARIAN") {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? college.name.fullName === this.props.auth.user.college
+              ? collegeOptions.push({
+                  label: college.name.fullName,
+                  value: college.name.fullName
+                })
+              : ""
+            : ""
+        );
+      } else {
+        college.colleges.map(college =>
+          college.deleted === 0
+            ? collegeOptions.push({
+                label: college.name.fullName,
+                value: college.name.fullName
+              })
+            : ""
+        );
+      }
     } catch (error) {}
 
     return (

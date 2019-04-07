@@ -91,7 +91,7 @@ class ResearchImageActions extends Component {
 
     if (research.document) {
       docuItem = (
-        <div className="docuItem btn-group-sm">
+        <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
           <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
             <i className="fas fa-search text-info mr-1" />
             Check Document |
@@ -125,7 +125,11 @@ class ResearchImageActions extends Component {
       );
     } else {
       docuItem = (
-        <div className="btn-group mb-3 btn-group-sm" role="group">
+        <div
+          className="btn-group mb-3 btn-group-sm"
+          role="group"
+          style={{ overflow: "auto" }}
+        >
           <label to="#" htmlFor="docUpload" className="btn btn-light">
             <i className="fas fa-plus text-info mr-1" />
             Add Document
