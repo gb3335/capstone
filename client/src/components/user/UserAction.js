@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ImageFieldGroup from "../common/ImageFieldGroup";
-import { changeStatus, changeAvatar } from '../../actions/registerActions';
+import { changeStatus, changeAvatar, createReportForUser } from '../../actions/registerActions';
 
 
 
@@ -29,6 +29,7 @@ class UserAction extends Component {
       showAlert: false,
       showAlertCancel: false,
       showAlertOkay: false,
+      generateAlert: false,
       image: "",
       images: []
     };
@@ -66,7 +67,33 @@ class UserAction extends Component {
     };
 
   };
+  onGenerateReport = () => {
+    const name =
+      this.props.auth.user.name.firstName +
+      " " +
+      this.props.auth.user.name.middleName +
+      " " +
+      this.props.auth.user.name.lastName;
 
+    const usersReport = {
+      user: this.props.users.user,
+      typeOfReport: "User Report",
+      printedBy: name
+    };
+
+    this.props.createReportForUser(usersReport);
+
+    // show generate alert
+    this.setState({ generateAlert: true });
+
+
+  };
+
+
+  onGenerateAlert = () => {
+    this.setState({ generateAlert: false });
+
+  };
   onDeleteAlert = () => {
     this.setState({ deleteAlert: true });
   };
@@ -139,6 +166,16 @@ class UserAction extends Component {
     }
     return (
       <div>
+        {/* ALERTS */}
+        {/* GENERATE REPORT ALERT */}
+        <SweetAlert
+          show={this.state.generateAlert}
+          success
+          title="Great!"
+          onConfirm={this.onGenerateAlert}
+        >
+          Please wait for the report to generate
+        </SweetAlert>
         <SweetAlert
           show={this.state.deleteAlert}
           warning
@@ -188,6 +225,11 @@ class UserAction extends Component {
             id="imageUpload"
           />
         </div>
+        <div className="btn-group mb-3 btn-group-sm" role="group">
+          <Link to="#" onClick={this.onGenerateReport} className="btn btn-light">
+            <i className="fas fa-poll-h text-info mr-1" />Create Report
+        </Link>
+        </div>
 
 
       </div>
@@ -198,7 +240,8 @@ class UserAction extends Component {
 UserAction.propTypes = {
   users: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  changeAvatar: PropTypes.func.isRequired
+  changeAvatar: PropTypes.func.isRequired,
+  createReportForUser: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
   users: state.users,
@@ -207,5 +250,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeStatus, changeAvatar }
+  { changeStatus, changeAvatar, createReportForUser }
 )(withRouter(UserAction));
