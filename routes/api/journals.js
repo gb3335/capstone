@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/journalDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function(data) {
+  pdf(dataBuffer).then(function (data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -152,9 +152,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                    name: aut.name,
-                    role: "Author"
-                  })
+                  name: aut.name,
+                  role: "Author"
+                })
                 : "";
             });
 
@@ -489,7 +489,7 @@ router.post(
         Key: `journalDocuments/${req.body.oldFile}`
       };
 
-      s3.deleteObject(params, function(err, data) {
+      s3.deleteObject(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -528,12 +528,12 @@ router.post(
         directory: "./routes/downloadedDocu",
         filename: req.body.journalId + ".pdf"
       };
-      download(docPath, options, function(err) {
+      download(docPath, options, function (err) {
         if (err) console.log(err);
         console.log("Document successfully downloaded.");
         pdfUtil.pdfToText(
           `./routes/downloadedDocu/${options.filename}`,
-          function(err, data) {
+          function (err, data) {
             fs.unlink(`./routes/downloadedDocu/${options.filename}`, err => {
               if (err) throw err;
               console.log("successfully deleted");
@@ -555,6 +555,7 @@ router.post(
               // add activity
               const newActivity = {
                 title: "Document added to " + journal.title,
+                type: "Journal",
                 by: req.body.username
               };
               new Activity(newActivity).save();
@@ -590,7 +591,7 @@ router.delete(
       Key: `journalDocuments/${req.params.filename}`
     };
 
-    s3.deleteObject(params, function(err, data) {
+    s3.deleteObject(params, function (err, data) {
       if (err) console.log(err, err.stack);
       else console.log(data);
     });
@@ -608,7 +609,8 @@ router.delete(
       // add activity
       const newActivity = {
         title: "Document removed from " + journal.title,
-        by: req.params.name
+        by: req.params.name,
+        type: "Journal"
       };
       new Activity(newActivity).save();
     });
@@ -760,7 +762,8 @@ router.post(
         title: req.body.hidden
           ? "Journal: " + journal.title + " hidden from list"
           : "Journal: " + journal.title + " moved to bin",
-        by: req.body.username
+        by: req.body.username,
+        type: "Journal"
       };
       new Activity(newActivity).save();
 
@@ -836,7 +839,8 @@ router.post(
         title: req.body.hidden
           ? "Journal: " + journal.title + " showed in list"
           : "Journal: " + journal.title + " restored from bin",
-        by: req.body.username
+        by: req.body.username,
+        type: "Journal"
       };
       new Activity(newActivity).save();
 

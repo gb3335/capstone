@@ -317,7 +317,6 @@ class RegisterActions extends Component {
                   <input
                     type="button"
                     value="Generate Report"
-                    onClick={this.onGenerateReport}
                     className="btn btn-info disabled"
                   />
                 ) : (
