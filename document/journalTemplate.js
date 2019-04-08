@@ -60,12 +60,17 @@ module.exports = ({
     typeString = `<li>Type: ${journal.type}</li>`;
   }
   if (description) {
-    descriptionString = journal.description === null | journal.description === "" | journal.description === "undefined" ? `<div class="details" style="font-size: 7px">
+    descriptionString =
+      (journal.description === null) |
+      (journal.description === "") |
+      (journal.description === "undefined")
+        ? `<div class="details" style="font-size: 7px">
                         <h4 style="font-size: 7px">Jounal Details:</h4>
                         <div>
                           <p>${journal.description}</p>
                         </div>
-                      </div>`: `<div class="details" style="font-size: 7px">
+                      </div>`
+        : `<div class="details" style="font-size: 7px">
                       <h4 style="font-size: 7px">Jounal Details:</h4>
                       <div>
                         <p>No details</p>
@@ -161,7 +166,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 9px">
+        <div class="item1 headerr" style="font-size: 7px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"

@@ -210,7 +210,7 @@ module.exports = ({
     </head>
     <body>
       <div class="grid-container">
-        <div class="item1 headerr" style="font-size: 9px">
+        <div class="item1 headerr" style="font-size: 7px">
           <img
             src="http://www.bulsu.edu.ph/resources/bulsu_red.png"
             alt="bulsu-logo"
