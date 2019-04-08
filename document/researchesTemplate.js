@@ -252,7 +252,7 @@ module.exports = ({
           <table>
           <colgroup>
           <col span="1" style="width: 5%;">
-          <col span="1" style="width: 20%;">
+          <col span="1" style="width: 10%;">
           <col span="1" style="width: 10%;">
           <col span="1" style="width: 10%;">
           <col span="1" style="width: 5%;">
