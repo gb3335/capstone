@@ -56,6 +56,10 @@ module.exports = function validateResearchInput(data) {
     errors.pages = "Journal pages is invalid";
   }
 
+  if (!Validator.isNumeric(data.volume)) {
+    errors.volume = "Journal volume is invalid";
+  }
+
   if (Validator.isEmpty(data.authorOne)) {
     errors.authorOne = "Author One is required";
   }
