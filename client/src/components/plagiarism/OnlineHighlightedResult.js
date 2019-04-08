@@ -15,7 +15,7 @@ import "./OnlineHighlightedResult.css"
       words: [],
       pattern: ""
     };
-    
+
   }
 
   componentWillReceiveProps(nextProps){
@@ -85,7 +85,8 @@ import "./OnlineHighlightedResult.css"
     return (
      
         <div className="hightlightSpanDivs">
-          <div className="highlightComponentDivs">
+          <div className="highlightComponentDivs" ref={this.highlightRef}>
+          <p>
             <Highlighter
               className="highlightSpan"
               highlightClassName="hightlight"
@@ -94,6 +95,7 @@ import "./OnlineHighlightedResult.css"
               textToHighlight={this.state.pattern}
               findChunks={this.findChunksAtBeginningOfWords}
             />
+            </p>
           </div>
           
         </div>

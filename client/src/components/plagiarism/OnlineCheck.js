@@ -32,7 +32,6 @@ class OnlineCheck extends Component {
             errors: {},
             ocrProgress: ""
         }
-
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
         this.onClickShowDetails = this.onClickShowDetails.bind(this);
@@ -71,7 +70,6 @@ class OnlineCheck extends Component {
             })
         
         
-
         this.setState({index, words})
         this.props.setPlagiarismOnlineShowDetails();
     }
@@ -192,7 +190,7 @@ class OnlineCheck extends Component {
                                                 <div className="spacer"/>
                                                 <button onClick={this.onClickHideDetails} className="close">x</button>
                                             </div>
-                                            <div className="sourceContent">
+                                            <div className="sourceContent" ref={this.highlightRef}>
                                                 <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
                                             </div>
                                         </div>
