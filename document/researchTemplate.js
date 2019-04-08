@@ -113,14 +113,14 @@ module.exports = ({
         }
   
         .bulsu-logo {
-          width: 5rem;
-          height: 5rem;
+          width: 3rem;
+          height: 3rem;
           float: left;
         }
   
         .cict-logo {
-          width: 5rem;
-          height: 5rem;
+          width: 3rem;
+          height: 3rem;
           float: right;
           visibility:hidden;
         }
