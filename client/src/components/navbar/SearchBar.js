@@ -13,17 +13,17 @@ import MenuItem from "@material-ui/core/MenuItem";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { emphasize } from "@material-ui/core/styles/colorManipulator";
 
+import "./Navbar.css";
+
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    height: 250,
-    fontSize: 12
+    height: 250
   },
   input: {
     display: "flex",
     padding: 0,
-    cursor: "pointer",
-    fontSize: 14
+    cursor: "pointer"
   },
   valueContainer: {
     display: "flex",
@@ -33,8 +33,7 @@ const styles = theme => ({
     overflow: "hidden"
   },
   chip: {
-    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
-    fontSize: 12
+    margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`
   },
   chipFocused: {
     backgroundColor: emphasize(
@@ -42,36 +41,30 @@ const styles = theme => ({
         ? theme.palette.grey[300]
         : theme.palette.grey[700],
       0.08
-    ),
-    fontSize: 12
+    )
   },
   noOptionsMessage: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`,
-    fontSize: 12
+    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
   },
   singleValue: {
     display: "flex",
     flexWrap: "wrap",
     flex: 1,
-    overflow: "hidden",
-    fontSize: 14
+    overflow: "hidden"
   },
   placeholder: {
     position: "absolute",
-    left: 2,
-    fontSize: 14
+    left: 2
   },
   paper: {
     position: "absolute",
     zIndex: 1,
     marginTop: theme.spacing.unit,
     left: 0,
-    right: 0,
-    fontSize: 12
+    right: 0
   },
   divider: {
-    height: theme.spacing.unit * 2,
-    fontSize: 12
+    height: theme.spacing.unit * 2
   }
 });
 
@@ -174,7 +167,7 @@ function Menu(props) {
   return (
     <Paper
       square
-      className={props.selectProps.classes.paper}
+      className={`${props.selectProps.classes.paper} paper`}
       {...props.innerProps}
     >
       {props.children}
@@ -317,7 +310,7 @@ class SearchBar extends Component {
           value={this.state.single}
           onChange={this.handleChange("single")}
           onInputChange={e => this.setState({ typed: e })}
-          placeholder="Search"
+          placeholder={"Search"}
           isClearable
           isLoading={loadFlag}
         />

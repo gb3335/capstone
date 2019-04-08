@@ -234,7 +234,7 @@ class Navbar extends Component {
           </Link>
         </div>
 
-        <div className="ml-3" style={{ width: "27%" }}>
+        <div className="ml-3 navSearch">
           <SearchBar />
         </div>
         <div className="spacer" />
