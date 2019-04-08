@@ -477,14 +477,14 @@ module.exports = ({
         }
   
         .rep-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: left;
         }
   
         .hidden-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: right;
           visibility:hidden;
         }

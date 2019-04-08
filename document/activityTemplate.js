@@ -85,14 +85,14 @@ module.exports = ({
         }
   
         .bulsu-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: left;
         }
   
         .cict-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: right;
           visibility:hidden;
         }
@@ -148,7 +148,7 @@ module.exports = ({
           <h4>${typeOfReport}</h4>
           <h4>University Research Office</h4>
         </div>
-        <p style="font-size: 5px"><b>Total # of Activities: </b>${
+        <p style="font-size: 6px"><b>Total # of Activities: </b>${
           activities.length
         }&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
 

@@ -172,14 +172,14 @@ module.exports = ({
         }
   
         .bulsu-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: left;
         }
   
         .cict-logo {
-          width: 3rem;
-          height: 3rem;
+          width: 4rem;
+          height: 4rem;
           float: right;
           visibility:hidden;
         }
@@ -236,7 +236,7 @@ module.exports = ({
           <h4>University Research Office</h4>
         </div>
         <div class="courses" style="font-size: 5px">
-          <p style="font-size: 5px"><b>Total # of Research: </b>${totalNumOfJournals}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
+          <p style="font-size: 6px"><b>Total # of Research: </b>${totalNumOfJournals}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
           <table>
           ${journalListHeaders}
           ${journalsListNoComma}
