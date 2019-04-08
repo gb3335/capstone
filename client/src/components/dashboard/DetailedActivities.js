@@ -293,7 +293,7 @@ class DetailedActivities extends Component {
             }
           ]}
           data={activityData}
-          title="Researches"
+          title="Activities"
         />
       );
     }

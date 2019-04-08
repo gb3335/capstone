@@ -152,7 +152,7 @@ module.exports = ({
           activities.length
         }&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
 
-        <div class="courses" style="font-size: 7px">
+        <div class="courses" style="font-size: 5px">
           <table>
           <tr>
             ${activitiesHeader}
