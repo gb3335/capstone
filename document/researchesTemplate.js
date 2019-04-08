@@ -248,7 +248,7 @@ module.exports = ({
         </div>
         <p style="font-size: 7px"><b>Total # of Researches: </b>${totalNumOfResearches}&nbsp;&nbsp;&nbsp;<b>Date Printed: </b>${currentDate}</p>
 
-        <div class="courses" style="font-size: 7px">
+        <div class="courses" style="font-size: 5px">
           <table>
           ${researchesListHeader}
           ${researchesListNoComma}
