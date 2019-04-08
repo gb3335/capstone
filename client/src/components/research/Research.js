@@ -194,7 +194,6 @@ class Research extends Component {
             authorAction = <ResearchAuthorActions />;
             imageAction = <ResearchImageActions />;
           }
-
           docAction = <ResearchDocumentActions research={research} />;
         }
         // check if research is deleted

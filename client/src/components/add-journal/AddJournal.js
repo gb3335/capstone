@@ -4,6 +4,8 @@ import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
 import { Tesseract } from "tesseract.ts";
+import { Progress } from "react-sweet-progress";
+import "react-sweet-progress/lib/style.css";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -30,7 +32,8 @@ class AddJournal extends Component {
       flagFromCollege: false,
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
-      ocrProgress: ""
+      ocrProgress: "",
+      progress: 0
     };
   }
 
@@ -154,7 +157,8 @@ class AddJournal extends Component {
         dataProg = dataProg.substring(0, 5);
 
         this.setState({
-          ocrProgress: data.status + " at " + dataProg + "%"
+          ocrProgress: data.status + "...",
+          progress: dataProg
         });
       })
       .then(data => {
@@ -279,7 +283,14 @@ class AddJournal extends Component {
                     id="ocr"
                     accept=".png, .jpg, .jpeg"
                   />
-                  <p style={{ fontSize: "12px" }}>{progress}</p>
+                  {progress.length >= 1 ? (
+                    <p style={{ fontSize: "14px" }}>
+                      {progress}
+                      <Progress percent={this.state.progress} />
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}

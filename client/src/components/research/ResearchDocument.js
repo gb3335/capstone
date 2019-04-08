@@ -24,7 +24,7 @@ class ResearchDocument extends Component {
     }
 
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title text-info">Document</h5>
           <hr />

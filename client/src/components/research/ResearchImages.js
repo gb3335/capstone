@@ -15,7 +15,7 @@ class ResearchImages extends Component {
     } catch (error) {}
 
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title text-info">Images</h5>
           <hr />

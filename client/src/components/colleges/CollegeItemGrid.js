@@ -33,7 +33,7 @@ class CollegeItemGrid extends Component {
 
     return (
       <div className="col-lg-3 col-md-3 col-sm-6 col-6">
-        <div className="card card-body bg-light mb-3">
+        <div className="card card-body bg-light mb-3 shadow">
           <div className="row">
             <div className="col-12">{image}</div>
             <div

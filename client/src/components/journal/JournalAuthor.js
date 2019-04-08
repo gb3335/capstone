@@ -19,9 +19,9 @@ class JournalAuthor extends Component {
           </div>
         );
       }
-    } catch (error) { }
+    } catch (error) {}
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title text-info">Authors</h5>
           {authorItems}

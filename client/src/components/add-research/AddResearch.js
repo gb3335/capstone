@@ -4,6 +4,8 @@ import { withRouter, Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
 import { Tesseract } from "tesseract.ts";
+import { Progress } from "react-sweet-progress";
+import "react-sweet-progress/lib/style.css";
 
 import "react-quill/dist/quill.snow.css";
 
@@ -30,7 +32,8 @@ class AddResearch extends Component {
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
       ocrProgress: "",
-      disableCollegeList: false
+      disableCollegeList: false,
+      progress: 0
     };
   }
 
@@ -140,7 +143,8 @@ class AddResearch extends Component {
         dataProg = dataProg.substring(0, 5);
 
         this.setState({
-          ocrProgress: data.status + " at " + dataProg + "%"
+          ocrProgress: data.status + "...",
+          progress: dataProg
         });
       })
       .then(data => {
@@ -283,7 +287,6 @@ class AddResearch extends Component {
                     <i className="fas fa-file-image mr-1" />
                     Image to Text
                   </label>
-
                   <input
                     type="file"
                     style={{
@@ -299,7 +302,15 @@ class AddResearch extends Component {
                     id="ocr"
                     accept=".png, .jpg, .jpeg"
                   />
-                  <p style={{ fontSize: "12px" }}>{progress}</p>
+
+                  {progress.length >= 1 ? (
+                    <p style={{ fontSize: "14px" }}>
+                      {progress}
+                      <Progress percent={this.state.progress} />
+                    </p>
+                  ) : (
+                    ""
+                  )}
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}

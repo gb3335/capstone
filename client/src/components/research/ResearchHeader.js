@@ -22,7 +22,7 @@ class ResearchHeader extends Component {
     }
 
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title display-4">{research.title}</h5>
           <span>

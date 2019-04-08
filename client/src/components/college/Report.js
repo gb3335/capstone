@@ -172,8 +172,8 @@ class Report extends Component {
         <p className="lead"> Filter</p>
         <div className="row">
           {/* COLLEGE BASIC INFO */}
-          <div className="col-md-4">
-            <div className="card">
+          <div className="col-md-4" style={{ height: "100%" }}>
+            <div className="card shadow">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-info mr-2" />
                 Basic Information
@@ -255,7 +255,7 @@ class Report extends Component {
           </div>
           {/* COLLEGE COURSES */}
           <div className="col-md-4">
-            <div className="card">
+            <div className="card shadow">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-graduation-cap mr-2" />
                 Courses
@@ -337,7 +337,7 @@ class Report extends Component {
           </div>
           {/* COLLEGE RESEARCHES */}
           <div className="col-md-4">
-            <div className="card">
+            <div className="card shadow">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-book mr-2" />
                 Researches

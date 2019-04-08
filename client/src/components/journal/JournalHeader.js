@@ -9,7 +9,6 @@ class JournalHeader extends Component {
     let deleted;
     let hidden;
 
-
     if (journal.deleted === 1) {
       deleted = <span className="badge badge-danger">Deleted</span>;
     }
@@ -18,7 +17,7 @@ class JournalHeader extends Component {
     }
 
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title display-4">{journal.title}</h5>
           <span>
@@ -55,7 +54,6 @@ class JournalHeader extends Component {
             {" at "}
             <Moment format="h:mm A">{journal.lastUpdate}</Moment>
           </span>
-
           {deleted} {hidden}
         </div>
       </div>

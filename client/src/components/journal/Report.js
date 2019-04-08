@@ -125,7 +125,7 @@ class Report extends Component {
         <div className="row">
           {/* COLLEGE BASIC INFO */}
           <div className="col-md-4">
-            <div className="card">
+            <div className="card shadow">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-info mr-2" />
                 Basic Information
@@ -273,15 +273,15 @@ class Report extends Component {
             Generate Report
           </button>
         ) : (
-            <button
-              type="button"
-              onClick={this.onGenerateReport}
-              className="btn btn-info"
-            >
-              <i className="fas fa-print mr-1" />
-              Generate Report
+          <button
+            type="button"
+            onClick={this.onGenerateReport}
+            className="btn btn-info"
+          >
+            <i className="fas fa-print mr-1" />
+            Generate Report
           </button>
-          )}
+        )}
       </div>
     );
   }

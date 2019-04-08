@@ -27,7 +27,7 @@ class CollegeHeader extends Component {
       <div className="row">
         <div className="col-md-12">
           <div
-            className="card card-body text-white mb-3 collegeCard"
+            className="card card-body text-white mb-3 collegeCard shadow"
             style={{ backgroundColor: college.color }}
           >
             <div className="row">

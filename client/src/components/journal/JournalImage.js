@@ -6,12 +6,10 @@ class JournalImage extends Component {
     super(props);
     this.state = {
       images: this.props.journal.images
-
     };
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({ images: nextProps.journal.images })
-
+    this.setState({ images: nextProps.journal.images });
   }
   render() {
     const { journal } = this.props;
@@ -23,10 +21,10 @@ class JournalImage extends Component {
       } else {
         imageItems = <span>No image is added in this journal.</span>;
       }
-    } catch (error) { }
+    } catch (error) {}
 
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title text-info">Images</h5>
           <hr />

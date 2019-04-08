@@ -8,17 +8,15 @@ class JournalDescription extends Component {
 
     try {
       if (journal.description == "" || journal.description == null) {
-        abstract = <div>No description</div>
-
-      }
-      else {
+        abstract = <div>No description</div>;
+      } else {
         abstract = renderHTML(journal.description);
       }
     } catch (err) {
       console.log(err);
     }
     return (
-      <div className="card">
+      <div className="card shadow">
         <div className="card-body">
           <h5 className="card-title text-info">Description</h5>
           <hr />

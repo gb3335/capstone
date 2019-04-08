@@ -126,7 +126,7 @@ class Report extends Component {
         <div className="row">
           {/* COLLEGE BASIC INFO */}
           <div className="col-md-4">
-            <div className="card">
+            <div className="card shadow">
               <div className="card-header text-white bg-info">
                 <i className="fas fa-info mr-2" />
                 Basic Information
