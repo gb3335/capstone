@@ -8,6 +8,7 @@ import Landing from "../landing/Landing";
 
 import Dashboard from "../dashboard/Dashboard";
 import OnlineCheck from "../plagiarism/OnlineCheck";
+import LocalCheck from "../plagiarism/LocalCheck";
 import Login from "../auth/login/Login";
 import Forgot from "../auth/forgotpassword/forgotpassword";
 import Sidebar from "../sidebar/Sidebar";
@@ -100,7 +101,6 @@ class Main extends Component {
                 <div id="content-wrap">
                   <Route exact path="/" component={Landing} />
                   <Route exact path="/dashboard" component={Dashboard} />
-                  <Route exact path="/onlinecheck" component={OnlineCheck} />
                   <Route exact path="/login" component={Login} />
                   <Route exact path="/forgotpassword" component={Forgot} />
                   <Route exact path="/colleges" component={Colleges} />
@@ -109,15 +109,16 @@ class Main extends Component {
                   <Route exact path="/researches/:id" component={Research} />
                   <Route exact path="/journals" component={Journals} />
                   <Route exact path="/journals/:id" component={Journal} />
+                  <Route exact path="/localcheck" component={LocalCheck} />
                   <Route exact path="/not-found" component={NotFound} />
                   <Route
                     exact
-                    path="/localresult/research/abstract"
+                    path="/localresult/abstract"
                     component={LocalResult}
                   />
                   <Route
                     exact
-                    path="/localResultSideBySide/research/abstract"
+                    path="/localResultSideBySide/abstract"
                     component={LocalResultSideBySide}
                   />
                   <Switch>
@@ -125,6 +126,11 @@ class Main extends Component {
                       exact
                       path="/add-course"
                       component={AddCourse}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact path="/onlinecheck" component={OnlineCheck}
                     />
                   </Switch>
                   <Switch>
@@ -154,7 +160,7 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute
                       exact
-                      path="/myaccount/:id/:oldurl/:oldid"
+                      path="/myaccount/:id/:oldpath/:oldid"
                       component={MyAccount}
                     />
                   </Switch>
@@ -164,7 +170,7 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute
                       exact
-                      path="/edit-account"
+                      path="/edit-account/:oldpath/:oldid"
                       component={EditAccount}
                     />
                   </Switch>

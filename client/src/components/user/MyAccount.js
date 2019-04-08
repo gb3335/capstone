@@ -35,11 +35,57 @@ class MyAccount extends Component {
 
 
 
-
     const { loading, users } = this.props.users;
     const { user } = this.props.auth;
     const auth = this.props.auth;
     const isAuthenticated = this.props.auth.isAuthenticated;
+
+    let oldlink;
+    let oldid;
+    let currentLink = window.location.href;
+    let firstOccurencePath;
+    let firstOccurence = currentLink.indexOf("/");
+    firstOccurencePath = currentLink.substring(firstOccurence + 1, currentLink.length);
+    let secondOccurencePath;
+    let secondOccurence = firstOccurencePath.indexOf("/");
+    secondOccurencePath = firstOccurencePath.substring(secondOccurence + 1, firstOccurencePath.length);
+    let thirdOccurencePath;
+    let thirdOccurence = secondOccurencePath.indexOf("/");
+    thirdOccurencePath = secondOccurencePath.substring(thirdOccurence + 1, secondOccurencePath.length);
+    let fouthOccurencePath;
+    let fourthOccurence = thirdOccurencePath.indexOf("/");
+    fouthOccurencePath = thirdOccurencePath.substring(fourthOccurence + 1, thirdOccurencePath.length);
+    // OLDLINK
+    let fifthOccurencePath;
+    let fifthOccurence = fouthOccurencePath.indexOf("/");
+    fifthOccurencePath = fouthOccurencePath.substring(fifthOccurence + 1, fouthOccurencePath.length);
+    //Continuation
+    let sixthOccurencePath;
+    let sixthOccurence = fifthOccurencePath.indexOf("/");
+    sixthOccurencePath = fifthOccurencePath.substring(sixthOccurence + 1, fifthOccurencePath.length);
+
+    let getlink;
+    let getoldlinkOccurence = fifthOccurencePath.indexOf("/");
+    getlink = fifthOccurencePath.substring(0, getoldlinkOccurence);
+
+    if (sixthOccurencePath.includes("/")) {
+      oldlink = `/${fifthOccurencePath}`
+    }
+    else {
+      if (getlink === sixthOccurencePath) {
+        if (sixthOccurencePath === "0000") {
+          oldlink = "/"
+        }
+        else {
+          oldlink = `/${getlink}`
+        }
+      }
+      else {
+        oldlink = `/${getlink}/${sixthOccurencePath}`
+      }
+    }
+
+
 
     let userContent;
     let useraction;
@@ -48,24 +94,6 @@ class MyAccount extends Component {
     if (isAuthenticated) {
       useraction = <MyAccountAction user={user} auth={auth} />
     }
-
-    // if (user.__id === authuser.__id) {
-    //   useraction = (
-    //     <label htmlFor="imageUpload" className="btn btn-light">
-    //       <i className="fas fa-pen text-info mr-1" />
-    //       Edit User
-    //     </label>
-    //   )
-    // }
-
-
-
-    // if (this.props.auth.isAuthenticated) {
-    //   if (college.deleted === 0) {
-    //     courseAction = <CollegeCourseActions />;
-    //   }
-    //   colAction = <CollegeActions />;
-    // }
 
     let recentUrl = this.props.match.params.oldurl;
     let backurl;
@@ -126,7 +154,7 @@ class MyAccount extends Component {
             </div>
             <div className="row">
               <div className="col-md-6">
-                <Link to={`/${backurl}`} className="btn btn-light mb-3 float-left">
+                <Link to={oldlink} className="btn btn-light mb-3 float-left">
                   <i className="fas fa-angle-left" /> Go Back
                 </Link>
               </div>
@@ -141,6 +169,10 @@ class MyAccount extends Component {
         );
       } catch (error) { }
     }
+
+
+
+
 
     return (
 

@@ -1,13 +1,18 @@
 import {
   GET_USER,
   GET_USERS,
-  USER_LOADING
+  USER_LOADING,
+  TOGGLE_USERS_BLOCK,
+  TOGGLE_USERS_LIST,
+  CHANGE_USER_BUTTON_STATUS
 } from "../actions/types";
 
 const initialState = {
   user: {},
   users: {},
-  loading: false
+  loading: false,
+  blocked: false,
+  buttonDisable: false
 };
 
 export default function (state = initialState, action) {
@@ -22,6 +27,21 @@ export default function (state = initialState, action) {
         ...state,
         users: action.payload,
         loading: false
+      };
+    case TOGGLE_USERS_BLOCK:
+      return {
+        ...state,
+        blocked: true
+      };
+    case TOGGLE_USERS_LIST:
+      return {
+        ...state,
+        blocked: false
+      };
+    case CHANGE_USER_BUTTON_STATUS:
+      return {
+        ...state,
+        buttonDisable: action.payload
       };
     case GET_USER:
       return {

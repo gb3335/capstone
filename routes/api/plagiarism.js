@@ -266,12 +266,13 @@ router.post("/online/result", (req, res) => {
 // @desc    search online route
 // @access  public
 router.post("/online", (req, res) => {
-  const { errors, isValid } = validateOnlineInput(req.body);
+  const { errors, isValid } = validateOnlineInput(req.body.q);
   //Check Validation
   if (!isValid) {
+    console.log(123)
     return res.status(400).json(errors);
   }
-
+  
   let q = req.body.q;
 
   q = q.replace(/\s+/g," ");
@@ -307,6 +308,9 @@ router.post("/online", (req, res) => {
     };
     runSample(options).catch((err) => {
       errors.q = err.errors[0].message;
+      if(err.response.status==500 && errors.q === "Internal Error"){
+        errors.q ="Please input 100 - 2500 characters only.";
+      }
       if(err.response.status==403){
         errors.q = "Daily Request Limit Exceeds! Please try again tomorrow."
       }
@@ -584,50 +588,69 @@ router.post("/local/initialize/pattern", (req, res) => {
   let title = req.body.title;
   let docuFile = req.body.docuFile;
   let abstract = req.body.abstract;
+  let raw = req.body.raw;
+  let q = req.body.q;
 
-  if (abstract) {
-    Research.findOne({ _id: docuId }, { content: 0 })
-      .then(research => {
-        if (!research) {
-          errors.noresearch = "There is no data for this research";
-          res.status(404).json(errors);
-        }
+  if(raw){
 
-        let newtext = stripHtml(research.abstract);
+    const { errors, isValid } = validateLocalInput(req.body.q);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
 
-        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
-        arr = text.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+    const { text, len } = processor.textProcess(q.toString().toLowerCase());
+    const arr = text.split(' ');
+    plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+    res.json({
+      success: true
+    })
+  }else{
+    if (abstract) {
+      Research.findOne({ _id: docuId }, { content: 0 })
+        .then(research => {
+          if (!research) {
+            errors.noresearch = "There is no data for this research";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = stripHtml(research.abstract);
+  
+          let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+          arr = text.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
-  } else {
-    Research.findOne({ _id: docuId })
-      .then(research => {
-        if (!research) {
-          errors.noresearch = "There is no data for this research";
-          res.status(404).json(errors);
-        }
-
-        let newtext = research.content.text;
-        const len = research.content.sentenceLength;
-        let arr = newtext.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+        .catch(err => res.status(404).json(err));
+    } else {
+      Research.findOne({ _id: docuId })
+        .then(research => {
+          if (!research) {
+            errors.noresearch = "There is no data for this research";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = research.content.text;
+          const len = research.content.sentenceLength;
+          let arr = newtext.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
+        .catch(err => res.status(404).json(err));
+    }
+  
   }
-
+  
 
 
   // const docPath =
@@ -722,11 +745,6 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
 // @desc    search local route
 // @access  public
 router.post("/local/result", (req, res) => {
-  // const { errors, isValid } = validateLocalInput(req.body);
-  // //Check Validation
-  // if (!isValid) {
-  //   return res.status(400).json(errors);
-  // }
 
 
   let textId = req.body.textId;
@@ -760,7 +778,6 @@ router.post("/local/result", (req, res) => {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
-
         let text = research.content.text;
         const len = research.content.sentenceLength;
 

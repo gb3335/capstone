@@ -4,11 +4,17 @@ const isEmpty = require('../is-empty');
 module.exports = function validateOnlineInput(data) {
     let errors = {};
 
-    data.q = !isEmpty(data.q) ? data.q : '';
+    data = !isEmpty(data) ? data : '';
 
-    if (Validator.isEmpty(data.q)) {
+    if (!Validator.isLength(data, { min: 100, max: 2500 })) {
+        errors.q = "Please input 100 - 2500 characters only.";
+    }
+
+    if (Validator.isEmpty(data)) {
         errors.q = "Please input text";
     }
+
+    
 
     return {
         errors,

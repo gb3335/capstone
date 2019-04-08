@@ -170,6 +170,98 @@ class Sidebar extends Component {
                 <p>Journals</p>
               </Link>
             </li>
+            <li className="multimenus forlarge">
+                <a
+                  onClick={this.updateClass}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded="false"
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
+
+                <div
+                  id="checkPlagiarism"
+                  className="collapse"
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    {/* <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li> */}
+                  </ul>
+                </div>
+              </li>
+              <li className="multimenus formini">
+                <a
+                  onClick={this.updateClass}
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className="parentA"
+                  id="plagiarism"
+                  data-toggle="collapse"
+                  href="#checkPlagiarism"
+                  aria-expanded={this.state.aria}
+                >
+                  <i className="fa fa-search" />
+                  <p className="pr-2">Check Plagiarism</p>
+                  <b id="rotate" className={this.state.rotate} />
+                </a>
+
+                <div
+                  id="checkPlagiarism"
+                  onMouseEnter={this.onMouseEnter}
+                  onMouseLeave={this.onMouseLeave}
+                  className={this.state.forcol}
+                  aria-expanded="false"
+                >
+                  <div className="csstriangle" />
+                  <ul className="submenus nav">
+                    <li>
+                      <Link
+                        to="/localcheck"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Locally")
+                        }
+                      >
+                        Local Check
+                      </Link>
+                    </li>
+                    {/* <li>
+                      <Link
+                        to="/sidebyside"
+                        onClick={() =>
+                          this.changeTitle("Check Plagiarism Side by Side")
+                        }
+                      >
+                        Side by side
+                      </Link>
+                    </li> */}
+                  </ul>
+                </div>
+              </li>
           </ul>
         </div>
       </nav>
@@ -430,7 +522,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -439,7 +531,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>
@@ -488,7 +580,7 @@ class Sidebar extends Component {
                         Local Check
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link
                         to="/sidebyside"
                         onClick={() =>
@@ -497,7 +589,7 @@ class Sidebar extends Component {
                       >
                         Side by side
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               </li>

@@ -7,8 +7,10 @@ const passport = require("passport");
 const generator = require("generate-password");
 const uuid = require("uuid");
 //Load input Validation
-
-
+const download = require("download-pdf");
+const path = require("path");
+const pdf = require("html-pdf");
+const fs = require("fs");
 
 
 
@@ -28,15 +30,20 @@ const validateLoginInput = require("../../validation/login");
 const validatePasswordInput = require("../../validation/password");
 const validateuserNameInput = require("../../validation/profileusername");
 const validateForgotInput = require("../../validation/forgot");
-
-
+let pdfUsersTemplate;
+let pdfUserTemplate;
+let fontFooter;
+// pdfUsersTemplate = require("../../document/usersTemplate");
+pdfUserTemplate = require("../../document/userTemplate");
+fontFooter = "7px";
 // Load User Model
 const User = require("../../models/User");
 // Load UserLog Model
 const UserLog = require("../../models/UserLog");
 // Load Transport Email
 const Transporter = require("../../mailer/transporter");
-
+// Load Activity Model
+const Activity = require("../../models/Activity");
 // @routes  GET api/users/test
 // @desc    Test users route
 // @access  public
@@ -51,23 +58,6 @@ generatePassword = () => {
   }));
 };
 
-// @routes  POST api/users/profile/update-picture
-// @desc    Change Profile Picture
-// @access  private
-router.post(
-  "/profile/update-picture",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    const newAvatarPath = req.body.avatar;
-    const profileData = {
-      avatar: newAvatarPath
-    };
-
-    User.findByIdAndUpdate(req.user._id, { $set: profileData }, { new: true })
-      .then(user => res.json(user))
-      .catch(err => console.log(err));
-  }
-);
 
 // @routes  POST api/users/profile/update-password
 // @desc    Edit User password
@@ -99,6 +89,14 @@ router.post(
                 bcrypt.hash(profileData.password, salt, (err, hash) => {
                   if (err) throw err;
                   profileData.password = hash;
+
+                  const newActivity = {
+                    title: "User " + (user.userName ? user.userName : user.email) + " updated",
+                    by: user._id,
+                    type: "User"
+                  };
+                  new Activity(newActivity).save();
+
                   User.findByIdAndUpdate(
                     req.user._id,
                     { $set: profileData },
@@ -152,37 +150,46 @@ router.post(
           errors.email = "Email Already Exists!";
           return res.status(400).json(errors);
         }
-        User.findByIdAndUpdate(
-          req.user._id,
-          { $set: profileData },
-          { new: true }
-        ).then(user => {
-          const payload = {
-            id: user._id,
-            userName: user.userName,
-            email: user.email,
-            contact: user.contact,
-            name: {
-              firstName: user.name.firstName,
-              middleName: user.name.middleName,
-              lastName: user.name.lastName
-            },
-            avatar: user.avatar,
-            userType: user.userType,
-            isLock: user.isLock,
-            isBlock: user.isBlock,
-            invitedBy: user.invitedBy,
-            college: user.college,
-            date: user.date
+        else {
+          const newActivity = {
+            title: "User " + (user.userName ? user.userName : user.email) + " updated",
+            by: user._id,
+            type: "User"
           };
-          jwt.sign(payload, keys.secretOrKey, (err, token) => {
-            res.json({
-              success: true,
-              token: "Bearer " + token
-            });
-          });
+          new Activity(newActivity).save();
 
-        });
+          User.findByIdAndUpdate(
+            req.user._id,
+            { $set: profileData },
+            { new: true }
+          ).then(user => {
+            const payload = {
+              id: user._id,
+              userName: user.userName,
+              email: user.email,
+              contact: user.contact,
+              name: {
+                firstName: user.name.firstName,
+                middleName: user.name.middleName,
+                lastName: user.name.lastName
+              },
+              avatar: user.avatar,
+              userType: user.userType,
+              isLock: user.isLock,
+              isBlock: user.isBlock,
+              invitedBy: user.invitedBy,
+              college: user.college,
+              date: user.date
+            };
+            jwt.sign(payload, keys.secretOrKey, (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            });
+
+          });
+        }
       }
     });
   }
@@ -209,43 +216,52 @@ router.post(
 
 
     };
-    User.findOne({ userName: profileData.userName }).then(user => {
+    User.findOne({ _id: req.body.id }).then(user => {
       if (user) {
         if (user.userName != req.user.userName) {
           errors.userName = "Username Already Exists!";
           return res.status(400).json(errors);
         }
-      }
-      User.findByIdAndUpdate(
-        req.user._id,
-        { $set: profileData },
-        { new: true }
-      ).then(user => {
-        const payload = {
-          id: user._id,
-          userName: user.userName,
-          email: user.email,
-          contact: user.contact,
-          name: {
-            firstName: user.name.firstName,
-            middleName: user.name.middleName,
-            lastName: user.name.lastName
-          },
-          avatar: user.avatar,
-          userType: user.userType,
-          isLock: user.isLock,
-          isBlock: user.isBlock,
-          invitedBy: user.invitedBy,
-          college: user.college,
-          date: user.date
-        };
-        jwt.sign(payload, keys.secretOrKey, (err, token) => {
-          res.json({
-            success: true,
-            token: "Bearer " + token
+        else {
+          const newActivity = {
+            title: "User " + (user.userName ? user.userName : user.email) + ": Username updated to " + profileData.userName,
+            by: user._id,
+            type: "User"
+          };
+          new Activity(newActivity).save();
+          User.findByIdAndUpdate(
+            req.user._id,
+            { $set: profileData },
+            { new: true }
+          ).then(user => {
+            const payload = {
+              id: user._id,
+              userName: user.userName,
+              email: user.email,
+              contact: user.contact,
+              name: {
+                firstName: user.name.firstName,
+                middleName: user.name.middleName,
+                lastName: user.name.lastName
+              },
+              avatar: user.avatar,
+              userType: user.userType,
+              isLock: user.isLock,
+              isBlock: user.isBlock,
+              invitedBy: user.invitedBy,
+              college: user.college,
+              date: user.date
+            };
+            jwt.sign(payload, keys.secretOrKey, (err, token) => {
+              res.json({
+                success: true,
+                token: "Bearer " + token
+              });
+            });
           });
-        });
-      });
+        }
+      }
+
 
     })
 
@@ -253,6 +269,32 @@ router.post(
 
 
 
+  });
+
+
+// @routes  POST api/users/profile/updateusername
+// @desc    Edit User profile username
+// @access  private
+router.post(
+  "/profile/addby",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const profileData = {
+      invitedBy: req.body.invitedBy,
+    };
+    User.findOne({ _id: req.body.id }).then(user => {
+      if (user) {
+        User.findByIdAndUpdate(
+          req.user._id,
+          { $set: profileData },
+          { new: true }
+        ).then(user => {
+          res.json({
+            success: true,
+          });
+        });
+      }
+    })
   });
 
 // @routes  POST api/users/profile/updatepassword
@@ -285,6 +327,14 @@ router.post(
             bcrypt.hash(profileData.password, salt, (err, hash) => {
               if (err) throw err;
               profileData.password = hash;
+
+              const newActivity = {
+                title: "User " + (user.userName ? user.userName : user.email) + ": Password updated",
+                by: user._id,
+                type: "User"
+              };
+              new Activity(newActivity).save();
+
               User.findByIdAndUpdate(
                 req.user._id,
                 { $set: profileData },
@@ -355,6 +405,12 @@ router.post(
     User.findById(req.user._id).then(user => {
       if (profileData.isBlock == 0) {
         profileData.isBlock = 1;
+        const newActivity = {
+          title: "User " + (user.username ? user.username : user.email) + ": User deactivated",
+          by: req.body.loginid,
+          type: "User"
+        };
+        new Activity(newActivity).save();
         User.findByIdAndUpdate(
           req.body.id,
           { $set: profileData },
@@ -365,6 +421,12 @@ router.post(
       }
       else {
         profileData.isBlock = 0;
+        const newActivity = {
+          title: "User " + (user.username ? user.username : user.email) + ": User change status to active",
+          by: req.body.loginidy,
+          type: "User"
+        };
+        new Activity(newActivity).save();
         User.findByIdAndUpdate(
           req.body.id,
           { $set: profileData },
@@ -470,6 +532,14 @@ router.post(
         errors.email = "Email Already Exists!";
         return res.status(400).json(errors);
       } else {
+
+        const newActivity = {
+          title: "User " + (req.body.email) + ": User created",
+          by: req.body.createdBy,
+          type: "User"
+        };
+        new Activity(newActivity).save();
+
         const password = generatePassword();
 
         const newUser = new User({
@@ -865,6 +935,14 @@ router.post(
       newUser = {
         avatar: req.body.id + "-" + rand + ".png"
       }
+
+      const newActivity = {
+        title: "User " + (req.body.username) + ": Avatar updated",
+        by: req.body.id,
+        type: "User"
+      };
+      new Activity(newActivity).save();
+
       User.findOneAndUpdate(
         { _id: req.body.id },
         { $set: newUser },
@@ -970,6 +1048,115 @@ router.post(
 
   }
 
+);
+
+
+// @route   POST api/journals/createReport/journals
+// @desc    Generate List of all journals Report
+// @access  Private
+router.post(
+  "/createReport/users",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfUsersTemplate(req.body), options)
+      .toFile("usersPDF.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/journals/fetchReport/journals
+// @desc    Send the generated pdf to client - list of journals
+// @access  Private
+router.get(
+  "/fetchReport/users",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/usersPDF.pdf`, () => {
+      fs.unlink(`${reqPath}/usersPDF.pdf`, err => {
+        if (err) throw err;
+        console.log("successfully deleted");
+      });
+    });
+  }
+);
+
+// @route   POST api/journals/createReport/journals
+// @desc    Generate List of all journals Report
+// @access  Private
+router.post(
+  "/createReport/user",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const printedBy = req.body.printedBy;
+    const options = {
+      border: {
+        top: "0.5in",
+        right: "0.5in",
+        bottom: "0.5in",
+        left: "0.5in"
+      },
+      paginationOffset: 1, // Override the initial pagination number
+      footer: {
+        height: "28mm",
+        contents: {
+          default: `<div class="item5">
+          <p style="float: left; font-size: ${fontFooter}"><b>Printed By: </b>${printedBy}</p>
+          <p style="float: right; font-size: ${fontFooter}">Page {{page}} of {{pages}}</p>
+        </div>` // fallback value
+        }
+      }
+    };
+    pdf
+      .create(pdfUserTemplate(req.body), options)
+      .toFile("usersPDF.pdf", err => {
+        if (err) {
+          res.send(Promise.reject());
+        }
+        res.send(Promise.resolve());
+      });
+  }
+);
+
+// @route   GET api/journals/fetchReport/journals
+// @desc    Send the generated pdf to client - list of journals
+// @access  Private
+router.get(
+  "/fetchReport/user",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../");
+    res.sendFile(`${reqPath}/usersPDF.pdf`, () => {
+      fs.unlink(`${reqPath}/usersPDF.pdf`, err => {
+        if (err) throw err;
+        console.log("successfully deleted");
+      });
+    });
+  }
 );
 
 module.exports = router;

@@ -33,6 +33,7 @@ class Journals extends Component {
   }
 
   render() {
+
     const { journals, loading } = this.props.journal;
     let journalItems;
     let journalData;
