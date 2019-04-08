@@ -211,7 +211,7 @@ class DetailedActivities extends Component {
       activities.map((activity, index) => {
         users.map(user => {
           if (activity.by === user._id) {
-            names[index] = user.userName;
+            names[index] = user.userName ? user.userName : user.email;
           }
         });
       });
@@ -238,20 +238,20 @@ class DetailedActivities extends Component {
         activityData = activities.map((activity, index) =>
           true
             ? {
-                activity: activity.title,
-                user: names[index],
-                type: activity.type,
-                date:
-                  activity.date + moment(activity.date).format("MMM. DD, YYYY"),
-                time: moment(activity.date).format("h:mm A")
-              }
+              activity: activity.title,
+              user: names[index],
+              type: activity.type,
+              date:
+                activity.date + moment(activity.date).format("MMM. DD, YYYY"),
+              time: moment(activity.date).format("h:mm A")
+            }
             : {
-                activity: null,
-                user: null,
-                type: null,
-                date: null,
-                time: null
-              }
+              activity: null,
+              user: null,
+              type: null,
+              date: null,
+              time: null
+            }
         );
       }
 

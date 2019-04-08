@@ -10,9 +10,11 @@ import RegisterActions from "./RegisterActions";
 import "./ViewUsers.css";
 
 class ViewUsers extends Component {
-  constructor() {
-    super();
-    this.state = {};
+  constructor(props) {
+    super(props);
+    this.state = {
+      blocked: false
+    };
   }
 
   componentDidMount() {
@@ -23,9 +25,19 @@ class ViewUsers extends Component {
     this.props.getUsers();
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ blocked: nextProps.blocked });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ blocked: nextProps.blocked });
+  }
+
   render() {
     const { users, loading } = this.props.users;
     let userItems;
+    let title;
+    let info;
     const usersData = [];
     if (users === null || loading) {
       userItems = <Spinner />;
@@ -41,41 +53,91 @@ class ViewUsers extends Component {
         //   blocked: whenBlock[index],
         //   college: user.college ? user.college : <div>None</div>
         // }));
+        if (this.state.blocked) {
+          users.map(user => {
+            if (user.isBlock === 1) {
+              let path;
+              if (user.avatar === "/images/User.png") {
+                path = "/images/User.png";
+              } else {
+                path =
+                  "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+                  user.avatar;
+              }
 
-        users.map(user => {
-          let path;
-          if (user.avatar === "/images/User.png") {
-            path = "/images/User.png";
-          } else {
-            path =
-              "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
-              user.avatar;
-          }
+              if (user._id !== this.props.auth.user.id) {
+                usersData.push({
+                  avatar: (
+                    <img src={path} alt="" className="img-thumbnail user_img" />
+                  ),
+                  username: user.name.firstName + " " + user.name.lastName,
+                  type: user.userType,
+                  view: (
+                    <Link to={/viewusers/ + user._id}>
+                      <div className="btn btn-outline-info btn-sm ">
+                        View Account
+            </div>{" "}
+                    </Link>
+                  ),
+                  blocked:
+                    user.isBlock === 0 ? (
+                      <div className="badge badge-success btn-sm">Active</div>
+                    ) : (
+                        <div className="badge badge-danger btn-sm ">Blocked</div>
+                      ),
+                  college: user.college ? user.college : <div>None</div>
+                });
+              }
+            }
+          });
+          title = (
+            <h1 className="display-4 text-danger text-center">
+              Users Blocked
+            </h1>
+          );
+          info = "List of Blocked Users";
+        }
+        else {
+          users.map(user => {
+            if (user.isBlock === 0) {
+              let path;
+              if (user.avatar === "/images/User.png") {
+                path = "/images/User.png";
+              } else {
+                path =
+                  "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+                  user.avatar;
+              }
 
-          if (user._id !== this.props.auth.user.id) {
-            usersData.push({
-              avatar: (
-                <img src={path} alt="" className="img-thumbnail user_img" />
-              ),
-              username: user.name.firstName + " " + user.name.lastName,
-              type: user.userType,
-              view: (
-                <Link to={/viewusers/ + user._id}>
-                  <div className="btn btn-outline-info btn-sm ">
-                    View Account
-                  </div>{" "}
-                </Link>
-              ),
-              blocked:
-                user.isBlock === 0 ? (
-                  <div className="badge badge-success btn-sm">Active</div>
-                ) : (
-                  <div className="badge badge-danger btn-sm ">Blocked</div>
-                ),
-              college: user.college ? user.college : <div>None</div>
-            });
-          }
-        });
+              if (user._id !== this.props.auth.user.id) {
+                usersData.push({
+                  avatar: (
+                    <img src={path} alt="" className="img-thumbnail user_img" />
+                  ),
+                  username: user.name.firstName + " " + user.name.lastName,
+                  type: user.userType,
+                  view: (
+                    <Link to={/viewusers/ + user._id}>
+                      <div className="btn btn-outline-info btn-sm ">
+                        View Account
+            </div>{" "}
+                    </Link>
+                  ),
+                  blocked:
+                    user.isBlock === 0 ? (
+                      <div className="badge badge-success btn-sm">Active</div>
+                    ) : (
+                        <div className="badge badge-danger btn-sm ">Blocked</div>
+                      ),
+                  college: user.college ? user.college : <div>None</div>
+                });
+              }
+            }
+          });
+          title = <h1 className="display-4 text-center">Users</h1>;
+          info = "See all users and it's informations";
+        }
+
 
         userItems = (
           <MaterialTable
@@ -240,12 +302,10 @@ class ViewUsers extends Component {
       <div className="profiles">
         <div className="row" style={{ margin: "5px" }}>
           <div className="col-md-12">
-            <div className="usersBg ">
-              <div className="light-overlay p-2">
-                <div className="display-4 text-center mb-1">
-                  Users
-                  <p className="lead text-center ">User list of Accounts</p>
-                </div>
+            <div className="usersBg">
+              <div className="light-overlay">
+                {title}
+                <p className="lead text-center">{info}</p>
               </div>
             </div>
             <br />
@@ -266,7 +326,8 @@ ViewUsers.protoTypes = {
 
 const mapStateToProps = state => ({
   users: state.users,
-  auth: state.auth
+  auth: state.auth,
+  blocked: state.users.blocked,
 });
 
 export default connect(

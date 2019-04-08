@@ -77,15 +77,8 @@ module.exports = ({
           grid-area: header;
         }
   
-        .grid-container {
-          display: grid;
-          grid-template-areas:
-            "header header header header header header"
-            "header "
-            "menu main main main right right"
-            "menu footer footer footer footer footer";
-          grid-gap: 10px;
-        }
+        
+        
   
         .grid-container > .headerr {
           background-color: rgba(255, 255, 255, 0.8);
@@ -110,6 +103,11 @@ module.exports = ({
           width: 8rem;
           height: 8rem;
           float: left;
+        }
+        .user-logos {
+          width: 8rem;
+          height: 8rem;
+          
         }
   
         .users-logo {
@@ -157,7 +155,7 @@ module.exports = ({
             alt="bulsu-logo"
             class="cict-logo"
           />
-          <h4>
+          <h5>
           <br />
           Republic of the Philippines
           <br />
@@ -167,9 +165,9 @@ module.exports = ({
           <br />
           <br />
           <br />
-          </h4>
-          <h2>${typeOfReport}</h2>
-          <h2>University Research Office</h2>
+          </h5>
+          <h4>${typeOfReport}</h4>
+          <h4>University Research Office</h4>
         
         </div>
         <div style="font-size: 7px;">
@@ -181,18 +179,20 @@ module.exports = ({
           </div>
          
           <hr />
-         <div class"logo" style="margin-top:30px;margin-left:275px"> 
-          <img src="${path}"
-          alt="user-logo"
-          class="user-logo"
+         <div class="logo"style="margin-left:auto;margin-right:auto;margin-top:20px;text-align: center;font-size: 12px"> 
+          <img style=" display: block;
+          margin-left: auto;
+          margin-right: auto;" src="${path}"
+          alt="user-logos"
+          class="user-logos"
             />
-          
+          <p>${user.userType}<p/>
           </div>
         <div class="details" style="font-size: 7px">
          
-          <h4 style="font-size: 13px; margin-top:180px">User Details:</h4>
+          <h4 style="font-size: 10px; margin-top:20px">User Details:</h4>
           <div>
-            <ul style="list-style-type:circle; text-align: left;font-size: 11px">
+            <ul style="list-style-type:circle; text-align: left;font-size: 7px">
               ${nameString}
               ${userNameString}
               ${emailString}

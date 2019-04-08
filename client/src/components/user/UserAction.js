@@ -158,9 +158,12 @@ class UserAction extends Component {
 
       }
       if (this.props.users.user.userType !== 'ADMINISTRATOR') {
-        blockAction = (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
-          <i className="fas fa-exchange-alt text-info mr-1" />&nbsp;Change Status
-        </Link>)
+
+        blockAction = user.isBlock === 0 ? (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
+          <i className="fas fa-exchange-alt text-danger mr-1" />&nbsp;Deactivate
+        </Link>) : (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
+            <i className="fas fa-exchange-alt text-success mr-1" />&nbsp;Activate
+        </Link>);
       }
 
     }
