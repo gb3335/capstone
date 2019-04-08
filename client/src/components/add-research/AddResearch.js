@@ -33,7 +33,8 @@ class AddResearch extends Component {
       errors: {},
       ocrProgress: "",
       disableCollegeList: false,
-      progress: 0
+      progress: 0,
+      ocrDisableFlag: false
     };
   }
 
@@ -144,11 +145,12 @@ class AddResearch extends Component {
 
         this.setState({
           ocrProgress: data.status + "...",
-          progress: dataProg
+          progress: dataProg,
+          ocrDisableFlag: true
         });
       })
       .then(data => {
-        this.setState({ abstract: data.text });
+        this.setState({ abstract: data.text, ocrDisableFlag: false });
       })
       .catch(console.error);
   };
@@ -277,16 +279,29 @@ class AddResearch extends Component {
                 </div>
 
                 <div>
-                  <label
-                    to="#"
-                    htmlFor="ocr"
-                    className="btn btn-light"
-                    style={{ fontSize: "12px" }}
-                    title="Use Image to Text"
-                  >
-                    <i className="fas fa-file-image mr-1" />
-                    Image to Text
-                  </label>
+                  {this.state.ocrDisableFlag ? (
+                    <label
+                      to="#"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px", cursor: "no-drop" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  ) : (
+                    <label
+                      to="#"
+                      htmlFor="ocr"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  )}
+
                   <input
                     type="file"
                     style={{
@@ -304,10 +319,10 @@ class AddResearch extends Component {
                   />
 
                   {progress.length >= 1 ? (
-                    <p style={{ fontSize: "14px" }}>
+                    <div style={{ fontSize: "14px" }}>
                       {progress}
                       <Progress percent={this.state.progress} />
-                    </p>
+                    </div>
                   ) : (
                     ""
                   )}

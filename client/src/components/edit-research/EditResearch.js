@@ -35,7 +35,8 @@ class EditResearch extends Component {
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
       ocrProgress: "",
-      progress: 0
+      progress: 0,
+      ocrDisableFlag: false
     };
   }
 
@@ -157,11 +158,12 @@ class EditResearch extends Component {
 
         this.setState({
           ocrProgress: data.status + "...",
-          progress: dataProg
+          progress: dataProg,
+          ocrDisableFlag: true
         });
       })
       .then(data => {
-        this.setState({ abstract: data.text });
+        this.setState({ abstract: data.text, ocrDisableFlag: false });
       })
       .catch(console.error);
   };
@@ -283,16 +285,28 @@ class EditResearch extends Component {
                   </div>
                 </div>
                 <div>
-                  <label
-                    to="#"
-                    htmlFor="ocr"
-                    className="btn btn-light"
-                    style={{ fontSize: "12px" }}
-                    title="Use Image to Text"
-                  >
-                    <i className="fas fa-file-image mr-1" />
-                    Image to Text
-                  </label>
+                  {this.state.ocrDisableFlag ? (
+                    <label
+                      to="#"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px", cursor: "no-drop" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  ) : (
+                    <label
+                      to="#"
+                      htmlFor="ocr"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  )}
 
                   <input
                     type="file"
@@ -310,10 +324,10 @@ class EditResearch extends Component {
                     accept=".png, .jpg, .jpeg"
                   />
                   {progress.length >= 1 ? (
-                    <p style={{ fontSize: "14px" }}>
+                    <div style={{ fontSize: "14px" }}>
                       {progress}
                       <Progress percent={this.state.progress} />
-                    </p>
+                    </div>
                   ) : (
                     ""
                   )}

@@ -33,7 +33,8 @@ class AddJournal extends Component {
       courseOptions: [{ label: "* Select Course", value: "" }],
       errors: {},
       ocrProgress: "",
-      progress: 0
+      progress: 0,
+      ocrDisableFlag: false
     };
   }
 
@@ -158,11 +159,12 @@ class AddJournal extends Component {
 
         this.setState({
           ocrProgress: data.status + "...",
-          progress: dataProg
+          progress: dataProg,
+          ocrDisableFlag: true
         });
       })
       .then(data => {
-        this.setState({ description: data.text });
+        this.setState({ description: data.text, ocrDisableFlag: false });
       })
       .catch(console.error);
   };
@@ -257,17 +259,28 @@ class AddJournal extends Component {
                 </div>
 
                 <div>
-                  <label
-                    to="#"
-                    htmlFor="ocr"
-                    className="btn btn-light"
-                    style={{ fontSize: "12px" }}
-                    title="Use Image to Text"
-                  >
-                    <i className="fas fa-file-image mr-1" />
-                    Image to Text
-                  </label>
-
+                  {this.state.ocrDisableFlag ? (
+                    <label
+                      to="#"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px", cursor: "no-drop" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  ) : (
+                    <label
+                      to="#"
+                      htmlFor="ocr"
+                      className="btn btn-light"
+                      style={{ fontSize: "12px" }}
+                      title="Use Image to Text"
+                    >
+                      <i className="fas fa-file-image mr-1" />
+                      Image to Text
+                    </label>
+                  )}
                   <input
                     type="file"
                     style={{
@@ -284,10 +297,10 @@ class AddJournal extends Component {
                     accept=".png, .jpg, .jpeg"
                   />
                   {progress.length >= 1 ? (
-                    <p style={{ fontSize: "14px" }}>
+                    <div style={{ fontSize: "14px" }}>
                       {progress}
                       <Progress percent={this.state.progress} />
-                    </p>
+                    </div>
                   ) : (
                     ""
                   )}
