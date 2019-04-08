@@ -256,7 +256,7 @@ class UserLogs extends Component {
       userlogs.map((userlogs, index) => {
         users.map(user => {
           if (userlogs.by === user._id) {
-            names[index] = user.userName;
+            names[index] = user.userName ? user.userName : user.email;
           }
         });
       });

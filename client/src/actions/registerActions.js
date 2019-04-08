@@ -1,9 +1,22 @@
 import axios from "axios";
 import { saveAs } from "file-saver";
-import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS, CHANGE_USER_BUTTON_STATUS, GET_USERS } from "./types";
+import { GET_ERRORS, SET_CURRENT_USER, GET_USER, USER_LOADING, CLEAR_ERRORS, CHANGE_USER_BUTTON_STATUS, GET_USERS, TOGGLE_USERS_BLOCK, TOGGLE_USERS_LIST } from "./types";
 import setAuthToken from "../utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { getUserById } from "./userActions";
+
+export const toggleUsersBlocked = toggle => {
+  if (toggle === 1) {
+    return {
+      type: TOGGLE_USERS_BLOCK
+    };
+  } else {
+    return {
+      type: TOGGLE_USERS_LIST
+    };
+  }
+};
+
 
 // Register
 export const createAccount = (userData, history) => dispatch => {

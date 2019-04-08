@@ -423,7 +423,7 @@ router.post(
         profileData.isBlock = 0;
         const newActivity = {
           title: "User " + (user.username ? user.username : user.email) + ": User change status to active",
-          by: req.body.loginidy,
+          by: req.body.loginid,
           type: "User"
         };
         new Activity(newActivity).save();

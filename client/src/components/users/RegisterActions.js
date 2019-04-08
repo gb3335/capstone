@@ -7,7 +7,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 
 
 import {
-
+  toggleUsersBlocked,
   createReportForUsers
 } from "../../actions/registerActions";
 
@@ -38,7 +38,7 @@ class RegisterActions extends Component {
       status: true,
       dateCreated: true,
       blockedUsers: true,
-      bin: false,
+      blocked: false,
       modalIsOpen: false,
       // for alerts
       checkOneAlert: false,
@@ -47,14 +47,14 @@ class RegisterActions extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({ bin: nextProps.bin });
+    this.setState({ blocked: nextProps.blocked });
   }
 
   onToggleBin = e => {
-    if (this.props.users.bin === false) {
-      this.props.toggleJournalBin(1);
+    if (this.props.users.blocked === false) {
+      this.props.toggleUsersBlocked(1);
     } else {
-      this.props.toggleJournalBin(0);
+      this.props.toggleUsersBlocked(0);
     }
   };
 
@@ -136,9 +136,23 @@ class RegisterActions extends Component {
     this.setState({ generateAlert: false });
   };
   render() {
+
     let binAction;
     const disableFlag = this.props.users.buttonDisable;
 
+    if (this.state.blocked) {
+      binAction = (
+        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+          <i className="fas fa-list-ul text-success mr-1" /> Users
+        </Link>
+      );
+    } else {
+      binAction = (
+        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+          <i className="fas fa-trash-alt text-danger mr-1" /> Blocked
+        </Link>
+      );
+    }
     return (
       <div className="btn-group mb-3 btn-group-sm" role="group">
         {/* ALERTS */}
@@ -324,21 +338,28 @@ class RegisterActions extends Component {
         <Link to="#" onClick={this.openModal} className="btn btn-light">
           <i className="fas fa-poll-h text-info mr-1" /> Create Report
         </Link>
+        {binAction}
       </div>
     )
   }
 }
 
+RegisterActions.propTypes = {
+  toggleUsersBlocked: PropTypes.func.isRequired,
+  createReportForUsers: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({
   users: state.users,
   blocked: state.users.blocked,
-  auth: state.auth
-
+  auth: state.auth,
+  blocked: state.users.blocked
 });
 
 export default connect(
   mapStateToProps,
-  { createReportForUsers }
+  { createReportForUsers, toggleUsersBlocked }
 )(RegisterActions);
 
 

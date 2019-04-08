@@ -9,7 +9,7 @@ class ViewUserDetails extends Component {
       user.isBlock === 0 ? (
         <span className="badge badge-success">Active</span>
       ) : (
-        <span className="badge badge-danger">Blocked</span>
+        <span className="badge badge-danger">Deactivated</span>
       );
 
     return (
