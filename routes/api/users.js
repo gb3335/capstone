@@ -33,7 +33,7 @@ const validateForgotInput = require("../../validation/forgot");
 let pdfUsersTemplate;
 let pdfUserTemplate;
 let fontFooter;
-// pdfUsersTemplate = require("../../document/usersTemplate");
+pdfUsersTemplate = require("../../document/usersTemplate");
 pdfUserTemplate = require("../../document/userTemplate");
 fontFooter = "7px";
 // Load User Model
@@ -947,7 +947,7 @@ router.post(
         { _id: req.body.id },
         { $set: newUser },
         { new: true }
-      ).then(user => res.json({ username: user.userName })).catch(err => console.log(res.json(err)));
+      ).then(user => res.json({ username: user.userName ? user.userName : user.email })).catch(err => console.log(res.json(err)));
     });
 
 
@@ -961,7 +961,7 @@ router.post(
   (req, res) => {
 
     const userName = req.body.username;
-
+    console.log(req.body.username)
 
     //FIND THE USER BY USERNAME
     User.findOne({ userName }).then(user => {

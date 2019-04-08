@@ -62,8 +62,9 @@ module.exports = ({
       "MMMM Do YYYY, h:mm A"
     )}</li>`;
   }
+  let path
+  user.avatar === "/images/User.png" ? path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/5caab69692cdb0204c7874ae-613b016c-6830-44f7-9ccb-9a813099fbb0.png" : path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
 
-  let path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
 
 
 

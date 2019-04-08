@@ -51,7 +51,7 @@ class MyAccountAction extends Component {
           images: upImages,
           id: this.props.users.user._id,
           createdBy: this.props.auth.id,
-          username: this.props.auth.user.userName ? this.props.auth.user.userName : this.props.auth.user.email,
+          username: this.props.users.user.userName ? this.props.users.user.userName : this.props.users.user.email,
           oldlink: thirdOccurencePath
         };
 
