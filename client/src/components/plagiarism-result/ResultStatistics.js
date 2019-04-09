@@ -65,7 +65,7 @@ export default class ResultStatistics extends Component {
     return (
       <div className="row">
         <div className="col-md-7">
-          <Pie data={data} height={300} options={{ maintainAspectRatio: false }} />
+          <Pie data={data} height={this.props.height} options={{ maintainAspectRatio: false }} />
         </div>
         <div className="col-md-5">
           <div className="overview">Statistics Overview</div>

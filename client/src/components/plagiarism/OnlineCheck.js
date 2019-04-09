@@ -225,7 +225,7 @@ class OnlineCheck extends Component {
                                                     config={{delay:500, duration:800}}>
                                                     {props2 =>(
                                                         <div style={props2}>
-                                                            <ResultStatistics output={output}/>
+                                                            <ResultStatistics height={280} output={output}/>
                                                         </div>
                                                     )}
                                             </Spring>

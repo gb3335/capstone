@@ -695,6 +695,25 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
   let docuFile = req.body.docuFile;
   let description = req.body.description;
 
+  let raw = req.body.raw;
+  let q = req.body.q;
+
+
+
+  if(raw){
+    const { errors, isValid } = validateLocalInput(req.body.q);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+
+    const { text, len } = processor.textProcess(q.toString().toLowerCase());
+    const arr = text.split(' ');
+    plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+    res.json({
+      success: true
+    })
+  }else{
   if (description) {
     Journal.findOne({ _id: docuId }, { content: 0 })
       .then(journal => {
@@ -737,6 +756,7 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
       })
       .catch(err => res.status(404).json(err));
   }
+}
 })
 
 

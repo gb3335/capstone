@@ -80,3 +80,25 @@
 .close:after {
     transform: rotate(-45deg);
 }
+
+.optionContent{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.optBtn {
+    width: 70%;
+    border: 1px solid rgb(94, 172, 192);
+    background-color: white;
+    padding:5px;
+    cursor: pointer;
+}
+
+.optBtnActive{
+    background-color: rgb(166, 221, 247);
+}
+
+.optBtn:focus {
+    outline: none;
+}

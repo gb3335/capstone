@@ -1,4 +1,4 @@
-import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT,PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_SET_ABSTRACT,PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS } from '../actions/types'
+import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT,PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_SET_ABSTRACT,PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS, PLAGIARISM_RAW_LOCAL_SET_OPTION } from '../actions/types'
 
 const initialState = {
     original: "",
@@ -8,7 +8,8 @@ const initialState = {
     showDetails: false,
     generateReport: false,
     axiosProgress: {},
-    abstract: false
+    abstract: false,
+    option: 1,
 }
 
 export default function (state = initialState, action) {
@@ -60,6 +61,11 @@ export default function (state = initialState, action) {
             return {
                 ...state,
                 buttonDisable: true
+            }
+        case PLAGIARISM_RAW_LOCAL_SET_OPTION:
+            return {
+                ...state,
+                option: action.payload
             }
         default:
             return state;

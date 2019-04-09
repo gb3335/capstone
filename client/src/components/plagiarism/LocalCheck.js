@@ -21,7 +21,6 @@ import OnlineHighlightedResult from './OnlineHighlightedResult'
 import {checkPlagiarismLocal , setPlagiarismRawLocalShowDetails, setPlagiarismRawLocalHideDetails ,createRawLocalPlagiarismReport, setPlagiarismGenerateReportLoading} from '../../actions/localRawPlagiarismActions'
 
 
-
 class LocalCheck extends Component {
 
     constructor(){
@@ -33,6 +32,7 @@ class LocalCheck extends Component {
             id: 0,
             words: [],
             errors: {},
+            option: 1,
             ocrProgress: ""
         }
 
@@ -62,8 +62,10 @@ class LocalCheck extends Component {
                 q: old,
                 original: this.state.q,
                 raw: true,
+                option: this.state.option,
                 abstract,
-                researches: this.props.research.researches
+                researches: this.props.research.researches,
+                journals: this.props.journal.journals
             }
             // console.log(input)
             
@@ -99,6 +101,17 @@ class LocalCheck extends Component {
         if(this.props.localRawPlagiarism.original){
             this.setState({q: this.props.localRawPlagiarism.original})
         }
+        if(this.props.localRawPlagiarism.option>0){
+            this.setState({option: this.props.localRawPlagiarism.option})
+        }
+        
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.localRawPlagiarism.option>0){
+            this.setState({option: nextProps.localRawPlagiarism.option})
+        }
+        
     }
 
     onClickGenerateReport = () => {
@@ -158,9 +171,14 @@ class LocalCheck extends Component {
           .catch(console.error);
       };
 
+    optSelect = option => {
+        this.setState({option})
+    }
+
   render() {
     const { errors } = this.props;
     const {output, loading , showDetails} = this.props.localRawPlagiarism;
+    const {isAuthenticated} = this.props.auth;
 
     let outputItems;
     let highlightItems;
@@ -185,6 +203,26 @@ class LocalCheck extends Component {
         } else {
             outputItems = <span>Nothing to Show</span>;
         }
+    }
+
+    let options="";
+    if(isAuthenticated){
+        options = (
+            <div>
+                <div className="sourceHeader">Select Your Target</div>
+                <div className="sourceContent pr-1">
+                    {loading ? <div className="optionContent">
+                        <button className={this.state.option === 1? "optBtnActive mr-2 ml-2 optBtn" : "mr-2 ml-2 optBtn"}>Researches</button>
+                        <button className={this.state.option === 2? "optBtnActive mr-2 ml-2 optBtn" : "mr-2 ml-2 optBtn"}>Journals</button>
+                    </div> : <div className="optionContent">
+                        <button onClick={() => this.optSelect(1)} className={this.state.option === 1? "optBtnActive mr-2 ml-2 optBtn" : "mr-2 ml-2 optBtn"}>Researches</button>
+                        <button onClick={() => this.optSelect(2)} className={this.state.option === 2? "optBtnActive mr-2 ml-2 optBtn" : "mr-2 ml-2 optBtn"}>Journals</button>
+                    </div> }
+                   
+                </div>
+            </div>
+            
+        )
     }
 
     if(showDetails){
@@ -242,7 +280,7 @@ class LocalCheck extends Component {
                                             config={{delay:500, duration:800}}>
                                             {props2 =>(
                                                 <div style={props2}>
-                                                    <ResultStatistics output={output}/>
+                                                    <ResultStatistics height={230} output={output}/>
                                                 </div>
                                             )}
                                     </Spring>
@@ -262,6 +300,7 @@ class LocalCheck extends Component {
                     config={{delay:100, duration:800}}>
                     {props => (
                         <div style={props}>
+                            {options}
                             <div className="sourceHeader">Check Plagiarism Local</div>
                             <form onSubmit={this.onSubmit}>
                                 <TextAreaFieldGroup 
@@ -381,6 +420,7 @@ const mapStateToProps = (state) =>({
     errors : state.errors,
     localRawPlagiarism: state.localRawPlagiarism,
     research: state.research,
+    journal: state.journal,
     auth: state.auth
 })
 
