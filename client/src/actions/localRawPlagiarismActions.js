@@ -1,4 +1,4 @@
-import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT, PLAGIARISM_RAW_LOCAL_SET_OPTION,PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, GET_ERRORS, PLAGIARISM_RAW_LOCAL_SET_ABSTRACT, PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS, PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, CLEAR_ERRORS } from '../actions/types'
+import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT, PLAGIARISM_RAW_LOCAL_SET_OPTION,PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, GET_ERRORS, PLAGIARISM_RAW_LOCAL_SET_ABSTRACT, PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS, PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, CLEAR_ERRORS, PLAGIARISM_LOCAL_GLOBAL_CHECK } from '../actions/types'
 
 import axios from "axios";
 
@@ -51,6 +51,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       .then(res => {
         dispatch(getRawLocalPlagiarismInput(input.original));
         dispatch(setPlagiarismLocalLoading());
+        dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
         dispatch(setPlagiarismLocalAbstract(input.abstract))
         dispatch(setPlagiarismRawLocalDisableButton());
         dispatch(clearErrors());
@@ -90,6 +91,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                 tag:"",
                 axiosProgress: 0
               }
+              dispatch(setPlagiarismGlobalCheck({}));
               dispatch(setAxiosProgress(axiosProgress));
               dispatch(outputLocalPlagiarism(newres));
               console.timeEnd("Initialize")
@@ -105,6 +107,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       })
       .catch(err => {
         dispatch(getRawLocalPlagiarismInput(input.original));
+        dispatch(setPlagiarismGlobalCheck({}));
         dispatch({
             type: GET_ERRORS,
             payload: err.response.data
@@ -119,6 +122,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
           dispatch(getRawLocalPlagiarismInput(input.original));
           dispatch(setPlagiarismLocalLoading());
           dispatch(setPlagiarismRawLocalDisableButton());
+          dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
           dispatch(clearErrors());
           console.log(res.data);
           if (res.data.success) {
@@ -149,6 +153,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                   tag:"",
                   axiosProgress: 0
                 }
+                dispatch(setPlagiarismGlobalCheck({}));
                 dispatch(setAxiosProgress(axiosProgress));
                 dispatch(outputLocalPlagiarism(newres));
                 console.timeEnd("Initialize")
@@ -163,6 +168,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
     
         })
         .catch(err => {
+          dispatch(setPlagiarismGlobalCheck({}));
           dispatch(getRawLocalPlagiarismInput(input.original));
           dispatch({
               type: GET_ERRORS,
@@ -172,6 +178,13 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
     }
   };
+
+  export const setPlagiarismGlobalCheck= (input) => {
+    return {
+      type: PLAGIARISM_LOCAL_GLOBAL_CHECK,
+      payload: input
+    };
+  }
 
   export const setPlagiarismRawLocalOption = (option) => {
     return {

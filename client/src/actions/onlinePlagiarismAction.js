@@ -9,7 +9,8 @@ import {
   PLAGIARISM_ONLINE_GOOGLE,
   PLAGIARISM_ONLINE_GENERATE_REPORT,
   PLAGIARISM_ONLINE_CLEAR_OUTPUT,
-  PLAGIARISM_ONLINE_AXIOS_PROGRESS
+  PLAGIARISM_ONLINE_AXIOS_PROGRESS,
+  PLAGIARISM_LOCAL_GLOBAL_CHECK
 } from "./types";
 import axios from "axios";
 
@@ -61,6 +62,7 @@ export const checkPlagiarismOnline = input => dispatch => {
       dispatch(getOnlinePlagiarismInput(input.original));
       if(res.data.onlinePlagiarism.data.items.length>0 && res.data.onlinePlagiarism.data.items){
         dispatch(setPlagiarismOnlineLoading());
+        dispatch(setPlagiarismGlobalCheck({loading:true, number:5}));
         const input2 = {
           text:res.data , pattern: input.q
         }
@@ -98,6 +100,7 @@ export const checkPlagiarismOnline = input => dispatch => {
                     tag:"",
                     axiosProgress: 0
                   }
+                  dispatch(setPlagiarismGlobalCheck({}));
                   dispatch(setAxiosProgress(axiosProgress));
                   dispatch(outputOnlinePlagiarism(newres));
                   console.timeEnd("Initialize")
@@ -116,6 +119,7 @@ export const checkPlagiarismOnline = input => dispatch => {
       
     })
     .catch(err => {
+      dispatch(setPlagiarismGlobalCheck({}));
       dispatch(getOnlinePlagiarismInput(input.original));
       dispatch({
         type: GET_ERRORS,
@@ -164,6 +168,13 @@ export const checkPlagiarismOnline = input => dispatch => {
 //     }
 //   })
 // }
+
+export const setPlagiarismGlobalCheck= (input) => {
+  return {
+    type: PLAGIARISM_LOCAL_GLOBAL_CHECK,
+    payload: input
+  };
+}
 
 export const setPlagiarismGenerateReportLoading = (input) =>{
   return {

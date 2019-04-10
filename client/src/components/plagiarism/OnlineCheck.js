@@ -259,7 +259,9 @@ class OnlineCheck extends Component {
                                             extraClass="onlineTextarea"
                                         />
                                         {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
-                                        <button type="submit" className={this.props.onlinePlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.onlinePlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>
+                                        {this.props.localPlagiarism.globalLoading.loading && this.props.localPlagiarism.globalLoading.number!==5 ? 
+                                        <p>Plagiarism scan is currently in progress, please wait...</p>
+                                        : <button type="submit" className={this.props.onlinePlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.onlinePlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button> }
                                     </form>
                                 </div>
                             )}
@@ -352,6 +354,8 @@ OnlineCheck.propTypes = {
     checkPlagiarismOnline: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    onlinePlagiarism: PropTypes.object.isRequired,
+    localPlagiarism: PropTypes.object.isRequired,
     setPlagiarismOnlineShowDetails : PropTypes.func.isRequired,
     setPlagiarismOnlineHideDetails : PropTypes.func.isRequired,
     setPlagiarismGenerateReportLoading : PropTypes.func.isRequired
@@ -360,6 +364,7 @@ OnlineCheck.propTypes = {
 const mapStateToProps = (state) =>({
     errors : state.errors,
     onlinePlagiarism: state.onlinePlagiarism,
+    localPlagiarism: state.localPlagiarism,
     auth: state.auth
 })
  

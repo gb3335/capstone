@@ -315,7 +315,13 @@ class LocalCheck extends Component {
                                     extraClass="onlineTextarea"
                                 />
                                 {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
-                                <button type="submit" className={this.props.localRawPlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.localRawPlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>
+                                {
+                                    this.props.localPlagiarism.globalLoading.loading && this.props.localPlagiarism.globalLoading.number!==3 ? 
+                                    <p>Plagiarism scan is currently in progress, please wait...</p>
+                                    :(<button type="submit" className={this.props.localRawPlagiarism.buttonDisable ? this.state.disableClassname : "btn btn-primary btn-block btn-flat"}>{this.props.localRawPlagiarism.buttonDisable ? "Checking for plagiarism..." : "Check"}</button>)  
+                                }
+
+                                
                             </form>
                         </div>
                     )}
@@ -408,6 +414,7 @@ LocalCheck.propTypes = {
     errors: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     localRawPlagiarism : PropTypes.object.isRequired,
+    localPlagiarism : PropTypes.object.isRequired,
     research: PropTypes.object.isRequired,
     checkPlagiarismLocal : PropTypes.func.isRequired,
     setPlagiarismRawLocalShowDetails : PropTypes.func.isRequired, 
@@ -419,6 +426,7 @@ LocalCheck.propTypes = {
 const mapStateToProps = (state) =>({
     errors : state.errors,
     localRawPlagiarism: state.localRawPlagiarism,
+    localPlagiarism: state.localPlagiarism,
     research: state.research,
     journal: state.journal,
     auth: state.auth

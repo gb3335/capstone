@@ -112,16 +112,16 @@ class ResearchImageActions extends Component {
 
     return (
       <div>
-        {this.props.localPlagiarism.loading &&
-        this.props.localPlagiarism.abstract ? (
+        {this.props.localPlagiarism.globalLoading.loading &&
+        this.props.localPlagiarism.globalLoading.number===2 ? (
           <div>
             <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
             <Progress
               percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
             />
           </div>
-        ) : this.props.localPlagiarism.loading &&
-          !this.props.localPlagiarism.abstract ? (
+        ) : this.props.localPlagiarism.globalLoading.loading &&
+        this.props.localPlagiarism.globalLoading.number!==2 ? (
           <p>Plagiarism scan is currently in progress, please wait...</p>
         ) : (
           docuItem
