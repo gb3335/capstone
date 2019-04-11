@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { Link } from "react-router-dom";
 
 import { getColleges } from '../../actions/collegeActions';
-import { editAccount, editPassword, editUsername } from '../../actions/registerActions';
-
+import { editAccount, editUsername } from '../../actions/registerActions';
+import { editPassword } from '../../actions/authActions';
 import TextFieldGroup from '../common/TextFieldGroup';
 import SelectListGroup from '../common/SelectListGroup';
 
@@ -104,7 +104,7 @@ class EditAccount extends Component {
 
   render() {
     const { errors } = this.props;
-    
+
     return (
 
       <div className="research">

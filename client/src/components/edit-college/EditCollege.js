@@ -279,7 +279,7 @@ class CreateCollege extends Component {
   };
 
   render() {
-    const { errors } = this.state;
+    const { errors } = this.props;
     const path = "/colleges/" + this.props.college.college.name.initials;
     const { classes, theme } = this.props;
     let suggestions = [];

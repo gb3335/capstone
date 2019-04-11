@@ -272,7 +272,7 @@ class Researches extends Component {
               </div>
             </div>
             <br />
-            <div style={{ overflow: "auto" }}>{action}</div>
+            {action}
             {researchItems}
           </div>
         </div>

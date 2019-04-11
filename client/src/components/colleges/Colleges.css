@@ -4,6 +4,18 @@
   }
 }
 
+@media only screen and (min-width: 500px) {
+  .sortBottom {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .sortTop {
+    display: none;
+  }
+}
+
 .bods {
   width: 100%;
   height: 100%;

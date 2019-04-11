@@ -128,9 +128,6 @@ class Colleges extends Component {
           <div className="container">
             {action}
             <br />
-            <div id="showIfSmall">
-              <br />
-            </div>
             {loadingItem}
             <div className="row">{collegeItems}</div>
           </div>

@@ -139,20 +139,57 @@ class ResearchesAction extends Component {
 
     if (this.state.bin) {
       binAction = (
-        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+        <Link
+          to="#"
+          onClick={this.onToggleBin}
+          className="btn btn-light"
+          style={{ fontSize: "14px" }}
+        >
           <i className="fas fa-list-ul text-success mr-1" /> Researches
         </Link>
       );
     } else {
       binAction = (
-        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+        <Link
+          to="#"
+          onClick={this.onToggleBin}
+          className="btn btn-light"
+          style={{ fontSize: "14px" }}
+        >
           <i className="fas fa-trash-alt text-danger mr-1" /> Bin
         </Link>
       );
     }
 
     return (
-      <div className="btn-group mb-3 btn-group-sm" role="group">
+      <div
+        className="btn-toolbar mb-3"
+        role="toolbar"
+        aria-label="Toolbar with button groups"
+      >
+        <div className="btn-group" role="group" aria-label="First group">
+          <Link
+            to="/add-research"
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-plus text-info mr-1" /> Add Research
+          </Link>
+        </div>
+        <div className="btn-group " role="group" aria-label="Second group">
+          <Link
+            to="#"
+            onClick={this.openModal}
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-poll-h text-info mr-1" /> Create Report
+          </Link>
+        </div>
+        <div className="btn-group " role="group" aria-label="Second group">
+          {binAction}
+        </div>
+
         {/* ALERTS */}
         {/* PLEASE CHECK ONE ALERT */}
         <SweetAlert
@@ -173,14 +210,6 @@ class ResearchesAction extends Component {
         >
           Please wait for the report to generate
         </SweetAlert>
-
-        <Link to="/add-research" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" /> Add Research
-        </Link>
-        <Link to="#" onClick={this.openModal} className="btn btn-light">
-          <i className="fas fa-poll-h text-info mr-1" /> Create Report
-        </Link>
-        {binAction}
 
         <Modal
           isOpen={this.state.modalIsOpen}

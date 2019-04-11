@@ -44,8 +44,12 @@ import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
 import ViewUser from "../user/ViewUser";
 import EditAccount from "../edit-account/EditAccount";
+import EditPassword from "../edit-account/EditPassword";
 import MyAccount from "../user/MyAccount";
 import UserLogs from "../users/UserLogs";
+
+// Backup & Restore
+import BackupList from "../user/BackupList";
 
 // Plagiarism Results
 import LocalResult from "../plagiarism-result/LocalResult";
@@ -90,6 +94,19 @@ class Main extends Component {
   }
 
   render() {
+    const { user } = this.props.auth;
+    let addCollege;
+
+    try {
+      if (user.userType !== "LIBRARIAN") {
+        addCollege = (
+          <Switch>
+            <PrivateRoute exact path="/add-college" component={AddCollege} />
+          </Switch>
+        );
+      }
+    } catch (error) {}
+
     return (
       <Router>
         <div className="App">
@@ -130,7 +147,9 @@ class Main extends Component {
                   </Switch>
                   <Switch>
                     <PrivateRoute
-                      exact path="/onlinecheck" component={OnlineCheck}
+                      exact
+                      path="/onlinecheck"
+                      component={OnlineCheck}
                     />
                   </Switch>
                   <Switch>
@@ -177,6 +196,13 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute
                       exact
+                      path="/edit-password"
+                      component={EditPassword}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
                       path="/add-author"
                       component={AddAuthor}
                     />
@@ -188,13 +214,7 @@ class Main extends Component {
                       component={AddJournalAuthor}
                     />
                   </Switch>
-                  <Switch>
-                    <PrivateRoute
-                      exact
-                      path="/add-college"
-                      component={AddCollege}
-                    />
-                  </Switch>
+                  {addCollege}
                   <Switch>
                     <PrivateRoute
                       exact
@@ -268,6 +288,13 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute exact path="/grammar" component={Grammar} />
                   </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/backup-list"
+                      component={BackupList}
+                    />
+                  </Switch>
                 </div>
               </div>
             </div>
@@ -290,7 +317,8 @@ class Main extends Component {
 }
 
 const mapStateToProps = state => ({
-  sidebar: state.sidebar
+  sidebar: state.sidebar,
+  auth: state.auth
 });
 
 export default connect(mapStateToProps)(Main);

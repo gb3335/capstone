@@ -12,6 +12,7 @@ import userReducer from "./userReducer";
 import journalReducer from "./journalReducer";
 import grammarReducer from "./grammarReducer";
 import userlogsReducer from "./userlogsReducer";
+import backupReducer from "./backupReducer";
 
 export default combineReducers({
   sidebar: sidebarReducer,
@@ -26,7 +27,6 @@ export default combineReducers({
   activity: activityReducer,
   users: userReducer,
   grammar: grammarReducer,
-  userlogs: userlogsReducer
-  
-
+  userlogs: userlogsReducer,
+  backups: backupReducer
 });

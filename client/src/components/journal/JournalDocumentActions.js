@@ -95,54 +95,95 @@ class ResearchImageActions extends Component {
         this.props.auth.user.college === journal.college
       ) {
         docuItem = (
-          <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
-            <label to="#" htmlFor="docUpload" className="btn btn-light">
-              <i className="fas fa-redo-alt text-info mr-1" />
-              Update Document
-            </label>
-            <label
-              to="#"
-              onClick={this.onDeleteDocument}
-              className="btn btn-danger"
-            >
-              <i className="fas fa-trash text-light mr-1" />
-              Remove Document
-            </label>
+          <div
+            className="btn-toolbar mb-3"
+            role="toolbar"
+            aria-label="Toolbar with button groups"
+          >
+            <div className="btn-group" role="group" aria-label="First group">
+              <label
+                to="#"
+                htmlFor="docUpload"
+                className="btn btn-light"
+                style={{ fontSize: "14px" }}
+              >
+                <i className="fas fa-redo-alt text-info mr-1" />
+                Update Document
+              </label>
+            </div>
+            <div className="btn-group" role="group" aria-label="Second group">
+              <label
+                to="#"
+                onClick={this.onDeleteDocument}
+                className="btn btn-danger"
+                style={{ fontSize: "14px" }}
+              >
+                <i className="fas fa-trash text-light mr-1" />
+                Remove Document
+              </label>
+            </div>
           </div>
         );
       }
       if (this.props.auth.user.userType === "ADMINISTRATOR") {
         docuItem = (
-          <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
-            <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
-              <i className="fas fa-search text-info mr-1" />
-              Check Document |
-              <i className="fas fa-database text-info mr-1 ml-1" />
-              <b>All </b>
-            </label>
-            <label
-              to="#"
-              onClick={this.onSidebySideFlagTrue}
-              className="btn btn-light"
-            >
-              <i className="fas fa-search text-info mr-1" />
-              Check Document |
-              <i className="fas fa-copy text-info mr-1 ml-1" />
-              <b>Side By Side</b>
-            </label>
-            <div className="spacer" />
-            <label to="#" htmlFor="docUpload" className="btn btn-light">
-              <i className="fas fa-redo-alt text-info mr-1" />
-              Update Document
-            </label>
-            <label
-              to="#"
-              onClick={this.onDeleteDocument}
-              className="btn btn-danger"
-            >
-              <i className="fas fa-trash text-light mr-1" />
-              Remove Document
-            </label>
+          <div
+            className="btn-toolbar justify-content-between"
+            role="toolbar"
+            aria-label="Toolbar with button groups"
+          >
+            <div>
+              <div className="btn-group" role="group" aria-label="First group">
+                <label
+                  to="#"
+                  onClick={this.onLocalCheck}
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-search text-info mr-1" />
+                  Check Document |
+                  <i className="fas fa-database text-info mr-1 ml-1" />
+                  <b>All </b>
+                </label>
+              </div>
+              <div className="btn-group" role="group" aria-label="First group">
+                <label
+                  to="#"
+                  onClick={this.onSidebySideFlagTrue}
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-search text-info mr-1" />
+                  Check Document |
+                  <i className="fas fa-copy text-info mr-1 ml-1" />
+                  <b>Side By Side</b>
+                </label>
+              </div>
+            </div>
+            <div className="input-group">
+              <div className="btn-group" role="group" aria-label="Second group">
+                <label
+                  to="#"
+                  htmlFor="docUpload"
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-redo-alt text-info mr-1" />
+                  Update Document
+                </label>
+              </div>
+              <div className="btn-group" role="group" aria-label="Second group">
+                <label
+                  to="#"
+                  onClick={this.onDeleteDocument}
+                  className="btn btn-danger"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-trash text-light mr-1" />
+                  Remove Document
+                </label>
+              </div>
+            </div>
           </div>
         );
       }

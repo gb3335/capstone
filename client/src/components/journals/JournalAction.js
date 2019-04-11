@@ -138,20 +138,57 @@ class JournalAction extends Component {
 
     if (this.state.bin) {
       binAction = (
-        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+        <Link
+          to="#"
+          onClick={this.onToggleBin}
+          className="btn btn-light"
+          style={{ fontSize: "14px" }}
+        >
           <i className="fas fa-list-ul text-success mr-1" /> Journals
         </Link>
       );
     } else {
       binAction = (
-        <Link to="#" onClick={this.onToggleBin} className="btn btn-light">
+        <Link
+          to="#"
+          onClick={this.onToggleBin}
+          className="btn btn-light"
+          style={{ fontSize: "14px" }}
+        >
           <i className="fas fa-trash-alt text-danger mr-1" /> Bin
         </Link>
       );
     }
 
     return (
-      <div className="btn-group mb-3 btn-group-sm" role="group">
+      <div
+        className="btn-toolbar mb-3"
+        role="toolbar"
+        aria-label="Toolbar with button groups"
+      >
+        <div className="btn-group" role="group" aria-label="First group">
+          <Link
+            to="/add-journal"
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-plus text-info mr-1" /> Add Journal
+          </Link>
+        </div>
+        <div className="btn-group " role="group" aria-label="Second group">
+          <Link
+            to="#"
+            onClick={this.openModal}
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-poll-h text-info mr-1" /> Create Report
+          </Link>
+        </div>
+        <div className="btn-group " role="group" aria-label="Second group">
+          {binAction}
+        </div>
+
         {/* ALERTS */}
         {/* PLEASE CHECK ONE ALERT */}
         <SweetAlert
@@ -172,15 +209,6 @@ class JournalAction extends Component {
         >
           Please wait for the report to generate
         </SweetAlert>
-
-
-        <Link to="/add-journal" className="btn btn-light">
-          <i className="fas fa-plus text-info mr-1" /> Add Journal
-        </Link>
-        <Link to="#" onClick={this.openModal} className="btn btn-light">
-          <i className="fas fa-poll-h text-info mr-1" /> Create Report
-        </Link>
-        {binAction}
 
         <Modal
           isOpen={this.state.modalIsOpen}
@@ -306,10 +334,7 @@ class JournalAction extends Component {
                     onChange={this.onChange}
                     checked={this.state.deletedJournals}
                   />
-                  <label
-                    className="form-check-label"
-                    htmlFor="deletedJournals"
-                  >
+                  <label className="form-check-label" htmlFor="deletedJournals">
                     Include Deleted Journals
                   </label>
                 </div>
@@ -328,13 +353,13 @@ class JournalAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                    <input
-                      type="button"
-                      value="Generate Report"
-                      onClick={this.onGenerateReport}
-                      className="btn btn-info"
-                    />
-                  )}
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info"
+                  />
+                )}
               </form>
             </div>
           </div>
@@ -354,7 +379,6 @@ const mapStateToProps = state => ({
   journal: state.journal,
   bin: state.journal.bin,
   auth: state.auth
-
 });
 
 export default connect(
