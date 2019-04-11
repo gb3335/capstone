@@ -230,6 +230,8 @@ class MyAccountAction extends Component {
     let editAction;
     let imageAction;
     let blockAction;
+    let createBU;
+    let listBU;
 
     if (auth.isAuthenticated) {
       if (user.email === auth.user.email) {
@@ -248,6 +250,25 @@ class MyAccountAction extends Component {
             <i className="fas fa-circle-notch text-info mr-1" />
             Change avatar
           </label>
+        );
+      }
+      if (user.userType === "ADMINISTRATOR") {
+        createBU = (
+          <Link
+            to="#"
+            onClick={() => this.setState({ modalIsOpen: true })}
+            className="btn btn-light"
+          >
+            <i className="fas fa-folder-plus text-info mr-1" />
+            Create Backup
+          </Link>
+        );
+
+        listBU = (
+          <Link to="/backup-list" className="btn btn-light">
+            <i className="fas fa-list-alt text-info mr-1" />
+            List of Backups
+          </Link>
         );
       }
     }
@@ -364,18 +385,8 @@ class MyAccountAction extends Component {
           </Link>
         </div>
         <div className="btn-group mb-3 btn-group-sm" role="group">
-          <Link
-            to="#"
-            onClick={() => this.setState({ modalIsOpen: true })}
-            className="btn btn-light"
-          >
-            <i className="fas fa-folder-plus text-info mr-1" />
-            Create Backup
-          </Link>
-          <Link to="/backup-list" className="btn btn-light">
-            <i className="fas fa-list-alt text-info mr-1" />
-            List of Backups
-          </Link>
+          {createBU}
+          {listBU}
         </div>
       </div>
     );

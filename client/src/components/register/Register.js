@@ -12,15 +12,14 @@ import SelectListGroup from "../common/SelectListGroup";
 
 class Register extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
-
-      firstName: '',
-      email: '',
-      lastName: '',
-      middleName: '',
-      contact: '',
-      userType: 'ADMINISTRATOR',
+      firstName: "",
+      email: "",
+      lastName: "",
+      middleName: "",
+      contact: "",
+      userType: "LIBRARIAN",
 
       errors: {}
     };
@@ -227,13 +226,12 @@ class Register extends Component {
 Register.propTypes = {
   getColleges: PropTypes.func.isRequired,
   college: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired,
-
+  auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   college: state.college,
   errors: state.errors,
-  auth: state.auth,
+  auth: state.auth
 });
 export default connect(
   mapStateToProps,

@@ -96,6 +96,7 @@ class Main extends Component {
   render() {
     const { user } = this.props.auth;
     let addCollege;
+    let backupList;
 
     try {
       if (user.userType !== "LIBRARIAN") {
@@ -104,6 +105,15 @@ class Main extends Component {
             <PrivateRoute exact path="/add-college" component={AddCollege} />
           </Switch>
         );
+        backupList = (
+          <Switch>
+            <PrivateRoute exact path="/backup-list" component={BackupList} />
+          </Switch>
+        );
+      } else {
+        addCollege = <Route exact path="/add-college" component={NotFound} />;
+
+        backupList = <Route exact path="/backup-list" component={NotFound} />;
       }
     } catch (error) {}
 
@@ -288,13 +298,7 @@ class Main extends Component {
                   <Switch>
                     <PrivateRoute exact path="/grammar" component={Grammar} />
                   </Switch>
-                  <Switch>
-                    <PrivateRoute
-                      exact
-                      path="/backup-list"
-                      component={BackupList}
-                    />
-                  </Switch>
+                  {backupList}
                 </div>
               </div>
             </div>
