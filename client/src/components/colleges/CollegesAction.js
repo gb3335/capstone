@@ -144,6 +144,7 @@ class CollegesActions extends Component {
     let binAction;
     let binActionForAuth;
     let listAction;
+    let listAction2;
     let addAction;
     let reportAction;
 
@@ -165,14 +166,44 @@ class CollegesActions extends Component {
 
     if (this.state.list) {
       listAction = (
-        <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-list text-info" title="List View" />
+        <Link
+          to="#"
+          onClick={this.onToggleList}
+          className="btn btn-light sortTop"
+        >
+          <i className="fas fa-list text-info mr-1" title="List View" />
+          List
+        </Link>
+      );
+      listAction2 = (
+        <Link
+          to="#"
+          onClick={this.onToggleList}
+          className="btn btn-light sortBottom"
+        >
+          <i className="fas fa-list text-info mr-1" title="List View" />
+          List
         </Link>
       );
     } else {
       listAction = (
-        <Link to="#" onClick={this.onToggleList} className="btn btn-light">
-          <i className="fas fa-th-large text-info" title="Grid View" />
+        <Link
+          to="#"
+          onClick={this.onToggleList}
+          className="btn btn-light sortTop"
+        >
+          <i className="fas fa-th-large text-info mr-2" title="Grid View" />
+          Grid
+        </Link>
+      );
+      listAction2 = (
+        <Link
+          to="#"
+          onClick={this.onToggleList}
+          className="btn btn-light sortBottom"
+        >
+          <i className="fas fa-th-large text-info mr-2" title="Grid View" />
+          Grid
         </Link>
       );
     }
@@ -216,13 +247,15 @@ class CollegesActions extends Component {
           Please wait for the report to generate
         </SweetAlert>
 
-        <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
+        <div className="docuItem btn-group-sm">
           {addAction}
           {reportAction}
           {binActionForAuth}
           <div className="spacer" />
           {listAction}
         </div>
+        <br className="sortBottom" />
+        <div className="docuItem btn-group-sm sortBottom">{listAction2}</div>
 
         <Modal
           isOpen={this.state.modalIsOpen}

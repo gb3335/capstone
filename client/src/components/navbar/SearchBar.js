@@ -23,7 +23,10 @@ const styles = theme => ({
   input: {
     display: "flex",
     padding: 0,
-    cursor: "pointer"
+    cursor: "pointer",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   },
   valueContainer: {
     display: "flex",

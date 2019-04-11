@@ -90,23 +90,37 @@ class ResearchImageActions extends Component {
     let docuItem;
 
     docuItem = (
-      <div className="docuItem btn-group-sm" style={{ overflow: "auto" }}>
-        <label to="#" onClick={this.onLocalCheck} className="btn btn-light">
-          <i className="fas fa-search text-info mr-1" />
-          Check Abstract |
-          <i className="fas fa-database text-info mr-1 ml-1" />
-          <b>All </b>
-        </label>
-        <label
-          to="#"
-          onClick={this.onSidebySideFlagTrue}
-          className="btn btn-light"
-        >
-          <i className="fas fa-search text-info mr-1" />
-          Check Abstract |
-          <i className="fas fa-copy text-info mr-1 ml-1" />
-          <b>Side By Side</b>
-        </label>
+      <div
+        className="btn-toolbar mb-3"
+        role="toolbar"
+        aria-label="Toolbar with button groups"
+      >
+        <div className="btn-group" role="group" aria-label="First group">
+          <label
+            to="#"
+            onClick={this.onLocalCheck}
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-search text-info mr-1" />
+            Check Abstract |
+            <i className="fas fa-database text-info mr-1 ml-1" />
+            <b>All </b>
+          </label>
+        </div>
+        <div className="btn-group" role="group" aria-label="Second group">
+          <label
+            to="#"
+            onClick={this.onSidebySideFlagTrue}
+            className="btn btn-light"
+            style={{ fontSize: "14px" }}
+          >
+            <i className="fas fa-search text-info mr-1" />
+            Check Abstract |
+            <i className="fas fa-copy text-info mr-1 ml-1" />
+            <b>Side By Side</b>
+          </label>
+        </div>
       </div>
     );
 
