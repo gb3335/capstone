@@ -52,10 +52,10 @@ export const editAccount = (userData, history) => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
 
-      if (userData.id) {
-        history.push(`${userData.oldlink}`);
+      if (userData.from) {
+        history.push(`/`);
       } else {
-        history.push(`/viewusers`);
+        history.push(`${userData.oldlink}`);
       }
     })
     .catch(err =>
@@ -150,10 +150,10 @@ export const editUsername = (userData, history) => dispatch => {
       // Set current user
       dispatch(setCurrentUser(decoded));
 
-      if (userData.id) {
-        history.push(`${userData.oldlink}`);
+      if (userData.from) {
+        history.push(`/`);
       } else {
-        history.push(`/viewusers`);
+        history.push(`${userData.oldlink}`);
       }
     })
     .catch(err =>
@@ -163,23 +163,7 @@ export const editUsername = (userData, history) => dispatch => {
       })
     );
 };
-export const editPassword = (userData, history) => dispatch => {
-  axios
-    .post("/api/users/profile/updatepassword", userData)
-    .then(res => {
-      if (userData.id) {
-        history.push(`${userData.oldlink}`);
-      } else {
-        history.push(`/viewusers`);
-      }
-    })
-    .catch(err =>
-      dispatch({
-        type: GET_ERRORS,
-        payload: err.response.data
-      })
-    );
-};
+
 
 export const changeStatus = (userData, history) => dispatch => {
   dispatch(setUserLoading());

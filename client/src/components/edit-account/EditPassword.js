@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { getColleges } from '../../actions/collegeActions';
 import { editAccount, editUsername } from '../../actions/registerActions';
 import { editPassword } from '../../actions/authActions';
+
 import TextFieldGroup from '../common/TextFieldGroup';
 import SelectListGroup from '../common/SelectListGroup';
 
@@ -52,7 +53,8 @@ class EditAccount extends Component {
       middlename: this.state.middleName,
       contact: this.state.contact,
       id: this.props.auth.user.id,
-      oldlink: this.state.oldlink
+      oldlink: this.state.oldlink,
+      from:"password"
     };
 
 
@@ -68,7 +70,8 @@ class EditAccount extends Component {
     const userData = {
       userName: this.state.userName,
       id: this.props.auth.user.id,
-      oldlink: this.state.oldlink
+      oldlink: this.state.oldlink,
+      from:"password"
     };
 
     this.refs.resBtn1.setAttribute('disabled', 'disabled');
@@ -85,7 +88,8 @@ class EditAccount extends Component {
       newpassword: this.state.newpassword,
       newpassword2: this.state.newpassword2,
       id: this.props.auth.user.id,
-      oldlink: this.state.oldlink
+      oldlink: this.state.oldlink,
+      from:"password"
     };
 
 
@@ -115,10 +119,10 @@ class EditAccount extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <Link
-                      to={this.state.oldlink}
+                      to={`/`}
                       className="btn btn-light mb-3 float-left"
                     >
-                      <i className="fas fa-angle-left" /> Back to Accounts
+                      <i className="fas fa-angle-left" /> Go back
                      </Link>
                   </div>
                   <div className="col-md-6" />
@@ -135,12 +139,13 @@ class EditAccount extends Component {
                     <div className="list-group" id="list-tab" role="tablist">
 
                       <a
-                        className="list-group-item list-group-item-action active"
+                        className="list-group-item list-group-item-action "
                         id="list-details-list"
                         data-toggle="list"
                         href="#list-details"
                         role="tab"
                         aria-controls="details"
+                        aria-selected="false"
                       >
                         <i className="fas fa-info-circle mr-2" />
                         User Information
@@ -152,18 +157,20 @@ class EditAccount extends Component {
                         href="#list-abstract"
                         role="tab"
                         aria-controls="abstract"
+                        aria-selected="false"
                       >
                         <i className="fas fa-user mr-2" />
                         Username
             </a>
 
                       <a
-                        className="list-group-item list-group-item-action"
+                        className="list-group-item list-group-item-action active show"
                         id="list-authors-list"
                         data-toggle="list"
                         href="#list-authors"
                         role="tab"
                         aria-controls="authors"
+                        aria-selected="true"
                       >
                         <i className="fas fa-key mr-2" />
                         Password
@@ -179,7 +186,7 @@ class EditAccount extends Component {
                     <div className="tab-content" id="nav-tabContent">
                       <h1 className="display-4 text-center">Update Account</h1>
                       <br />
-                      <form onSubmit={this.onSubmit} className="tab-pane fade show active"
+                      <form onSubmit={this.onSubmit} className="tab-pane fade "
                         id="list-details"
                         role="tabpanel"
                         aria-labelledby="list-details-list">
@@ -256,7 +263,7 @@ class EditAccount extends Component {
 
                       </form >
                       <form
-                        className="tab-pane fade"
+                        className="tab-pane fade show active"
                         id="list-authors"
                         role="tabpanel"
                         aria-labelledby="list-authors-list"

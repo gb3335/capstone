@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { Parallax, Background } from "react-parallax";
-
+import SweetAlert from "react-bootstrap-sweetalert";
 import {
   getColleges,
   getCollegeByInitials
@@ -12,7 +12,7 @@ import {
 import { getResearches } from "../../actions/researchActions";
 import { getUsers } from "../../actions/userActions";
 import { getJournals } from "../../actions/journalActions";
-
+import { Redirect } from 'react-router';
 import "./Landing.css";
 
 class Landing extends Component {
@@ -21,17 +21,30 @@ class Landing extends Component {
     this.state = {
       greet: "",
       day: "",
-      color: ""
+      color: "",
+      alert: this.props.auth.user.passwordUpdated === 0 ? true : false,
+      redirect: false
     };
   }
+  onCancel = () => {
+    this.setState({ alert: false });
+  };
+  onUpdate = () => {
 
+
+    window.location.href = `/edit-password`;
+  }
   componentWillMount() {
     this.props.getColleges();
     this.props.getResearches();
     this.props.getUsers();
     this.props.getJournals();
   }
-
+  handleOnClick = () => {
+    // some action...
+    // then redirect
+    this.setState({ redirect: true });
+  }
   componentDidMount() {
     let currentHour = moment().format("HH");
     currentHour = parseInt(currentHour, 10);
@@ -59,10 +72,13 @@ class Landing extends Component {
 
   render() {
     let name;
+    if (this.state.redirect) {
+      return <Redirect push to={`/edit-password`} />;
+    }
 
     try {
       this.props.getCollegeByInitials(this.props.colleges[0].name.initials);
-    } catch (error) {}
+    } catch (error) { }
 
     if (this.props.auth.isAuthenticated) {
       name = ", " + this.props.auth.user.name.firstName;
@@ -97,6 +113,20 @@ class Landing extends Component {
 
     return (
       <div>
+        <SweetAlert
+          show={this.state.alert}
+          warning
+          showCancel
+          confirmBtnText="Yes, update password!"
+          confirmBtnBsStyle="success"
+          cancelBtnText="Later"
+          cancelBtnBsStyle="default"
+          title="Update Password?"
+          onConfirm={this.handleOnClick}
+          onCancel={this.onCancel}
+        >
+          The system detected that you are using our system generated password. Would you like to update your password?
+        </SweetAlert>
         <div style={styles}>
           {/* <Hello name="Parallax" /> */}
           <Parallax bgImage={image1} strength={300}>

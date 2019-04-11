@@ -46,6 +46,10 @@ const UserSchema = new Schema({
     type: Number,
     default: 0
   },
+  passwordUpdated: {
+    type: Number,
+    default: 0
+  },
   isLock: {
     type: Number,
     default: 0

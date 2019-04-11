@@ -44,6 +44,7 @@ import Register from "../register/Register";
 import ViewUsers from "../users/ViewUsers";
 import ViewUser from "../user/ViewUser";
 import EditAccount from "../edit-account/EditAccount";
+import EditPassword from "../edit-account/EditPassword";
 import MyAccount from "../user/MyAccount";
 import UserLogs from "../users/UserLogs";
 
@@ -172,6 +173,13 @@ class Main extends Component {
                       exact
                       path="/edit-account/:oldpath/:oldid"
                       component={EditAccount}
+                    />
+                  </Switch>
+                  <Switch>
+                    <PrivateRoute
+                      exact
+                      path="/edit-password"
+                      component={EditPassword}
                     />
                   </Switch>
                   <Switch>
