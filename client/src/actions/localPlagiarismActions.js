@@ -94,7 +94,6 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               tag: "",
               axiosProgress: 0
             }
-            console.log(newres);
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));

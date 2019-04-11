@@ -134,7 +134,6 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                   total++;
                 }
             })
-            console.log(promises);
             axios
               .all(promises)
               .then(res => {
