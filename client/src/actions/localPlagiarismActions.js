@@ -52,11 +52,11 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
   dispatch(setPlagiarismLocalAbstract(input.abstract))
   console.time("Initialize")
-  axios
-    .post("/api/plagiarism/local/initialize/pattern", input)
-    .then(res => {
-      console.log(res.data);
-      if (res.data.success) {
+  // axios
+  //   .post("/api/plagiarism/local/initialize/pattern", input)
+  //   .then(res => {
+  //     console.log(res.data);
+  //     if (res.data.success) {
         promises = []
         input.researches.forEach(function (research) {
           if (research._id !== input.docuId) {
@@ -118,7 +118,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               payload: err.response.data
             });
           });
-      }//else{
+      //}//else{
       //   dispatch(outputLocalPlagiarism(res.data));
       //   dispatch({
       //     type: GET_ERRORS,
@@ -126,7 +126,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       //   });
       // }
 
-    })
+    // })
 
 };
 
@@ -164,11 +164,11 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
   dispatch(setDocumentId(input.docuId));
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
   console.time("Initialize")
-  axios
-    .post("/api/plagiarism/local/initialize/journal/pattern", input)
-    .then(res => {
-      console.log(res.data);
-      if (res.data.success) {
+  // axios
+  //   .post("/api/plagiarism/local/initialize/journal/pattern", input)
+  //   .then(res => {
+  //     console.log(res.data);
+  //     if (res.data.success) {
         promises = []
         input.journals.forEach(function (journal) {
           if (journal._id !== input.docuId) {
@@ -217,15 +217,15 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
               payload: err.response.data
             });
           });
-      }//else{
-      //   dispatch(outputLocalPlagiarism(res.data));
-      //   dispatch({
-      //     type: GET_ERRORS,
-      //     payload: {initializeLocal: "Document not Found!"}
-      //   });
-      // }
+    //   }//else{
+    //   //   dispatch(outputLocalPlagiarism(res.data));
+    //   //   dispatch({
+    //   //     type: GET_ERRORS,
+    //   //     payload: {initializeLocal: "Document not Found!"}
+    //   //   });
+    //   // }
 
-    })
+    // })
 
 };
 

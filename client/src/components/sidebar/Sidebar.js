@@ -357,59 +357,46 @@ class Sidebar extends Component {
       );
     }
 
-    const replaceString = require("replace-string");
-    let strstart = 0;
     let currentLink = window.location.href;
-    let oldpath;
+    let firstOccurencePath;
+    let firstOccurence = currentLink.indexOf("/");
+    firstOccurencePath = currentLink.substring(firstOccurence + 1, currentLink.length);
+    let secondOccurencePath;
+    let secondOccurence = firstOccurencePath.indexOf("/");
+    secondOccurencePath = firstOccurencePath.substring(secondOccurence + 1, firstOccurencePath.length);
+    let thirdOccurencePath;
+    let thirdOccurence = secondOccurencePath.indexOf("/");
+    thirdOccurencePath = secondOccurencePath.substring(thirdOccurence + 1, secondOccurencePath.length);
     let oldid;
-    let linkCutted;
-
-    let mylink;
-    if (currentLink.includes("http://34.229.6.94/")) {
-      linkCutted = replaceString(currentLink, "http://34.229.6.94/", "");
+    let oldlink;
+    let fourthOccurencePath;
+    let fourthOccurence;
+    let backlink;
+    if (thirdOccurencePath.includes("/")) {
+      fourthOccurence = thirdOccurencePath.indexOf("/");
+      fourthOccurencePath = thirdOccurencePath.substring(fourthOccurence + 1, thirdOccurencePath.length);
+      oldid = fourthOccurencePath;
+      oldlink = thirdOccurencePath.substring(0, fourthOccurence);
+      backlink = `${oldlink}/${oldid}`
     }
     else {
-      linkCutted = replaceString(currentLink, "http://localhost:3000/", "");
+      oldid = thirdOccurencePath;
+      oldlink = thirdOccurencePath;
+      backlink = `${oldlink}/${oldid}`
+    }
+    let toCompare = (`myaccount/${this.props.auth.user.id}`).length;
+    let thisOldLink = (`myaccount/${this.props.auth.user.id}/${oldlink}/${oldid}`).length;
+
+
+    if (thirdOccurencePath.substring(0, toCompare) === `myaccount/${this.props.auth.user.id}`) {
+
+      backlink = thirdOccurencePath.substring(toCompare + 1, thisOldLink)
     }
 
+    if (backlink === '/') {
+      backlink = `0000/0000`;
 
-
-    if (linkCutted.includes("/")) {
-      strstart = linkCutted.indexOf("/");
-      oldpath = linkCutted.substring(0, strstart);
-      oldid = linkCutted.substring(strstart + 1, linkCutted.length);
-      mylink = "/myaccount/" + this.props.auth.user.id + "/" + oldpath + "/" + oldid;
-
-    } else {
-      if (linkCutted === "") {
-        mylink =
-          "/myaccount/" +
-          this.props.auth.user.id +
-          "/" +
-          "undefined" +
-          "/" +
-          oldid;
-      } else {
-
-
-        mylink =
-          "/myaccount/" + this.props.auth.user.id + "/" + linkCutted + "/" + oldid;
-
-      }
     }
-    if (
-      "/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id ===
-      mylink.substring(0, ("/myaccount/" + this.props.auth.user.id + "/myaccount/" + this.props.auth.user.id).length)
-    ) {
-      mylink = mylink.substring(
-        ("/myaccount/" + this.props.auth.user.id).length,
-        mylink.length
-      );
-    }
-
-
-    let oldlink = mylink;
-    mylink = "";
 
     let authLinks;
     if (isAuthenticated) {
@@ -431,7 +418,7 @@ class Sidebar extends Component {
               />
             </div>
             <div className="sidebar_user_name">
-              <Link to={oldlink}>
+              <Link to={`/myaccount/${this.props.auth.user.id}/${backlink}`}>
                 {user.name.firstName} {user.name.lastName}
               </Link>
             </div>

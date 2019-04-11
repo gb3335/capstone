@@ -25,6 +25,7 @@ const googleKeys = require('../../config/googlekeys')
 
 // Load Plagiarism Checker
 const plagiarism = require("../../krishield-kyle-plagiarism");
+const plagiarism_binary_search = require("../../plagiarism-checker/plagiarism-checker-binary");
 
 // Text Processor
 const processor = require('../../validation/plagiarism/processor');
@@ -51,27 +52,9 @@ let fontFooter = "7px";
 // @access  public
 router.get("/test", (req, res) => {
 
-  async function runSample(options) {
-    console.log(options);
-    const ress = await customsearch.cse.list({
-      cx: options.cx,
-      q: options.q,
-      auth: options.apiKey,
-    });
-    res.send(ress);
-  }
+  let {text, len} = processor.textProcess(req.body.text.toLowerCase());
   
-  
-    // You can get a custom search engine id at
-    // https://www.google.com/cse/create/new
-    const options = {
-      q: "rabin karp",
-      apiKey: ApiKey,
-      cx
-    };
-    runSample(options).catch(console.error);
-  
-  
+  res.send({text,len});
 
   // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
   // const newString = processor.textProcess(oldString);
@@ -139,11 +122,11 @@ router.get("/test", (req, res) => {
 // @desc    initialize online pattern
 // @access  public
 router.post("/online/initialize/pattern", (req, res) => {
-  let pattern = req.body.pattern;
+  // let pattern = req.body.pattern;
 
-  const { text, len } = processor.textProcess(pattern.toString().toLowerCase());
-  const arr = text.split(' ');
-  plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+  // const { text, len } = processor.textProcess(pattern.toString().toLowerCase());
+  // const arr = text.split(' ');
+  // plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
   res.json({
     success: true
   })
@@ -156,6 +139,7 @@ router.post("/online/initialize/pattern", (req, res) => {
 // @desc    search online route
 // @access  public
 router.post("/online/result", (req, res) => {
+  let pattern2 = req.body.pattern;
   let link = req.body.link;
   let title = req.body.title;
   let mime = req.body.mime;
@@ -180,16 +164,46 @@ router.post("/online/result", (req, res) => {
         });
 
 
-        let { text, len } = processor.textProcess(data.toString().toLowerCase());
+        let output = processor.textProcess(data.toString().toLowerCase());
+        let text2 = output.text;
+        let lenText = output.len;
 
-        let result = plagiarism.search(text, len, title, link);
+        let output2 = processor.textProcess(pattern2.toString().toLowerCase());
+        let pattern = output2.text;
+        let lenPattern = output2.len;
 
-        res.json({
-          onlinePlagiarism: {
-            success: true,
-            data: result
-          }
-        });
+        let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+            let result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: 'Not Applicable',
+                  Id: 'Not Applicable'  
+                },
+                Text: {
+                  Name: title,
+                  Id: link}
+              },
+              Index: similarity.index
+            }
+            res.json({
+              onlinePlagiarism: {
+                success: true,
+                data: result
+              }
+            });
+        // let result = plagiarism.search(text, len, title, link);
+
+        // res.json({
+        //   onlinePlagiarism: {
+        //     success: true,
+        //     data: result
+        //   }
+        // });
       });
     });
   } else {
@@ -223,14 +237,47 @@ router.post("/online/result", (req, res) => {
           }
         });
       } else {
-        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
-        result = plagiarism.search(text, len, title, link);
+        let output = processor.textProcess(newtext.toString().toLowerCase());
+        let text2 = output.text;
+        let lenText = output.len;
+
+        let output2 = processor.textProcess(pattern2.toString().toLowerCase());
+        let pattern = output2.text;
+        let lenPattern = output2.len;
+
+        let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+        let result = {
+          SimilarityScore: similarity.pattern,
+          DocumentScore: {
+            Pattern: similarity.pattern,
+            Text: similarity.text
+          },
+          Document: {
+            Pattern: {
+              Name: 'Not Applicable',
+              Id: 'Not Applicable'
+            },
+            Text: {
+              Name: title,
+              Id: link}
+          },
+          Index: similarity.index
+        }
         res.json({
           onlinePlagiarism: {
             success: true,
             data: result
           }
         });
+
+
+        // result = plagiarism.search(text, len, title, link);
+        // res.json({
+        //   onlinePlagiarism: {
+        //     success: true,
+        //     data: result
+        //   }
+        // });
       }
 
 
@@ -599,9 +646,9 @@ router.post("/local/initialize/pattern", (req, res) => {
       return res.status(400).json(errors);
     }
 
-    const { text, len } = processor.textProcess(q.toString().toLowerCase());
-    const arr = text.split(' ');
-    plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+    // const { text, len } = processor.textProcess(q.toString().toLowerCase());
+    // const arr = text.split(' ');
+    // plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
     res.json({
       success: true
     })
@@ -696,10 +743,6 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
   let description = req.body.description;
 
   let raw = req.body.raw;
-  let q = req.body.q;
-
-
-
   if(raw){
     const { errors, isValid } = validateLocalInput(req.body.q);
     //Check Validation
@@ -707,107 +750,232 @@ router.post("/local/initialize/journal/pattern", (req, res) => {
       return res.status(400).json(errors);
     }
 
-    const { text, len } = processor.textProcess(q.toString().toLowerCase());
-    const arr = text.split(' ');
-    plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
+    // const { text, len } = processor.textProcess(q.toString().toLowerCase());
+    // const arr = text.split(' ');
+    // plagiarism.initialize(arr, len, "Not Applicable", "Not Applicable");
     res.json({
       success: true
     })
   }else{
-  if (description) {
-    Journal.findOne({ _id: docuId }, { content: 0 })
-      .then(journal => {
-        if (!journal) {
-          errors.nojournal = "There is no data for this journal";
-          res.status(404).json(errors);
-        }
-
-        let newtext = stripHtml(journal.description);
-
-        let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
-        arr = text.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+    if (description) {
+      Journal.findOne({ _id: docuId }, { content: 0 })
+        .then(journal => {
+          if (!journal) {
+            errors.nojournal = "There is no data for this journal";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = stripHtml(journal.description);
+  
+          let { text, len } = processor.textProcess(newtext.toString().toLowerCase());
+          arr = text.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
-  } else {
-    Journal.findOne({ _id: docuId })
-      .then(journal => {
-        if (!journal) {
-          errors.nojournal = "There is no data for this journal";
-          res.status(404).json(errors);
-        }
-
-        let newtext = journal.content.text;
-        const len = journal.content.sentenceLength;
-        let arr = newtext.split(' ')
-
-        plagiarism.initialize(arr, len, title, docuId);
-        res.json({
-          success: true
+        .catch(err => res.status(404).json(err));
+    } else {
+      Journal.findOne({ _id: docuId })
+        .then(journal => {
+          if (!journal) {
+            errors.nojournal = "There is no data for this journal";
+            res.status(404).json(errors);
+          }
+  
+          let newtext = journal.content.text;
+          const len = journal.content.sentenceLength;
+          let arr = newtext.split(' ')
+  
+          plagiarism.initialize(arr, len, title, docuId);
+          res.json({
+            success: true
+          })
+  
+  
         })
-
-
-      })
-      .catch(err => res.status(404).json(err));
+        .catch(err => res.status(404).json(err));
+    }
   }
-}
-})
+ 
 
-
+});
 
 // @routes  POST api/plagiarism/local
 // @desc    search local route
 // @access  public
 router.post("/local/result", (req, res) => {
 
-
+  let docuId = req.body.docuId;
+  let title = req.body.title;
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
-  let textFile = req.body.textFile;
   let abstract = req.body.abstract;
-
+  let raw = req.body.raw;
+  let q = req.body.q;
   if (abstract) {
+    
     Research.findOne({ _id: textId }, { content: 0 })
-      .then(research => {
-        if (!research) {
+      .then(researchText => {
+        if (!researchText) {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
 
-        let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
-        let result = plagiarism.search(text, len, textTitle, textId);
-        res.json({
-          localPlagiarism: {
-            success: true,
-            data: result
-          }
+        let {text, len} = processor.textProcess(stripHtml(researchText.abstract).toString().toLowerCase());
+        let text2 = text
+        let lenText = len;
 
-        });
+        Research.findOne({_id: docuId}, { content: 0 })
+        .then(researchPattern => {
+         let output;
+          if(!researchPattern || raw){
+            output = processor.textProcess(stripHtml(req.body.q).toString().toLowerCase());
+          }else{
+            output = processor.textProcess(stripHtml(researchPattern.abstract).toString().toLowerCase());
+          }
+          
+          
+          let pattern = output.text;
+          let lenPattern = output.len;
+          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+          let result;
+          if(raw){
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: 'Not Applicable',
+                  Id: 'Not Applicable'
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }else {
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: title,
+                  Id: docuId
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }
+          
+
+          res.json({
+            localPlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+
+
+          
+        })
+        .catch(err => res.status(404).json(err));
+        // let { text, len } = processor.textProcess(stripHtml(research.abstract).toString().toLowerCase());
+        // let result = plagiarism.search(text, len, textTitle, textId);
+
+        
+        // res.json({
+        //   localPlagiarism: {
+        //     success: true,
+        //     data: result
+        //   }
+
+        // });
       })
       .catch(err => res.status(404).json(err));
   } else {
     Research.findOne({ _id: textId })
-      .then(research => {
-        if (!research) {
+      .then(researchText => {
+        if (!researchText) {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
-        let text = research.content.text;
-        const len = research.content.sentenceLength;
-
-        let result = plagiarism.search(text, len, textTitle, textId);
-        res.json({
-          localPlagiarism: {
-            success: true,
-            data: result
+        let text = researchText.content.text;
+        const lenText = researchText.content.sentenceLength;
+        
+          Research.findOne({ _id:docuId })
+          .then(researchPattern => {
+            let pattern;
+            let lenPattern;
+            if(!researchPattern || raw){
+              let output = processor.textProcess(req.body.q.toLowerCase());
+              pattern = output.text;
+              lenPattern = output.len;
+            }else{
+              pattern = researchPattern.content.text;
+              lenPattern = researchPattern.content.sentenceLength;
+            }
+            let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern);
+            let result;
+          if(raw){
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: 'Not Applicable',
+                  Id: 'Not Applicable'
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }else {
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: title,
+                  Id: docuId
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
           }
-        });
+            res.json({
+              localPlagiarism: {
+                success: true,
+                data: result
+              }
+            });
+          })
+        
+        
       })
       .catch(err => res.status(404).json(err));
   }
@@ -890,49 +1058,177 @@ router.post("/local/result", (req, res) => {
 // @desc    search local route
 // @access  public
 router.post("/local/journal/result", (req, res) => {
-
+  let docuId = req.body.docuId
+  let title = req.body.title
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   let textFile = req.body.textFile;
   let abstract = req.body.abstract;
-
+  let raw = req.body.raw;
   if (abstract) {
     Journal.findOne({ _id: textId }, { content: 0 })
-      .then(journal => {
-        if (!journal) {
+      .then(journalText => {
+        if (!journalText) {
           errors.nojournal = "There is no data for this journal";
           res.status(404).json(errors);
         }
 
-        let { text, len } = processor.textProcess(stripHtml(journal.abstract).toString().toLowerCase());
-        let result = plagiarism.search(text, len, textTitle, textId);
-        res.json({
-          localPlagiarism: {
-            success: true,
-            data: result
+        let { text, len } = processor.textProcess(stripHtml(journalText.abstract).toString().toLowerCase());
+        let text2 = text
+        let lenText = len;
+
+        Journal.findOne({ _id: docuId }, { content: 0 })
+        .then(journalPattern => {
+          let output;
+          if (!journalPattern || raw) {
+            output = processor.textProcess(stripHtml(req.body.q).toString().toLowerCase());
+
+          }else{
+            output = processor.textProcess(stripHtml(journalPattern.abstract).toString().toLowerCase());
           }
 
-        });
+          let pattern = output.text;
+          let lenPattern = output.len;
+
+          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+          let result;
+          if(raw){
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: 'Not Applicable',
+                  Id: 'Not Applicable'
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }else {
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: title,
+                  Id: docuId
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }
+          res.json({
+            localPlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+
+        })
+
+        // let result = plagiarism.search(text, len, textTitle, textId);
+        // res.json({
+        //   localPlagiarism: {
+        //     success: true,
+        //     data: result
+        //   }
+
+        // });
       })
       .catch(err => res.status(404).json(err));
   } else {
     Journal.findOne({ _id: textId })
-      .then(journal => {
-        if (!journal) {
+      .then(journalText => {
+        if (!journalText) {
           errors.nojournal = "There is no data for this journal";
           res.status(404).json(errors);
         }
 
-        let text = journal.content.text;
-        const len = journal.content.sentenceLength;
+        let text = journalText.content.text;
+        const lenText = journalText.content.sentenceLength;
 
-        let result = plagiarism.search(text, len, textTitle, textId);
-        res.json({
-          localPlagiarism: {
-            success: true,
-            data: result
+        Journal.findOne({ _id: docuId })
+        .then(journalPattern => {
+          let pattern;
+          let lenPattern;
+          if(!journalPattern || raw){
+            let output = processor.textProcess(req.body.q.toLowerCase());
+            pattern = output.text;
+            lenPattern = output.len;
+          }else{
+            pattern = journalPattern.content.text;
+            lenPattern = journalPattern.content.sentenceLength;
           }
-        });
+          
+
+          
+          let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern);
+          let result;
+          if(raw){
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: 'Not Applicable',
+                  Id: 'Not Applicable'
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }else {
+            result = {
+              SimilarityScore: similarity.pattern,
+              DocumentScore: {
+                Pattern: similarity.pattern,
+                Text: similarity.text
+              },
+              Document: {
+                Pattern: {
+                  Name: title,
+                  Id: docuId
+                },
+                Text: {
+                  Name: textTitle,
+                  Id: textId}
+              },
+              Index: similarity.index
+            }
+          }
+          res.json({
+            localPlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+
+        })
+
+        // let result = plagiarism.search(text, len, textTitle, textId);
+        // res.json({
+        //   localPlagiarism: {
+        //     success: true,
+        //     data: result
+        //   }
+        // });
       })
       .catch(err => res.status(404).json(err));
   }
