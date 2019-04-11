@@ -1,4 +1,4 @@
-import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT, PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, GET_ERRORS, PLAGIARISM_RAW_LOCAL_SET_ABSTRACT, PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS, PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, CLEAR_ERRORS } from '../actions/types'
+import { PLAGIARISM_RAW_LOCAL, PLAGIARISM_RAW_LOCAL_INPUT, PLAGIARISM_RAW_LOCAL_SET_OPTION,PLAGIARISM_RAW_LOCAL_LOADING,PLAGIARISM_RAW_LOCAL_AXIOS_PROGRESS, GET_ERRORS, PLAGIARISM_RAW_LOCAL_SET_ABSTRACT, PLAGIARISM_RAW_LOCAL_GENERATE_REPORT, PLAGIARISM_RAW_LOCAL_SHOW_DETAILS, PLAGIARISM_RAW_LOCAL_HIDE_DETAILS, PLAGIARISM_RAW_LOCAL_DISABLE_BUTTON, CLEAR_ERRORS, PLAGIARISM_LOCAL_GLOBAL_CHECK } from '../actions/types'
 
 import axios from "axios";
 
@@ -41,8 +41,9 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
         
       }
     }
+    dispatch(setPlagiarismRawLocalOption(input.option));
     
-    
+    if(input.option===1){
     console.time("Initialize")
     dispatch(setPlagiarismRawLocalDisableButton());
     axios
@@ -50,6 +51,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       .then(res => {
         dispatch(getRawLocalPlagiarismInput(input.original));
         dispatch(setPlagiarismLocalLoading());
+        dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
         dispatch(setPlagiarismLocalAbstract(input.abstract))
         dispatch(setPlagiarismRawLocalDisableButton());
         dispatch(clearErrors());
@@ -89,6 +91,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                 tag:"",
                 axiosProgress: 0
               }
+              dispatch(setPlagiarismGlobalCheck({}));
               dispatch(setAxiosProgress(axiosProgress));
               dispatch(outputLocalPlagiarism(newres));
               console.timeEnd("Initialize")
@@ -104,11 +107,90 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       })
       .catch(err => {
         dispatch(getRawLocalPlagiarismInput(input.original));
+        dispatch(setPlagiarismGlobalCheck({}));
         dispatch({
             type: GET_ERRORS,
             payload: err.response.data
         });
     });
+    }else{
+      console.time("Initialize")
+      dispatch(setPlagiarismRawLocalDisableButton());
+      axios
+        .post("/api/plagiarism/local/initialize/journal/pattern", input)
+        .then(res => {
+          dispatch(getRawLocalPlagiarismInput(input.original));
+          dispatch(setPlagiarismLocalLoading());
+          dispatch(setPlagiarismRawLocalDisableButton());
+          dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
+          dispatch(clearErrors());
+          console.log(res.data);
+          if (res.data.success) {
+            promises = []
+            input.journals.forEach(function (journal) {
+                if (journal.document && journal.deleted !== 1) {
+                  promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, raw: input.raw, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }, config))
+                  total++;
+                }
+            })
+            console.log(promises);
+            axios
+              .all(promises)
+              .then(res => {
+                let newres = [];
+                res.forEach(function (r, index) {
+                  //console.log("MARK: "+index+" "+r.data.localPlagiarism.data)
+                  //newres.push(JSON.parse(hm.decompress(r.data.localPlagiarism.data)))
+                  newres.push(r.data.localPlagiarism.data)
+                })
+                total=0;
+                comFlag=0;
+                newres.sort(function (obj1, obj2) {
+                  // Ascending: first age less than the previous
+                  return obj2.SimilarityScore - obj1.SimilarityScore;
+                });
+                const axiosProgress ={
+                  tag:"",
+                  axiosProgress: 0
+                }
+                dispatch(setPlagiarismGlobalCheck({}));
+                dispatch(setAxiosProgress(axiosProgress));
+                dispatch(outputLocalPlagiarism(newres));
+                console.timeEnd("Initialize")
+              })
+          }//else{
+          //   dispatch(outputLocalPlagiarism(res.data));
+          //   dispatch({
+          //     type: GET_ERRORS,
+          //     payload: {initializeLocal: "Document not Found!"}
+          //   });
+          // }
+    
+        })
+        .catch(err => {
+          dispatch(setPlagiarismGlobalCheck({}));
+          dispatch(getRawLocalPlagiarismInput(input.original));
+          dispatch({
+              type: GET_ERRORS,
+              payload: err.response.data
+          });
+      });
+
+    }
+  };
+
+  export const setPlagiarismGlobalCheck= (input) => {
+    return {
+      type: PLAGIARISM_LOCAL_GLOBAL_CHECK,
+      payload: input
+    };
+  }
+
+  export const setPlagiarismRawLocalOption = (option) => {
+    return {
+      type: PLAGIARISM_RAW_LOCAL_SET_OPTION,
+      payload: option
+    };
   };
 
   export const setPlagiarismLocalLoading = () => {

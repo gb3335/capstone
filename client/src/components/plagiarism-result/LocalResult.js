@@ -280,7 +280,7 @@ class LocalResult extends Component {
                   <div className="sourceResearch">
                     <div className="sourceHeader">Local Result Statistics</div>
                     <div className="sourceContent">
-                      <ResultStatistics output={output} />
+                      <ResultStatistics height={300} output={output} />
                     </div>
                     <div className="sourceHeader">Research Title</div>
                     <div className="sourceContent">{research.title}</div>

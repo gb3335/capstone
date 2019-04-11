@@ -54,7 +54,7 @@ class Login extends Component {
 
       <div className="container-fluid p-2">
         <Link to="/login" className="btn btn-light mb-3 float-left">
-          <i className="fas fa-angle-left" /> Back to Accounts
+          <i className="fas fa-angle-left" /> Back to Login
          </Link>
         <div className="forgot-box">
 

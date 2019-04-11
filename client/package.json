@@ -17,6 +17,8 @@
     "initials": "^3.0.0",
     "itsa-react-docviewer": "^16.1.1",
     "js-string-compression": "^1.0.1",
+    "jss": "^9.8.7",
+    "jss-global": "^3.0.0",
     "jwt-decode": "^2.2.0",
     "material-table": "^1.28.0",
     "moment": "^2.24.0",

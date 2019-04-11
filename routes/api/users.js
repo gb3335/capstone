@@ -65,6 +65,7 @@ generatePassword = () => {
   }));
 };
 
+
 // @routes  POST api/users/profile/update-password
 // @desc    Edit User password
 // @access  private
@@ -97,10 +98,7 @@ router.post(
                   profileData.password = hash;
 
                   const newActivity = {
-                    title:
-                      "User " +
-                      (user.userName ? user.userName : user.email) +
-                      " updated",
+                    title: "User " + (user.userName ? user.userName : user.email) + " updated",
                     by: user._id,
                     type: "User"
                   };
@@ -149,20 +147,19 @@ router.post(
       email: req.body.email,
       contact: req.body.contact,
       college: req.body.college,
-      id: req.body.id
+      id: req.body.id,
+
     };
     User.findOne({ email: profileData.email }).then(user => {
-      const errors = {};
+      const errors = {}
       if (user) {
         if (user.email != req.user.email) {
           errors.email = "Email Already Exists!";
           return res.status(400).json(errors);
-        } else {
+        }
+        else {
           const newActivity = {
-            title:
-              "User " +
-              (user.userName ? user.userName : user.email) +
-              " updated",
+            title: "User " + (user.userName ? user.userName : user.email) + " updated",
             by: user._id,
             type: "User"
           };
@@ -197,6 +194,7 @@ router.post(
                 token: "Bearer " + token
               });
             });
+
           });
         }
       }
@@ -216,21 +214,24 @@ router.post(
       return res.status(400).json(errors);
     }
 
+
     const profileData = {
-      userName: req.body.userName
+
+
+      userName: req.body.userName,
+
+
+
     };
     User.findOne({ _id: req.body.id }).then(user => {
       if (user) {
         if (user.userName != req.user.userName) {
           errors.userName = "Username Already Exists!";
           return res.status(400).json(errors);
-        } else {
+        }
+        else {
           const newActivity = {
-            title:
-              "User " +
-              (user.userName ? user.userName : user.email) +
-              ": Username updated to " +
-              profileData.userName,
+            title: "User " + (user.userName ? user.userName : user.email) + ": Username updated to " + profileData.userName,
             by: user._id,
             type: "User"
           };
@@ -267,9 +268,16 @@ router.post(
           });
         }
       }
-    });
-  }
-);
+
+
+    })
+
+
+
+
+
+  });
+
 
 // @routes  POST api/users/profile/updateusername
 // @desc    Edit User profile username
@@ -279,7 +287,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const profileData = {
-      invitedBy: req.body.invitedBy
+      invitedBy: req.body.invitedBy,
     };
     User.findOne({ _id: req.body.id }).then(user => {
       if (user) {
@@ -289,13 +297,12 @@ router.post(
           { new: true }
         ).then(user => {
           res.json({
-            success: true
+            success: true,
           });
         });
       }
-    });
-  }
-);
+    })
+  });
 
 // @routes  POST api/users/profile/updatepassword
 // @desc    Edit User profile
@@ -314,37 +321,67 @@ router.post(
     const password2 = req.body.password2;
     const profileData = {
       id: req.body.id,
-      password
+      password,
+      passwordUpdated: 1
     };
 
     User.findById(req.user._id).then(user => {
       bcrypt.compare(req.body.password, user.password).then(isMatch => {
         if (isMatch) {
+
+
           bcrypt.genSalt(10, (err, salt) => {
             bcrypt.hash(profileData.password, salt, (err, hash) => {
               if (err) throw err;
               profileData.password = hash;
 
               const newActivity = {
-                title:
-                  "User " +
-                  (user.userName ? user.userName : user.email) +
-                  ": Password updated",
+                title: "User " + (user.userName ? user.userName : user.email) + ": Password updated",
                 by: user._id,
                 type: "User"
               };
               new Activity(newActivity).save();
 
+              
+              
               User.findByIdAndUpdate(
                 req.user._id,
                 { $set: profileData },
                 { new: true }
               )
-                .then(user => res.json(user))
+                .then(user => {
+                  const payload = {
+                    id: user._id,
+                    userName: user.userName,
+                    email: user.email,
+                    contact: user.contact,
+                    name: {
+                      firstName: user.name.firstName,
+                      middleName: user.name.middleName,
+                      lastName: user.name.lastName
+                    },
+                    avatar: user.avatar,
+                    userType: user.userType,
+                    isLock: user.isLock,
+                    isBlock: user.isBlock,
+                    invitedBy: user.invitedBy,
+                    college: user.college,
+                    passwordUpdated: user.passwordUpdated,
+                    date: user.date
+                  };
+                  jwt.sign(payload, keys.secretOrKey, (err, token) => {
+                    res.json({
+                      success: true,
+                      token: "Bearer " + token
+                    });
+                  });
+                })
                 .catch(err => console.log(err));
             });
           });
-        } else {
+
+        }
+        else {
           errors.password = "Invalid password";
           return res.status(400).json(errors);
         }
@@ -368,6 +405,7 @@ router.post(
     //       }
     //     }
 
+
     //     bcrypt.genSalt(10, (err, salt) => {
     //       bcrypt.hash(profileData.password, salt, (err, hash) => {
     //         if (err) throw err;
@@ -381,6 +419,9 @@ router.post(
     //     });
     //   })
     // });
+
+
+
   }
 );
 
@@ -394,16 +435,13 @@ router.post(
     const isBlock = req.body.isBlock;
     const profileData = {
       id: req.body.id,
-      isBlock
+      isBlock,
     };
     User.findById(req.user._id).then(user => {
       if (profileData.isBlock == 0) {
         profileData.isBlock = 1;
         const newActivity = {
-          title:
-            "User " +
-            (user.username ? user.username : user.email) +
-            ": User deactivated",
+          title: "User " + (user.username ? user.username : user.email) + ": User deactivated",
           by: req.body.loginid,
           type: "User"
         };
@@ -415,13 +453,11 @@ router.post(
         )
           .then(user => res.json(user))
           .catch(err => console.log(err));
-      } else {
+      }
+      else {
         profileData.isBlock = 0;
         const newActivity = {
-          title:
-            "User " +
-            (user.username ? user.username : user.email) +
-            ": User change status to active",
+          title: "User " + (user.username ? user.username : user.email) + ": User change status to active",
           by: req.body.loginid,
           type: "User"
         };
@@ -441,10 +477,10 @@ router.post(
 // @routes  POST api/users/forgotpassword
 // @desc    Forgot password/
 // @access  private
-router.post(
-  "/forgotpassword",
+router.post("/forgotpassword",
 
   (req, res) => {
+
     const { errors, isValid } = validateForgotInput(req.body);
 
     //Check Validation
@@ -452,53 +488,65 @@ router.post(
       return res.status(400).json(errors);
     }
 
-    User.findOne({ email: req.body.email })
-      .then(user => {
-        if (user) {
-          const password = generatePassword();
-          const mailOptions = {
-            from: "dummykrishield@gmail.com",
-            to: req.body.email,
-            subject: "Bulacan State University",
-            text: `Here is your new password generated by the system. 
+    User.findOne({ email: req.body.email }).then(user => {
+      if (user) {
+        const password = generatePassword();
+        const mailOptions = {
+          from: "dummykrishield@gmail.com",
+          to: req.body.email,
+          subject: "Bulacan State University",
+          text: `Here is your new password generated by the system. 
                 
-                Login to <todo link>
+                Login to: http://34.229.6.94/login
                 Email: ${req.body.email}
                 Password: ${password}
                 `
-          };
-          Transporter.sendMail(mailOptions, function(error, info) {
-            if (error) {
-              errors.sendemail = "Sending Email Failed!";
-              return res.status(400).json(errors);
-            } else {
-              success.sendemail = "Invitation Successfully Sent!";
-            }
-          });
+        };
+        Transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            errors.sendemail = "Sending Email Failed!";
+            return res.status(400).json(errors);
+          } else {
+            success.sendemail = "Invitation Successfully Sent!";
+          }
+        });
 
-          const newUser = {
-            password
-          };
+        const newUser = {
 
-          bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(newUser.password, salt, (err, hash) => {
-              if (err) throw err;
-              newUser.password = hash;
-              User.findByIdAndUpdate(user._id, { $set: newUser }, { new: true })
-                .then(user => res.json(user))
-                .catch(err => console.log(err));
-            });
+          passwordUpdated: 0,
+          password,
+
+        };
+
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            if (err) throw err;
+            newUser.password = hash;
+            User.findByIdAndUpdate(
+              user._id,
+              { $set: newUser },
+              { new: true }
+            )
+              .then(user => res.json(user))
+              .catch(err => console.log(err));
           });
-        } else {
-          errors.email = "Email do not exist.";
-          return res.status(400).json(errors);
-        }
-      })
-      .catch(err => {
-        res.status(400).json(err);
-      });
-  }
-);
+        });
+
+      }
+      else {
+        errors.email = "Email do not exist."
+        return res.status(400).json(errors);
+      }
+
+
+
+
+
+
+    }).catch(err => { res.status(400).json(err); })
+
+
+  });
 
 // @routes  POST api/users/register
 // @desc    Add / Update User
@@ -519,8 +567,9 @@ router.post(
         errors.email = "Email Already Exists!";
         return res.status(400).json(errors);
       } else {
+
         const newActivity = {
-          title: "User " + req.body.email + ": User created",
+          title: "User " + (req.body.email) + ": User created",
           by: req.body.createdBy,
           type: "User"
         };
@@ -549,16 +598,16 @@ router.post(
           subject: "Bulacan State University",
           text: `You are invited to be ${
             req.body.usertype
-          } in Bulacan State University by ${req.user.name.firstName} ${
+            } in Bulacan State University by ${req.user.name.firstName} ${
             req.user.name.lastName
-          }
+            }
                 
-                Login to <todo link>
+                Login to: http://34.229.6.94/login
                 Email: ${req.body.email}
                 Password: ${password}
                 `
         };
-        Transporter.sendMail(mailOptions, function(error, info) {
+        Transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
             errors.sendemail = "Sending Email Failed!";
             return res.status(400).json(errors);
@@ -582,6 +631,7 @@ router.post(
   }
 );
 router.post("/logout", (req, res) => {
+
   const newUser = new UserLog({
     name: {
       firstName: req.body.name.firstName,
@@ -598,8 +648,12 @@ router.post("/logout", (req, res) => {
     type: "Logout"
   });
 
-  newUser.save().catch(err => console.log(err));
-});
+  newUser
+    .save()
+    .catch(err => console.log(err));
+
+
+})
 // @routes  POST api/users/login
 // @desc    Login User /Returning JWT Token
 // @access  public
@@ -645,6 +699,7 @@ router.post("/login", (req, res) => {
                   isBlock: user.isBlock,
                   invitedBy: user.invitedBy,
                   college: user.college,
+                  passwordUpdated: user.passwordUpdated,
                   date: user.date
                 };
 
@@ -664,7 +719,9 @@ router.post("/login", (req, res) => {
                   type: "Login"
                 });
 
-                newUser.save().catch(err => console.log(err));
+                newUser
+                  .save()
+                  .catch(err => console.log(err));
 
                 //Create JWT Payload
                 //Sign the Token
@@ -679,14 +736,16 @@ router.post("/login", (req, res) => {
                 return res.status(400).json(errors);
               }
             });
-          } else {
-            errors.username =
-              "User currently blocked. Please contact the administrator!";
+          }
+          else {
+            errors.username = "User currently blocked. Please contact the administrator!";
             return res.status(400).json(errors);
           }
+
         }
       });
     } else {
+
       if (user.isBlock === 0) {
         //Check password
         bcrypt.compare(password, user.password).then(isMatch => {
@@ -709,7 +768,8 @@ router.post("/login", (req, res) => {
               isBlock: user.isBlock,
               invitedBy: user.invitedBy,
               college: user.college,
-              date: user.date
+              date: user.date,
+              passwordUpdated: user.passwordUpdated
             };
 
             const newUser = new UserLog({
@@ -728,7 +788,9 @@ router.post("/login", (req, res) => {
               type: "Login"
             });
 
-            newUser.save().catch(err => console.log(err));
+            newUser
+              .save()
+              .catch(err => console.log(err));
 
             //Create JWT Payload
             //Sign the Token
@@ -743,11 +805,12 @@ router.post("/login", (req, res) => {
             return res.status(400).json(errors);
           }
         });
-      } else {
-        errors.username =
-          "User currently blocked. Please contact the administrator!";
+      }
+      else {
+        errors.username = "User currently blocked. Please contact the administrator!";
         return res.status(400).json(errors);
       }
+
     }
   });
 });
@@ -778,20 +841,23 @@ router.get(
   }
 );
 
-// @route   GET api/users/
+// @route   GET api/users/      
 // @desc    Get activities
 // @access  Public
 router.get(
   "/all",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+
+
     User.find()
       .sort({ date: -1 })
       .then(user => {
-        const payload = [];
-        const list = user;
+        const payload = []
+        const list = user
         list.map((currentElement, index) => {
           payload.push({
+
             _id: currentElement._id,
             userName: currentElement.userName,
             email: currentElement.email,
@@ -808,10 +874,19 @@ router.get(
             invitedBy: currentElement.invitedBy,
             college: currentElement.college,
             date: currentElement.date
-          });
+
+
+          })
+
         });
-        res.json(payload);
-      });
+        res.json(payload)
+
+
+      }
+
+      )
+
+
   }
 );
 
@@ -851,6 +926,7 @@ router.get("/:id", (req, res) => {
     .catch(err => res.status(404).json(err));
 });
 
+
 // @route   POST api/users/avatar
 // @desc    add avatar to user
 // @access  Private
@@ -866,11 +942,11 @@ router.post(
         Bucket: "bulsu-capstone",
         Key: `userImages/${req.body.oldFile}`
       };
-      s3.deleteObject(params, function(err, data) {
+      s3.deleteObject(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
-      console.log("Old avatar deleted");
+      console.log("Old avatar deleted")
     }
     s3 = new AWS.S3();
     const base64Data = new Buffer(
@@ -895,10 +971,10 @@ router.post(
       console.log("Image successfully uploaded.");
       newUser = {
         avatar: req.body.id + "-" + rand + ".png"
-      };
+      }
 
       const newActivity = {
-        title: "User " + req.body.username + ": Avatar updated",
+        title: "User " + (req.body.username) + ": Avatar updated",
         by: req.body.id,
         type: "User"
       };
@@ -908,12 +984,11 @@ router.post(
         { _id: req.body.id },
         { $set: newUser },
         { new: true }
-      )
-        .then(user =>
-          res.json({ username: user.userName ? user.userName : user.email })
-        )
-        .catch(err => console.log(res.json(err)));
+      ).then(user => res.json({ username: user.userName ? user.userName : user.email })).catch(err => console.log(res.json(err)));
     });
+
+
+
   }
 );
 
@@ -921,8 +996,9 @@ router.post(
   "/avatarupdateauth",
 
   (req, res) => {
+
     const userName = req.body.username;
-    console.log(req.body.username);
+    console.log(req.body.username)
 
     //FIND THE USER BY USERNAME
     User.findOne({ userName }).then(user => {
@@ -950,6 +1026,7 @@ router.post(
                 isBlock: user.isBlock,
                 invitedBy: user.invitedBy,
                 college: user.college,
+                passwordUpdated: user.passwordUpdated,
                 date: user.date
               }; //Create JWT Payload
               //Sign the Token
@@ -959,15 +1036,18 @@ router.post(
                   token: "Bearer " + token
                 });
               });
-            } else {
-              errors.username =
-                "User currently blocked. Please contact the administrator!";
+            }
+            else {
+              errors.username = "User currently blocked. Please contact the administrator!";
               return res.status(400).json(errors);
             }
+
           }
         });
       } else {
+
         if (user.isBlock === 0) {
+
           const payload = {
             id: user._id,
             userName: user.userName,
@@ -994,15 +1074,20 @@ router.post(
               token: "Bearer " + token
             });
           });
-        } else {
-          errors.username =
-            "User currently blocked. Please contact the administrator!";
+        }
+        else {
+          errors.username = "User currently blocked. Please contact the administrator!";
           return res.status(400).json(errors);
         }
+
       }
     });
+
+
   }
+
 );
+
 
 // @route   POST api/journals/createReport/journals
 // @desc    Generate List of all journals Report

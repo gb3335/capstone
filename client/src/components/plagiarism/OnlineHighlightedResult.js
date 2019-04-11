@@ -85,8 +85,8 @@ import "./OnlineHighlightedResult.css"
     return (
      
         <div className="hightlightSpanDivs">
-          <div className="highlightComponentDivs" ref={this.highlightRef}>
-          <p>
+          <div className="highlightComponentDivs">
+          
             <Highlighter
               className="highlightSpan"
               highlightClassName="hightlight"
@@ -95,7 +95,7 @@ import "./OnlineHighlightedResult.css"
               textToHighlight={this.state.pattern}
               findChunks={this.findChunksAtBeginningOfWords}
             />
-            </p>
+            
           </div>
           
         </div>

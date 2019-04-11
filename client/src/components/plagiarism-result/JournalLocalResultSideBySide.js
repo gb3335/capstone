@@ -250,7 +250,7 @@ class LocalResultSideBySide extends Component {
                     <div className="col-md-12">
                       
                         <Link
-                            to={`/researches/${this.props.localPlagiarism.docuId}`}
+                            to={`/journals/${this.props.localPlagiarism.docuId}`}
                             className="btn btn-light mb-1"
                           >
                             <i className="fas fa-angle-left" /> Back

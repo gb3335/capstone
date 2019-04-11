@@ -1,4 +1,4 @@
-import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE, PLAGIARISM_LOCAL_AXIOS_PROGRESS } from "./types";
+import { PLAGIARISM_LOCAL, GET_ERRORS, PLAGIARISM_ONLINE_INPUT, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE, PLAGIARISM_LOCAL_AXIOS_PROGRESS, PLAGIARISM_LOCAL_GLOBAL_CHECK, PLAGIARISM_LOCAL_SET_JOURNAL } from "./types";
 import axios from "axios";
 import { saveAs } from "file-saver";
 
@@ -42,6 +42,12 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
     }
   }
   dispatch(setPlagiarismLocalLoading());
+  if(input.abstract){
+    dispatch(setPlagiarismGlobalCheck({loading: true, number: 2}));
+  }else{
+    dispatch(setPlagiarismGlobalCheck({loading: true, number: 1}));
+  }
+  dispatch(setPlagiarismLocalJournal(false));
   dispatch(setDocumentId(input.docuId));
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
   dispatch(setPlagiarismLocalAbstract(input.abstract))
@@ -91,6 +97,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
+            dispatch(setPlagiarismGlobalCheck({}));
             if (input.abstract) {
               if (input.fromFlag) {
                 history.push(`/localResultSideBySide/abstract`);
@@ -152,6 +159,8 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
     }
   }
   dispatch(setPlagiarismLocalLoading());
+  dispatch(setPlagiarismGlobalCheck({loading: true, number: 4}));
+  dispatch(setPlagiarismLocalJournal(true));
   dispatch(setDocumentId(input.docuId));
   dispatch(setPlagiarismLocalFromFlag(input.fromFlag))
   console.time("Initialize")
@@ -190,6 +199,7 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
               tag: "",
               axiosProgress: 0
             }
+            dispatch(setPlagiarismGlobalCheck({}));
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
@@ -222,6 +232,13 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
 export const setPlagiarismGenerateReportLoading = (input) => {
   return {
     type: PLAGIARISM_LOCAL_GENERATE_REPORT,
+    payload: input
+  };
+}
+
+export const setPlagiarismGlobalCheck= (input) => {
+  return {
+    type: PLAGIARISM_LOCAL_GLOBAL_CHECK,
     payload: input
   };
 }
@@ -330,6 +347,13 @@ export const getJournalTargetText = (input) => dispatch => {
 export const setPlagiarismLocalAbstract = (flag) => {
   return {
     type: PLAGIARISM_LOCAL_SET_ABSTRACT,
+    payload: flag
+  };
+};
+
+export const setPlagiarismLocalJournal = (flag) => {
+  return {
+    type: PLAGIARISM_LOCAL_SET_JOURNAL,
     payload: flag
   };
 };
