@@ -77,7 +77,7 @@ export const checkPlagiarismOnline = input => dispatch => {
               promises = []
               input2.text.onlinePlagiarism.data.items.forEach(function(item, index){
                   let mime = item.mime || "not_pdf";
-                  promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, title: item.title, mime, index},config))
+                  promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, pattern: input2.pattern, title: item.title, mime, index},config))
                   total++;
               })
               axios

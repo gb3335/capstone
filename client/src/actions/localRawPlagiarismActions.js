@@ -63,15 +63,16 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               if (input.abstract) {
                 if (research.deleted !== 1) {
                   total++;
-                  promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
+                  promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, q: input.q, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
                 }
               } else {
                 if (research.document && research.deleted !== 1) {
                   total++;
-                  promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
+                  promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, q: input.q, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
                 }
               }
           })
+          
           axios
             .all(promises)
             .then(res => {
@@ -129,7 +130,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
             promises = []
             input.journals.forEach(function (journal) {
                 if (journal.document && journal.deleted !== 1) {
-                  promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, raw: input.raw, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }, config))
+                  promises.push(axios.post("/api/plagiarism/local/journal/result", { docuId: input.docuId, q: input.q,raw: input.raw, title: input.title, flag: input.flag, textId: journal._id, textTitle: journal.title, textFile: journal.document }, config))
                   total++;
                 }
             })

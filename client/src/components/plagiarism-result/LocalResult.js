@@ -78,21 +78,26 @@ class LocalResult extends Component {
 
       this.setState({ little, moderate, heavy, score })
 
-      const words = [];
-
-      output.forEach((out) => {
-        out.Index.forEach((index) => {
-          let obj = JSON.parse(index);
-          words.push(obj.Pattern)
-        })
+      let words = [];
+      
+      output[0].Index.forEach(index => {
+        let obj = JSON.parse(index);
+        words.push(obj.Pattern)
       })
+      // output.forEach((out) => {
+      //   out.Index.forEach((index) => {
+      //     let obj = JSON.parse(index);
+      //     words.push(obj.Pattern)
+      //   })
+      // })
+      words = words.join(' ').split(' ');
       var uniqueItems = [...new Set(words)]
 
 
-      const word = uniqueItems.join(' ');
+      //const word = uniqueItems.join(' ');
 
-      var splited = word.split(' ');
-      this.setState({ words: splited });
+      //var splited = word.split(' ');
+      this.setState({ words: uniqueItems });
     }
     
 

@@ -79,21 +79,26 @@ class LocalResult extends Component {
 
       this.setState({ little, moderate, heavy, score })
 
-      const words = [];
+      let words = [];
 
-      output.forEach((out) => {
-        out.Index.forEach((index) => {
-          let obj = JSON.parse(index);
-          words.push(obj.Pattern)
-        })
+      output[0].Index.forEach(index => {
+        let obj = JSON.parse(index);
+        words.push(obj.Pattern)
       })
+      // output.forEach((out) => {
+      //   out.Index.forEach((index) => {
+      //     let obj = JSON.parse(index);
+      //     words.push(obj.Pattern)
+      //   })
+      // })
+      words = words.join(' ').split(' ');
       var uniqueItems = [...new Set(words)]
 
 
-      const word = uniqueItems.join(' ');
+      //const word = uniqueItems.join(' ');
 
-      var splited = word.split(' ');
-      this.setState({ words: splited });
+      //var splited = word.split(' ');
+      this.setState({ words: uniqueItems });
     }
 
 
@@ -282,7 +287,7 @@ class LocalResult extends Component {
                   <div className="sourceResearch">
                     <div className="sourceHeader">Local Result Statistics</div>
                     <div className="sourceContent">
-                      <ResultStatistics output={output} />
+                      <ResultStatistics height={300} output={output} />
                     </div>
                     <div className="sourceHeader">Journal Title</div>
                     <div className="sourceContent">{journal.title}</div>
