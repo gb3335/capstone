@@ -30,11 +30,10 @@ export const checkPlagiarismOnline = input => dispatch => {
   total=0;
   comFlag=0;
   let config = {
-    onUploadProgress: progressEvent =>{
+    onDownloadProgress: progressEvent =>{
       const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
       // console.log(percentCompleted);
-      
       if(percentCompleted===100){
         comFlag++;
         let progress = parseFloat((comFlag/total)*100).toFixed(2).toString().replace(/\.00$/,'');
@@ -77,7 +76,11 @@ export const checkPlagiarismOnline = input => dispatch => {
               promises = []
               input2.text.onlinePlagiarism.data.items.forEach(function(item, index){
                   let mime = item.mime || "not_pdf";
-                  promises.push(axios.post("/api/plagiarism/online/result", {link: item.link, pattern: input2.pattern, title: item.title, mime, index},config))
+                  let link=item.link;
+                  // if(item.mime==="text/plain"){
+                  //   link=item.formattedUrl;
+                  // }
+                  promises.push(axios.post("/api/plagiarism/online/result", {link, pattern: input2.pattern, title: item.title, mime, index},config))
                   total++;
               })
               axios

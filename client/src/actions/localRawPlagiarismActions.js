@@ -19,7 +19,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
     total=0;
     comFlag=0;
     let config = {
-      onUploadProgress: progressEvent =>{
+      onDownloadProgress: progressEvent =>{
         const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
         let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
         // console.log(percentCompleted);
@@ -50,7 +50,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
       .post("/api/plagiarism/local/initialize/pattern", input)
       .then(res => {
         dispatch(getRawLocalPlagiarismInput(input.original));
-        dispatch(setPlagiarismLocalLoading());
+        
         dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
         dispatch(setPlagiarismLocalAbstract(input.abstract))
         dispatch(setPlagiarismRawLocalDisableButton());
@@ -68,12 +68,13 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               } else {
                 if (research.document && research.deleted !== 1) {
                   total++;
-                  promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, q: input.q, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
+                 promises.push(axios.post("/api/plagiarism/local/result", { docuId: input.docuId, q: input.q, raw: input.raw, abstract: input.abstract, title: input.title, flag: input.flag, textId: research._id, textTitle: research.title, textFile: research.document },config))
                 }
               }
           })
-          
-          axios
+          if(promises.length>0){
+            dispatch(setPlagiarismLocalLoading(true));
+            axios
             .all(promises)
             .then(res => {
               let newres = [];
@@ -97,6 +98,15 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               dispatch(outputLocalPlagiarism(newres));
               console.timeEnd("Initialize")
             })
+          }else{
+            dispatch(setPlagiarismLocalLoading(false));
+            dispatch(getRawLocalPlagiarismInput(input.original));
+            dispatch(setPlagiarismGlobalCheck({}));
+            let errors = {}
+              errors.noResearchForPlagiarism = "No researches found!"
+              dispatch(showPlagiarismError({errors}))
+          }
+          
         }//else{
         //   dispatch(outputLocalPlagiarism(res.data));
         //   dispatch({
@@ -121,7 +131,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
         .post("/api/plagiarism/local/initialize/journal/pattern", input)
         .then(res => {
           dispatch(getRawLocalPlagiarismInput(input.original));
-          dispatch(setPlagiarismLocalLoading());
+          
           dispatch(setPlagiarismRawLocalDisableButton());
           dispatch(setPlagiarismGlobalCheck({loading:true, number:3}));
           dispatch(clearErrors());
@@ -134,7 +144,9 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                   total++;
                 }
             })
-            axios
+            if(promises.length>0){
+              dispatch(setPlagiarismLocalLoading(true));
+              axios
               .all(promises)
               .then(res => {
                 let newres = [];
@@ -158,6 +170,15 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
                 dispatch(outputLocalPlagiarism(newres));
                 console.timeEnd("Initialize")
               })
+            }else{
+              dispatch(setPlagiarismLocalLoading(false));
+              dispatch(setPlagiarismGlobalCheck({}));
+              dispatch(getRawLocalPlagiarismInput(input.original));
+              let errors = {}
+              errors.noResearchForPlagiarism = "No journals found!"
+              dispatch(showPlagiarismError({errors}))
+            }
+            
           }//else{
           //   dispatch(outputLocalPlagiarism(res.data));
           //   dispatch({
@@ -179,6 +200,13 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
     }
   };
 
+  export const showPlagiarismError = (error) => {
+    return ({
+       type: GET_ERRORS,
+       payload: error
+     });
+   }
+
   export const setPlagiarismGlobalCheck= (input) => {
     return {
       type: PLAGIARISM_LOCAL_GLOBAL_CHECK,
@@ -193,9 +221,10 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
     };
   };
 
-  export const setPlagiarismLocalLoading = () => {
+  export const setPlagiarismLocalLoading = (flag) => {
     return {
-      type: PLAGIARISM_RAW_LOCAL_LOADING
+      type: PLAGIARISM_RAW_LOCAL_LOADING,
+      payload: flag
     };
   };
 

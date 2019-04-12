@@ -314,6 +314,7 @@ class LocalCheck extends Component {
                                     error={errors.q}
                                     extraClass="onlineTextarea"
                                 />
+                                {this.props.errors.errors ? <p className="text-danger">{this.props.errors.errors.noResearchForPlagiarism}</p> : ""}
                                 {/* <textarea onChange={this.onChange} classname="form-control" name="q"></textarea> */}
                                 {
                                     this.props.localPlagiarism.globalLoading.loading && this.props.localPlagiarism.globalLoading.number!==3 ? 

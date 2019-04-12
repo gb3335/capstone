@@ -30,7 +30,7 @@ export default function (state = initialState, action) {
         case PLAGIARISM_RAW_LOCAL_LOADING:
             return {
                 ...state,
-                loading: true
+                loading: action.payload
             }
         case PLAGIARISM_RAW_LOCAL_SET_ABSTRACT:
             return {

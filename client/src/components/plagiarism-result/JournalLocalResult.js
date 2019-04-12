@@ -30,7 +30,8 @@ class LocalResult extends Component {
       heavy: 0,
       score: [],
       showDetails: false,
-      words: []
+      words: [],
+      report: true
     };
 
     this.forHide = React.createRef();
@@ -77,28 +78,33 @@ class LocalResult extends Component {
       score.push(moderate);
       score.push(heavy);
 
-      this.setState({ little, moderate, heavy, score })
-
-      let words = [];
-
-      output[0].Index.forEach(index => {
-        let obj = JSON.parse(index);
-        words.push(obj.Pattern)
+      this.setState({ little, moderate, heavy, score }, () => {
+        let words = [];
+      
+        output[0].Index.forEach(index => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+        // output.forEach((out) => {
+        //   out.Index.forEach((index) => {
+        //     let obj = JSON.parse(index);
+        //     words.push(obj.Pattern)
+        //   })
+        // })
+        words = words.join(' ').split(' ');
+        var uniqueItems = [...new Set(words)]
+  
+  
+        //const word = uniqueItems.join(' ');
+  
+        //var splited = word.split(' ');
+        this.setState({words: uniqueItems}, () => {
+          setTimeout(() => {
+            this.setState({ report: false });
+          },4000)
+        })
+        
       })
-      // output.forEach((out) => {
-      //   out.Index.forEach((index) => {
-      //     let obj = JSON.parse(index);
-      //     words.push(obj.Pattern)
-      //   })
-      // })
-      words = words.join(' ').split(' ');
-      var uniqueItems = [...new Set(words)]
-
-
-      //const word = uniqueItems.join(' ');
-
-      //var splited = word.split(' ');
-      this.setState({ words: uniqueItems });
     }
 
 
@@ -125,38 +131,41 @@ class LocalResult extends Component {
   }
 
   onClickGenerateReport = () => {
-    const { output, abstract } = this.props.localPlagiarism;
+    
     this.props.setPlagiarismGenerateReportLoading(true);
-
-    // const node = ReactDOM.findDOMNode(this);
-
-    // // Get child nodes
-    // let child = "";
-    // child = node.querySelector('.forhidehighlightSpan');
-
-    let word = this.forHide.current.children[0].innerHTML.toString();
-
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
-
-    let subTypeOfReport = "Checked in the System Database";
-    if (abstract) {
-      subTypeOfReport = "Checked in the System Database (ABSTRACT)"
-    }
-    const input = {
-      reportFor: "Journal",
-      printedBy: name,
-      word,
-      typeOfReport: "Plagiarism Check Result",
-      subTypeOfReport,
-      output,
-      journal: this.props.journal.journal
-    }
-    this.props.createLocalPlagiarismReport(input);
+    setTimeout(() => {
+      const { output, abstract } = this.props.localPlagiarism;
+      // const node = ReactDOM.findDOMNode(this);
+  
+      // // Get child nodes
+      // let child = "";
+      // child = node.querySelector('.forhidehighlightSpan');
+  
+      let word = this.forHide.current.children[0].innerHTML.toString();
+  
+      const name =
+        this.props.auth.user.name.firstName +
+        " " +
+        this.props.auth.user.name.middleName +
+        " " +
+        this.props.auth.user.name.lastName;
+  
+      let subTypeOfReport = "Checked in the System Database";
+      if (abstract) {
+        subTypeOfReport = "Checked in the System Database (ABSTRACT)"
+      }
+      const input = {
+        reportFor: "Journal",
+        printedBy: name,
+        word,
+        typeOfReport: "Plagiarism Check Result",
+        subTypeOfReport,
+        output,
+        journal: this.props.journal.journal
+      }
+      this.props.createLocalPlagiarismReport(input);
+    },2000)
+    
 
 
   }

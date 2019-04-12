@@ -123,7 +123,7 @@ class ResearchImageActions extends Component {
         </div>
       </div>
     );
-
+    const {errors} = this.props;
     return (
       <div>
         {this.props.localPlagiarism.globalLoading.loading &&
@@ -140,7 +140,7 @@ class ResearchImageActions extends Component {
         ) : (
           docuItem
         )}
-
+        {errors.errors ? <p className="text-danger">{errors.errors.noResearchForPlagiarism}</p> : ""}
         <div hidden>
           <FileFieldGroup
             placeholder="* Document"

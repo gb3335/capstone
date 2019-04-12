@@ -52,9 +52,11 @@ let fontFooter = "7px";
 // @access  public
 router.get("/test", (req, res) => {
 
-  let {text, len} = processor.textProcess(req.body.text.toLowerCase());
+  // let {text, len} = processor.textProcess(req.body.text.toLowerCase());
   
-  res.send({text,len});
+  // res.send({text,len});
+
+
 
   // const oldString = 'a really the. string Interesting string. with. some string. words. thing'
   // const newString = processor.textProcess(oldString);
@@ -110,10 +112,10 @@ router.get("/test", (req, res) => {
 
   // })
 
-  // scraping("https://en.wikipedia.org/wiki/Aho%E2%80%93Corasick_algorithm", function (response) {
-  //   let data = response.join(' ');
-  //   res.send(data);//Returns text
-  // });
+  scraping("https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/short/complete.html", function (response) {
+    let data = response.join(' ');
+    res.send(data);//Returns text
+  });
 
   // res.json({ msg: "Plagiarism Works!" });
 });

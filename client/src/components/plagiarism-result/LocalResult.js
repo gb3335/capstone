@@ -29,7 +29,8 @@ class LocalResult extends Component {
       heavy: 0,
       score: [],
       showDetails: false,
-      words: []
+      words: [],
+      report: true
     };
 
     this.forHide = React.createRef();
@@ -76,28 +77,34 @@ class LocalResult extends Component {
       score.push(moderate);
       score.push(heavy);
 
-      this.setState({ little, moderate, heavy, score })
-
-      let words = [];
+      this.setState({ little, moderate, heavy, score }, () => {
+        let words = [];
       
-      output[0].Index.forEach(index => {
-        let obj = JSON.parse(index);
-        words.push(obj.Pattern)
+        output[0].Index.forEach(index => {
+          let obj = JSON.parse(index);
+          words.push(obj.Pattern)
+        })
+        // output.forEach((out) => {
+        //   out.Index.forEach((index) => {
+        //     let obj = JSON.parse(index);
+        //     words.push(obj.Pattern)
+        //   })
+        // })
+        words = words.join(' ').split(' ');
+        var uniqueItems = [...new Set(words)]
+  
+  
+        //const word = uniqueItems.join(' ');
+  
+        //var splited = word.split(' ');
+        this.setState({words: uniqueItems}, () => {
+          setTimeout(() => {
+            this.setState({ report: false });
+          },4000)
+        })
       })
-      // output.forEach((out) => {
-      //   out.Index.forEach((index) => {
-      //     let obj = JSON.parse(index);
-      //     words.push(obj.Pattern)
-      //   })
-      // })
-      words = words.join(' ').split(' ');
-      var uniqueItems = [...new Set(words)]
 
-
-      //const word = uniqueItems.join(' ');
-
-      //var splited = word.split(' ');
-      this.setState({ words: uniqueItems });
+      
     }
     
 
@@ -124,9 +131,9 @@ class LocalResult extends Component {
   }
 
   onClickGenerateReport = () => {
-    const { output, abstract } = this.props.localPlagiarism;
     this.props.setPlagiarismGenerateReportLoading(true);
-
+    setTimeout(() =>{
+      const { output, abstract } = this.props.localPlagiarism;
     // const node = ReactDOM.findDOMNode(this);
 
     // // Get child nodes
@@ -155,6 +162,8 @@ class LocalResult extends Component {
       output
     }
     this.props.createLocalPlagiarismReport(input);
+    }, 2000)
+    
 
 
   }
@@ -374,7 +383,11 @@ class LocalResult extends Component {
                 <i className="fas fa-flag text-danger" /> Generating Report...
                 </button>
 
-                : <button
+                : this.state.report ?<button
+                    className="btn btn-light mb-3 float-right disabled"
+                  >
+                    <i className="fas fa-flag text-danger" /> Generate Report
+                  </button> :<button
                   onClick={this.onClickGenerateReport}
                   className="btn btn-light mb-3 float-right"
                 >
