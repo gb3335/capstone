@@ -220,7 +220,6 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
-            console.log("test")
             if (input.fromFlag) {
               history.push(`/localResultSideBySide/journal`);
             } else {
@@ -305,11 +304,12 @@ export const getTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-export const getPattern = (input) => dispatch => {
+export const getPattern = (input, callback) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/pattern', input)
     .then(res => {
       dispatch(outputLocalPlagiarismPattern(res.data));
+      callback("done");
     })
 }
 
@@ -331,11 +331,12 @@ export const getJournalTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-export const getJournalPattern = (input) => dispatch => {
+export const getJournalPattern = (input, callback) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/journal/pattern', input)
     .then(res => {
       dispatch(outputLocalPlagiarismPattern(res.data));
+      callback("done");
     })
 }
 

@@ -6,6 +6,10 @@ import Moment from "react-moment";
 import Spinner from "../common/Spinner";
 import Highlighter from "react-highlight-words";
 
+//workers
+import worker from "./workers/workerHide";
+import WebWorker from "./workers/WorkerSetup";
+
 import { Spring, Transition, animated } from 'react-spring/renderprops';
 
 import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern, clearLocalPlagiarismState } from "../../actions/localPlagiarismActions";
@@ -30,7 +34,8 @@ class LocalResult extends Component {
       score: [],
       showDetails: false,
       words: [],
-      report: true
+      report: true,
+      chunks: []
     };
 
     this.forHide = React.createRef();
@@ -50,12 +55,49 @@ class LocalResult extends Component {
         docuFile: research.document,
         abstract: this.props.localPlagiarism.abstract
       }
-      this.props.getPattern(input);
+      this.props.getPattern(input, (e)=> {
+        this.callWhenPatternDone()
+      });
     }
     
   }
 
+  callWhenPatternDone = () => {
+    const { output } = this.props.localPlagiarism;
+    this.worker.postMessage({"args": {output, textToHighlight: this.props.localPlagiarism.pattern.data}});
+    this.worker.addEventListener("message", event => {
+      this.setState({
+        chunks: event.data.chunks,
+        words: event.data.words,
+        report: false
+      });
+    });
+    // let words = [];
+      
+    //     output[0].Index.forEach(index => {
+    //       let obj = JSON.parse(index);
+    //       words.push(obj.Pattern)
+    //     })
+    //     // output.forEach((out) => {
+    //     //   out.Index.forEach((index) => {
+    //     //     let obj = JSON.parse(index);
+    //     //     words.push(obj.Pattern)
+    //     //   })
+    //     // })
+    //     words = words.join(' ').split(' ');
+    //     var uniqueItems = [...new Set(words)]
+  
+  
+    //     //const word = uniqueItems.join(' ');
+  
+    //     //var splited = word.split(' ');
+    //     this.setState({words: uniqueItems}, () => {
+    //     })
+  }
+
   componentDidMount() {
+    this.worker = new WebWorker(worker);
+
     if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
       this.props.history.push("/dashboard");
     }else{
@@ -77,32 +119,7 @@ class LocalResult extends Component {
       score.push(moderate);
       score.push(heavy);
 
-      this.setState({ little, moderate, heavy, score }, () => {
-        let words = [];
-      
-        output[0].Index.forEach(index => {
-          let obj = JSON.parse(index);
-          words.push(obj.Pattern)
-        })
-        // output.forEach((out) => {
-        //   out.Index.forEach((index) => {
-        //     let obj = JSON.parse(index);
-        //     words.push(obj.Pattern)
-        //   })
-        // })
-        words = words.join(' ').split(' ');
-        var uniqueItems = [...new Set(words)]
-  
-  
-        //const word = uniqueItems.join(' ');
-  
-        //var splited = word.split(' ');
-        this.setState({words: uniqueItems}, () => {
-          setTimeout(() => {
-            this.setState({ report: false });
-          },4000)
-        })
-      })
+      this.setState({ little, moderate, heavy, score })
 
       
     }
@@ -132,41 +149,40 @@ class LocalResult extends Component {
 
   onClickGenerateReport = () => {
     this.props.setPlagiarismGenerateReportLoading(true);
-    setTimeout(() =>{
-      const { output, abstract } = this.props.localPlagiarism;
-    // const node = ReactDOM.findDOMNode(this);
-
-    // // Get child nodes
-    // let child = "";
-    // child = node.querySelector('.forhidehighlightSpan');
-
-    let word = this.forHide.current.children[0].innerHTML.toString();
-
-    const name =
-      this.props.auth.user.name.firstName +
-      " " +
-      this.props.auth.user.name.middleName +
-      " " +
-      this.props.auth.user.name.lastName;
-
-    let subTypeOfReport = "Checked in the System Database";
-    if (abstract) {
-      subTypeOfReport = "Checked in the System Database (ABSTRACT)"
-    }
-    const input = {
-      reportFor: "Research",
-      printedBy: name,
-      word,
-      typeOfReport: "Plagiarism Check Result",
-      subTypeOfReport,
-      output
-    }
-    this.props.createLocalPlagiarismReport(input);
-    }, 2000)
-    
-
+    const { output, abstract } = this.props.localPlagiarism;
+      // const node = ReactDOM.findDOMNode(this);
+  
+      // // Get child nodes
+      // let child = "";
+      // child = node.querySelector('.forhidehighlightSpan');
+  
+      let word = this.forHide.current.children[0].innerHTML.toString();
+  
+      const name =
+        this.props.auth.user.name.firstName +
+        " " +
+        this.props.auth.user.name.middleName +
+        " " +
+        this.props.auth.user.name.lastName;
+  
+      let subTypeOfReport = "Checked in the System Database";
+      if (abstract) {
+        subTypeOfReport = "Checked in the System Database (ABSTRACT)"
+      }
+      const input = {
+        reportFor: "Research",
+        printedBy: name,
+        word,
+        typeOfReport: "Plagiarism Check Result",
+        subTypeOfReport,
+        output
+      }
+      this.props.createLocalPlagiarismReport(input);
+      
 
   }
+
+  
 
   // Complex example
   findChunksAtBeginningOfWords = ({
@@ -339,7 +355,7 @@ class LocalResult extends Component {
 
     let forhide;
 
-    if (patternLoading || pattern === "") {
+    if (patternLoading || pattern === "" || this.state.report) {
       forhide = (
         <div className="spinnerMainDiv">
           <div className="spinner">
@@ -355,7 +371,7 @@ class LocalResult extends Component {
           searchWords={this.state.words}
           autoEscape={true}
           textToHighlight={pattern.data}
-          findChunks={this.findChunksAtBeginningOfWords}
+          findChunks={() => this.state.chunks}
         />
       )
     }
