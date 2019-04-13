@@ -12,7 +12,7 @@ import {
 import { getResearches } from "../../actions/researchActions";
 import { getUsers } from "../../actions/userActions";
 import { getJournals } from "../../actions/journalActions";
-import { Redirect } from 'react-router';
+import { Redirect } from "react-router";
 import "./Landing.css";
 
 class Landing extends Component {
@@ -30,10 +30,8 @@ class Landing extends Component {
     this.setState({ alert: false });
   };
   onUpdate = () => {
-
-
     window.location.href = `/edit-password`;
-  }
+  };
   componentWillMount() {
     this.props.getColleges();
     this.props.getResearches();
@@ -44,7 +42,7 @@ class Landing extends Component {
     // some action...
     // then redirect
     this.setState({ redirect: true });
-  }
+  };
   componentDidMount() {
     let currentHour = moment().format("HH");
     currentHour = parseInt(currentHour, 10);
@@ -78,7 +76,7 @@ class Landing extends Component {
 
     try {
       this.props.getCollegeByInitials(this.props.colleges[0].name.initials);
-    } catch (error) { }
+    } catch (error) {}
 
     if (this.props.auth.isAuthenticated) {
       name = ", " + this.props.auth.user.name.firstName;
@@ -103,11 +101,11 @@ class Landing extends Component {
     };
 
     const image1 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/maingate.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/gateOne.jpg";
     const image2 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/law.jpg";
     const image3 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/heroespark.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/hspark.jpg";
     const image4 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsu114.jpg";
 
@@ -125,10 +123,12 @@ class Landing extends Component {
           onConfirm={this.handleOnClick}
           onCancel={this.onCancel}
         >
-          The system detected that you are using our system generated password. Would you like to update your password?
+          The system detected that you are using our system generated password.
+          Would you like to update your password?
         </SweetAlert>
+
+        {/* 
         <div style={styles}>
-          {/* <Hello name="Parallax" /> */}
           <Parallax bgImage={image1} strength={300}>
             <div style={{ height: 500 }}>
               <div style={insideStyles}>
@@ -137,7 +137,7 @@ class Landing extends Component {
                   alt="logo-3d"
                   style={{ width: "120px" }}
                 />
-                <div className="hide">
+                <div classNameName="hide">
                   <br />
                 </div>
                 Plagiarism and Grammar Checker System for Bulacan State
@@ -178,6 +178,225 @@ class Landing extends Component {
             </div>
           </Parallax>
         </div>
+        <br />
+        <br /> */}
+
+        <div style={styles}>
+          <Parallax bgImage={image1} strength={0}>
+            <div style={{ height: 900 }}>
+              <div style={insideStyles}>
+                <img
+                  src="./images/3dlogo.gif"
+                  alt="logo-3d"
+                  style={{ width: "120px" }}
+                />
+                <div className="hide">
+                  <br />
+                </div>
+                Plagiarism and Grammar Checker System for Bulacan State
+                University Research Materials
+              </div>
+            </div>
+          </Parallax>
+        </div>
+
+        <br />
+
+        <section className="about" id="about">
+          <div className="container text-center">
+            <h2 style={{ fontFamily: "Raleway, Helvetica, Arial, sans-serif" }}>
+              About
+            </h2>
+
+            <p>
+              Plagiarism and Grammar Checker System for Bulacan State University
+              Research Materials is created with the intentions of keeping the
+              research office works hassle-free and fast. With our fast and
+              accurate Plagiarism Checker and other features such as the Grammar
+              Checker we can ensure that the process in the research office will
+              be much more faster. This system also acts as a repository for
+              College Research and Journals. We also have an android application
+              for the users convinience they can use it anytime, anywhere even
+              without an internet connection.
+            </p>
+
+            <div className="row stats-row">
+              <div className="stats-col text-center col-md-3 col-sm-6">
+                <div className="circle">
+                  <span className="stats-no" data-toggle="counter-up">
+                    98%
+                  </span>{" "}
+                  IT Expert
+                </div>
+              </div>
+
+              <div className="stats-col text-center col-md-3 col-sm-6">
+                <div className="circle">
+                  <span className="stats-no" data-toggle="counter-up">
+                    46%
+                  </span>{" "}
+                  Students
+                </div>
+              </div>
+
+              <div className="stats-col text-center col-md-3 col-sm-6">
+                <div className="circle">
+                  <span className="stats-no" data-toggle="counter-up">
+                    92%
+                  </span>{" "}
+                  Librarians
+                </div>
+              </div>
+
+              <div className="stats-col text-center col-md-3 col-sm-6">
+                <div className="circle">
+                  <span className="stats-no" data-toggle="counter-up">
+                    14%
+                  </span>{" "}
+                  Tricycle Drivers
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <br />
+
+        <Parallax bgImage={image3} strength={300}>
+          <div style={{ height: 400 }} />
+        </Parallax>
+
+        <br />
+
+        <section className="features" id="features">
+          <div className="container">
+            <h2
+              className="text-center"
+              style={{ fontFamily: "Raleway, Helvetica, Arial, sans-serif" }}
+            >
+              Features
+            </h2>
+
+            <div className="row">
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fas fa-rocket" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Fast Plagiarism Checker</h4>
+
+                    <p>
+                      Check a research document for potential plagiarism content
+                      in just a matter of minutes!
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fas fa-file-word" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Grammar Checker</h4>
+
+                    <p>
+                      See if there's any grammatical error in your sentences.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fas fa-times" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>No Word Limit</h4>
+
+                    <p>
+                      Don't worry for any word limitations in our local
+                      plagiarism checker.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="row">
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fab fa-android" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Android Application</h4>
+
+                    <p>
+                      Check research abstracts anytime, anywhere! Even if your
+                      not connected to the internet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fas fa-database" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Document Repository</h4>
+
+                    <p>Easily find and organize researches and journals.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="feature-col col-lg-4 col-xs-12">
+                <div className="card card-block text-center border-0">
+                  <div>
+                    <div className="feature-icon">
+                      <span className="fas fa-user-shield" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4>Email Verification</h4>
+
+                    <p>
+                      For security, this website uses an email verification for
+                      user registration.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <br />
+        <Parallax bgImage={image4} strength={300}>
+          <div style={{ height: 400 }} />
+        </Parallax>
+        <br />
         <br />
         <br />
       </div>
