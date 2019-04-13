@@ -55,3 +55,106 @@ img {
     display: none;
   }
 }
+
+/* ==================================================
+  Features Styling
+  ================================================== */
+.features {
+  padding-bottom: 45px;
+  font-family: "Raleway", Helvetica, Arial, sans-serif;
+}
+
+.features h2 {
+  color: #199eb8;
+}
+
+.feature-col {
+  display: table;
+  padding-bottom: 45px;
+}
+
+.feature-col > div > div {
+  display: table-cell;
+  vertical-align: middle;
+  padding-top: 15px;
+}
+
+.feature-col > div > div:last-child {
+  padding-left: 20px;
+}
+
+.feature-col .feature-icon {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 15px;
+  background: #199eb8;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  line-height: 70px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.feature-col h4 {
+  color: #199eb8;
+}
+
+.feature-col p {
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #999;
+}
+
+/* ==================================================
+  Stats Styling
+================================================== */
+.stats-row {
+  margin-top: 65px;
+}
+
+.stats-col .circle {
+  display: inline-block;
+  width: 160px;
+  height: 160px;
+  font-family: "Raleway", Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  color: #666;
+  border: 6px solid #199eb8;
+  border-radius: 50%;
+  padding: 55px 25px 0 25px;
+  position: relative;
+}
+
+.stats-col .circle .stats-no {
+  color: #fff;
+  width: 70px;
+  height: 70px;
+  line-height: 70px;
+  top: -25px;
+  right: -15px;
+  font-family: "Raleway", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+  background-color: #e04f00;
+  position: absolute;
+  border-radius: 50%;
+  font-weight: 700;
+}
+/* ==================================================
+  Responsive Styling
+  ================================================== */
+@media (max-width: 61.9em) {
+  .features {
+    padding-bottom: 5px;
+  }
+  .stats-col {
+    margin-bottom: 25px;
+  }
+}
+
+@media (max-width: 767px) {
+  .block {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+}
