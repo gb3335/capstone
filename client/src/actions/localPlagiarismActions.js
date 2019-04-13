@@ -19,7 +19,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
   total = 0;
   comFlag = 0;
   let config = {
-    onUploadProgress: progressEvent => {
+    onDownloadProgress: progressEvent => {
       const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
       // console.log(percentCompleted);
@@ -74,7 +74,8 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
           }
 
         })
-        axios
+        if(promises.length>0){
+          axios
           .all(promises)
           .then(res => {
             const hm = new jsscompress.Hauffman();
@@ -118,6 +119,14 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               payload: err.response.data
             });
           });
+        }else{
+          console.timeEnd("Initialize")
+          dispatch(setPlagiarismGlobalCheck({}));
+          let errors = {}
+          errors.noResearchForPlagiarism = "No other researches found!"
+          dispatch(showPlagiarismError({errors}))
+        }
+        
       //}//else{
       //   dispatch(outputLocalPlagiarism(res.data));
       //   dispatch({
@@ -130,13 +139,20 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
 
 };
 
+export const showPlagiarismError = (error) => {
+ return ({
+    type: GET_ERRORS,
+    payload: error
+  });
+}
+
 
 // Check Plagiarism Local
 export const journalPlagiarismLocal = (input, history) => dispatch => {
   total = 0;
   comFlag = 0;
   let config = {
-    onUploadProgress: progressEvent => {
+    onDownloadProgress: progressEvent => {
       const totalLength = progressEvent.lengthComputable ? progressEvent.total : progressEvent.target.getResponseHeader('content-length') || progressEvent.target.getResponseHeader('x-decompressed-content-length');
       let percentCompleted = Math.floor((progressEvent.loaded * 100) / totalLength);
       // console.log(percentCompleted);
@@ -179,7 +195,8 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
           }
 
         })
-        axios
+        if(promises.length>0){
+          axios
           .all(promises)
           .then(res => {
             const hm = new jsscompress.Hauffman();
@@ -203,7 +220,6 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
             dispatch(setAxiosProgress(axiosProgress));
             console.timeEnd("Initialize")
             dispatch(outputLocalPlagiarism(newres));
-            console.log("test")
             if (input.fromFlag) {
               history.push(`/localResultSideBySide/journal`);
             } else {
@@ -217,6 +233,14 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
               payload: err.response.data
             });
           });
+        }else{
+          console.timeEnd("Initialize")
+          dispatch(setPlagiarismGlobalCheck({}));
+          let errors = {}
+          errors.noResearchForPlagiarism = "No other journals found!"
+          dispatch(showPlagiarismError({errors}))
+        }
+        
     //   }//else{
     //   //   dispatch(outputLocalPlagiarism(res.data));
     //   //   dispatch({
@@ -280,11 +304,12 @@ export const getTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-export const getPattern = (input) => dispatch => {
+export const getPattern = (input, callback) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/pattern', input)
     .then(res => {
       dispatch(outputLocalPlagiarismPattern(res.data));
+      callback("done");
     })
 }
 
@@ -306,11 +331,12 @@ export const getJournalTextPattern = (input) => dispatch => {
       dispatch(outputLocalPlagiarismPattern(res.data));
     })
 }
-export const getJournalPattern = (input) => dispatch => {
+export const getJournalPattern = (input, callback) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/journal/pattern', input)
     .then(res => {
       dispatch(outputLocalPlagiarismPattern(res.data));
+      callback("done");
     })
 }
 

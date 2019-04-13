@@ -45,6 +45,9 @@ const checkPlagiarism = (
     result.pattern = 100;
   }
   result.text = (sentenceSimilarNum / textSentenceLen) * 100;
+  if (result.text > 100) {
+    result.text = 100;
+  }
   result.index = index;
   return result;
 };

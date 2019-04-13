@@ -4,7 +4,11 @@ import PropTypes from "prop-types";
 
 import Highlighter from "react-highlight-words";
 
+//workers
+import worker from "./workers/workerHighlight";
+import WebWorker from "./workers/WorkerSetup";
 
+import Spinner from "../common/Spinner";
 import "./LocalHighlightedResult.css"
 
  class LocalHighlightedResult extends Component {
@@ -12,27 +16,41 @@ import "./LocalHighlightedResult.css"
   constructor() {
     super();
     this.state = {
-      words: []
+      words: [],
+      chunks: [],
+      show: false
     };
     
   }
 
   componentDidMount(){
+    this.worker = new WebWorker(worker);
     const {output , textId} = this.props.localPlagiarism;
 
-    let Index = output.find(obj => obj.Document.Text.Id === textId);
+    this.worker.postMessage({"args": {output, textId, textToHighlight: this.props.localPlagiarism.pattern.data}});
+
+    this.worker.addEventListener("message", event => {
+      this.setState({
+        chunks: event.data.chunks,
+        words: event.data.words,
+        show: true
+      });
+    });
+    // let Index = output.find(obj => obj.Document.Text.Id === textId);
     
-    let words = [];
-    if(Index.Index.length > 0){
-      Index.Index.forEach((index =>{
-        let obj = JSON.parse(index);
+    // let words = [];
+    // if(Index.Index.length > 0){
+    //   Index.Index.forEach((index =>{
+    //     let obj = JSON.parse(index);
   
-        words.push.apply(words,obj.Pattern.split(' '))
-      }))
-    }
+    //     words.push.apply(words,obj.Pattern.split(' '))
+    //   }))
+    // }
     
     
-    this.setState({words})
+    // this.setState({words},()=>{
+    //   this.findHighlight()
+    // })
   }
 
   // Complex example
@@ -91,20 +109,23 @@ import "./LocalHighlightedResult.css"
     const {pattern} = this.props.localPlagiarism;
 
     return (
-     
+      <div>
+        {this.state.show ?
         <div className="hightlightSpanDiv">
           <div className="highlightComponentDiv">
-            <Highlighter
+          <Highlighter
               className="highlightSpan"
               highlightClassName="hightlight"
               searchWords={this.state.words}
               autoEscape={true}
               textToHighlight={pattern.data}
-              findChunks={this.findChunksAtBeginningOfWords}
+              findChunks={() => this.state.chunks}
             />
-          </div>
           
-        </div>
+          </div>
+        
+        </div> : <Spinner/>}
+      </div>
       
     )
   }
