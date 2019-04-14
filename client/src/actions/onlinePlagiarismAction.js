@@ -109,9 +109,11 @@ export const checkPlagiarismOnline = input => dispatch => {
                   console.timeEnd("Initialize")
                 })
                 .catch(err => {
+                  const errors={}
+                  errors.time = "Timeout Error"
                   dispatch({
                     type: GET_ERRORS,
-                    payload: err.response.data
+                    payload: errors
                   });
                 });
             }
