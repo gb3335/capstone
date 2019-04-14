@@ -445,8 +445,9 @@ router.post("/get/pattern", (req, res) => {
     //     })
     //   });
     // });
+    let reqPath = path.join(__dirname, "../../");
 
-    pdfUtil.pdfToText(`docFiles/researchDocuments/${docuFile}`, function (err, data) {
+    pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${docuFile}`, function (err, data) {
      
       res.json({
         success: true,
@@ -516,7 +517,8 @@ router.post("/get/journal/pattern", (req, res) => {
     //     })
     //   });
     // });
-    pdfUtil.pdfToText(`docFiles/journalDocuments/${docuFile}`, function (err, data) {
+    let reqPath = path.join(__dirname, "../../");
+    pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${docuFile}`, function (err, data) {
      
       res.json({
         success: true,
@@ -587,7 +589,8 @@ router.post("/get/text", (req, res) => {
     //     })
     //   });
     // });
-    pdfUtil.pdfToText(`docFiles/researchDocuments/${docuFile}`, function (err, data) {
+    let reqPath = path.join(__dirname, "../../");
+    pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${docuFile}`, function (err, data) {
      
       res.json({
         success: true,
@@ -654,7 +657,8 @@ router.post("/get/journal/text", (req, res) => {
     //     })
     //   });
     // });
-    pdfUtil.pdfToText(`docFiles/journalDocuments/${docuFile}`, function (err, data) {
+    let reqPath = path.join(__dirname, "../../");
+    pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${docuFile}`, function (err, data) {
      
       res.json({
         success: true,

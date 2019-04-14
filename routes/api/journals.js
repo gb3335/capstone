@@ -479,11 +479,11 @@ router.post(
     let base64String = req.body.file;
     let base64Doc = base64String.split(";base64,").pop();
     const filename = req.body.journalId + "-" + rand + ".pdf";
-
+    let reqPath = path.join(__dirname, "../../");
     if (req.body.oldFile) {
       // delete research document from client folder
       try {
-        fs.unlinkSync(`docFiles/journalDocuments/${req.body.oldFile}`, () => {
+        fs.unlinkSync(`${reqPath}/docFiles/journalDocuments/${req.body.oldFile}`, () => {
           console.log("old file deleted");
         });
       } catch (error) {
@@ -492,13 +492,13 @@ router.post(
     }
 
     fs.writeFile(
-      `docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`,
+      `${reqPath}/docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
       function(err) {
         console.log("file created");
 
-        pdfUtil.pdfToText(`docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`, function (err, data) {
+        pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`, function (err, data) {
           let {text,len} = processor.textProcess(data.toString().toLowerCase());
 
           const newDocument = {
@@ -541,8 +541,9 @@ router.delete(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     // delete research document from client folder
+    let reqPath = path.join(__dirname, "../../");
     try {
-      fs.unlinkSync(`docFiles/journalDocuments/${req.params.filename}`);
+      fs.unlinkSync(`${reqPath}/docFiles/journalDocuments/${req.params.filename}`);
     } catch (error) {
       console.log(error);
     }
