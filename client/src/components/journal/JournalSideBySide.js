@@ -238,6 +238,12 @@ class JournalSideBySide extends Component {
               { title: "Status", field: "status" },
               { title: "", field: "view" }
             ]}
+            options={{
+              pageSizeOptions: [10, 15, 25, 50, 100],
+              emptyRowsWhenPaging: false,
+              columnsButton: true,
+              pageSize: 15
+            }}
             data={journalData}
             title={`Select a Journal to compare with ${journal.title}`}
           />

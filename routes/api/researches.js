@@ -504,7 +504,7 @@ router.post(
       function(err) {
         console.log("file created");
         let reqPath = path.join(__dirname, "../../");
-        pdfUtil.pdfToText(`${reqPath}docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
+        pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
 
           let {text,len} = processor.textProcess(data.toString().toLowerCase());
 

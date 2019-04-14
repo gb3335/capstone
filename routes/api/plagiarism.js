@@ -446,7 +446,6 @@ router.post("/get/pattern", (req, res) => {
     //   });
     // });
     let reqPath = path.join(__dirname, "../../");
-
     pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${docuFile}`, function (err, data) {
      
       res.json({

@@ -248,6 +248,12 @@ class ResearchSideBySide extends Component {
               { title: "Status", field: "status" },
               { title: "", field: "view" }
             ]}
+            options={{
+              pageSizeOptions: [10, 15, 25, 50, 100],
+              emptyRowsWhenPaging: false,
+              columnsButton: true,
+              pageSize: 15
+            }}
             data={researchData}
             title={`Select a Research to compare with ${research.title}`}
           />
