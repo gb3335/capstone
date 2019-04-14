@@ -482,6 +482,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const rand = uuid();
+    console.log("called")
     let base64String = req.body.file;
     let base64Doc = base64String.split(";base64,").pop();
     if(base64Doc){
