@@ -105,7 +105,7 @@ class Landing extends Component {
     const image2 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/law.jpg";
     const image3 =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/hspark.jpg";
+      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/parkbulsu.jpg";
     const image4 =
       "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/bulsu114.jpg";
 
