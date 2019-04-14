@@ -475,7 +475,7 @@ router.post(
 );
 
 // @route   POST api/researches/document
-// @desc    Add document to research
+// @desc    Add / Update document to research
 // @access  Private
 router.post(
   "/document",
@@ -487,98 +487,44 @@ router.post(
     const filename = req.body.researchId + "-" + rand + ".pdf";
 
     if (req.body.oldFile) {
-      // delete research document from s3
-      let s3 = new AWS.S3();
-
-      let params = {
-        Bucket: "bulsu-capstone",
-        Key: `researchDocuments/${req.body.oldFile}`
-      };
-
-      s3.deleteObject(params, function(err, data) {
-        if (err) console.log(err, err.stack);
-        else console.log(data);
-      });
-    }
-    // S3 upload
-    s3 = new AWS.S3();
-
-    const base64Data = new Buffer(
-      base64Doc.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    );
-
-    const type = base64String.split(";")[0].split("/")[1];
-
-    const userId = 1;
-
-    let researchObject = {};
-
-    params = {
-      Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.body.researchId + "-" + rand}.pdf`, // type is not required
-      Body: base64Data,
-      ACL: "public-read",
-      ContentEncoding: "base64", // required
-      ContentType: `application/pdf` // required. Notice the back ticks
-    };
-
-    s3.upload(params, (err, data) => {
-      if (err) {
-        return console.log(err);
-      }
-      const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-        filename;
-      const options = {
-        directory: "./routes/downloadedDocu",
-        filename: req.body.researchId + ".pdf"
-      };
-      download(docPath, options, function(err) {
-        if (err) console.log(err);
-        console.log("Document successfully downloaded.");
-        pdfUtil.pdfToText(
-          `./routes/downloadedDocu/${options.filename}`,
-          function(err, data) {
-            fs.unlink(`./routes/downloadedDocu/${options.filename}`, err => {
-              if (err) throw err;
-              console.log("successfully deleted");
-            });
-
-            let { text, len } = processor.textProcess(
-              data.toString().toLowerCase()
-            );
-
-            const newDocument = {
-              document: filename,
-              content: {
-                text,
-                sentenceLength: len
-              },
-              lastUpdate: Date.now()
-            };
-            Research.findOne({ _id: req.body.researchId }).then(research => {
-              // add activity
-              const newActivity = {
-                title: "Research: Document added to " + research.title,
-                by: req.body.username,
-                type: "Research"
-              };
-              new Activity(newActivity).save();
-            });
-
-            Research.findOneAndUpdate(
-              { _id: req.body.researchId },
-              { $set: newDocument },
-              { new: true }
-            ).then(research => {
-              delete research.content;
-              res.json(research);
-            });
-          }
+      // delete research document from client folder
+      try {
+        fs.unlinkSync(
+          `client/public/documents/researchDocuments/${req.body.oldFile}`
         );
-      });
-    });
+      } catch (error) {
+        //console.log(error);
+      }
+    }
+
+    fs.writeFile(
+      `client/public/documents/researchDocuments/${req.body.researchId +
+        "-" +
+        rand}.pdf`,
+      base64Doc,
+      { encoding: "base64" },
+      function(err) {
+        console.log("file created");
+        const newDocument = {
+          document: filename
+        };
+        Research.findOne({ _id: req.body.researchId }).then(research => {
+          // add activity
+          const newActivity = {
+            title: "Research: Document added to " + research.title,
+            by: req.body.username,
+            type: "Research"
+          };
+          new Activity(newActivity).save();
+        });
+
+        Research.findOneAndUpdate(
+          { _id: req.body.researchId },
+          { $set: newDocument },
+          { new: true }
+        ).then(research => res.json(research));
+      }
+    );
   }
 );
 
@@ -589,33 +535,17 @@ router.delete(
   "/document/:research_id/:filename/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //delete research document from s3
-    let s3 = new AWS.S3();
-
-    let params = {
-      Bucket: "bulsu-capstone",
-      Key: `researchDocuments/${req.params.filename}`
-    };
-
-    s3.deleteObject(params, function(err, data) {
-      if (err) console.log(err, err.stack);
-      else console.log(data);
-    });
-    // try {
-    //   fs.unlinkSync(
-    //     `client/public/documents/researchDocuments/${req.params.filename}`
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    // delete research document from client folder
+    try {
+      fs.unlinkSync(
+        `client/public/documents/researchDocuments/${req.params.filename}`
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
     const newDocument = {
-      document: "",
-      content: {
-        text: "",
-        sentenceLength: ""
-      },
-      lastUpdate: Date.now()
+      document: ""
     };
 
     Research.findOne({ _id: req.params.research_id }).then(research => {
@@ -632,10 +562,7 @@ router.delete(
       { _id: req.params.research_id },
       { $set: newDocument },
       { new: true }
-    ).then(research => {
-      delete research.content;
-      res.json(research);
-    });
+    ).then(research => res.json(research));
   }
 );
 

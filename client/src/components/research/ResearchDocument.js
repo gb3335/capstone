@@ -3,9 +3,7 @@ import React, { Component } from "react";
 class ResearchDocument extends Component {
   render() {
     const { research } = this.props;
-    const docPath =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-      research.document;
+    const docPath = "/documents/researchDocuments/" + research.document;
     let fileItems;
 
     if (research.document) {
@@ -14,7 +12,12 @@ class ResearchDocument extends Component {
           <iframe src={docPath} height="100%" width="100%" />
         </div>
         // <div>
-        //   <a href={docPath} target="_blank" rel="noopener noreferrer">
+        //   <a
+        //     href={docPath}
+        //     download="researchPdf"
+        //     target="_blank"
+        //     rel="noopener noreferrer"
+        //   >
         //     View Document
         //   </a>
         // </div>
@@ -26,7 +29,7 @@ class ResearchDocument extends Component {
     return (
       <div className="card shadow">
         <div className="card-body">
-          <h5 className="card-title text-info">Document</h5>
+          <h5 className="card-title text-1info">Document</h5>
           <hr />
           {fileItems}
         </div>
