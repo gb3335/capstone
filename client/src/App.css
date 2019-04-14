@@ -1,0 +1,3 @@
+[class^="MuiTableRow-root-"]:nth-child(n+1):hover{
+    background-color: rgba(218, 109, 127, 0.315);
+}
