@@ -492,60 +492,60 @@ router.post(
     }
     const filename = req.body.researchId + "-" + rand + ".pdf";
     let reqPath = path.join(__dirname, "../../");
-    if (req.body.oldFile) {
-      // delete research document from client folder
-      try {
-        fs.unlinkSync(`${reqPath}/docFiles/researchDocuments/${req.body.oldFile}`, () => {
-          console.log("old file deleted");
-        });
-      } catch (error) {
-        //console.log(error);
-      }
-    }
+    // if (req.body.oldFile) {
+    //   // delete research document from client folder
+    //   try {
+    //     fs.unlinkSync(`${reqPath}/docFiles/researchDocuments/${req.body.oldFile}`, () => {
+    //       console.log("old file deleted");
+    //     });
+    //   } catch (error) {
+    //     //console.log(error);
+    //   }
+    // }
 
-    fs.writeFile(
-      `${reqPath}/docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`,
-      base64Doc,
-      { encoding: "base64" },
-      function(err) {
-        console.log("file created");
-        let reqPath = path.join(__dirname, "../../");
-        pdfUtil.pdfToText(`${reqPath}docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
+    // fs.writeFile(
+    //   `${reqPath}/docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`,
+    //   base64Doc,
+    //   { encoding: "base64" },
+    //   function(err) {
+    //     console.log("file created");
+    //     let reqPath = path.join(__dirname, "../../");
+    //     pdfUtil.pdfToText(`${reqPath}docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
 
-          let {text,len} = processor.textProcess(data.toString().toLowerCase());
+    //       let {text,len} = processor.textProcess(data.toString().toLowerCase());
 
-          const newDocument = {
-            document: filename,
-            content: {
-              text,
-              sentenceLength: len
-            },
-            lastUpdate: Date.now()
-          };
+    //       const newDocument = {
+    //         document: filename,
+    //         content: {
+    //           text,
+    //           sentenceLength: len
+    //         },
+    //         lastUpdate: Date.now()
+    //       };
 
-          Research.findOneAndUpdate(
-            { _id: req.body.researchId },
-            { $set: newDocument },
-            { new: true }
-          ).then(research => res.json(research));
+    //       Research.findOneAndUpdate(
+    //         { _id: req.body.researchId },
+    //         { $set: newDocument },
+    //         { new: true }
+    //       ).then(research => res.json(research));
 
-        })
+    //     })
 
-
-        
-        Research.findOne({ _id: req.body.researchId }).then(research => {
-          // add activity
-          const newActivity = {
-            title: "Research: Document added to " + research.title,
-            by: req.body.username,
-            type: "Research"
-          };
-          new Activity(newActivity).save();
-        });
 
         
-      }
-    );
+    //     Research.findOne({ _id: req.body.researchId }).then(research => {
+    //       // add activity
+    //       const newActivity = {
+    //         title: "Research: Document added to " + research.title,
+    //         by: req.body.username,
+    //         type: "Research"
+    //       };
+    //       new Activity(newActivity).save();
+    //     });
+
+        
+    //   }
+    // );
   }
 );
 
