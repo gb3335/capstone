@@ -484,6 +484,9 @@ router.post(
     const rand = uuid();
     let base64String = req.body.file;
     let base64Doc = base64String.split(";base64,").pop();
+    if(base64Doc){
+      console.log("test");
+    }
     const filename = req.body.researchId + "-" + rand + ".pdf";
     let reqPath = path.join(__dirname, "../../");
     if (req.body.oldFile) {
