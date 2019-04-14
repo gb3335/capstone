@@ -486,6 +486,8 @@ router.post(
     let base64Doc = base64String.split(";base64,").pop();
     if(base64Doc){
       console.log("test");
+    }else{
+      console.log("no");
     }
     const filename = req.body.researchId + "-" + rand + ".pdf";
     let reqPath = path.join(__dirname, "../../");
