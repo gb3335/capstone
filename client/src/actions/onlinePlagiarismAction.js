@@ -100,7 +100,7 @@ export const checkPlagiarismOnline = input => dispatch => {
                   total=0;
                   comFlag=0;
                   const axiosProgress ={
-                    tag:"",
+                    tag:"Initializing...",
                     axiosProgress: 0
                   }
                   dispatch(setPlagiarismGlobalCheck({}));

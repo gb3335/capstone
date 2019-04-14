@@ -92,7 +92,7 @@ export const checkPlagiarismLocal = (input, history) => dispatch => {
               return obj2.SimilarityScore - obj1.SimilarityScore;
             });
             const axiosProgress = {
-              tag: "",
+              tag: "Initializing...",
               axiosProgress: 0
             }
             dispatch(setAxiosProgress(axiosProgress));
@@ -213,7 +213,7 @@ export const journalPlagiarismLocal = (input, history) => dispatch => {
             total = 0;
             comFlag = 0;
             const axiosProgress = {
-              tag: "",
+              tag: "Initializing...",
               axiosProgress: 0
             }
             dispatch(setPlagiarismGlobalCheck({}));
