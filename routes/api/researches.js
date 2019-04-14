@@ -503,10 +503,29 @@ router.post(
       { encoding: "base64" },
       function(err) {
         console.log("file created");
-        const newDocument = {
-          document: filename,
-          lastUpdate: Date.now()
-        };
+        pdfUtil.pdfToText(`docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
+
+          let {text,len} = processor.textProcess(data.toString().toLowerCase());
+
+          const newDocument = {
+            document: filename,
+            content: {
+              text,
+              sentenceLength: len
+            },
+            lastUpdate: Date.now()
+          };
+
+          Research.findOneAndUpdate(
+            { _id: req.body.researchId },
+            { $set: newDocument },
+            { new: true }
+          ).then(research => res.json(research));
+
+        })
+
+
+        
         Research.findOne({ _id: req.body.researchId }).then(research => {
           // add activity
           const newActivity = {
@@ -517,11 +536,7 @@ router.post(
           new Activity(newActivity).save();
         });
 
-        Research.findOneAndUpdate(
-          { _id: req.body.researchId },
-          { $set: newDocument },
-          { new: true }
-        ).then(research => res.json(research));
+        
       }
     );
   }
@@ -543,6 +558,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content:{
+        text: "",
+        sentenceLength: 0
+      },
       lastUpdate: Date.now()
     };
 

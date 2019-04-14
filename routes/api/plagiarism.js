@@ -396,7 +396,7 @@ router.post("/online", (req, res) => {
 router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let abstract = req.body.abstract
-
+  let docuFile = req.body.docuFile;
   if (abstract) {
     Research.findOne({ _id: docuId }, { content: 0 })
       .then(research => {
@@ -415,36 +415,46 @@ router.post("/get/pattern", (req, res) => {
       .catch(err => res.status(404).json(err));
   } else {
     //option to extract text from page 0 to 10
-    var option = { from: 0, to: 10 };
+    // var option = { from: 0, to: 10 };
 
-    let docuFile = req.body.docuFile;
-    const docPath =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-      docuFile;
+    // let docuFile = req.body.docuFile;
+    // const docPath =
+    //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+    //   docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+    // const options = {
+    //   directory: "./routes/downloadedDocu/",
+    //   filename: docuFile
+    // };
 
-    download(docPath, options, function (err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+    // download(docPath, options, function (err) {
+    //   if (err) console.log(err);
+    //   console.log("Document successfully downloaded.");
+    //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
 
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
+    //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+    //       if (err) throw err;
+    //       console.log('successfully deleted');
+    //     });
 
-        res.json({
-          success: true,
-          data: data.toString(),
-          docuId
-        })
-      });
+    //     res.json({
+    //       success: true,
+    //       data: data.toString(),
+    //       docuId
+    //     })
+    //   });
+    // });
+
+    pdfUtil.pdfToText(`docFiles/researchDocuments/${docuFile}`, function (err, data) {
+     
+      res.json({
+        success: true,
+        data: data.toString(),
+        docuId
+      })
     });
+
   }
 
 
@@ -456,6 +466,7 @@ router.post("/get/pattern", (req, res) => {
 // @access  public
 router.post("/get/journal/pattern", (req, res) => {
   let docuId = req.body.docuId;
+  let docuFile = req.body.docuFile;
   let abstract = req.body.abstract
   if (abstract) {
     Journal.findOne({ _id: docuId }, { content: 0 })
@@ -475,36 +486,45 @@ router.post("/get/journal/pattern", (req, res) => {
       .catch(err => res.status(404).json(err));
   } else {
     //option to extract text from page 0 to 10
-    var option = { from: 0, to: 10 };
+    // var option = { from: 0, to: 10 };
 
-    let docuFile = req.body.docuFile;
-    const docPath =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
-      docuFile;
+    // let docuFile = req.body.docuFile;
+    // const docPath =
+    //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
+    //   docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+    // const options = {
+    //   directory: "./routes/downloadedDocu/",
+    //   filename: docuFile
+    // };
 
-    download(docPath, options, function (err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+    // download(docPath, options, function (err) {
+    //   if (err) console.log(err);
+    //   console.log("Document successfully downloaded.");
+    //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
 
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
+    //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+    //       if (err) throw err;
+    //       console.log('successfully deleted');
+    //     });
 
-        res.json({
-          success: true,
-          data: data.toString(),
-          docuId
-        })
-      });
+    //     res.json({
+    //       success: true,
+    //       data: data.toString(),
+    //       docuId
+    //     })
+    //   });
+    // });
+    pdfUtil.pdfToText(`docFiles/journalDocuments/${docuFile}`, function (err, data) {
+     
+      res.json({
+        success: true,
+        data: data.toString(),
+        docuId
+      })
     });
+
   }
 
 
@@ -517,6 +537,7 @@ router.post("/get/journal/pattern", (req, res) => {
 // @access  public
 router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
+  let docuFile = req.body.docuFile;
   let abstract = req.body.abstract
 
   if (abstract) {
@@ -537,34 +558,42 @@ router.post("/get/text", (req, res) => {
       .catch(err => res.status(404).json(err));
   } else {
     //option to extract text from page 0 to 10
-    var option = { from: 0, to: 10 };
-    let docuFile = req.body.docuFile;
-    const docPath =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
-      docuFile;
+    // var option = { from: 0, to: 10 };
+    // let docuFile = req.body.docuFile;
+    // const docPath =
+    //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/researchDocuments/" +
+    //   docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+    // const options = {
+    //   directory: "./routes/downloadedDocu/",
+    //   filename: docuFile
+    // };
 
-    download(docPath, options, function (err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+    // download(docPath, options, function (err) {
+    //   if (err) console.log(err);
+    //   console.log("Document successfully downloaded.");
+    //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
 
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
+    //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+    //       if (err) throw err;
+    //       console.log('successfully deleted');
+    //     });
 
-        res.json({
-          success: true,
-          data: data.toString(),
-          textId: docuId
-        })
-      });
+    //     res.json({
+    //       success: true,
+    //       data: data.toString(),
+    //       textId: docuId
+    //     })
+    //   });
+    // });
+    pdfUtil.pdfToText(`docFiles/researchDocuments/${docuFile}`, function (err, data) {
+     
+      res.json({
+        success: true,
+        data: data.toString(),
+        docuId
+      })
     });
   }
 
@@ -575,6 +604,7 @@ router.post("/get/text", (req, res) => {
 // @access  public
 router.post("/get/journal/text", (req, res) => {
   let docuId = req.body.docuId;
+  let docuFile = req.body.docuFile;
   let abstract = req.body.abstract
 
   if (abstract) {
@@ -595,34 +625,42 @@ router.post("/get/journal/text", (req, res) => {
       .catch(err => res.status(404).json(err));
   } else {
     //option to extract text from page 0 to 10
-    var option = { from: 0, to: 10 };
-    let docuFile = req.body.docuFile;
-    const docPath =
-      "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
-      docuFile;
+    // var option = { from: 0, to: 10 };
+    // let docuFile = req.body.docuFile;
+    // const docPath =
+    //   "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
+    //   docuFile;
 
-    const options = {
-      directory: "./routes/downloadedDocu/",
-      filename: docuFile
-    };
+    // const options = {
+    //   directory: "./routes/downloadedDocu/",
+    //   filename: docuFile
+    // };
 
-    download(docPath, options, function (err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
+    // download(docPath, options, function (err) {
+    //   if (err) console.log(err);
+    //   console.log("Document successfully downloaded.");
+    //   pdfUtil.pdfToText(`./routes/downloadedDocu/${options.filename}`, function (err, data) {
 
 
-        fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
-        });
+    //     fs.unlink(`./routes/downloadedDocu/${options.filename}`, (err) => {
+    //       if (err) throw err;
+    //       console.log('successfully deleted');
+    //     });
 
-        res.json({
-          success: true,
-          data: data.toString(),
-          textId: docuId
-        })
-      });
+    //     res.json({
+    //       success: true,
+    //       data: data.toString(),
+    //       textId: docuId
+    //     })
+    //   });
+    // });
+    pdfUtil.pdfToText(`docFiles/journalDocuments/${docuFile}`, function (err, data) {
+     
+      res.json({
+        success: true,
+        data: data.toString(),
+        docuId
+      })
     });
   }
 

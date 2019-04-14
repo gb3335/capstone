@@ -497,10 +497,26 @@ router.post(
       { encoding: "base64" },
       function(err) {
         console.log("file created");
-        const newDocument = {
-          document: filename,
-          lastUpdate: Date.now()
-        };
+
+        pdfUtil.pdfToText(`docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`, function (err, data) {
+          let {text,len} = processor.textProcess(data.toString().toLowerCase());
+
+          const newDocument = {
+            document: filename,
+            content: {
+              text,
+              sentenceLength: len
+            },
+            lastUpdate: Date.now()
+          };
+
+          Journal.findOneAndUpdate(
+            { _id: req.body.journalId },
+            { $set: newDocument },
+            { new: true }
+          ).then(journal => res.json(journal));
+        })
+        
         Journal.findOne({ _id: req.body.journalId }).then(journal => {
           // add activity
           const newActivity = {
@@ -511,11 +527,7 @@ router.post(
           new Activity(newActivity).save();
         });
 
-        Journal.findOneAndUpdate(
-          { _id: req.body.journalId },
-          { $set: newDocument },
-          { new: true }
-        ).then(journal => res.json(journal));
+        
       }
     );
   }
@@ -537,6 +549,10 @@ router.delete(
 
     const newDocument = {
       document: "",
+      content: {
+        text: "",
+        sentenceLength:0
+      },
       lastUpdate: Date.now()
     };
 
