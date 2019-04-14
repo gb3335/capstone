@@ -70,8 +70,7 @@ if (process.env.NODE_ENV === "production") {
         __dirname,
         "client",
         "build",
-        "index.html",
-        "researchDocuments"
+        "index.html"
       )
     );
   });
