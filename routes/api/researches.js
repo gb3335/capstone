@@ -489,24 +489,23 @@ router.post(
     if (req.body.oldFile) {
       // delete research document from client folder
       try {
-        fs.unlinkSync(
-          `client/public/documents/researchDocuments/${req.body.oldFile}`
-        );
+        fs.unlinkSync(`docFiles/researchDocuments/${req.body.oldFile}`, () => {
+          console.log("old file deleted");
+        });
       } catch (error) {
         //console.log(error);
       }
     }
 
     fs.writeFile(
-      `client/public/documents/researchDocuments/${req.body.researchId +
-        "-" +
-        rand}.pdf`,
+      `docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
       function(err) {
         console.log("file created");
         const newDocument = {
-          document: filename
+          document: filename,
+          lastUpdate: Date.now()
         };
         Research.findOne({ _id: req.body.researchId }).then(research => {
           // add activity
@@ -537,15 +536,14 @@ router.delete(
   (req, res) => {
     // delete research document from client folder
     try {
-      fs.unlinkSync(
-        `client/public/documents/researchDocuments/${req.params.filename}`
-      );
+      fs.unlinkSync(`docFiles/researchDocuments/${req.params.filename}`);
     } catch (error) {
       console.log(error);
     }
 
     const newDocument = {
-      document: ""
+      document: "",
+      lastUpdate: Date.now()
     };
 
     Research.findOne({ _id: req.params.research_id }).then(research => {
@@ -563,6 +561,18 @@ router.delete(
       { $set: newDocument },
       { new: true }
     ).then(research => res.json(research));
+  }
+);
+
+// @route   GET api/researches/downloadResDoc
+// @desc    Send the generated pdf to client - research Document download
+// @access  Private
+router.post(
+  "/downloadResDoc",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../docFiles/researchDocuments");
+    res.sendFile(`${reqPath}/${req.body.document}`);
   }
 );
 

@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/journalDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -152,9 +152,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                  name: aut.name,
-                  role: "Author"
-                })
+                    name: aut.name,
+                    role: "Author"
+                  })
                 : "";
             });
 
@@ -469,7 +469,7 @@ router.post(
 );
 
 // @route   POST api/journals/document
-// @desc    Add document to journal
+// @desc    Add / Update document to journal
 // @access  Private
 router.post(
   "/document",
@@ -481,98 +481,43 @@ router.post(
     const filename = req.body.journalId + "-" + rand + ".pdf";
 
     if (req.body.oldFile) {
-      // delete journal document from s3
-      let s3 = new AWS.S3();
-
-      let params = {
-        Bucket: "bulsu-capstone",
-        Key: `journalDocuments/${req.body.oldFile}`
-      };
-
-      s3.deleteObject(params, function (err, data) {
-        if (err) console.log(err, err.stack);
-        else console.log(data);
-      });
-    }
-    // S3 upload
-    s3 = new AWS.S3();
-
-    const base64Data = new Buffer(
-      base64Doc.replace(/^data:image\/\w+;base64,/, ""),
-      "base64"
-    );
-
-    const type = base64String.split(";")[0].split("/")[1];
-
-    const userId = 1;
-
-    let researchObject = {};
-
-    params = {
-      Bucket: "bulsu-capstone",
-      Key: `journalDocuments/${req.body.journalId + "-" + rand}.pdf`, // type is not required
-      Body: base64Data,
-      ACL: "public-read",
-      ContentEncoding: "base64", // required
-      ContentType: `application/pdf` // required. Notice the back ticks
-    };
-
-    s3.upload(params, (err, data) => {
-      if (err) {
-        return console.log(err);
+      // delete research document from client folder
+      try {
+        fs.unlinkSync(`docFiles/journalDocuments/${req.body.oldFile}`, () => {
+          console.log("old file deleted");
+        });
+      } catch (error) {
+        //console.log(error);
       }
-      const docPath =
-        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/journalDocuments/" +
-        filename;
-      const options = {
-        directory: "./routes/downloadedDocu",
-        filename: req.body.journalId + ".pdf"
-      };
-      download(docPath, options, function (err) {
-        if (err) console.log(err);
-        console.log("Document successfully downloaded.");
-        pdfUtil.pdfToText(
-          `./routes/downloadedDocu/${options.filename}`,
-          function (err, data) {
-            fs.unlink(`./routes/downloadedDocu/${options.filename}`, err => {
-              if (err) throw err;
-              console.log("successfully deleted");
-            });
+    }
 
-            let { text, len } = processor.textProcess(
-              data.toString().toLowerCase()
-            );
+    fs.writeFile(
+      `docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`,
+      base64Doc,
+      { encoding: "base64" },
+      function(err) {
+        console.log("file created");
+        const newDocument = {
+          document: filename,
+          lastUpdate: Date.now()
+        };
+        Journal.findOne({ _id: req.body.journalId }).then(journal => {
+          // add activity
+          const newActivity = {
+            title: "Document added to " + journal.title,
+            type: "Journal",
+            by: req.body.username
+          };
+          new Activity(newActivity).save();
+        });
 
-            const newDocument = {
-              document: filename,
-              content: {
-                text,
-                sentenceLength: len
-              },
-              lastUpdate: Date.now()
-            };
-            Journal.findOne({ _id: req.body.journalId }).then(journal => {
-              // add activity
-              const newActivity = {
-                title: "Document added to " + journal.title,
-                type: "Journal",
-                by: req.body.username
-              };
-              new Activity(newActivity).save();
-            });
-
-            Journal.findOneAndUpdate(
-              { _id: req.body.journalId },
-              { $set: newDocument },
-              { new: true }
-            ).then(journal => {
-              delete journal.content;
-              res.json(journal);
-            });
-          }
-        );
-      });
-    });
+        Journal.findOneAndUpdate(
+          { _id: req.body.journalId },
+          { $set: newDocument },
+          { new: true }
+        ).then(journal => res.json(journal));
+      }
+    );
   }
 );
 
@@ -580,28 +525,18 @@ router.post(
 // @desc    Delete document from journal
 // @access  Private
 router.delete(
-  "/document/:journal_id/:filename/:name",
+  "/document/:research_id/:filename/:name",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    //delete journal document from s3
-    let s3 = new AWS.S3();
-
-    let params = {
-      Bucket: "bulsu-capstone",
-      Key: `journalDocuments/${req.params.filename}`
-    };
-
-    s3.deleteObject(params, function (err, data) {
-      if (err) console.log(err, err.stack);
-      else console.log(data);
-    });
+    // delete research document from client folder
+    try {
+      fs.unlinkSync(`docFiles/journalDocuments/${req.params.filename}`);
+    } catch (error) {
+      console.log(error);
+    }
 
     const newDocument = {
       document: "",
-      content: {
-        text: "",
-        sentenceLength: ""
-      },
       lastUpdate: Date.now()
     };
 
@@ -619,10 +554,19 @@ router.delete(
       { _id: req.params.journal_id },
       { $set: newDocument },
       { new: true }
-    ).then(journal => {
-      delete journal.content;
-      res.json(journal);
-    });
+    ).then(journal => res.json(journal));
+  }
+);
+
+// @route   GET api/journals/downloadJourDoc
+// @desc    Send the generated pdf to client - journal Document download
+// @access  Private
+router.post(
+  "/downloadJourDoc",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    let reqPath = path.join(__dirname, "../../docFiles/journalDocuments");
+    res.sendFile(`${reqPath}/${req.body.document}`);
   }
 );
 

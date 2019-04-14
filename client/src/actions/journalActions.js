@@ -65,7 +65,7 @@ export const createReportForJournals = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
+            reader.onloadend = function() {
               const pdfData = {
                 base64: reader.result
               };
@@ -167,7 +167,7 @@ export const createReportForJournal = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function () {
+            reader.onloadend = function() {
               const pdfData = {
                 base64: reader.result
               };
@@ -189,7 +189,6 @@ export const createReportForJournal = reportData => dispatch => {
 
 // Delete Author
 export const deleteAuthor = (journal, id, name) => dispatch => {
-
   dispatch(setJournalLoading());
 
   axios
@@ -206,7 +205,6 @@ export const deleteAuthor = (journal, id, name) => dispatch => {
         payload: err.response.data
       })
     );
-
 };
 
 // Add Images
@@ -301,6 +299,16 @@ export const restoreJournal = (data, history) => dispatch => {
         })
       )
     );
+};
+
+// Download Journal Document
+export const downloadJournalDoc = jourData => dispatch => {
+  axios
+    .post("/api/journals/downloadJourDoc", jourData, { responseType: "blob" })
+    .then(res => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      saveAs(pdfBlob, `${jourData.title}-Document.pdf`);
+    });
 };
 
 export const changeButtonStatus = flag => {

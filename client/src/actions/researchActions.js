@@ -79,6 +79,16 @@ export const createReportForResearch = reportData => dispatch => {
     );
 };
 
+// Download Research Document
+export const downloadResearchDoc = resData => dispatch => {
+  axios
+    .post("/api/researches/downloadResDoc", resData, { responseType: "blob" })
+    .then(res => {
+      const pdfBlob = new Blob([res.data], { type: "application/pdf" });
+      saveAs(pdfBlob, `${resData.title}-Document.pdf`);
+    });
+};
+
 // Change Status of Generate Report Button
 // set loading state
 export const changeButtonStatus = flag => {
@@ -101,7 +111,6 @@ export const setAbstractClick = abstract => {
     payload: abstract
   };
 };
-
 
 // Toggle Research Bin
 export const toggleResearchBin = toggle => {
