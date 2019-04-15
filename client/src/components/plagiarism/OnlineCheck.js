@@ -30,6 +30,7 @@ class OnlineCheck extends Component {
             index: 0,
             words: [],
             errors: {},
+            pattern: "",
             ocrProgress: ""
         }
         this.onChange = this.onChange.bind(this);
@@ -60,17 +61,48 @@ class OnlineCheck extends Component {
     }
 
     onClickShowDetails(index){
-        const {output} = this.props.onlinePlagiarism;
+        const {output, original} = this.props.onlinePlagiarism;
         let words=[];
+        words=output[index].Index;
+        let text = original;
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el !== "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+       
+        words.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
         
-            output[index].Index.forEach(word => {
-                let obj = JSON.parse(word);
-    
-                words.push.apply(words,obj.Pattern.split(' '))
-            })
+        text2 = text2.join(' ');
         
-        
-        this.setState({index, words})
+        this.setState({index, words, pattern:text2})
         this.props.setPlagiarismOnlineShowDetails();
     }
 
@@ -91,14 +123,11 @@ class OnlineCheck extends Component {
         const words = [];
 
         output.forEach((out) => {
-            out.Index.forEach((index) => {
-            let obj = JSON.parse(index);
-            words.push(obj.Pattern)
-            })
+            words.push.apply(words, out.Index)
         })
         var uniqueItems = [...new Set(words)]
 
-        const word = uniqueItems.join(' ');
+        const word = uniqueItems;
         const name =
             this.props.auth.user.name.firstName +
             " " +
@@ -191,7 +220,7 @@ class OnlineCheck extends Component {
                                                 <button onClick={this.onClickHideDetails} className="close">x</button>
                                             </div>
                                             <div className="sourceContent" ref={this.highlightRef}>
-                                                <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
+                                                <OnlineHighlightedResult words={this.state.words} pattern={this.state.pattern}/>
                                             </div>
                                         </div>
                                     </div>

@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
 import Highlighter from "react-highlight-words";
+import parse from 'html-react-parser';
 
 //workers
 import worker from "./workers/workerHide";
@@ -36,7 +37,8 @@ class LocalResult extends Component {
       showDetails: false,
       words: [],
       report: true,
-      chunks: []
+      chunks: [],
+      patternHide: ""
     };
 
     this.forHide = React.createRef();
@@ -47,17 +49,31 @@ class LocalResult extends Component {
       this.props.history.push("/dashboard");
     } else {
       this.props.setPlagiarismLocalHideDetails();
-      const { docuId } = this.props.localPlagiarism;
-      const { journals, journal } = this.props.journal;
+      const { docuId, output } = this.props.localPlagiarism;
+      const { journal } = this.props.journal;
+      let words=[];
+      output.forEach((out) => {
+        out.Index.forEach((index) => {
+          words.push(index)
+        })
+      })
+      // let words2= words.join(' ').split(' ');
+      const uniqueItems = words.filter((v, i, a) => a.indexOf(v) === i); 
 
       // let newob = journals.find(obj => obj._id === docuId);
       const input = {
         docuId: docuId,
         docuFile: journal.document,
+        Indexes: uniqueItems,
+        hide: true,
         abstract: this.props.localPlagiarism.abstract
       }
       this.props.getJournalPattern(input, (e)=> {
-        this.callWhenPatternDone()
+        // this.callWhenPatternDone()
+        this.setState({
+          patternHide: this.props.localPlagiarism.patternHide.data,
+          report: false
+        });
       });
     }
 
@@ -132,10 +148,13 @@ class LocalResult extends Component {
   onClickShowDetails = (id) => {
     const { output } = this.props.localPlagiarism;
     let newob = output.find(obj => obj.Document.Text.Id === id);
+    let index=[];
+    index = newob.Index.filter((v, i, a) => a.indexOf(v) === i); 
     const input = {
       docuId: newob.Document.Pattern.Id,
       docuFile: this.props.journal.journal.document,
       textId: id,
+      Indexes: index,
       abstract: this.props.localPlagiarism.abstract
     }
     this.props.getJournalTextPattern(input);
@@ -156,7 +175,7 @@ class LocalResult extends Component {
       // let child = "";
       // child = node.querySelector('.forhidehighlightSpan');
   
-      let word = this.forHide.current.children[0].innerHTML.toString();
+      let word = this.forHide.current.innerHTML.toString();
   
       const name =
         this.props.auth.user.name.firstName +
@@ -238,7 +257,7 @@ class LocalResult extends Component {
 
   render() {
 
-    const { output, patternLoading, pattern, showDetails } = this.props.localPlagiarism;
+    const { output, patternLoading, pattern, showDetails,patternHide } = this.props.localPlagiarism;
     const { journal } = this.props.journal;
     let outputItems;
 
@@ -364,16 +383,17 @@ class LocalResult extends Component {
         </div>
       )
     } else {
-      forhide = (
-        <Highlighter
-          className="forhidehighlightSpan"
-          highlightClassName="hightlight"
-          searchWords={this.state.words}
-          autoEscape={true}
-          textToHighlight={pattern.data}
-          findChunks={() => this.state.chunks}
-        />
-      )
+      // forhide = (
+      //   <Highlighter
+      //     className="forhidehighlightSpan"
+      //     highlightClassName="hightlight"
+      //     searchWords={this.state.words}
+      //     autoEscape={true}
+      //     textToHighlight={pattern.data}
+      //     findChunks={() => this.state.chunks}
+      //   />
+      // )
+      forhide = parse(this.state.patternHide);
     }
 
 

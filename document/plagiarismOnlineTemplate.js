@@ -235,7 +235,6 @@ mark {
       </div>
 
       <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0/dist/Chart.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js"></script>
 
     <script>
 
@@ -268,18 +267,6 @@ mark {
         })
         
         
-    </script>
-    <script>
-    var options = {
-      "accuracy": {
-          "value": "exactly",
-          "limiters": ['!', '@', '#', '&', '*', '(', ')', '-', '–', '—', '+', '=', '[', ']', '{', '}', '|', ':', ';', '‘', '’', '“', '”', ',', '.', '<', '>', '/', '?']
-      }
-    };
-       
-        var context = document.querySelector(".context");
-        var instance = new Mark(context);
-        instance.mark(${words}, options);
     </script>
     </body>
 

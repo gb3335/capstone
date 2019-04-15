@@ -7,7 +7,10 @@ const initialState = {
     buttonDisable: false,
     showDetails: false,
     generateReport: false,
-    axiosProgress: {},
+    axiosProgress: {
+        tag: "Initializing...",
+        axiosProgress: 0
+      },
     abstract: false,
     option: 1,
 }

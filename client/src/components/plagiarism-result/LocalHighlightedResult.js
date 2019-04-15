@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Highlighter from "react-highlight-words";
+import parse from 'html-react-parser';
+
 
 //workers
 import worker from "./workers/workerHighlight";
@@ -18,24 +20,26 @@ import "./LocalHighlightedResult.css"
     this.state = {
       words: [],
       chunks: [],
-      show: false
+      show: false,
+      pattern: ""
     };
     
   }
 
   componentDidMount(){
     this.worker = new WebWorker(worker);
-    const {output , textId} = this.props.localPlagiarism;
+    const {output , textId, pattern} = this.props.localPlagiarism;
 
-    this.worker.postMessage({"args": {output, textId, textToHighlight: this.props.localPlagiarism.pattern.data}});
+    this.setState({pattern: pattern.data, show: true})
 
-    this.worker.addEventListener("message", event => {
-      this.setState({
-        chunks: event.data.chunks,
-        words: event.data.words,
-        show: true
-      });
-    });
+    // this.worker.postMessage({"args": {output, textId, textToHighlight: this.props.localPlagiarism.pattern.data}});
+
+    // this.worker.addEventListener("message", event => {
+    //   this.setState({
+    //     words: event.data.words,
+    //     show: true
+    //   });
+    // });
     // let Index = output.find(obj => obj.Document.Text.Id === textId);
     
     // let words = [];
@@ -112,17 +116,18 @@ import "./LocalHighlightedResult.css"
       <div>
         {this.state.show ?
         <div className="hightlightSpanDiv">
-          <div className="highlightComponentDiv">
-          <Highlighter
+          
+          {/* <Highlighter
               className="highlightSpan"
               highlightClassName="hightlight"
               searchWords={this.state.words}
               autoEscape={true}
               textToHighlight={pattern.data}
-              findChunks={() => this.state.chunks}
-            />
+              //findChunks={() => this.state.chunks}
+            /> */}
+            {parse(this.state.pattern)}
           
-          </div>
+         
         
         </div> : <Spinner/>}
       </div>

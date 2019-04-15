@@ -17,8 +17,8 @@ export default () => {
             words.push(obj.Pattern)
           })
         })
-        let words2= words.join(' ').split(' ');
-        const uniqueItems = words2.filter((v, i, a) => a.indexOf(v) === i); 
+        // let words2= words.join(' ').split(' ');
+        const uniqueItems = words.filter((v, i, a) => a.indexOf(v) === i); 
 
         const chunks = [];
         const textLow = args.textToHighlight.toLowerCase();

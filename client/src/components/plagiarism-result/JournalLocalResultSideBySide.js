@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Spinner from "../common/Spinner";
+import parse from 'html-react-parser';
 
 import './LocalResultSideBySide.css'
 
@@ -18,7 +19,11 @@ class LocalResultSideBySide extends Component {
     super();
     this.state = {
       level: 0,
-      words: []
+      words: [],
+      pattern: "",
+      text: "",
+      showPattern: true,
+      showText: true
     };
     this.textItem = React.createRef();
     this.patternItem = React.createRef();
@@ -32,7 +37,7 @@ class LocalResultSideBySide extends Component {
     if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
       this.props.history.push("/dashboard");
     }else{
-    const { output, docuId } = this.props.localPlagiarism;
+    const { output, docuId, abstract, pattern, text } = this.props.localPlagiarism;
     const { journals } = this.props.journal
 
     let level = 0;
@@ -47,37 +52,47 @@ class LocalResultSideBySide extends Component {
     }
 
     this.setState({ level })
+    let words = output[0].Index.patternIndex;
+    const uniqueItems = words.filter((v, i, a) => a.indexOf(v) === i); 
 
     const input = {
       docuId: docuId,
       docuFile: this.props.journal.journal.document,
-      textId: output[0].Document.Text.Id
+      textId: output[0].Document.Text.Id,
+      Indexes: uniqueItems
     }
 
-    this.props.getJournalSourcePattern(input);
+    this.props.getJournalSourcePattern(input, (e) =>{
+      this.setState({pattern: pattern.data, showPattern: false})
+    });
+
+    let words2 = output[0].Index.textIndex;
+    const uniqueItems2 = words2.filter((v, i, a) => a.indexOf(v) === i); 
 
     let textdocument = journals.find(obj => obj._id === output[0].Document.Text.Id)
 
     const input2 = {
       docuId: output[0].Document.Text.Id,
       docuFile: textdocument.document,
-      textId: output[0].Document.Text.Id
+      textId: output[0].Document.Text.Id,
+      Indexes: uniqueItems2
     }
 
 
-    this.props.getJournalTargetText(input2);
+    this.props.getJournalTargetText(input2, (e) =>{
+      this.setState({text: text.data, showText:false})
+    });
+    // let words = [];
+    // if (output[0].Index.length > 0) {
+    //   output[0].Index.forEach((index => {
+    //     let obj = JSON.parse(index);
 
-    let words = [];
-    if (output[0].Index.length > 0) {
-      output[0].Index.forEach((index => {
-        let obj = JSON.parse(index);
-
-        words.push.apply(words, obj.Pattern.split(' '))
-      }))
-    }
+    //     words.push.apply(words, obj.Pattern.split(' '))
+    //   }))
+    // }
 
 
-    this.setState({ words })
+    // this.setState({ words })
 
     }
   }
@@ -153,8 +168,8 @@ class LocalResultSideBySide extends Component {
     })
     console.log(comparedJournal)
 
-    let pattern = this.patternItem.current.children[0].innerHTML.toString();
-    let text = this.textItem.current.children[0].innerHTML.toString();
+    let pattern = this.patternItem.current.innerHTML.toString();
+    let text = this.textItem.current.innerHTML.toString();
     // pattern = pattern.innerHTML.toString()
     // text = text.innerHTML.toString()
 
@@ -187,7 +202,7 @@ class LocalResultSideBySide extends Component {
     let patternItem;
     let textItem;
 
-    if (patternLoading || pattern === "") {
+    if (patternLoading || pattern === "" || this.state.showPattern) {
       patternItem = (
         <div className="row">
           <div className="col-md-12">
@@ -199,7 +214,7 @@ class LocalResultSideBySide extends Component {
       patternItem = (
         <div className="hightlightSpanDiv">
           <div className="highlightComponentDiv" ref={this.patternItem}>
-            <Highlighter
+            {/* <Highlighter
               id="highlightPat"
               className="highlightSpan"
               highlightClassName="hightlight"
@@ -207,14 +222,15 @@ class LocalResultSideBySide extends Component {
               autoEscape={true}
               textToHighlight={pattern.data}
               findChunks={this.findChunksAtBeginningOfWords}
-            />
+            /> */}
+            {parse(pattern.data)}
           </div>
 
         </div>
       )
     }
 
-    if (textLoading || text === "") {
+    if (textLoading || text === "" || this.state.showText) {
       textItem = (
         <div className="row">
           <div className="col-md-12">
@@ -226,7 +242,7 @@ class LocalResultSideBySide extends Component {
       textItem = (
         <div className="hightlightSpanDiv">
           <div className="highlightComponentDiv" ref={this.textItem}>
-            <Highlighter
+            {/* <Highlighter
               id="highlightText"
               className="highlightSpan"
               highlightClassName="hightlight"
@@ -234,7 +250,8 @@ class LocalResultSideBySide extends Component {
               autoEscape={true}
               textToHighlight={text.data}
               findChunks={this.findChunksAtBeginningOfWords}
-            />
+            /> */}
+            {parse(text.data)}
           </div>
 
         </div>

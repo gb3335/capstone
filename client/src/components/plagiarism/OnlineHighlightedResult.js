@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import Highlighter from "react-highlight-words";
+import parse from 'html-react-parser';
 
 
 import "./OnlineHighlightedResult.css"
@@ -87,15 +88,15 @@ import "./OnlineHighlightedResult.css"
         <div className="hightlightSpanDivs">
           <div className="highlightComponentDivs">
           
-            <Highlighter
+            {/* <Highlighter
               className="highlightSpan"
               highlightClassName="hightlight"
               searchWords={this.state.words}
               autoEscape={true}
               textToHighlight={this.state.pattern}
               findChunks={this.findChunksAtBeginningOfWords}
-            />
-            
+            /> */}
+            {parse(this.state.pattern)}
           </div>
           
         </div>

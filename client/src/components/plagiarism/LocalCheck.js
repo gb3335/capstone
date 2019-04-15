@@ -33,6 +33,7 @@ class LocalCheck extends Component {
             words: [],
             errors: {},
             option: 1,
+            pattern: "",
             ocrProgress: ""
         }
 
@@ -75,17 +76,51 @@ class LocalCheck extends Component {
 
     onClickShowDetails(id){
         
-        const {output} = this.props.localRawPlagiarism;
+        const {output, original} = this.props.localRawPlagiarism;
         let newob = output.find(obj => obj.Document.Text.Id === id);
         let words=[];
+        words=newob.Index;
+        let text = original;
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
 
-        newob.Index.forEach(word => {
-            let obj = JSON.parse(word);
-
-            words.push.apply(words,obj.Pattern.split(' '))
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el !== "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
         })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
 
-        this.setState({id, words}, ()=>{
+        words.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
+
+
+
+        this.setState({id, words, pattern: text2}, ()=>{
             this.props.setPlagiarismRawLocalShowDetails();
         })
        
@@ -120,14 +155,11 @@ class LocalCheck extends Component {
         const words = [];
 
         output.forEach((out) => {
-            out.Index.forEach((index) => {
-            let obj = JSON.parse(index);
-            words.push(obj.Pattern)
-            })
+                words.push.apply(words, out.Index)
         })
         var uniqueItems = [...new Set(words)]
 
-        const word = uniqueItems.join(' ');
+        const word = uniqueItems;
         const name =
             this.props.auth.user.name.firstName +
             " " +
@@ -246,7 +278,7 @@ class LocalCheck extends Component {
                                         <button onClick={this.onClickHideDetails} className="close">x</button>
                                     </div>
                                     <div className="sourceContent">
-                                        <OnlineHighlightedResult words={this.state.words} pattern={this.state.q}/>
+                                        <OnlineHighlightedResult words={this.state.words} pattern={this.state.pattern}/>
                                     </div>
                                 </div>
                             </div>

@@ -14,6 +14,7 @@
     "downshift": "^3.2.7",
     "fast-sort": "^1.5.6",
     "file-saver": "^2.0.1",
+    "html-react-parser": "^0.7.0",
     "initials": "^3.0.0",
     "itsa-react-docviewer": "^16.1.1",
     "js-string-compression": "^1.0.1",

@@ -2,54 +2,110 @@ const checkPlagiarism = (
   text,
   pattern,
   textSentenceLen,
-  patternSentenceLen
+  patternSentenceLen,
+  fromFlag
 ) => {
   let result = {};
 
   let textWordLen;
   let patternWordLen;
   let curHitNum = 0;
-  let index = [];
-
+  let Index = [];
+  let textIndex= [];
   let sentenceSimilarNum = 0;
-
-  pattern = pattern.split(".");
-  text = text.split(".");
-  text.forEach(t => {
-    if (t !== "") {
+  if(fromFlag){
+    pattern = pattern.split(".");
+    text = text.split(".");
+    text.forEach((t, textindex)=> {
       t = t.replace(/^\s+/g, "").replace(/\s+$/, "");
-      t = t.split(" ").sort();
-      textWordLen = t.length;
-      pattern.forEach(pat => {
-        if (pat !== "") {
-          pat = pat.replace(/^\s+/g, "").replace(/\s+$/, "");
-          pat = pat.split(" ");
-          patternWordLen = pat.length;
-          pat.forEach(p => {
-            let binary = binarySearch(t, p);
-            if (binary !== -1) {
-              curHitNum++;
-            }
-          });
-          if (calculateSentence(curHitNum, textWordLen, patternWordLen) > 80) {
-            sentenceSimilarNum++;
-            index.push(`{ "Pattern": "${pat.join(" ")}"}`);
-          }
-          curHitNum = 0;
-        }
-      });
+      if (t !== "") {
+         
+            t = t.split(" ").sort();
+            textWordLen = t.length;
+            pattern.forEach((pat,index) => {
+              pat = pat.replace(/^\s+/g, "").replace(/\s+$/, "");
+              if (pat !== "") {
+                  
+                  pat = pat.split(" ");
+                  patternWordLen = pat.length;
+                  pat.forEach(p => {
+                    let binary = binarySearch(t, p);
+                    if (binary !== -1) {
+                      curHitNum++;
+                    }
+                  });
+                  if(curHitNum>0){
+                    if (calculateSentence(curHitNum, textWordLen, patternWordLen) > 80) {
+                      sentenceSimilarNum++;
+                      textIndex.push(textindex)
+                      Index.push(index);
+                    }
+                  }
+                  curHitNum = 0;
+                
+              }
+            });
+      }
+    });
+    result.pattern = (sentenceSimilarNum / patternSentenceLen) * 100;
+    if (result.pattern > 100) {
+      result.pattern = 100;
     }
-  });
-  result.pattern = (sentenceSimilarNum / patternSentenceLen) * 100;
-  if (result.pattern > 100) {
-    result.pattern = 100;
+    result.text = (sentenceSimilarNum / textSentenceLen) * 100;
+    if (result.text > 100) {
+      result.text = 100;
+    }
+    let newIndex = {
+      patternIndex : Index,
+      textIndex
+    }
+    result.index = newIndex;
+    return result;
+  }else{
+    pattern = pattern.split(".");
+    text = text.split(".");
+    text.forEach((t, textIndex)=> {
+      t = t.replace(/^\s+/g, "").replace(/\s+$/, "");
+      if (t !== "") {
+         
+            t = t.split(" ").sort();
+            textWordLen = t.length;
+            pattern.forEach((pat,index) => {
+              pat = pat.replace(/^\s+/g, "").replace(/\s+$/, "");
+              if (pat !== "") {
+                  
+                  pat = pat.split(" ");
+                  patternWordLen = pat.length;
+                  pat.forEach(p => {
+                    let binary = binarySearch(t, p);
+                    if (binary !== -1) {
+                      curHitNum++;
+                    }
+                  });
+                  if(curHitNum>0){
+                    if (calculateSentence(curHitNum, textWordLen, patternWordLen) > 80) {
+                      sentenceSimilarNum++;
+                      Index.push(index);
+                    }
+                  }
+                  curHitNum = 0;
+                
+              }
+            });
+      }
+    });
+    result.pattern = (sentenceSimilarNum / patternSentenceLen) * 100;
+    if (result.pattern > 100) {
+      result.pattern = 100;
+    }
+    result.text = (sentenceSimilarNum / textSentenceLen) * 100;
+    if (result.text > 100) {
+      result.text = 100;
+    }
+    result.index = Index;
+    return result;
   }
-  result.text = (sentenceSimilarNum / textSentenceLen) * 100;
-  if (result.text > 100) {
-    result.text = 100;
-  }
-  result.index = index;
-  return result;
+    
 };
 
 const calculateSentence = (numOfHits, textWordLen, patternWordLen) => {

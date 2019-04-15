@@ -64,25 +64,14 @@ router.get("/test", (req, res) => {
   // console.log(newString.text);
   // console.log(newString.len);
 
-  // pdfUtil.pdfToText(`./routes/downloadedDocu/5c832df01cf56e239472296b.pdf`, function(err, data) {
+  // pdfUtil.pdfToText(`./routes/downloadedDocu/Annualreport20132014English.pdf`, function(err, data) {
   //   if (err) throw(err);
-  //   //console.log(data); //print all text
-  //   let text = processor.textProcess(data.toString().toLowerCase());
-  //   let arr = processor.arrayProcess(data.toString().toLowerCase());
-  //   console.log(text);
-  //   let arrlen = arr.len;
-  //   let textlen = text.len;
-
-
-  //   const lens = {
-  //     array: arrlen,
-  //     text: textlen
-  //   }
-
-  //   res.json({ 
-  //     success: true,
-  //     data: lens
-  //   })
+  //   data =data.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+  //   data = data.replace(/[^A-Za-z0-9. ]/g, "");
+  //   data = data.replace(/\s+/g," ");
+  //   let test = data.split('.')
+  //   res.send(test);
+    
   // });
 
   // request.get("https://pypi.org/project/aca/", function(error, response, body){
@@ -112,10 +101,10 @@ router.get("/test", (req, res) => {
 
   // })
 
-  scraping("https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/short/complete.html", function (response) {
-    let data = response.join(' ');
-    res.send(data);//Returns text
-  });
+  // scraping("https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/short/complete.html", function (response) {
+  //   let data = response.join(' ');
+  //   res.send(data);//Returns text
+  // });
 
   // res.json({ msg: "Plagiarism Works!" });
 });
@@ -397,6 +386,8 @@ router.post("/get/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let abstract = req.body.abstract
   let docuFile = req.body.docuFile;
+  let Index = req.body.Indexes;
+  let hide = req.body.hide;
   if (abstract) {
     Research.findOne({ _id: docuId }, { content: 0 })
       .then(research => {
@@ -404,9 +395,46 @@ router.post("/get/pattern", (req, res) => {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
+        let text = stripHtml(research.abstract);
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
         res.json({
           success: true,
-          data: stripHtml(research.abstract),
+          data: text2,
           docuId
         })
 
@@ -447,12 +475,48 @@ router.post("/get/pattern", (req, res) => {
     // });
     let reqPath = path.join(__dirname, "../../");
     pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${docuFile}`, function (err, data) {
-     
-      res.json({
-        success: true,
-        data: data.toString(),
-        docuId
-      })
+      
+        let text2 = data.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
+        res.json({
+          success: true,
+          data: text2,
+          docuId
+        })
     });
 
   }
@@ -467,7 +531,8 @@ router.post("/get/pattern", (req, res) => {
 router.post("/get/journal/pattern", (req, res) => {
   let docuId = req.body.docuId;
   let docuFile = req.body.docuFile;
-  let abstract = req.body.abstract
+  let abstract = req.body.abstract;
+  let Index = req.body.Indexes;
   if (abstract) {
     Journal.findOne({ _id: docuId }, { content: 0 })
       .then(journal => {
@@ -475,9 +540,46 @@ router.post("/get/journal/pattern", (req, res) => {
           errors.noresearch = "There is no data for this journal";
           res.status(404).json(errors);
         }
+        let text = stripHtml(journal.abstract);
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
         res.json({
           success: true,
-          data: stripHtml(journal.abstract),
+          data: text2,
           docuId
         })
 
@@ -519,11 +621,47 @@ router.post("/get/journal/pattern", (req, res) => {
     let reqPath = path.join(__dirname, "../../");
     pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${docuFile}`, function (err, data) {
      
-      res.json({
-        success: true,
-        data: data.toString(),
-        docuId
-      })
+      let text2 = data.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
+        res.json({
+          success: true,
+          data: text2,
+          docuId
+        })
     });
 
   }
@@ -539,7 +677,8 @@ router.post("/get/journal/pattern", (req, res) => {
 router.post("/get/text", (req, res) => {
   let docuId = req.body.docuId;
   let docuFile = req.body.docuFile;
-  let abstract = req.body.abstract
+  let abstract = req.body.abstract;
+  let Index = req.body.Indexes;
 
   if (abstract) {
     Research.findOne({ _id: docuId }, { content: 0 })
@@ -548,9 +687,46 @@ router.post("/get/text", (req, res) => {
           errors.noresearch = "There is no data for this research";
           res.status(404).json(errors);
         }
+        let text = stripHtml(research.abstract);
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
         res.json({
           success: true,
-          data: stripHtml(research.abstract),
+          data: text2,
           docuId
         })
 
@@ -590,10 +766,45 @@ router.post("/get/text", (req, res) => {
     // });
     let reqPath = path.join(__dirname, "../../");
     pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${docuFile}`, function (err, data) {
-     
+      let text2 = data.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+      // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+      
+      text2 = text2.join(' ');
       res.json({
         success: true,
-        data: data.toString(),
+        data: text2,
         docuId
       })
     });
@@ -607,7 +818,8 @@ router.post("/get/text", (req, res) => {
 router.post("/get/journal/text", (req, res) => {
   let docuId = req.body.docuId;
   let docuFile = req.body.docuFile;
-  let abstract = req.body.abstract
+  let abstract = req.body.abstract;
+  let Index = req.body.Indexes;
 
   if (abstract) {
     Journal.findOne({ _id: docuId }, { content: 0 })
@@ -616,9 +828,46 @@ router.post("/get/journal/text", (req, res) => {
           errors.nojournal = "There is no data for this journal";
           res.status(404).json(errors);
         }
+        let text = stripHtml(journal.abstract);
+        let text2 = text.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+        // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+        
+        text2 = text2.join(' ');
         res.json({
           success: true,
-          data: stripHtml(journal.abstract),
+          data: text2,
           docuId
         })
 
@@ -658,10 +907,45 @@ router.post("/get/journal/text", (req, res) => {
     // });
     let reqPath = path.join(__dirname, "../../");
     pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${docuFile}`, function (err, data) {
-     
+      let text2 = data.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+      // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        Index.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+      
+      text2 = text2.join(' ');
       res.json({
         success: true,
-        data: data.toString(),
+        data: text2,
         docuId
       })
     });
@@ -857,6 +1141,8 @@ router.post("/local/result", (req, res) => {
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
   let abstract = req.body.abstract;
+  let textFile = req.body.textFile;
+  let fromFlag = req.body.fromFlag;
   let raw = req.body.raw;
   let q = req.body.q;
   if (abstract) {
@@ -884,7 +1170,7 @@ router.post("/local/result", (req, res) => {
           
           let pattern = output.text;
           let lenPattern = output.len;
-          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern,fromFlag);
           let result;
           if(raw){
             result = {
@@ -971,51 +1257,56 @@ router.post("/local/result", (req, res) => {
               pattern = researchPattern.content.text;
               lenPattern = researchPattern.content.sentenceLength;
             }
-            let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern);
-            let result;
-          if(raw){
-            result = {
-              SimilarityScore: similarity.pattern,
-              DocumentScore: {
-                Pattern: similarity.pattern,
-                Text: similarity.text
-              },
-              Document: {
-                Pattern: {
-                  Name: 'Not Applicable',
-                  Id: 'Not Applicable'
-                },
-                Text: {
-                  Name: textTitle,
-                  Id: textId}
-              },
-              Index: similarity.index
-            }
-          }else {
-            result = {
-              SimilarityScore: similarity.pattern,
-              DocumentScore: {
-                Pattern: similarity.pattern,
-                Text: similarity.text
-              },
-              Document: {
-                Pattern: {
-                  Name: title,
-                  Id: docuId
-                },
-                Text: {
-                  Name: textTitle,
-                  Id: textId}
-              },
-              Index: similarity.index
-            }
-          }
-            res.json({
-              localPlagiarism: {
-                success: true,
-                data: result
+            // let reqPath = path.join(__dirname, "../../");
+            // pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${researchPattern.document}`, function (err, data) {
+              let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern,fromFlag);
+              let result;
+              if(raw){
+                result = {
+                  SimilarityScore: similarity.pattern,
+                  DocumentScore: {
+                    Pattern: similarity.pattern,
+                    Text: similarity.text
+                  },
+                  Document: {
+                    Pattern: {
+                      Name: 'Not Applicable',
+                      Id: 'Not Applicable'
+                    },
+                    Text: {
+                      Name: textTitle,
+                      Id: textId}
+                  },
+                  Index: similarity.index
+                }
+              }else {
+                result = {
+                  SimilarityScore: similarity.pattern,
+                  DocumentScore: {
+                    Pattern: similarity.pattern,
+                    Text: similarity.text
+                  },
+                  Document: {
+                    Pattern: {
+                      Name: title,
+                      Id: docuId
+                    },
+                    Text: {
+                      Name: textTitle,
+                      Id: textId}
+                  },
+                  Index: similarity.index
+                }
               }
-            });
+                res.json({
+                  localPlagiarism: {
+                    success: true,
+                    data: result
+                  }
+                });
+             
+            // });
+            
           })
         
         
@@ -1105,6 +1396,7 @@ router.post("/local/journal/result", (req, res) => {
   let title = req.body.title
   let textId = req.body.textId;
   let textTitle = req.body.textTitle;
+  let fromFlag = req.body.fromFlag;
   let textFile = req.body.textFile;
   let abstract = req.body.abstract;
   let raw = req.body.raw;
@@ -1133,7 +1425,7 @@ router.post("/local/journal/result", (req, res) => {
           let pattern = output.text;
           let lenPattern = output.len;
 
-          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern,fromFlag);
           let result;
           if(raw){
             result = {
@@ -1214,54 +1506,56 @@ router.post("/local/journal/result", (req, res) => {
             pattern = journalPattern.content.text;
             lenPattern = journalPattern.content.sentenceLength;
           }
-          
+          // pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${journalPattern.document}`, function (err, data) {
+            let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern,fromFlag);
+            let result;
+            if(raw){
+              result = {
+                SimilarityScore: similarity.pattern,
+                DocumentScore: {
+                  Pattern: similarity.pattern,
+                  Text: similarity.text
+                },
+                Document: {
+                  Pattern: {
+                    Name: 'Not Applicable',
+                    Id: 'Not Applicable'
+                  },
+                  Text: {
+                    Name: textTitle,
+                    Id: textId}
+                },
+                Index: similarity.index
+              }
+            }else {
+              result = {
+                SimilarityScore: similarity.pattern,
+                DocumentScore: {
+                  Pattern: similarity.pattern,
+                  Text: similarity.text
+                },
+                Document: {
+                  Pattern: {
+                    Name: title,
+                    Id: docuId
+                  },
+                  Text: {
+                    Name: textTitle,
+                    Id: textId}
+                },
+                Index: similarity.index
+              }
+            }
+            res.json({
+              localPlagiarism: {
+                success: true,
+                data: result
+              }
+            });
+          // })
 
           
-          let similarity = plagiarism_binary_search.checkPlagiarism(text, pattern, lenText, lenPattern);
-          let result;
-          if(raw){
-            result = {
-              SimilarityScore: similarity.pattern,
-              DocumentScore: {
-                Pattern: similarity.pattern,
-                Text: similarity.text
-              },
-              Document: {
-                Pattern: {
-                  Name: 'Not Applicable',
-                  Id: 'Not Applicable'
-                },
-                Text: {
-                  Name: textTitle,
-                  Id: textId}
-              },
-              Index: similarity.index
-            }
-          }else {
-            result = {
-              SimilarityScore: similarity.pattern,
-              DocumentScore: {
-                Pattern: similarity.pattern,
-                Text: similarity.text
-              },
-              Document: {
-                Pattern: {
-                  Name: title,
-                  Id: docuId
-                },
-                Text: {
-                  Name: textTitle,
-                  Id: textId}
-              },
-              Index: similarity.index
-            }
-          }
-          res.json({
-            localPlagiarism: {
-              success: true,
-              data: result
-            }
-          });
+          
 
         })
 
@@ -1377,6 +1671,47 @@ router.get('/get/report/local/side', (req, res) => {
 
 router.post('/create/report/online', (req, res) => {
   req.connection.setTimeout(1000 * 60 * 10);
+  
+      
+      let text2 = req.body.pattern.replace(/(\r\n|\n|\r)/gm," ").replace(/\s+/g," ").replace(/[.]{2,}/g, '.');
+      // text2 = text2.replace(/[^A-Za-z0-9`~!@#$%^&*()_|+\-=?;:'",. \{\}\[\]\\\/]/g, "");
+        // text2 = text2.replace(/[^A-Za-z0-9. ]/g, "");
+        text2 = text2.replace(/[<>]/g,"")
+        text2 = text2.replace(/\s+/g," ");
+
+        text2 = text2.split('.');
+        text2 = text2.filter(el =>{
+          return el != "";
+        });
+        let newtext=[];
+        text2.forEach(t => {
+          t = t.replace(/^\s+/g, '').replace(/\s+$/,"");
+          let fortest= t.replace(/[^A-Za-z0-9]/g, "");
+          
+            if(fortest!==""){
+              t=t+'.';
+              newtext.push(t);
+            }
+         
+        })
+        text2 = newtext;
+        // console.log(text2.length)
+        // // console.log(Index.length)
+        // function sortNumber(a,b) {
+        //   return a - b;
+        // }
+        // Index = Index.sort(sortNumber)
+
+        req.body.word.forEach((index)=>{  
+          // console.log(index)
+          text2[index] = `<mark>${text2[index]}</mark>`
+          
+        })
+      
+      req.body.pattern = text2.join(' ');
+
+
+
   const printedBy = req.body.printedBy;
   const options = {
     border: {

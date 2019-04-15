@@ -90,37 +90,73 @@ const textProcess = (text) => {
                 return el != "";
         });
         let newword= [];
+        let sentenceMinus=0;
         words.forEach((word)=>{
                 word = word.replace(/^\s+/g, '').replace(/\s+$/,"");
                 
                 word = word.split(' ');
-                word = sw.removeStopwords(word);
-                word = duplicateArray(word);
-                
                 word = word.filter(el =>{
                         return el != "";
                 });
-
-                word = word.join(' ');
-                if(word!==""){
-                        let flag=0;
-                        let word1 = word.replace(/[^A-Za-z0-9 ]/g, "").split(' ');
-                        word1.sort();
-                        newword.forEach((n)=> {
-                                let word2 = n.replace(/[^A-Za-z0-9 ]/g, "").split(' ');        
-                                if(JSON.stringify(word1) === JSON.stringify(word2)){
-                                        flag=1;
+                if(word.length>0){
+                        // console.log(wordCopy)
+                        word = sw.removeStopwords(word);
+                        
+                        word = duplicateArray(word);
+                        
+                        word = word.join(' ');
+                        if(word!==""){
+                                let flag=0;
+                                let word1 = word.replace(/[^A-Za-z0-9 ]/g, "").split(' ');
+                                word1.sort();
+                                newword.forEach((n)=> {
+                                        let word2 = n.replace(/[^A-Za-z0-9 ]/g, "")
+                                        if(word2!==" "){
+                                                word2 = word2.split(' ');    
+                                                word2 = word2.sort();
+                                                if(JSON.stringify(word1) === JSON.stringify(word2)){
+                                                        flag=1;
+                                                }
+                                        }
+                                        
+                                })      
+                                if(flag===0){
+                                        word = word+'.';
+                                        newword.push(word);
+                                }else{
+                                        sentenceMinus++;
+                                        word = " ";
+                                        word = word+'.';
+                                        newword.push(word);
                                 }
-                        })      
-                        if(flag===0){
+                        }else{
+                                sentenceMinus++;
+                                word = " ";
                                 word = word+'.';
                                 newword.push(word);
                         }
-                }     
+                }
+                
+                
+                // if(word!==""){
+                //         let flag=0;
+                //         let word1 = word.replace(/[^A-Za-z0-9 ]/g, "").split(' ');
+                //         word1.sort();
+                //         newword.forEach((n)=> {
+                //                 let word2 = n.replace(/[^A-Za-z0-9 ]/g, "").split(' ');        
+                //                 if(JSON.stringify(word1) === JSON.stringify(word2)){
+                //                         flag=1;
+                //                 }
+                //         })      
+                //         if(flag===0){
+                //                 word = word+'.';
+                //                 newword.push(word);
+                //         }
+                // }     
         })
-        words = newword.join(' ');
+        words = newword.join('');
         let forlen = words.split('.').length-1;
-        
+        forlen=forlen-sentenceMinus;
         return {text: words,len:forlen};
 
         // REAL SHERLOCK END

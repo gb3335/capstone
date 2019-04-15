@@ -1,10 +1,11 @@
-import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_SET_JOURNAL, PLAGIARISM_LOCAL_GLOBAL_CHECK, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE, PLAGIARISM_LOCAL_AXIOS_PROGRESS } from "../actions/types";
+import { PLAGIARISM_LOCAL, PLAGIARISM_LOCAL_SET_JOURNAL, PLAGIARISM_LOCAL_PATTERN_HIDE, PLAGIARISM_LOCAL_GLOBAL_CHECK, PLAGIARISM_LOCAL_LOADING, PLAGIARISM_LOCAL_ID, PLAGIARISM_LOCAL_PATTERN, PLAGIARISM_LOCAL_PATTERN_LOADING, PLAGIARISM_LOCAL_TEXT_ID, PLAGIARISM_LOCAL_SHOW_DETAILS, PLAGIARISM_LOCAL_HIDE_DETAILS, PLAGIARISM_LOCAL_SET_FROM, PLAGIARISM_LOCAL_TEXT_LOADING, PLAGIARISM_LOCAL_TEXT, PLAGIARISM_LOCAL_GENERATE_REPORT, PLAGIARISM_LOCAL_SET_ABSTRACT, PLAGIARISM_LOCAL_CLEAR_STATE, PLAGIARISM_LOCAL_AXIOS_PROGRESS } from "../actions/types";
 
 const initialState = {
   output: {},
   docuId: "",
   textId: "",
   pattern: "",
+  patterHide: "",
   text: "",
   showDetails: false,
   patternLoading: false,
@@ -15,7 +16,10 @@ const initialState = {
   abstract: false,
   journal: false,
   globalLoading: {},
-  axiosProgress: {}
+  axiosProgress: {
+    tag: "Initializing...",
+    axiosProgress: 0
+  }
 };
 
 export default function (state = initialState, action) {
@@ -46,6 +50,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         pattern: action.payload,
+        patternLoading: false
+      };
+    case PLAGIARISM_LOCAL_PATTERN_HIDE:
+      return {
+        ...state,
+        patternHide: action.payload,
         patternLoading: false
       };
     case PLAGIARISM_LOCAL_TEXT:

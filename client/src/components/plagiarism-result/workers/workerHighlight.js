@@ -12,11 +12,11 @@ export default () => {
             Index.Index.forEach((index =>{
               let obj = JSON.parse(index);
         
-              words.push.apply(words,obj.Pattern.split(' '))
+              words.push(obj.Pattern)
             }))
           }
 
-          const chunks = [];
+          let chunks = [];
           const textLow = args.textToHighlight.toLowerCase();
           // Match at the beginning of each new word
           // New word start after whitespace or - (hyphen)
