@@ -1,11 +1,6 @@
-const nodemailer = require('nodemailer');
+if(process.env.NODE_ENV === 'production'){
+    module.exports = require('./transporter_prod');
+}else{
+    module.exports = require('./transporter_dev');
+}
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: 'dummykrishield@gmail.com',
-    pass: 'krishieldkyle'
-  }
-});
-
-module.exports = transporter
