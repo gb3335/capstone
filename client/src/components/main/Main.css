@@ -54,6 +54,10 @@
   padding-top: 15px;
 }
 
+[class^="MuiTableRow-root-"]:nth-child(n+1):hover{
+  background-color: rgba(31, 199, 101, 0.295);
+}
+
 @media (max-width: 962px) {
   .navmain {
     width: calc(100% - 50px);
