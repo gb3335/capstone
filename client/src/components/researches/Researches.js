@@ -273,7 +273,10 @@ class Researches extends Component {
             </div>
             <br />
             {action}
-            {researchItems}
+            <div className="tableClassname">
+                {researchItems}
+            </div>
+            
           </div>
         </div>
       </div>

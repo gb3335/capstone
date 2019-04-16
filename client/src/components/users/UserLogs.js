@@ -799,7 +799,10 @@ class UserLogs extends Component {
                 <i className="fas fa-redo-alt text-info mr-1" /> Reset Dates
             </Link>
             </div>
-            {activityItems}
+            <div className="tableClassname">
+              {activityItems}
+            </div>
+            
           </div>
         </div>
       </div>

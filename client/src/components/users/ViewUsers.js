@@ -310,7 +310,10 @@ class ViewUsers extends Component {
             </div>
             <br />
             <RegisterActions />
-            {userItems}
+            <div className="tableClassname">
+              {userItems}
+            </div>
+            
           </div>
         </div>
       </div>

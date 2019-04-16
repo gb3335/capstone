@@ -283,7 +283,9 @@ class Journals extends Component {
             </div>
             <br />
             {action}
-            {journalItems}
+            <div className="tableClassname">
+              {journalItems}
+            </div>
           </div>
         </div>
       </div>

@@ -268,7 +268,10 @@ class JournalSideBySide extends Component {
                 </button>
           </div>
         </div>
-        {journalItems}
+        <div className="tableClassname">
+          {journalItems}
+        </div>
+        
       </div>
     )
   }

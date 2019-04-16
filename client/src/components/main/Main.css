@@ -54,11 +54,7 @@
   padding-top: 15px;
 }
 
-[class^="MuiTableRow-root-"]:nth-child(n+1):hover{
-  background-color: rgba(31, 199, 101, 0.295);
-}
-
-[class^="jss288"]:nth-child(n+1):hover{
+.tableClassname tr:nth-child(n+1):hover{
   background-color: rgba(31, 199, 101, 0.295);
 }
 

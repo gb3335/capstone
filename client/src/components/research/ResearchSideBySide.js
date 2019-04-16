@@ -278,7 +278,10 @@ class ResearchSideBySide extends Component {
                 </button>
           </div>
         </div>
-        {researchItems}
+        <div className="tableClassname">
+          {researchItems}
+        </div>
+       
       </div>
     )
   }
