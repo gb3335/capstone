@@ -619,6 +619,7 @@ router.post(
           }
         });
 
+        
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
@@ -629,7 +630,6 @@ router.post(
               .catch(err => console.log(err));
           });
         });
-        
       }
     });
   }
