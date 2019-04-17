@@ -14,6 +14,10 @@ const fs = require("fs");
 const fse = require('fs-extra')
 const rimraf = require("rimraf");
 
+// child process
+const exec = require('child_process').exec;
+const Promise = require('bluebird');
+
 // Backup and Restore
 const backup = require("mongodb-backup");
 var restore = require("mongodb-restore");
@@ -1185,6 +1189,13 @@ router.get(
   }
 );
 
+const promiseFromChildProcess = (child) => {
+  return new Promise(function (resolve, reject) {
+      child.addListener("error", reject);
+      child.addListener("exit", resolve);
+  });
+}
+
 // @route   GET api/users/mongdb-backup
 // @desc    Backup mongodb
 // @access  Private
@@ -1207,19 +1218,42 @@ router.post(
     backup(
       {
         uri: mongoConfig.mongoURI, // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
-        root: path.join(__dirname, `../../backups/${date}`)
-      },
-      new BackupModel(newBackup)
-        .save()
-        .then(backup => res.json({ backup, "errors.success": true }))
+        root: path.join(__dirname, `../../backups/${date}`),
+        callback: () => {
+          const docOldPath = path.join(__dirname, `../../docFiles`)
+          const docNewPath = path.join(__dirname, `../../backups/${date}/docFiles`)
+          
+          fse.copy(docOldPath, docNewPath, err => {
+            if (err) return console.error(err)
+          
+            console.log('success!')
+            const backupPath = path.join(__dirname, `../../backups/${date}`)
+
+            const child = exec(`aws s3 sync ${backupPath} s3://bulsu-capstone-backup/${date}`)
+
+            promiseFromChildProcess(child).then(function (result) {
+              console.log('promise complete: ' + result);
+              new BackupModel(newBackup)
+                .save()
+                .then(backup => res.json({ backup, "errors.success": true }))
+            }, function (err) {
+                console.log('promise rejected: ' + err);
+            });
+
+            // child.stdout.on('data', function (data) {
+            //   console.log('stdout: ' + data);
+            // });
+            // child.stderr.on('data', function (data) {
+            //     console.log('stderr: ' + data);
+            // });
+            // child.on('close', function (code) {
+            //     console.log('closing code: ' + code);
+            // });
+          })
+        }
+      }
     );
-    const docOldPath = path.join(__dirname, `../../docFiles`)
-    const docNewPath = path.join(__dirname, `../../backups/${date}/docFiles`)
-    fse.copy(docOldPath, docNewPath, err => {
-      if (err) return console.error(err)
-    
-      console.log('success!')
-    })
+        
   }
 );
 
