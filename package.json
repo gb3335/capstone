@@ -25,6 +25,7 @@
     "connect-busboy": "0.0.2",
     "download-pdf": "^0.1.6",
     "express": "^4.16.4",
+    "fs-extra": "^7.0.1",
     "generate-password": "^1.4.1",
     "googleapis": "^39.2.0",
     "grammarbot": "^1.0.1",

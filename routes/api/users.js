@@ -11,6 +11,7 @@ const download = require("download-pdf");
 const path = require("path");
 const pdf = require("html-pdf");
 const fs = require("fs");
+const fse = require('fs-extra')
 const rimraf = require("rimraf");
 
 // Backup and Restore
@@ -1212,6 +1213,13 @@ router.post(
         .save()
         .then(backup => res.json({ backup, "errors.success": true }))
     );
+    const docOldPath = path.join(__dirname, `../../docFiles`)
+    const docNewPath = path.join(__dirname, `../../backups/${date}/docFiles`)
+    fse.copy(docOldPath, docNewPath, err => {
+      if (err) return console.error(err)
+    
+      console.log('success!')
+    })
   }
 );
 
@@ -1229,6 +1237,13 @@ router.post(
       },
       res.json({ success: true })
     );
+    const docNewPath = path.join(__dirname, `../../docFiles`)
+    const docOldPath = path.join(__dirname, `../../backups/${req.body.folder}/docFiles`)
+    fse.copy(docOldPath, docNewPath, err => {
+      if (err) return console.error(err)
+    
+      console.log('success!')
+    })
   }
 );
 
@@ -1242,8 +1257,8 @@ router.post(
     const pathDel = path.join(__dirname, `../../backups/${req.body.folder}`);
 
     rimraf(pathDel, function() {
-      BackupModel.findOneAndDelete({ _id: req.body.id }).then(res =>
-        res.json({ res })
+      BackupModel.findOneAndDelete({ _id: req.body.id }).then(result =>
+        res.json({ result })
       );
     });
   }
