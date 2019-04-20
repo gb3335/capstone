@@ -1232,7 +1232,7 @@ router.post(
   (req, res) => {
     restore(
       {
-        uri: "mongodb://carl:carl123@ds159993.mlab.com:59993/plagdb", // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
+        uri: mongoConfig.mongoURI, // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
         root: path.join(__dirname, `../../backups/${req.body.folder}/capstone`)
       },
       res.json({ success: true })
