@@ -220,7 +220,7 @@ class Landing extends Component {
               without an internet connection.
             </p>
 
-            <div className="row stats-row">
+            {/* <div className="row stats-row">
               <div className="stats-col text-center col-md-3 col-sm-6">
                 <div className="circle">
                   <span className="stats-no" data-toggle="counter-up">
@@ -255,8 +255,8 @@ class Landing extends Component {
                   </span>{" "}
                   Tricycle Drivers
                 </div>
-              </div>
-            </div>
+              </div> 
+            </div>*/}
           </div>
         </section>
 

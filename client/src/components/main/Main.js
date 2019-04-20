@@ -305,7 +305,7 @@ class Main extends Component {
             <footer id="footer">
               <p>
                 <img
-                  src="https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/landingLogo/logo.png"
+                  src="images/logo-website.png"
                   alt="website-logo"
                   style={{ width: "25px" }}
                 />{" "}
