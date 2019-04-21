@@ -11,7 +11,7 @@ const download = require("download-pdf");
 const path = require("path");
 const pdf = require("html-pdf");
 const fs = require("fs");
-const fse = require('fs-extra')
+const fse = require("fs-extra");
 const rimraf = require("rimraf");
 
 // Backup and Restore
@@ -576,33 +576,33 @@ router.post(
         let text = `<h3>Hi! ${req.body.firstname} ${req.body.lastname}</h3>
         
           <p>You are invited to be a <strong>${
-          req.body.usertype 
-        }</strong> in Bulacan State University Research Admin Office by ${req.user.name.firstName} ${
-          req.user.name.lastName
-        }</p>
+            req.body.usertype
+          }</strong> in Bulacan State University Research Admin Office by ${
+          req.user.name.firstName
+        } ${req.user.name.lastName}</p>
               <ul>
                 <li>Login to: http://34.229.6.94/login</li>
                 <li>Email: ${req.body.email}</li>
                 <li>Password: ${password}</li>
               </ul>
               
-              `
+              `;
 
-        if(req.body.usertype.toString().toLowerCase()==="administrator"){
+        if (req.body.usertype.toString().toLowerCase() === "administrator") {
           text = `<h3>Hi! ${req.body.firstname} ${req.body.lastname}</h3>
         
           <p>You are invited to be an <strong>${
-          req.body.usertype 
-        }</strong> in Bulacan State University Research Admin Office by ${req.user.name.firstName} ${
-          req.user.name.lastName
-        }</p>
+            req.body.usertype
+          }</strong> in Bulacan State University Research Admin Office by ${
+            req.user.name.firstName
+          } ${req.user.name.lastName}</p>
               <ul>
                 <li>Login to: http://34.229.6.94/login</li>
                 <li>Email: ${req.body.email}</li>
                 <li>Password: ${password}</li>
               </ul>
               
-              `
+              `;
         }
 
         const mailOptions = {
@@ -620,7 +620,6 @@ router.post(
           }
         });
 
-        
         bcrypt.genSalt(10, (err, salt) => {
           bcrypt.hash(newUser.password, salt, (err, hash) => {
             if (err) throw err;
@@ -1213,13 +1212,13 @@ router.post(
         .save()
         .then(backup => res.json({ backup, "errors.success": true }))
     );
-    const docOldPath = path.join(__dirname, `../../docFiles`)
-    const docNewPath = path.join(__dirname, `../../backups/${date}/docFiles`)
+    const docOldPath = path.join(__dirname, `../../docFiles`);
+    const docNewPath = path.join(__dirname, `../../backups/${date}/docFiles`);
     fse.copy(docOldPath, docNewPath, err => {
-      if (err) return console.error(err)
-    
-      console.log('success!')
-    })
+      if (err) return console.error(err);
+
+      console.log("success!");
+    });
   }
 );
 
@@ -1237,13 +1236,16 @@ router.post(
       },
       res.json({ success: true })
     );
-    const docNewPath = path.join(__dirname, `../../docFiles`)
-    const docOldPath = path.join(__dirname, `../../backups/${req.body.folder}/docFiles`)
+    const docNewPath = path.join(__dirname, `../../docFiles`);
+    const docOldPath = path.join(
+      __dirname,
+      `../../backups/${req.body.folder}/docFiles`
+    );
     fse.copy(docOldPath, docNewPath, err => {
-      if (err) return console.error(err)
-    
-      console.log('success!')
-    })
+      if (err) return console.error(err);
+
+      console.log("success!");
+    });
   }
 );
 

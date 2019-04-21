@@ -205,7 +205,11 @@ class Researches extends Component {
           info = "See all research and it's informations";
         }
 
-        for (let index = 0; index < researchData.length; index++) {
+        for (
+          let index = 0;
+          index < researchData.length * researchData.length;
+          index++
+        ) {
           researchData.map((data, index) => {
             if (data.title === null) {
               researchData.splice(index, 1);
@@ -234,10 +238,12 @@ class Researches extends Component {
                 title: "Updated on",
                 field: "updated",
                 render: rowData => {
-                  const date = moment(rowData.updated.substr(0, 24)).format(
-                    "MMMM Do YYYY, h:mm A"
-                  );
-                  return date;
+                  try {
+                    const date = moment(rowData.updated.substr(0, 24)).format(
+                      "MMMM Do YYYY, h:mm A"
+                    );
+                    return date;
+                  } catch (error) {}
                 }
               },
               { title: "View Details", field: "view" }
@@ -273,10 +279,7 @@ class Researches extends Component {
             </div>
             <br />
             {action}
-            <div className="tableClassname">
-                {researchItems}
-            </div>
-            
+            <div className="tableClassname">{researchItems}</div>
           </div>
         </div>
       </div>
