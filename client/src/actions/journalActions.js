@@ -65,7 +65,7 @@ export const createReportForJournals = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -167,7 +167,7 @@ export const createReportForJournal = reportData => dispatch => {
           if (reportData.android) {
             const reader = new FileReader();
             reader.readAsDataURL(pdfBlob);
-            reader.onloadend = function() {
+            reader.onloadend = function () {
               const pdfData = {
                 base64: reader.result
               };
@@ -242,7 +242,23 @@ export const addDocument = (docuData, history) => dispatch => {
       })
     );
 };
+export const addExcel = (docuData, history) => dispatch => {
+  dispatch(setJournalLoading());
+  axios
+    .post("/api/journals/excel", docuData)
+    .then(res => {
+      axios
+        .get("/api/journals/test").then(res => {
+          console.log("saved")
+        })
+      dispatch(getJournals());
+      history.push("/journals/");
 
+    })
+    .catch(err =>
+      console.log(err)
+    );
+};
 // Delete Document
 export const deleteDocument = (journalId, filename, name) => dispatch => {
   if (window.confirm("Are you sure? This can NOT be undone.")) {

@@ -201,23 +201,23 @@ class ResearchImageActions extends Component {
         </div>
       );
     }
-    const {errors} = this.props;
+    const { errors } = this.props;
     return (
       <div>
         {this.props.localPlagiarism.globalLoading.loading &&
-        this.props.localPlagiarism.globalLoading.number===4 ? (
-          <div>
-            <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
-            <Progress
-              percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
-            />
-          </div>
-        ) : this.props.localPlagiarism.globalLoading.loading &&
-        this.props.localPlagiarism.globalLoading.number!==4 ? (
-          <p>Plagiarism scan is currently in progress, please wait...</p>
-        ) : (
-          docuItem
-        )}
+          this.props.localPlagiarism.globalLoading.number === 4 ? (
+            <div>
+              <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+              <Progress
+                percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
+              />
+            </div>
+          ) : this.props.localPlagiarism.globalLoading.loading &&
+            this.props.localPlagiarism.globalLoading.number !== 4 ? (
+              <p>Plagiarism scan is currently in progress, please wait...</p>
+            ) : (
+              docuItem
+            )}
         {errors.errors ? <p className="text-danger">{errors.errors.noResearchForPlagiarism}</p> : ""}
 
         <div hidden>

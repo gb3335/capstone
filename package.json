@@ -48,6 +48,7 @@
     "pdf-to-text": "0.0.7",
     "randomcolor": "^0.5.3",
     "react-router": "^5.0.0",
+    "read-excel-file": "^2.0.10",
     "request": "^2.88.0",
     "rimraf": "^2.6.3",
     "sentence-tokenizer": "^1.0.1",

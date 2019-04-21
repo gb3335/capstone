@@ -47,22 +47,22 @@ class AddResearch extends Component {
       this.props.college.colleges.map(college =>
         college.name.fullName === courseData.collegeName
           ? college.course.map(course =>
-              course.deleted === 0
-                ? course.status === 0
-                  ? this.state.courseOptions.push({
-                      label: course.name,
-                      value: course.name
-                    })
-                  : ""
+            course.deleted === 0
+              ? course.status === 0
+                ? this.state.courseOptions.push({
+                  label: course.name,
+                  value: course.name
+                })
                 : ""
-            )
+              : ""
+          )
           : ""
       );
 
       this.setState({ course: courseData.courseName });
       this.setState({ college: courseData.collegeName });
       this.setState({ flagFromCollege: courseData.fromCollege });
-    } catch (error) {}
+    } catch (error) { }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -111,15 +111,15 @@ class AddResearch extends Component {
     this.props.college.colleges.map(college =>
       college.name.fullName === e.target.value
         ? college.course.map(course =>
-            course.deleted === 0
-              ? course.status === 0
-                ? this.state.courseOptions.push({
-                    label: course.name,
-                    value: course.name
-                  })
-                : ""
+          course.deleted === 0
+            ? course.status === 0
+              ? this.state.courseOptions.push({
+                label: course.name,
+                value: course.name
+              })
               : ""
-          )
+            : ""
+        )
         : ""
     );
   };
@@ -166,9 +166,9 @@ class AddResearch extends Component {
           college.deleted === 0
             ? college.name.fullName === this.props.auth.user.college
               ? collegeOptions.push({
-                  label: college.name.fullName,
-                  value: college.name.fullName
-                })
+                label: college.name.fullName,
+                value: college.name.fullName
+              })
               : ""
             : ""
         );
@@ -176,13 +176,13 @@ class AddResearch extends Component {
         college.colleges.map(college =>
           college.deleted === 0
             ? collegeOptions.push({
-                label: college.name.fullName,
-                value: college.name.fullName
-              })
+              label: college.name.fullName,
+              value: college.name.fullName
+            })
             : ""
         );
       }
-    } catch (error) {}
+    } catch (error) { }
     return (
       <div className="create-research">
         <div className="container">
@@ -290,17 +290,17 @@ class AddResearch extends Component {
                       Image to Text
                     </label>
                   ) : (
-                    <label
-                      to="#"
-                      htmlFor="ocr"
-                      className="btn btn-light"
-                      style={{ fontSize: "12px" }}
-                      title="Use Image to Text"
-                    >
-                      <i className="fas fa-file-image mr-1" />
-                      Image to Text
+                      <label
+                        to="#"
+                        htmlFor="ocr"
+                        className="btn btn-light"
+                        style={{ fontSize: "12px" }}
+                        title="Use Image to Text"
+                      >
+                        <i className="fas fa-file-image mr-1" />
+                        Image to Text
                     </label>
-                  )}
+                    )}
 
                   <input
                     type="file"
@@ -324,8 +324,8 @@ class AddResearch extends Component {
                       <Progress percent={this.state.progress} />
                     </div>
                   ) : (
-                    ""
-                  )}
+                      ""
+                    )}
                 </div>
                 <ReactQuill
                   style={{ height: "20rem" }}
