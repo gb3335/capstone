@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Modal from "react-modal";
 import SweetAlert from "react-bootstrap-sweetalert";
-
+import ExcelFieldGroup from "../common/ExcelFileFieldGroup";
 import {
+  addExcel,
   toggleResearchBin,
   createReportForResearches
 } from "../../actions/researchActions";
@@ -79,6 +80,31 @@ class ResearchesAction extends Component {
     this.setState({ [e.target.name]: bool });
   };
 
+  onFileSelected = e => {
+    try {
+      let files = e.target.files;
+      let reader = new FileReader();
+      reader.readAsDataURL(files[0]);
+      reader.onload = e => {
+        this.setState({
+          file: e.target.result
+        });
+        const name = this.props.auth.user.id;
+
+        const docuData = {
+          researchId: "excelResearch",
+          oldFile: "excelResearch",
+          file: this.state.file,
+          username: name
+        };
+
+        this.props.addExcel(docuData, this.props.history);
+      };
+    } catch (error) {
+      console.log("Not Blob");
+    }
+  };
+
   onGenerateReport = () => {
     if (!this.props.research.buttonDisable) {
       if (
@@ -139,25 +165,25 @@ class ResearchesAction extends Component {
 
     if (this.state.bin) {
       binAction = (
-        <Link
+        <label
           to="#"
           onClick={this.onToggleBin}
           className="btn btn-light"
           style={{ fontSize: "14px" }}
         >
           <i className="fas fa-list-ul text-success mr-1" /> Researches
-        </Link>
+        </label>
       );
     } else {
       binAction = (
-        <Link
+        <label
           to="#"
           onClick={this.onToggleBin}
           className="btn btn-light"
           style={{ fontSize: "14px" }}
         >
           <i className="fas fa-trash-alt text-danger mr-1" /> Bin
-        </Link>
+        </label>
       );
     }
 
@@ -171,20 +197,37 @@ class ResearchesAction extends Component {
           <Link
             to="/add-research"
             className="btn btn-light"
-            style={{ fontSize: "14px" }}
+            style={{ fontSize: "14px", height: "81%" }}
           >
             <i className="fas fa-plus text-info mr-1" /> Add Research
           </Link>
         </div>
         <div className="btn-group " role="group" aria-label="Second group">
-          <Link
+          <label
             to="#"
             onClick={this.openModal}
             className="btn btn-light"
             style={{ fontSize: "14px" }}
           >
             <i className="fas fa-poll-h text-info mr-1" /> Create Report
-          </Link>
+          </label>
+        </div>
+        {this.props.auth.user.userType === "ADMINISTRATOR" ?
+          <div className="btn-group" role="group" aria-label="Second group">
+            <label to="#" htmlFor="input" className="btn btn-light" style={{ fontSize: "14px" }}>
+              <i className="fas fa-file-import text-info mr-1" />
+              Export Excel File to Database
+         </label>
+          </div>
+          : console.log(false)
+        }
+        <div hidden>
+          <ExcelFieldGroup
+            placeholder="* Document"
+            name="filename"
+            onChange={this.onFileSelected}
+            id="input"
+          />
         </div>
         <div className="btn-group " role="group" aria-label="Second group">
           {binAction}
@@ -371,13 +414,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                  <input
-                    type="button"
-                    value="Generate Report"
-                    onClick={this.onGenerateReport}
-                    className="btn btn-info"
-                  />
-                )}
+                    <input
+                      type="button"
+                      value="Generate Report"
+                      onClick={this.onGenerateReport}
+                      className="btn btn-info"
+                    />
+                  )}
               </form>
             </div>
           </div>
@@ -401,5 +444,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { toggleResearchBin, createReportForResearches }
+  { toggleResearchBin, createReportForResearches, addExcel }
 )(ResearchesAction);

@@ -145,7 +145,23 @@ export const getResearchById = id => dispatch => {
       })
     );
 };
+export const addExcel = (docuData, history) => dispatch => {
+  dispatch(setResearchLoading());
+  axios
+    .post("/api/researches/excel", docuData)
+    .then(res => {
+      axios
+        .get("/api/researches/test").then(res => {
+          console.log("saved")
+        })
+      dispatch(getResearches());
+      history.push("/researches/");
 
+    })
+    .catch(err =>
+      console.log(err)
+    );
+};
 // Create / Update Research
 export const createResearch = (researchData, history) => dispatch => {
   axios
