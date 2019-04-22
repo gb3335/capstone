@@ -11,7 +11,7 @@ const download = require("download-pdf");
 const pdfUtil = require("pdf-to-text");
 const path = require("path");
 const pdf = require("html-pdf");
-const readXlsxFile = require('read-excel-file/node');
+const readXlsxFile = require("read-excel-file/node");
 // Text Processor
 const processor = require("../../validation/plagiarism/processor");
 
@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/researchDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -95,7 +95,7 @@ router.post(
       `${reqPath}/document/${req.body.researchId}.xlsx`,
       base64Doc,
       { encoding: "base64" },
-      function (err) {
+      function(err) {
         console.log("file created");
         Research.findOne({ id: "123" })
           .sort({ title: 1 })
@@ -113,107 +113,89 @@ router.post(
 // @access  Public
 
 router.get("/test", (req, res) => {
-
   const schema = {
-    'TITLE': {
-      prop: 'title',
+    TITLE: {
+      prop: "title",
       type: String,
       required: true
     },
-    'COLLEGE': {
-      prop: 'college',
+    COLLEGE: {
+      prop: "college",
       type: String,
       required: true
     },
-    'COURSE': {
-      prop: 'course',
+    COURSE: {
+      prop: "course",
       type: String,
       required: true
     },
-    'ABSTRACT': {
-      prop: 'abstract',
-      type: String,
+    ABSTRACT: {
+      prop: "abstract",
+      type: String
     },
-    'RESEARCHID': {
-      prop: 'researchId',
+    RESEARCHID: {
+      prop: "researchId",
       type: Number,
       required: true
     },
-    'PAGES': {
-      prop: 'pages',
+    PAGES: {
+      prop: "pages",
       type: String,
       required: true
     },
-    'SCHOOLYEAR': {
-      prop: 'schoolYear',
+    SCHOOLYEAR: {
+      prop: "schoolYear",
       type: String,
       required: true
     },
-    'AUTHOR': {
-      prop: 'authorOne',
+    AUTHOR: {
+      prop: "authorOne",
       type: String,
       required: true
     },
-    'TYPE': {
-      prop: 'type',
+    TYPE: {
+      prop: "type",
       type: String,
       required: true
-    },
+    }
+  };
 
-  }
-
-  readXlsxFile('document/excelResearch.xlsx', { schema }).then((rows) => {
-
-
-    let collegeArr = []
-    let collegeArrCopy1 = []
-    let collegeArrCopy = []
-
+  readXlsxFile("document/excelResearch.xlsx", { schema }).then(rows => {
+    let collegeArr = [];
+    let collegeArrCopy1 = [];
+    let collegeArrCopy = [];
 
     Research.find().then(research => {
-      let titles = []
+      let titles = [];
       for (let x = 0; x < research.length; x++) {
-        titles.push(research[x].title)
-
+        titles.push(research[x].title);
       }
-      console.log(titles)
+      console.log(titles);
 
       for (let ctr = 0; ctr < rows.rows.length; ctr++) {
-
-
         if (titles.includes(rows.rows[ctr].title)) {
-
-        }
-        else {
-          collegeArr.push(rows.rows[ctr].college + "")
-          collegeArrCopy1.push(rows.rows[ctr].college + "")
-          console.log("includes not")
+        } else {
+          collegeArr.push(rows.rows[ctr].college + "");
+          collegeArrCopy1.push(rows.rows[ctr].college + "");
+          console.log("includes not");
         }
       }
 
-
       for (let ctr = 0; ctr < collegeArr.length; ctr++) {
-
         for (let ctr1 = 0; ctr1 < collegeArr.length; ctr1++) {
           if (ctr !== ctr1) {
             if (collegeArr[ctr] === collegeArr[ctr1]) {
               collegeArr[ctr1] = null;
-
             }
-
           }
-
         }
-
       }
 
       for (let ctr = 0; ctr < collegeArr.length; ctr++) {
-        if (collegeArr[ctr] !== null)
-          collegeArrCopy.push(collegeArr[ctr])
+        if (collegeArr[ctr] !== null) collegeArrCopy.push(collegeArr[ctr]);
       }
 
       let collegeArrCopyCount = new Array(collegeArrCopy.length);
-
 
       let ctrCount = 0;
       for (let ctr = 0; ctr < collegeArrCopy.length; ctr++) {
@@ -228,13 +210,12 @@ router.get("/test", (req, res) => {
         counter = 0;
       }
       if (collegeArrCopy) {
-        console.log(collegeArrCopyCount)
-        console.log(collegeArrCopy)
+        console.log(collegeArrCopyCount);
+        console.log(collegeArrCopy);
         for (let ctr = 0; ctr < collegeArrCopy.length; ctr++) {
           College.findOne({ "name.fullName": collegeArrCopy[ctr] }).then(
             college => {
               if (college) {
-
                 const total = ++college.researchTotal - 1;
                 const newCollege = {
                   researchTotal: total + collegeArrCopyCount[ctr]
@@ -244,19 +225,19 @@ router.get("/test", (req, res) => {
                   { $set: newCollege },
                   { new: true }
                 )
-                  .then(college => { })
+                  .then(college => {})
                   .catch(err => console.log(err));
               }
             }
-          )
+          );
         }
       }
-    })
+    });
 
     for (let ctr = 0; ctr < rows.rows.length; ctr++) {
       Research.findOne({ title: rows.rows[ctr].title }).then(research => {
         if (research) {
-          console.log("find Occurence")
+          console.log("find Occurence");
         } else {
           try {
             // increase college research total
@@ -286,16 +267,10 @@ router.get("/test", (req, res) => {
         }
       });
     }
-    console.log("working")
-    res.json(rows)
-
-  })
-
-
-
-
+    console.log("working");
+    res.json(rows);
+  });
 });
-
 
 // @route   GET api/researches
 // @desc    Get researches
@@ -372,9 +347,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                  name: aut.name,
-                  role: "Author"
-                })
+                    name: aut.name,
+                    role: "Author"
+                  })
                 : "";
             });
 
@@ -710,43 +685,51 @@ router.post(
     if (req.body.oldFile) {
       // delete research document from client folder
       try {
-        fs.unlinkSync(`${reqPath}/docFiles/researchDocuments/${req.body.oldFile}`, () => {
-          console.log("old file deleted");
-        });
+        fs.unlinkSync(
+          `${reqPath}/docFiles/researchDocuments/${req.body.oldFile}`,
+          () => {
+            console.log("old file deleted");
+          }
+        );
       } catch (error) {
         //console.log(error);
       }
     }
 
     fs.writeFile(
-      `${reqPath}/docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`,
+      `${reqPath}/docFiles/researchDocuments/${req.body.researchId +
+        "-" +
+        rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
-      function (err) {
+      function(err) {
         console.log("file created");
         let reqPath = path.join(__dirname, "../../");
-        pdfUtil.pdfToText(`${reqPath}/docFiles/researchDocuments/${req.body.researchId + "-" + rand}.pdf`, function (err, data) {
+        pdfUtil.pdfToText(
+          `${reqPath}/docFiles/researchDocuments/${req.body.researchId +
+            "-" +
+            rand}.pdf`,
+          function(err, data) {
+            let { text, len } = processor.textProcess(
+              data.toString().toLowerCase()
+            );
 
-          let { text, len } = processor.textProcess(data.toString().toLowerCase());
+            const newDocument = {
+              document: filename,
+              content: {
+                text,
+                sentenceLength: len
+              },
+              lastUpdate: Date.now()
+            };
 
-          const newDocument = {
-            document: filename,
-            content: {
-              text,
-              sentenceLength: len
-            },
-            lastUpdate: Date.now()
-          };
-
-          Research.findOneAndUpdate(
-            { _id: req.body.researchId },
-            { $set: newDocument },
-            { new: true }
-          ).then(research => res.json(research));
-
-        })
-
-
+            Research.findOneAndUpdate(
+              { _id: req.body.researchId },
+              { $set: newDocument },
+              { new: true }
+            ).then(research => res.json(research));
+          }
+        );
 
         Research.findOne({ _id: req.body.researchId }).then(research => {
           // add activity
@@ -757,8 +740,6 @@ router.post(
           };
           new Activity(newActivity).save();
         });
-
-
       }
     );
   }
@@ -774,7 +755,9 @@ router.delete(
     // delete research document from client folder
     let reqPath = path.join(__dirname, "../../");
     try {
-      fs.unlinkSync(`${reqPath}/docFiles/researchDocuments/${req.params.filename}`);
+      fs.unlinkSync(
+        `${reqPath}/docFiles/researchDocuments/${req.params.filename}`
+      );
     } catch (error) {
       console.log(error);
     }
@@ -970,21 +953,23 @@ router.post(
           researchTotal: req.body.hidden ? researchCount : --researchCount
         };
 
-        college.course.map((cou, index) => {
-          if (cou.name === research.course) {
-            newCourse = {
-              name: cou.name,
-              initials: cou.initials,
-              status: cou.status,
-              deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : --cou.researchTotal,
-              journalTotal: cou.journalTotal
-            };
-            removeIndex = index;
-          }
-        });
+        try {
+          college.course.map((cou, index) => {
+            if (cou.name === research.course) {
+              newCourse = {
+                name: cou.name,
+                initials: cou.initials,
+                status: cou.status,
+                deleted: cou.deleted,
+                researchTotal: req.body.hidden
+                  ? cou.researchTotal
+                  : --cou.researchTotal,
+                journalTotal: cou.journalTotal
+              };
+              removeIndex = index;
+            }
+          });
+        } catch (error) {}
 
         // Splice out of array
         college.course.splice(removeIndex, 1);
@@ -1049,21 +1034,23 @@ router.post(
           researchTotal: req.body.hidden ? researchCount : ++researchCount
         };
 
-        college.course.map((cou, index) => {
-          if (cou.name === research.course) {
-            newCourse = {
-              name: cou.name,
-              initials: cou.initials,
-              status: cou.status,
-              deleted: cou.deleted,
-              researchTotal: req.body.hidden
-                ? cou.researchTotal
-                : ++cou.researchTotal,
-              journalTotal: cou.journalTotal
-            };
-            removeIndex = index;
-          }
-        });
+        try {
+          college.course.map((cou, index) => {
+            if (cou.name === research.course) {
+              newCourse = {
+                name: cou.name,
+                initials: cou.initials,
+                status: cou.status,
+                deleted: cou.deleted,
+                researchTotal: req.body.hidden
+                  ? cou.researchTotal
+                  : ++cou.researchTotal,
+                journalTotal: cou.journalTotal
+              };
+              removeIndex = index;
+            }
+          });
+        } catch (error) {}
 
         // Splice out of array
         college.course.splice(removeIndex, 1);

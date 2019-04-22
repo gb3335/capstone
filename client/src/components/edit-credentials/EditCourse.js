@@ -10,6 +10,7 @@ class EditCourse extends Component {
     super(props);
     this.state = {
       name: "",
+      oldName: "",
       initials: "",
       totalRes: "",
       totalJour: "",
@@ -26,6 +27,7 @@ class EditCourse extends Component {
 
     try {
       this.setState({ name: course.courseName });
+      this.setState({ oldName: course.courseName });
       this.setState({ initials: course.courseInitials });
       this.setState({ courseId: course.courseId });
       this.setState({ collegeId: course.collegeId });
@@ -53,6 +55,7 @@ class EditCourse extends Component {
 
     const courseData = {
       name: this.state.name,
+      oldName: this.state.oldName,
       initials: this.state.initials,
       researchTotal: this.state.totalRes,
       journalTotal: this.state.totalJour,

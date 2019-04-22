@@ -26,6 +26,8 @@ fontFooter = "7px";
 
 // College model
 const College = require("../../models/College");
+const Research = require("../../models/Research");
+const Journal = require("../../models/Journal");
 const Activity = require("../../models/Activity");
 const User = require("../../models/User");
 
@@ -273,7 +275,19 @@ router.post(
                     { _id: req.body.id },
                     { $set: newCollege },
                     { new: true }
-                  ).then(college => res.json(college));
+                  ).then(
+                    college => res.json(college),
+                    Research.updateMany(
+                      { college: req.body.oldName },
+                      { $set: { college: req.body.fullName } }
+                    ).then(
+                      research => res.json(research),
+                      Journal.updateMany(
+                        { college: req.body.oldName },
+                        { $set: { college: req.body.fullName } }
+                      ).then(journal => res.json(journal))
+                    )
+                  );
                 }
               });
             }
@@ -497,7 +511,19 @@ router.post(
           { _id: req.body.colId },
           { $set: newCollege },
           { new: true }
-        ).then(college => res.json(college));
+        ).then(
+          college => res.json(college),
+          Research.updateMany(
+            { course: req.body.oldName },
+            { $set: { course: req.body.name } }
+          ).then(
+            research => res.json(research),
+            Journal.updateMany(
+              { course: req.body.oldName },
+              { $set: { course: req.body.name } }
+            ).then(journal => res.json(journal))
+          )
+        );
       }
     });
   }
