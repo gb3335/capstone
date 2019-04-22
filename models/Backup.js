@@ -10,6 +10,14 @@ const BackupSchema = new Schema({
   folder: {
     type: String
   },
+  requested:{
+    type: Number,
+    default:0
+  },
+  available: {
+    type: Number,
+    default:0
+  },
   date: {
     type: Date,
     default: Date.now
