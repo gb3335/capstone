@@ -12,6 +12,8 @@ const path = require("path");
 const pdf = require("html-pdf");
 const fs = require("fs");
 const fse = require('fs-extra')
+const archiver = require('archiver');
+const AdmZip = require('adm-zip');
 const rimraf = require("rimraf");
 
 // child process
@@ -20,7 +22,7 @@ const Promise = require('bluebird');
 
 // Backup and Restore
 const backup = require("mongodb-backup");
-var restore = require("mongodb-restore");
+const restore = require("mongodb-restore");
 
 const AWS = require("aws-sdk");
 const s3config = require("../../config/s3keys");
@@ -1229,30 +1231,72 @@ router.post(
             console.log('success!')
             const backupPath = path.join(__dirname, `../../backups/${date}`)
 
-            const child = exec(`aws s3 sync ${backupPath} s3://bulsu-capstone-backup/${date}`)
-
-            promiseFromChildProcess(child).then(function (result) {
-              console.log('promise complete: ' + result);
-              new BackupModel(newBackup)
-                .save()
-                .then(backup => res.json({ backup, "errors.success": true }))
-            }, function (err) {
-                console.log('promise rejected: ' + err);
+            const output = fs.createWriteStream(`${backupPath}.zip`);
+            const archive = archiver('zip', {
+              zlib: { level: 9 } // Sets the compression level.
             });
 
-            // child.stdout.on('data', function (data) {
-            //   console.log('stdout: ' + data);
-            // });
-            // child.stderr.on('data', function (data) {
-            //     console.log('stderr: ' + data);
-            // });
-            // child.on('close', function (code) {
-            //     console.log('closing code: ' + code);
-            // });
+            output.on('close', function() {
+              console.log(archive.pointer() + ' total bytes');
+              console.log('archiver has been finalized and the output file descriptor has closed.');
+
+              rimraf(backupPath, function () { console.log("delete folder done"); });
+              const child = exec(`aws s3 cp ${backupPath}.zip s3://bulsu-capstone-backup`)
+
+              promiseFromChildProcess(child).then(function (result) {
+                console.log('promise complete: ' + result);
+                fs.unlink(`${backupPath}.zip`, (err) => {
+                  if (err) throw err;
+                  console.log('successfully deleted');
+                });
+
+                new BackupModel(newBackup)
+                  .save()
+                  //.then(backup => res.json({ backup, "errors.success": true }))
+                  // const child2 = exec(`aws s3 cp s3://bulsu-capstone-backup/${date}.zip .`)
+
+                  // promiseFromChildProcess(child2).then(function (result) {
+                  //   const zip = new AdmZip(`./${date}.zip`);
+                  //   const backupTest = path.join(__dirname, `../../backups/`)
+  
+                  //   zip.extractAllToAsync(backupTest, true, () => {
+                  //     console.log("done");
+                  //   });
+                  // })
+
+                  
+              }, function (err) {
+                  console.log('promise rejected: ' + err);
+              });
+
+              // child.stdout.on('data', function (data) {
+              //   console.log('stdout: ' + data);
+              // });
+              // child.stderr.on('data', function (data) {
+              //     console.log('stderr: ' + data);
+              // });
+              // child.on('close', function (code) {
+              //     console.log('closing code: ' + code);
+              // });
+
+            });
+
+            archive.on('error', function(err) {
+              throw err;
+            });
+             
+            // pipe archive data to the file
+            archive.pipe(output);
+
+            archive.directory(backupPath, false);
+
+            archive.finalize();
+
           })
         }
       }
     );
+    res.json({ backupRequest: true })   
         
   }
 );
@@ -1264,20 +1308,62 @@ router.post(
   "/mongodb-restore",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    restore(
-      {
-        uri: "mongodb://carl:carl123@ds159993.mlab.com:59993/plagdb", // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
-        root: path.join(__dirname, `../../backups/${req.body.folder}/capstone`)
-      },
-      res.json({ success: true })
-    );
-    const docNewPath = path.join(__dirname, `../../docFiles`)
-    const docOldPath = path.join(__dirname, `../../backups/${req.body.folder}/docFiles`)
-    fse.copy(docOldPath, docNewPath, err => {
-      if (err) return console.error(err)
+
+    const backupPath = path.join(__dirname, `../../backups`)
+    const child2 = exec(`aws s3 cp s3://bulsu-capstone-backup/${req.body.folder}.zip ${backupPath}`)
     
-      console.log('success!')
+
+    promiseFromChildProcess(child2).then(function (result) {
+      
+
+      const newBackup = {
+        available: 1
+      }
+      BackupModel.findOneAndUpdate(
+        { folder: req.body.folder },
+        { $set: newBackup },
+        { new: true }
+      )
+      .then(() => {
+        console.log("downloaded");
+      })
+
+      // const zip = new AdmZip(`${backupPath}/${req.body.folder}.zip`);
+      // const backupTest = path.join(__dirname, `../../backups/`)
+      // zip.extractAllToAsync(backupTest, true, () => {
+      //   console.log("extraction done");
+
+
+        
+        // restore(
+        //   {
+        //     uri: "mongodb://carl:carl123@ds159993.mlab.com:59993/plagdb", // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
+        //     root: path.join(__dirname, `../../backups/capstone`)
+        //   }
+        // );
+        // const docNewPath = path.join(__dirname, `../../docFiles`)
+        // const docOldPath = path.join(__dirname, `../../backups/docFiles`)
+        // fse.copy(docOldPath, docNewPath, err => {
+        //   if (err) return console.error(err)
+        
+        //   console.log('success!')
+        // })
+      // });
     })
+    const newBackup = {
+      requested: 1
+    }
+    BackupModel.findOneAndUpdate(
+      { folder: req.body.folder },
+      { $set: newBackup },
+      { new: true }
+    )
+      .then(backup => {
+        res.json(backup);
+      })
+      .catch(err => console.log(err));
+    //res.json({ success: true })
+    
   }
 );
 
