@@ -216,7 +216,7 @@ class ResearchesAction extends Component {
           <div className="btn-group" role="group" aria-label="Second group">
             <label to="#" htmlFor="input" className="btn btn-light" style={{ fontSize: "14px" }}>
               <i className="fas fa-file-import text-info mr-1" />
-              Export Excel File to Database
+              Import Excel File to Database
          </label>
           </div>
           : console.log(false)
