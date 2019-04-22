@@ -16,6 +16,7 @@ class EditCourse extends Component {
       totalJour: "",
       deleted: "",
       collegeId: "",
+      collegeName: "",
       courseId: "",
       deactivate: false,
       errors: {}
@@ -31,6 +32,7 @@ class EditCourse extends Component {
       this.setState({ initials: course.courseInitials });
       this.setState({ courseId: course.courseId });
       this.setState({ collegeId: course.collegeId });
+      this.setState({ collegeName: course.collegeName });
       this.setState({ totalRes: course.courseTotalRes });
       this.setState({ totalJour: course.courseTotalJour });
       this.setState({ deleted: course.courseDeleted });
@@ -61,6 +63,7 @@ class EditCourse extends Component {
       journalTotal: this.state.totalJour,
       deleted: this.state.deleted,
       colId: this.state.collegeId,
+      collegeName: this.state.collegeName,
       courseId: this.state.courseId,
       deactivate: this.state.deactivate,
       colInit: this.props.college.college.name.initials,

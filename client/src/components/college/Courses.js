@@ -123,6 +123,7 @@ class Courses extends Component {
                             courseTotalJour: cou.journalTotal,
                             courseId: cou._id,
                             collegeId: college._id,
+                            collegeName: college.name.fullName,
                             courseStatus: cou.status,
                             courseDeleted: cou.deleted,
                             username: name
@@ -227,6 +228,7 @@ class Courses extends Component {
                             courseTotalJour: cou.journalTotal,
                             courseId: cou._id,
                             collegeId: college._id,
+                            collegeName: college.name.fullName,
                             courseStatus: cou.status,
                             courseDeleted: cou.deleted,
                             username: name

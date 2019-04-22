@@ -514,12 +514,22 @@ router.post(
         ).then(
           college => res.json(college),
           Research.updateMany(
-            { course: req.body.oldName },
+            {
+              $and: [
+                { course: req.body.oldName },
+                { college: req.body.collegeName }
+              ]
+            },
             { $set: { course: req.body.name } }
           ).then(
             research => res.json(research),
             Journal.updateMany(
-              { course: req.body.oldName },
+              {
+                $and: [
+                  { course: req.body.oldName },
+                  { college: req.body.collegeName }
+                ]
+              },
               { $set: { course: req.body.name } }
             ).then(journal => res.json(journal))
           )
