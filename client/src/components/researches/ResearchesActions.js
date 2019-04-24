@@ -212,15 +212,21 @@ class ResearchesAction extends Component {
             <i className="fas fa-poll-h text-info mr-1" /> Create Report
           </label>
         </div>
-        {this.props.auth.user.userType === "ADMINISTRATOR" ?
+        {this.props.auth.user.userType === "LIBRARIAN" ? (
           <div className="btn-group" role="group" aria-label="Second group">
-            <label to="#" htmlFor="input" className="btn btn-light" style={{ fontSize: "14px" }}>
+            <label
+              to="#"
+              htmlFor="input"
+              className="btn btn-light"
+              style={{ fontSize: "14px" }}
+            >
               <i className="fas fa-file-import text-info mr-1" />
               Import Excel File to Database
-         </label>
+            </label>
           </div>
-          : console.log(false)
-        }
+        ) : (
+          console.log(false)
+        )}
         <div hidden>
           <ExcelFieldGroup
             placeholder="* Document"
@@ -414,13 +420,13 @@ class ResearchesAction extends Component {
                     className="btn btn-info disabled"
                   />
                 ) : (
-                    <input
-                      type="button"
-                      value="Generate Report"
-                      onClick={this.onGenerateReport}
-                      className="btn btn-info"
-                    />
-                  )}
+                  <input
+                    type="button"
+                    value="Generate Report"
+                    onClick={this.onGenerateReport}
+                    className="btn btn-info"
+                  />
+                )}
               </form>
             </div>
           </div>
