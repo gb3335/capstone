@@ -5,7 +5,7 @@ const initialState = {
   docuId: "",
   textId: "",
   pattern: "",
-  patterHide: "",
+  patternHide: "",
   text: "",
   showDetails: false,
   patternLoading: false,
