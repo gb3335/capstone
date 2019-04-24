@@ -42,7 +42,7 @@ router.get(
   (req, res) => {
     Activity.find()
       .sort({ date: -1 })
-      .limit(20)
+      .limit(150)
       .then(activities => res.json(activities))
       .catch(err =>
         res.status(404).json({ noActivitiesFound: "No Activities found" })
