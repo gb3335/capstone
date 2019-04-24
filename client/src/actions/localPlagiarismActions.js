@@ -341,8 +341,13 @@ export const getJournalPattern = (input, callback) => dispatch => {
   dispatch(setPlagiarismLocalPatternLoading())
   axios.post('/api/plagiarism/get/journal/pattern', input)
     .then(res => {
-      dispatch(outputLocalPlagiarismPattern(res.data));
-      callback("done");
+      if(input.hide){
+        dispatch(outputLocalPlagiarismPatternHide(res.data));
+        callback("done");
+      }else{
+        dispatch(outputLocalPlagiarismPattern(res.data));
+        callback("done");
+      }
     })
 }
 
