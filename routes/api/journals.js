@@ -101,7 +101,7 @@ router.get("/test", (req, res) => {
     },
     'ISSN': {
       prop: 'issn',
-      type: Number,
+      type: String,
       required: true
     },
     'PUBLISHER': {
@@ -111,7 +111,7 @@ router.get("/test", (req, res) => {
     },
     'VOLUME': {
       prop: 'volume',
-      type: Number,
+      type: String,
       required: true
     },
     'PAGES': {
