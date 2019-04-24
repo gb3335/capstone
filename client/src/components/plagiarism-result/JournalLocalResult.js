@@ -374,7 +374,7 @@ class LocalResult extends Component {
 
     let forhide;
 
-    if (patternLoading || pattern === "" || this.state.report) {
+    if (patternLoading || patternHide === "" || this.state.report) {
       forhide = (
         <div className="spinnerMainDiv">
           <div className="spinner">
