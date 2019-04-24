@@ -55,10 +55,10 @@
 .sidebar_user_image img {
   border-radius: 50%;
   width: 5.5vw;
-  
+
   margin-top: 2px;
   transition: 1s;
-  height:  5.5vw;
+  height: 5.5vw;
 }
 
 .sidebar_logo {
@@ -169,8 +169,14 @@
     margin: 0;
     width: 35px;
   }
+
+  .sidebar_logo {
+    margin-top: 5px;
+    margin-bottom: 8px;
+  }
+
   .sidebar_logo a {
-    font-size: 1.2rem;
+    font-size: 0.8rem;
   }
   .sidebar_user {
     padding: 10px 2px;
