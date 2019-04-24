@@ -135,7 +135,7 @@ router.get("/test", (req, res) => {
     },
     RESEARCHID: {
       prop: "researchId",
-      type: Number,
+      type: String,
       required: true
     },
     PAGES: {
