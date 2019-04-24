@@ -11,7 +11,7 @@ const download = require("download-pdf");
 const pdfUtil = require("pdf-to-text");
 const path = require("path");
 const pdf = require("html-pdf");
-const readXlsxFile = require('read-excel-file/node');
+const readXlsxFile = require("read-excel-file/node");
 
 // Text Processor
 const processor = require("../../validation/plagiarism/processor");
@@ -54,7 +54,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/journalDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function (data) {
+  pdf(dataBuffer).then(function(data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -77,113 +77,94 @@ router.get("/pdfText", (req, res) => {
 // @access  Public
 
 router.get("/test", (req, res) => {
-
   const schema = {
-    'TITLE': {
-      prop: 'title',
+    TITLE: {
+      prop: "title",
       type: String,
       required: true
     },
-    'COLLEGE': {
-      prop: 'college',
+    COLLEGE: {
+      prop: "college",
       type: String,
       required: true
     },
-    'COURSE': {
-      prop: 'course',
+    COURSE: {
+      prop: "course",
       type: String,
       required: true
     },
-    'DESCRIPTION': {
-      prop: 'description',
+    DESCRIPTION: {
+      prop: "description",
+      type: String
+    },
+    ISSN: {
+      prop: "issn",
       type: String,
+      required: true
+    },
+    PUBLISHER: {
+      prop: "publisher",
+      type: String,
+      required: true
+    },
+    VOLUME: {
+      prop: "volume",
+      type: String,
+      required: true
+    },
+    PAGES: {
+      prop: "pages",
+      type: String,
+      required: true
+    },
+    YEARPUBLISHED: {
+      prop: "yearPublished",
+      type: String,
+      required: true
+    },
+    AUTHOR: {
+      prop: "authorOne",
+      type: String,
+      required: true
+    }
+  };
 
-    },
-    'ISSN': {
-      prop: 'issn',
-      type: String,
-      required: true
-    },
-    'PUBLISHER': {
-      prop: 'publisher',
-      type: String,
-      required: true
-    },
-    'VOLUME': {
-      prop: 'volume',
-      type: String,
-      required: true
-    },
-    'PAGES': {
-      prop: 'pages',
-      type: String,
-      required: true
-    },
-    'YEARPUBLISHED': {
-      prop: 'yearPublished',
-      type: String,
-      required: true
-    },
-    'AUTHOR': {
-      prop: 'authorOne',
-      type: String,
-      required: true
-    },
-
-  }
-
-  readXlsxFile('document/excelJournal.xlsx', { schema }).then((rows) => {
-
-
-    let collegeArr = []
-    let collegeArrCopy1 = []
-    let collegeArrCopy = []
-
+  readXlsxFile("document/excelJournal.xlsx", { schema }).then(rows => {
+    let collegeArr = [];
+    let collegeArrCopy1 = [];
+    let collegeArrCopy = [];
 
     Journal.find().then(journal => {
-      let titles = []
+      let titles = [];
       for (let x = 0; x < journal.length; x++) {
-        titles.push(journal[x].title)
-
+        titles.push(journal[x].title);
       }
-      console.log(titles)
+      console.log(titles);
 
       for (let ctr = 0; ctr < rows.rows.length; ctr++) {
-
-
         if (titles.includes(rows.rows[ctr].title)) {
-
-        }
-        else {
-          collegeArr.push(rows.rows[ctr].college + "")
-          collegeArrCopy1.push(rows.rows[ctr].college + "")
-          console.log("includes not")
+        } else {
+          collegeArr.push(rows.rows[ctr].college + "");
+          collegeArrCopy1.push(rows.rows[ctr].college + "");
+          console.log("includes not");
         }
       }
 
-
       for (let ctr = 0; ctr < collegeArr.length; ctr++) {
-
         for (let ctr1 = 0; ctr1 < collegeArr.length; ctr1++) {
           if (ctr !== ctr1) {
             if (collegeArr[ctr] === collegeArr[ctr1]) {
               collegeArr[ctr1] = null;
-
             }
-
           }
-
         }
-
       }
 
       for (let ctr = 0; ctr < collegeArr.length; ctr++) {
-        if (collegeArr[ctr] !== null)
-          collegeArrCopy.push(collegeArr[ctr])
+        if (collegeArr[ctr] !== null) collegeArrCopy.push(collegeArr[ctr]);
       }
 
       let collegeArrCopyCount = new Array(collegeArrCopy.length);
-
 
       let ctrCount = 0;
       for (let ctr = 0; ctr < collegeArrCopy.length; ctr++) {
@@ -198,13 +179,12 @@ router.get("/test", (req, res) => {
         counter = 0;
       }
       if (collegeArrCopy) {
-        console.log(collegeArrCopyCount)
-        console.log(collegeArrCopy)
+        console.log(collegeArrCopyCount);
+        console.log(collegeArrCopy);
         for (let ctr = 0; ctr < collegeArrCopy.length; ctr++) {
           College.findOne({ "name.fullName": collegeArrCopy[ctr] }).then(
             college => {
               if (college) {
-
                 const total = ++college.journalTotal - 1;
                 const newCollege = {
                   journalTotal: total + collegeArrCopyCount[ctr]
@@ -214,19 +194,19 @@ router.get("/test", (req, res) => {
                   { $set: newCollege },
                   { new: true }
                 )
-                  .then(college => { })
+                  .then(college => {})
                   .catch(err => console.log(err));
               }
             }
-          )
+          );
         }
       }
-    })
+    });
 
     for (let ctr = 0; ctr < rows.rows.length; ctr++) {
       Journal.findOne({ title: rows.rows[ctr].title }).then(journal => {
         if (journal) {
-          console.log("find Occurence")
+          console.log("find Occurence");
         } else {
           try {
             // increase college journal total
@@ -253,38 +233,23 @@ router.get("/test", (req, res) => {
             // Save Journal
 
             new Journal(newJournal).save();
-
-
-
-
           } catch (error) {
             console.log(error);
           }
         }
       });
-
-
-
-
-
     }
 
-
-    console.log("working")
-    res.json(rows)
-
-  })
-
-
-
-
+    console.log("working");
+    res.json(rows);
+  });
 });
 
 // @route   GET api/journals
 // @desc    Get journals
 // @access  Public
 router.get("/", (req, res) => {
-  Journal.find({})
+  Journal.find({}, { description: 0 })
     .sort({ title: 1 })
     .then(journals => res.json(journals))
     .catch(err =>
@@ -356,9 +321,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                  name: aut.name,
-                  role: "Author"
-                })
+                    name: aut.name,
+                    role: "Author"
+                  })
                 : "";
             });
 
@@ -368,7 +333,7 @@ router.post(
               course: req.body.course,
               description: req.body.description,
               issn: req.body.issn,
-              pages: req.body.pages,
+              // pages: req.body.pages,
               publisher: req.body.publisher,
               volume: req.body.volume,
               yearPublished: req.body.yearPublished,
@@ -455,8 +420,8 @@ router.post(
                       course: req.body.course,
                       description: req.body.description,
                       issn: req.body.issn,
-                      pages: req.body.pages,
-                      publisher: req.body.pages,
+                      // pages: req.body.pages,
+                      publisher: req.body.publisher,
                       volume: req.body.volume,
                       yearPublished: req.body.yearPublished,
                       author: authorArray,
@@ -687,39 +652,51 @@ router.post(
     if (req.body.oldFile) {
       // delete research document from client folder
       try {
-        fs.unlinkSync(`${reqPath}/docFiles/journalDocuments/${req.body.oldFile}`, () => {
-          console.log("old file deleted");
-        });
+        fs.unlinkSync(
+          `${reqPath}/docFiles/journalDocuments/${req.body.oldFile}`,
+          () => {
+            console.log("old file deleted");
+          }
+        );
       } catch (error) {
         //console.log(error);
       }
     }
 
     fs.writeFile(
-      `${reqPath}/docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`,
+      `${reqPath}/docFiles/journalDocuments/${req.body.journalId +
+        "-" +
+        rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
-      function (err) {
+      function(err) {
         console.log("file created");
 
-        pdfUtil.pdfToText(`${reqPath}/docFiles/journalDocuments/${req.body.journalId + "-" + rand}.pdf`, function (err, data) {
-          let { text, len } = processor.textProcess(data.toString().toLowerCase());
+        pdfUtil.pdfToText(
+          `${reqPath}/docFiles/journalDocuments/${req.body.journalId +
+            "-" +
+            rand}.pdf`,
+          function(err, data) {
+            let { text, len } = processor.textProcess(
+              data.toString().toLowerCase()
+            );
 
-          const newDocument = {
-            document: filename,
-            content: {
-              text,
-              sentenceLength: len
-            },
-            lastUpdate: Date.now()
-          };
+            const newDocument = {
+              document: filename,
+              content: {
+                text,
+                sentenceLength: len
+              },
+              lastUpdate: Date.now()
+            };
 
-          Journal.findOneAndUpdate(
-            { _id: req.body.journalId },
-            { $set: newDocument },
-            { new: true }
-          ).then(journal => res.json(journal));
-        })
+            Journal.findOneAndUpdate(
+              { _id: req.body.journalId },
+              { $set: newDocument },
+              { new: true }
+            ).then(journal => res.json(journal));
+          }
+        );
 
         Journal.findOne({ _id: req.body.journalId }).then(journal => {
           // add activity
@@ -730,8 +707,6 @@ router.post(
           };
           new Activity(newActivity).save();
         });
-
-
       }
     );
   }
@@ -761,7 +736,7 @@ router.post(
       `${reqPath}/document/${req.body.journalId}.xlsx`,
       base64Doc,
       { encoding: "base64" },
-      function (err) {
+      function(err) {
         console.log("file created");
         Journal.findOne({ id: "123" })
           .sort({ title: 1 })
@@ -774,7 +749,6 @@ router.post(
   }
 );
 
-
 // @route   DELETE api/journals/document/:journal_id/:filename
 // @desc    Delete document from journal
 // @access  Private
@@ -785,7 +759,9 @@ router.delete(
     // delete research document from client folder
     let reqPath = path.join(__dirname, "../../");
     try {
-      fs.unlinkSync(`${reqPath}/docFiles/journalDocuments/${req.params.filename}`);
+      fs.unlinkSync(
+        `${reqPath}/docFiles/journalDocuments/${req.params.filename}`
+      );
     } catch (error) {
       console.log(error);
     }

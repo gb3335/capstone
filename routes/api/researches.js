@@ -276,7 +276,7 @@ router.get("/test", (req, res) => {
 // @desc    Get researches
 // @access  Public
 router.get("/", (req, res) => {
-  Research.find({}, { content: 0 })
+  Research.find({}, { content: 0, abstract: 0 })
     .sort({ title: 1 })
     .then(researches => res.json(researches))
     .catch(err =>
@@ -360,7 +360,7 @@ router.post(
               course: req.body.course,
               abstract: req.body.abstract,
               researchID: req.body.researchId,
-              pages: req.body.pages,
+              // pages: req.body.pages,
               schoolYear: req.body.schoolYear,
               author: authorArray,
               lastUpdate: Date.now()
@@ -446,7 +446,7 @@ router.post(
                       course: req.body.course,
                       abstract: req.body.abstract,
                       researchID: req.body.researchId,
-                      pages: req.body.pages,
+                      // pages: req.body.pages,
                       schoolYear: req.body.schoolYear,
                       author: authorArray,
                       lastUpdate: Date.now()
