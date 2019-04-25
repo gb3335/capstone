@@ -949,7 +949,7 @@ router.get(
             invitedBy: currentElement.invitedBy,
             college: currentElement.college,
             date: currentElement.date,
-            superAdmin: user.superAdmin
+            superAdmin: currentElement.superAdmin
           });
         });
         res.json(payload);

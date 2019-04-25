@@ -96,31 +96,61 @@ class ResearchImageActions extends Component {
       ) {
         docuItem = (
           <div
-            className="btn-toolbar mb-3"
+            className="btn-toolbar justify-content-between"
             role="toolbar"
             aria-label="Toolbar with button groups"
           >
-            <div className="btn-group" role="group" aria-label="First group">
-              <label
-                to="#"
-                htmlFor="docUpload"
-                className="btn btn-light"
-                style={{ fontSize: "14px" }}
-              >
-                <i className="fas fa-redo-alt text-info mr-1" />
-                Update Document
-              </label>
+            <div>
+              <div className="btn-group" role="group" aria-label="First group">
+                <label
+                  to="#"
+                  onClick={this.onLocalCheck}
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-search text-info mr-1" />
+                  Check Document |
+                  <i className="fas fa-database text-info mr-1 ml-1" />
+                  <b>All </b>
+                </label>
+              </div>
+              <div className="btn-group" role="group" aria-label="First group">
+                <label
+                  to="#"
+                  onClick={this.onSidebySideFlagTrue}
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-search text-info mr-1" />
+                  Check Document |
+                  <i className="fas fa-copy text-info mr-1 ml-1" />
+                  <b>Side By Side</b>
+                </label>
+              </div>
             </div>
-            <div className="btn-group" role="group" aria-label="Second group">
-              <label
-                to="#"
-                onClick={this.onDeleteDocument}
-                className="btn btn-danger"
-                style={{ fontSize: "14px" }}
-              >
-                <i className="fas fa-trash text-light mr-1" />
-                Remove Document
-              </label>
+            <div className="input-group">
+              <div className="btn-group" role="group" aria-label="Second group">
+                <label
+                  to="#"
+                  htmlFor="docUpload"
+                  className="btn btn-light"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-redo-alt text-info mr-1" />
+                  Update Document
+                </label>
+              </div>
+              <div className="btn-group" role="group" aria-label="Second group">
+                <label
+                  to="#"
+                  onClick={this.onDeleteDocument}
+                  className="btn btn-danger"
+                  style={{ fontSize: "14px" }}
+                >
+                  <i className="fas fa-trash text-light mr-1" />
+                  Remove Document
+                </label>
+              </div>
             </div>
           </div>
         );
@@ -205,20 +235,24 @@ class ResearchImageActions extends Component {
     return (
       <div>
         {this.props.localPlagiarism.globalLoading.loading &&
-          this.props.localPlagiarism.globalLoading.number === 4 ? (
-            <div>
-              <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
-              <Progress
-                percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
-              />
-            </div>
-          ) : this.props.localPlagiarism.globalLoading.loading &&
-            this.props.localPlagiarism.globalLoading.number !== 4 ? (
-              <p>Plagiarism scan is currently in progress, please wait...</p>
-            ) : (
-              docuItem
-            )}
-        {errors.errors ? <p className="text-danger">{errors.errors.noResearchForPlagiarism}</p> : ""}
+        this.props.localPlagiarism.globalLoading.number === 4 ? (
+          <div>
+            <p>{this.props.localPlagiarism.axiosProgress.tag}</p>
+            <Progress
+              percent={this.props.localPlagiarism.axiosProgress.axiosProgress}
+            />
+          </div>
+        ) : this.props.localPlagiarism.globalLoading.loading &&
+          this.props.localPlagiarism.globalLoading.number !== 4 ? (
+          <p>Plagiarism scan is currently in progress, please wait...</p>
+        ) : (
+          docuItem
+        )}
+        {errors.errors ? (
+          <p className="text-danger">{errors.errors.noResearchForPlagiarism}</p>
+        ) : (
+          ""
+        )}
 
         <div hidden>
           <FileFieldGroup
