@@ -7,7 +7,7 @@ module.exports = function validateCollegeInput(data) {
   data.fullName = !isEmpty(data.fullName) ? data.fullName : "";
   data.initials = !isEmpty(data.initials) ? data.initials : "";
   data.logo = !isEmpty(data.logo) ? data.logo : "";
-  data.librarian = !isEmpty(data.librarian) ? data.librarian : "";
+  data.librarianName = !isEmpty(data.librarianName) ? data.librarianName : "";
 
   if (Validator.isEmpty(data.fullName)) {
     errors.fullName = "College Name is required";
@@ -21,7 +21,7 @@ module.exports = function validateCollegeInput(data) {
     errors.logo = "College logo is required";
   }
 
-  if (Validator.isEmpty(data.librarian)) {
+  if (Validator.isEmpty(data.librarianName)) {
     errors.librarian = "College librarian is required";
   }
 

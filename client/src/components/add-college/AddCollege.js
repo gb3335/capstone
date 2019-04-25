@@ -250,7 +250,7 @@ class CreateCollege extends Component {
           .split(".")
           .slice(0, -1)
           .join(".") + Date.now(),
-      librarian: libName,
+      librarianName: libName,
       librarianId: libId,
       file: this.state.selectedFile,
       color: this.state.background,
