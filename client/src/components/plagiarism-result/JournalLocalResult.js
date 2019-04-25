@@ -375,12 +375,12 @@ class LocalResult extends Component {
                           {journal.course}
                         </div>
                         <div>
-                          <span>Pages: </span>
-                          {journal.pages}
-                        </div>
-                        <div>
                           <span>Volume #: </span>
                           {journal.volume}
+                        </div>
+                        <div>
+                          <span>ISSN: </span>
+                          {journal.issn}
                         </div>
                         <div>
                           <span>Year Published: </span>
