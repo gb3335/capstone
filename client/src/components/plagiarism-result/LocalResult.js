@@ -384,8 +384,8 @@ class LocalResult extends Component {
                           )}
                         </div>
                         <div>
-                          <span>Pages: </span>
-                          {research.pages}
+                          <span>Accession ID: </span>
+                          {research.researchID}
                         </div>
                         <div>
                           <span>School Year: </span>
