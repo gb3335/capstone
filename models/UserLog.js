@@ -8,11 +8,11 @@ const UserLogSchema = new Schema({
     required: true
   },
   username: {
-    type: String,
+    type: String
   },
   type: {
     type: String,
-    default: 'Login'
+    default: "Login"
   },
   email: {
     type: String,
@@ -24,8 +24,7 @@ const UserLogSchema = new Schema({
       required: true
     },
     middleName: {
-      type: String,
-      required: true
+      type: String
     },
     lastName: {
       type: String,
@@ -41,12 +40,12 @@ const UserLogSchema = new Schema({
     required: true
   },
   college: {
-    type: String,
+    type: String
   },
 
   avatar: {
     type: String,
-    default: './default.jpg'
+    default: "./default.jpg"
   },
   isBlock: {
     type: Number,
@@ -55,10 +54,7 @@ const UserLogSchema = new Schema({
   date: {
     type: Date,
     default: Date.now
-  },
-
-
-
+  }
 });
 
 module.exports = UserLog = mongoose.model("userlogs", UserLogSchema);

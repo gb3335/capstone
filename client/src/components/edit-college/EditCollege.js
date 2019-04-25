@@ -260,7 +260,7 @@ class CreateCollege extends Component {
       journalTotal: this.state.journalTotal,
       id: this.props.college.college._id,
       oldLibId: this.state.oldLibId,
-      librarian: libName,
+      librarianName: libName,
       librarianId: libId,
       username: name
     };
@@ -288,7 +288,8 @@ class CreateCollege extends Component {
       if (this.props.users !== null) {
         this.props.users.map(user => {
           if (
-            (user.userType === "LIBRARIAN" && user.college === "") ||
+            (user.userType === "LIBRARIAN" &&
+              (user.college === "" || user.college === null)) ||
             user._id === this.props.college.college.librarianId
           ) {
             suggestions.push({

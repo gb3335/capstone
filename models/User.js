@@ -9,8 +9,7 @@ const UserSchema = new Schema({
       required: true
     },
     middleName: {
-      type: String,
-      required: true
+      type: String
     },
     lastName: {
       type: String,
@@ -18,6 +17,9 @@ const UserSchema = new Schema({
     }
   },
   userName: {
+    type: String
+  },
+  superAdmin: {
     type: String
   },
   email: {

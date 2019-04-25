@@ -1,12 +1,13 @@
-
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
 import ImageFieldGroup from "../common/ImageFieldGroup";
-import { changeStatus, changeAvatar, createReportForUser } from '../../actions/registerActions';
-
-
+import {
+  changeStatus,
+  changeAvatarBySuper,
+  createReportForUser
+} from "../../actions/registerActions";
 
 import SweetAlert from "react-bootstrap-sweetalert";
 class UserAction extends Component {
@@ -51,21 +52,18 @@ class UserAction extends Component {
       ctr = 1;
 
       if (ctr === len) {
-
         const data = {
           images: upImages,
-          id: this.props.users.user._id,
-
+          id: this.props.users.user._id
         };
 
-        this.props.changeAvatar(data, this.props.history);
+        this.props.changeAvatarBySuper(data, this.props.history);
         this.setState({
           image: "",
           images: []
-        })
+        });
       }
     };
-
   };
   onGenerateReport = () => {
     const name =
@@ -85,14 +83,10 @@ class UserAction extends Component {
 
     // show generate alert
     this.setState({ generateAlert: true });
-
-
   };
-
 
   onGenerateAlert = () => {
     this.setState({ generateAlert: false });
-
   };
   onDeleteAlert = () => {
     this.setState({ deleteAlert: true });
@@ -105,67 +99,91 @@ class UserAction extends Component {
   };
   onRemoveDeleteOkay = () => {
     const userData = {
-
       id: this.props.users.user._id,
       isBlock: this.props.users.user.isBlock,
       loginid: this.props.auth.user.id
-
     };
 
-
     this.props.changeStatus(userData, this.props.history);
-    this.setState({ deleteAlertOkay: false })
-
-
+    this.setState({ deleteAlertOkay: false });
   };
   onDeleteResearch = () => {
     this.setState({ deleteAlertOkay: true, deleteAlert: false });
   };
 
   render() {
-
-
-    const { user, auth } = this.props
-
-
-
-
+    const { user, auth } = this.props;
 
     let editAction;
     let imageAction;
     let blockAction;
 
     if (auth.isAuthenticated) {
-
-      if (user.email === auth.user.email) {
+      if (
+        user.email === auth.user.email ||
+        this.props.auth.user.superAdmin === "true"
+      ) {
         editAction = (
-
-          <Link to="/edit-account" className="btn btn-light"> <i className="fas fa-pen text-info mr-1" />Edit User</Link>
-
-
-
-
+          <Link to="/edit-by-super" className="btn btn-light">
+            {" "}
+            <i className="fas fa-pen text-info mr-1" />
+            Edit User
+          </Link>
         );
         imageAction = (
-
-          <label to="#" htmlFor="imageUpload" className="btn btn-light">
+          <label to="#" htmlFor="imageUpload" className="btn btn-light mt-2">
             <i className="fas fa-circle-notch text-info mr-1" />
             Change avatar
           </label>
-
-
-        )
-
+        );
       }
-      if (this.props.users.user.userType !== 'ADMINISTRATOR') {
-
-        blockAction = user.isBlock === 0 ? (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
-          <i className="fas fa-exchange-alt text-danger mr-1" />&nbsp;Deactivate
-        </Link>) : (<Link to="#" htmlFor="imageUpload" className="btn btn-light" onClick={this.onDeleteAlert}>
-            <i className="fas fa-exchange-alt text-success mr-1" />&nbsp;Activate
-        </Link>);
+      if (this.props.users.user.userType !== "ADMINISTRATOR") {
+        blockAction =
+          user.isBlock === 0 ? (
+            <Link
+              to="#"
+              htmlFor="imageUpload"
+              className="btn btn-light"
+              onClick={this.onDeleteAlert}
+            >
+              <i className="fas fa-exchange-alt text-danger mr-1" />
+              &nbsp;Deactivate
+            </Link>
+          ) : (
+            <Link
+              to="#"
+              htmlFor="imageUpload"
+              className="btn btn-light"
+              onClick={this.onDeleteAlert}
+            >
+              <i className="fas fa-exchange-alt text-success mr-1" />
+              &nbsp;Activate
+            </Link>
+          );
+      } else if (this.props.auth.user.superAdmin === "true") {
+        blockAction =
+          user.isBlock === 0 ? (
+            <Link
+              to="#"
+              htmlFor="imageUpload"
+              className="btn btn-light"
+              onClick={this.onDeleteAlert}
+            >
+              <i className="fas fa-exchange-alt text-danger mr-1" />
+              &nbsp;Deactivate
+            </Link>
+          ) : (
+            <Link
+              to="#"
+              htmlFor="imageUpload"
+              className="btn btn-light"
+              onClick={this.onDeleteAlert}
+            >
+              <i className="fas fa-exchange-alt text-success mr-1" />
+              &nbsp;Activate
+            </Link>
+          );
       }
-
     }
     return (
       <div>
@@ -229,12 +247,15 @@ class UserAction extends Component {
           />
         </div>
         <div className="btn-group mb-3 btn-group-sm" role="group">
-          <Link to="#" onClick={this.onGenerateReport} className="btn btn-light">
-            <i className="fas fa-poll-h text-info mr-1" />Create Report
-        </Link>
+          <Link
+            to="#"
+            onClick={this.onGenerateReport}
+            className="btn btn-light"
+          >
+            <i className="fas fa-poll-h text-info mr-1" />
+            Create Report
+          </Link>
         </div>
-
-
       </div>
     );
   }
@@ -243,7 +264,7 @@ class UserAction extends Component {
 UserAction.propTypes = {
   users: PropTypes.object.isRequired,
   auth: PropTypes.object.isRequired,
-  changeAvatar: PropTypes.func.isRequired,
+  changeAvatarBySuper: PropTypes.func.isRequired,
   createReportForUser: PropTypes.func.isRequired
 };
 const mapStateToProps = state => ({
@@ -253,5 +274,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeStatus, changeAvatar, createReportForUser }
+  { changeStatus, changeAvatarBySuper, createReportForUser }
 )(withRouter(UserAction));

@@ -364,14 +364,14 @@ class EditResearch extends Component {
                   error={errors.researchId}
                   info="Research ID given by the college library"
                 />
-                <TextFieldGroup
+                {/* <TextFieldGroup
                   placeholder="* Pages"
                   name="pages"
                   value={this.state.pages}
                   onChange={this.onChange}
                   error={errors.pages}
                   info="Number of pages in your research"
-                />
+                /> */}
                 <TextFieldGroup
                   placeholder="* School Year"
                   name="schoolYear"

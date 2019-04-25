@@ -33,7 +33,7 @@ class ResearchesAction extends Component {
       college: true,
       course: true,
       type: true,
-      pages: true,
+      pages: false,
       academicYear: true,
       lastUpdate: true,
       deletedResearches: false,
@@ -346,7 +346,7 @@ class ResearchesAction extends Component {
                     Research Type
                   </label>
                 </div>
-                <div className="form-check">
+                {/* <div className="form-check">
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
@@ -359,7 +359,7 @@ class ResearchesAction extends Component {
                   <label className="form-check-label" htmlFor="pages">
                     Pages
                   </label>
-                </div>
+                </div> */}
                 <div className="form-check">
                   <input
                     className="form-check form-check-inline"
@@ -415,7 +415,7 @@ class ResearchesAction extends Component {
                 {disableFlag ? (
                   <input
                     type="button"
-                    value="Generate Report"
+                    value="Generate Report..."
                     onClick={this.onGenerateReport}
                     className="btn btn-info disabled"
                   />

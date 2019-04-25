@@ -12,10 +12,8 @@ module.exports = function validateResearchInput(data) {
   data.publisher = !isEmpty(data.publisher) ? data.publisher : "";
   data.course = !isEmpty(data.course) ? data.course : "";
 
-
-
   data.yearPublished = !isEmpty(data.yearPublished) ? data.yearPublished : "";
-  data.pages = !isEmpty(data.pages) ? data.pages : "";
+  // data.pages = !isEmpty(data.pages) ? data.pages : "";
   data.issn = !isEmpty(data.issn) ? data.issn : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
@@ -38,8 +36,6 @@ module.exports = function validateResearchInput(data) {
     errors.course = "Journal course is required";
   }
 
-
-
   if (Validator.isEmpty(data.issn)) {
     errors.issn = "ISSN is required";
   }
@@ -48,17 +44,13 @@ module.exports = function validateResearchInput(data) {
     errors.yearPublished = "Year published is required";
   }
 
-  if (Validator.isEmpty(data.pages)) {
-    errors.pages = "Journal pages is required";
-  }
+  // if (Validator.isEmpty(data.pages)) {
+  //   errors.pages = "Journal pages is required";
+  // }
 
-  if (!Validator.isNumeric(data.pages)) {
-    errors.pages = "Journal pages is invalid";
-  }
-
-  if (!Validator.isNumeric(data.volume)) {
-    errors.volume = "Journal volume is invalid";
-  }
+  // if (!Validator.isNumeric(data.pages)) {
+  //   errors.pages = "Journal pages is invalid";
+  // }
 
   if (Validator.isEmpty(data.authorOne)) {
     errors.authorOne = "Author One is required";

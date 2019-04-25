@@ -147,12 +147,11 @@ router.post(
         middleName: req.body.middlename,
         lastName: req.body.lastname
       },
-      email: req.body.email,
       contact: req.body.contact,
       college: req.body.college,
       id: req.body.id
     };
-    User.findOne({ email: profileData.email }).then(user => {
+    User.findOne({ _id: req.body.id }).then(user => {
       const errors = {};
       if (user) {
         if (user.email != req.user.email) {
@@ -170,7 +169,7 @@ router.post(
           new Activity(newActivity).save();
 
           User.findByIdAndUpdate(
-            req.user._id,
+            { _id: req.body.id },
             { $set: profileData },
             { new: true }
           ).then(user => {
@@ -190,7 +189,8 @@ router.post(
               isBlock: user.isBlock,
               invitedBy: user.invitedBy,
               college: user.college,
-              date: user.date
+              date: user.date,
+              superAdmin: user.superAdmin
             };
             jwt.sign(payload, keys.secretOrKey, (err, token) => {
               res.json({
@@ -204,6 +204,62 @@ router.post(
     });
   }
 );
+
+// @routes  POST api/users/profile/update
+// @desc    Edit User profile
+// @access  private
+router.post(
+  "/profile/updateBySuper",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+    //Check Validation
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    const password = req.body.password;
+
+    User.findOne({ _id: req.body.id }).then(user => {
+      const errors = {};
+      if (user) {
+        if (user.email != req.user.email) {
+          errors.email = "Email Already Exists!";
+          return res.status(400).json(errors);
+        } else {
+          const newActivity = {
+            title:
+              "User " +
+              (user.userName ? user.userName : user.email) +
+              " updated",
+            by: user._id,
+            type: "User"
+          };
+          new Activity(newActivity).save();
+          const profileData = {
+            name: {
+              firstName: req.body.firstname,
+              middleName: req.body.middlename,
+              lastName: req.body.lastname
+            },
+            contact: req.body.contact,
+            college: req.body.college,
+            id: req.body.id
+          };
+          User.findByIdAndUpdate(
+            { _id: profileData.id },
+            { $set: profileData },
+            { new: true }
+          ).then(user => {
+            res.json({
+              user
+            });
+          });
+        }
+      }
+    });
+  }
+);
+
 // @routes  POST api/users/profile/updateusername
 // @desc    Edit User profile username
 // @access  private
@@ -257,7 +313,8 @@ router.post(
               isBlock: user.isBlock,
               invitedBy: user.invitedBy,
               college: user.college,
-              date: user.date
+              date: user.date,
+              superAdmin: user.superAdmin
             };
             jwt.sign(payload, keys.secretOrKey, (err, token) => {
               res.json({
@@ -291,6 +348,32 @@ router.post(
         ).then(user => {
           res.json({
             success: true
+          });
+        });
+      }
+    });
+  }
+);
+
+// @routes  POST api/users/profile/updateusername
+// @desc    Edit User profile username
+// @access  private
+router.post(
+  "/profile/changeEmail",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const profileData = {
+      email: req.body.email
+    };
+    User.findOne({ _id: req.body.id }).then(user => {
+      if (user) {
+        User.findByIdAndUpdate(
+          { _id: req.body.id },
+          { $set: profileData },
+          { new: true }
+        ).then(user => {
+          res.json({
+            user
           });
         });
       }
@@ -360,7 +443,8 @@ router.post(
                     invitedBy: user.invitedBy,
                     college: user.college,
                     passwordUpdated: user.passwordUpdated,
-                    date: user.date
+                    date: user.date,
+                    superAdmin: user.superAdmin
                   };
                   jwt.sign(payload, keys.secretOrKey, (err, token) => {
                     res.json({
@@ -699,7 +783,8 @@ router.post("/login", (req, res) => {
                   invitedBy: user.invitedBy,
                   college: user.college,
                   passwordUpdated: user.passwordUpdated,
-                  date: user.date
+                  date: user.date,
+                  superAdmin: user.superAdmin
                 };
 
                 const newUser = new UserLog({
@@ -764,7 +849,8 @@ router.post("/login", (req, res) => {
               invitedBy: user.invitedBy,
               college: user.college,
               date: user.date,
-              passwordUpdated: user.passwordUpdated
+              passwordUpdated: user.passwordUpdated,
+              superAdmin: user.superAdmin
             };
 
             const newUser = new UserLog({
@@ -862,7 +948,8 @@ router.get(
             isBlock: currentElement.isBlock,
             invitedBy: currentElement.invitedBy,
             college: currentElement.college,
-            date: currentElement.date
+            date: currentElement.date,
+            superAdmin: user.superAdmin
           });
         });
         res.json(payload);
@@ -898,7 +985,8 @@ router.get("/:id", (req, res) => {
         isBlock: user.isBlock,
         invitedBy: user.invitedBy,
         college: user.college,
-        date: user.date
+        date: user.date,
+        superAdmin: user.superAdmin
       };
 
       res.json(payload);
@@ -953,7 +1041,10 @@ router.post(
       };
 
       const newActivity = {
-        title: "User " + req.body.username + ": Avatar updated",
+        title:
+          "User " + req.body.username
+            ? req.body.username
+            : req.body.email + ": Avatar updated",
         by: req.body.id,
         type: "User"
       };
@@ -1006,7 +1097,8 @@ router.post(
                 invitedBy: user.invitedBy,
                 college: user.college,
                 passwordUpdated: user.passwordUpdated,
-                date: user.date
+                date: user.date,
+                superAdmin: user.superAdmin
               }; //Create JWT Payload
               //Sign the Token
               jwt.sign(payload, keys.secretOrKey, (err, token) => {
@@ -1040,7 +1132,8 @@ router.post(
             isBlock: user.isBlock,
             invitedBy: user.invitedBy,
             college: user.college,
-            date: user.date
+            date: user.date,
+            superAdmin: user.superAdmin
           }; //Create JWT Payload
 
           //Sign the Token

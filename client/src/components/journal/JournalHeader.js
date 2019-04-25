@@ -37,13 +37,13 @@ class JournalHeader extends Component {
           </span>
           <br />
           <span>
-            <b>Volume :</b> {journal.volume}
+            <b>Volume and Number :</b> {journal.volume}
           </span>
           <br />
-          <span>
+          {/* <span>
             <b>Pages:</b> {journal.pages}
           </span>
-          <br />
+          <br /> */}
           <span>
             <b>Year Published:</b> {journal.yearPublished}
           </span>

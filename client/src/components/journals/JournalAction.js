@@ -20,7 +20,7 @@ const customStyles = {
     transform: "translate(-50%, -50%)",
     borderRadius: "10px",
     width: "350px",
-    height: "410px"
+    height: "380px"
   }
 };
 
@@ -32,7 +32,7 @@ class JournalAction extends Component {
       issn: true,
       college: true,
       course: true,
-      pages: true,
+      pages: false,
       yearPublished: true,
       lastUpdate: true,
       deletedJournals: false,
@@ -333,7 +333,7 @@ class JournalAction extends Component {
                     Course
                   </label>
                 </div>
-                <div className="form-check">
+                {/* <div className="form-check">
                   <input
                     className="form-check form-check-inline"
                     type="checkbox"
@@ -346,7 +346,7 @@ class JournalAction extends Component {
                   <label className="form-check-label" htmlFor="pages">
                     Pages
                   </label>
-                </div>
+                </div> */}
                 <div className="form-check">
                   <input
                     className="form-check form-check-inline"
@@ -399,7 +399,7 @@ class JournalAction extends Component {
                 {disableFlag ? (
                   <input
                     type="button"
-                    value="Generate Report"
+                    value="Generate Report..."
                     onClick={this.onGenerateReport}
                     className="btn btn-info disabled"
                   />

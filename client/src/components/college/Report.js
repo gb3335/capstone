@@ -30,7 +30,7 @@ class Report extends Component {
       researchCollege: true,
       researchCourse: true,
       researchType: true,
-      researchPages: true,
+      researchPages: false,
       researchAcademicYear: true,
       researchLastUpdate: true,
       deletedResearches: false,
@@ -430,7 +430,7 @@ class Report extends Component {
                     Type
                   </label>
                 </div>
-                <div className="form-check disabled">
+                {/* <div className="form-check disabled">
                   <input
                     className="form-check-input"
                     type="checkbox"
@@ -443,7 +443,7 @@ class Report extends Component {
                   <label className="form-check-label" htmlFor="researchPages">
                     Pages
                   </label>
-                </div>
+                </div> */}
                 <div className="form-check disabled">
                   <input
                     className="form-check-input"
@@ -508,7 +508,7 @@ class Report extends Component {
             className="btn btn-info disabled"
           >
             <i className="fas fa-print mr-1" />
-            Generate Report
+            Generate Report...
           </button>
         ) : (
           <button

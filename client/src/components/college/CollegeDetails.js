@@ -57,15 +57,15 @@ class CollegeDetails extends Component {
               <div className="col-md-4">
                 <p className="infoText">
                   <i className="fas fa-graduation-cap" />{" "}
-                  <span>Total Courses: {activeCourseLenght}</span>
+                  <span>Total Course: {activeCourseLenght}</span>
                 </p>
                 <p className="infoText">
                   <i className="fas fa-book" />{" "}
-                  <span>Total Researches: {college.researchTotal}</span>
+                  <span>Total Research: {college.researchTotal}</span>
                 </p>
                 <p className="infoText">
                   <i className="fas fa-newspaper" />{" "}
-                  <span>Total Journals: {college.journalTotal}</span>
+                  <span>Total Journal: {college.journalTotal}</span>
                 </p>
               </div>
               <div className="col md-4">

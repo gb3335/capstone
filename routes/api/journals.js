@@ -249,7 +249,7 @@ router.get("/test", (req, res) => {
 // @desc    Get journals
 // @access  Public
 router.get("/", (req, res) => {
-  Journal.find({}, { description: 0 })
+  Journal.find()
     .sort({ title: 1 })
     .then(journals => res.json(journals))
     .catch(err =>

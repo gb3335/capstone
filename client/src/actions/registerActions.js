@@ -133,6 +133,22 @@ export const changeAvatar = (userData, history) => (dispatch, decoded) => {
     );
 };
 
+export const changeAvatarBySuper = (userData, history) => dispatch => {
+  dispatch(setUserLoading());
+  axios
+    .post("/api/users/avatar", userData)
+    .then(res => {
+      dispatch(getUserById(userData.id));
+      history.push(`/viewusers/${userData.id}`);
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 export const editUsername = (userData, history) => dispatch => {
   axios
     .post("/api/users/profile/updateusername", userData)
@@ -160,8 +176,28 @@ export const editUsername = (userData, history) => dispatch => {
       })
     );
 };
-
-
+export const editUsernameBySuper = (userData, history) => dispatch => {
+  axios
+    .post("/api/users/profile/updateusername", userData)
+    .then(res => {
+      const { token } = res.data;
+      // Set token to local storage
+      localStorage.setItem("jwtToken", token);
+      // Set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      // Set current user
+      dispatch(setCurrentUser(decoded));
+      history.push(`/viewusers/${userData.id}`);
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
 export const changeStatus = (userData, history) => dispatch => {
   dispatch(setUserLoading());
   axios

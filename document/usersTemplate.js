@@ -11,7 +11,6 @@ module.exports = ({
   users,
   typeOfReport
 }) => {
-
   let userList;
   let usersListNoComma = "";
   let usersListHeaders;
@@ -21,7 +20,7 @@ module.exports = ({
 
   const currentDate = moment().format("MMMM Do YYYY, h:mm A");
 
-  String.prototype.getInitials = function (glue) {
+  String.prototype.getInitials = function(glue) {
     if (typeof glue == "undefined") {
       var glue = true;
     }
@@ -29,12 +28,11 @@ module.exports = ({
     var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
     if (glue) {
-      return initials.join('.');
+      return initials.join(".");
     }
 
     return initials;
   };
-
 
   if (email === true) {
     numberOfColForEndRow = ++numberOfColForEndRow;
@@ -64,18 +62,38 @@ module.exports = ({
         (user, index) =>
           "<tr>" +
           `<td>${++index}</td>` +
-          `<td>${user.name.lastName}, ${user.name.firstName} ${user.name.middleName.getInitials()}.</td>` +
+          `<td>${user.name.lastName}, ${user.name.firstName} ${
+            user.name.middleName
+              ? user.name.middleName.getInitials() + ". "
+              : ""
+          }</td>` +
           `${email === true ? `<td>${user.email}</td>` : ""}` +
-          `${userName === true ? `<td>${user.userName ? user.userName : `None`}</td>` : ""}` +
-          `${type === true ? `<td>${user.userType}</td>` : ""}` +
-          `${college === true ? `<td>${user.college === null | user.college === "" | user.college === "undefined" ? `None` : user.college}</td>` : ""}` +
-          `${status === true ? `<td>${user.isBlock === 0 ? `ACTIVE` : `DEACTIVATED`}</td>` : ""}` +
           `${
-          dateCreated === true
-            ? `<td>${moment(user.date).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
+            userName === true
+              ? `<td>${user.userName ? user.userName : `None`}</td>`
+              : ""
+          }` +
+          `${type === true ? `<td>${user.userType}</td>` : ""}` +
+          `${
+            college === true
+              ? `<td>${
+                  (user.college === null) |
+                  (user.college === "") |
+                  (user.college === "undefined")
+                    ? `None`
+                    : user.college
+                }</td>`
+              : ""
+          }` +
+          `${
+            status === true
+              ? `<td>${user.isBlock === 0 ? `ACTIVE` : `DEACTIVATED`}</td>`
+              : ""
+          }` +
+          `${
+            dateCreated === true
+              ? `<td>${moment(user.date).format("MMMM Do YYYY, h:mm A")}</td>`
+              : ""
           }` +
           "</tr>"
       );
@@ -85,21 +103,37 @@ module.exports = ({
       userList = users.map((user, index) =>
         user.isBlock === 0
           ? "<tr>" +
-          `<td>${++ind}</td>` +
-          `<td>${user.name.lastName}, ${user.name.firstName} ${user.name.middleName.getInitials()}.</td>` +
-          `${email === true ? `<td>${user.email}</td>` : ""}` +
-          `${userName === true ? `<td>${user.userName}</td>` : ""}` +
-          `${type === true ? `<td>${user.userType}</td>` : ""}` +
-          `${college === true ? `<td>${user.college === null | user.college === "" | user.college === "undefined" ? `None` : user.college}</td>` : ""}` +
-          `${status === true ? `<td>${user.isBlock === 0 ? `ACTIVE` : `DEACTIVATED`}</td>` : ""}` +
-          `${
-          dateCreated === true
-            ? `<td>${moment(user.date).format(
-              "MMMM Do YYYY, h:mm A"
-            )}</td>`
-            : ""
-          }` +
-          "</tr>"
+            `<td>${++ind}</td>` +
+            `<td>${user.name.lastName}, ${user.name.firstName} ${
+              user.name.middleName
+                ? user.name.middleName.getInitials() + ". "
+                : ""
+            }</td>` +
+            `${email === true ? `<td>${user.email}</td>` : ""}` +
+            `${userName === true ? `<td>${user.userName}</td>` : ""}` +
+            `${type === true ? `<td>${user.userType}</td>` : ""}` +
+            `${
+              college === true
+                ? `<td>${
+                    (user.college === null) |
+                    (user.college === "") |
+                    (user.college === "undefined")
+                      ? `None`
+                      : user.college
+                  }</td>`
+                : ""
+            }` +
+            `${
+              status === true
+                ? `<td>${user.isBlock === 0 ? `ACTIVE` : `DEACTIVATED`}</td>`
+                : ""
+            }` +
+            `${
+              dateCreated === true
+                ? `<td>${moment(user.date).format("MMMM Do YYYY, h:mm A")}</td>`
+                : ""
+            }` +
+            "</tr>"
           : ""
       );
 
@@ -125,7 +159,6 @@ module.exports = ({
       "<tr>" +
       "<th>NO</th>" +
       "<th>NAME</th>" +
-
       `${email === true ? `<th>EMAIL</th>` : ""}` +
       `${userName === true ? "<th>USERNAME</th>" : ""}` +
       `${type === true ? "<th>TYPE</th>" : ""}` +

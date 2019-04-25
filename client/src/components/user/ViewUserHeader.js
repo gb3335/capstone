@@ -52,8 +52,9 @@ class ViewUserHeader extends Component {
                 className="display-4 text-center"
                 style={{ color: fontColor }}
               >
-                {user.name.firstName} {user.name.middleName.getInitials()}.{" "}
-                {user.name.lastName}
+                {user.name.firstName}{" "}
+                {user.name.middleName ? user.name.middleName.getInitials() : ""}
+                {user.name.middleName ? ". " : ""} {user.name.lastName}
               </h1>
               <p className="lead text-center" style={{ color: fontColor }}>
                 <span>{user.college}</span>

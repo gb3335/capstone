@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Spinner from "../common/Spinner";
 import MaterialTable from "material-table";
-import './ViewUsers.css';
+import "./ViewUsers.css";
 import moment from "moment";
 import SweetAlert from "react-bootstrap-sweetalert";
 import {
@@ -16,7 +16,10 @@ import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import Modal from "react-modal";
-import { getUserLogs, createReportForUserlogs } from "../../actions/userActions";
+import {
+  getUserLogs,
+  createReportForUserlogs
+} from "../../actions/userActions";
 import UserLogsAction from "./UserLogsAction";
 import { Link } from "react-router-dom";
 
@@ -54,13 +57,10 @@ const styles = {
   }
 };
 
-
 class UserLogs extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
-
       // for alerts
       generateAlert: false,
       dateAlert: false,
@@ -214,14 +214,10 @@ class UserLogs extends Component {
 
   componentWillMount() {
     this.props.getUserLogs();
-
   }
 
-
   render() {
-
-
-    String.prototype.getInitials = function (glue) {
+    String.prototype.getInitials = function(glue) {
       if (typeof glue == "undefined") {
         var glue = true;
       }
@@ -229,7 +225,7 @@ class UserLogs extends Component {
       var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
       if (glue) {
-        return initials.join('.');
+        return initials.join(".");
       }
 
       return initials;
@@ -271,8 +267,30 @@ class UserLogs extends Component {
           ) {
             activityData.push({
               userlogs: userlogs.userType,
-              user: names[index] === "" | names[index] === null | names[index] === "undefined" ? `Untracked` : names[index],
-              type: userlogs.type,
+              user:
+                (names[index] === "") |
+                (names[index] === null) |
+                (names[index] === "undefined")
+                  ? `Untracked`
+                  : names[index],
+              login:
+                userlogs.type === "Login" ? (
+                  <i
+                    class="fas fa-check-circle text-success"
+                    style={{ fontColor: "green" }}
+                  />
+                ) : (
+                  ""
+                ),
+              logout:
+                userlogs.type === "Logout" ? (
+                  <i
+                    class="fas fa-check-circle text-danger"
+                    style={{ fontColor: "red" }}
+                  />
+                ) : (
+                  ""
+                ),
               date:
                 userlogs.date + moment(userlogs.date).format("MMM. DD, YYYY"),
               time: moment(userlogs.date).format("h:mm A")
@@ -283,20 +301,42 @@ class UserLogs extends Component {
         activityData = userlogs.map((userlogs, index) =>
           true
             ? {
-              userlogs: userlogs.userType,
-              user: names[index] === "" | names[index] === null | names[index] === "undefined" ? `Untracked` : names[index],
-              type: userlogs.type,
-              date:
-                userlogs.date + moment(userlogs.date).format("MMM. DD, YYYY"),
-              time: moment(userlogs.date).format("h:mm A")
-            }
+                userlogs: userlogs.userType,
+                user:
+                  (names[index] === "") |
+                  (names[index] === null) |
+                  (names[index] === "undefined")
+                    ? `Untracked`
+                    : names[index],
+                login:
+                  userlogs.type === "Login" ? (
+                    <i
+                      class="fas fa-check-circle text-success"
+                      style={{ fontColor: "green" }}
+                    />
+                  ) : (
+                    ""
+                  ),
+                logout:
+                  userlogs.type === "Logout" ? (
+                    <i
+                      class="fas fa-check-circle text-danger"
+                      style={{ fontColor: "red" }}
+                    />
+                  ) : (
+                    ""
+                  ),
+                date:
+                  userlogs.date + moment(userlogs.date).format("MMM. DD, YYYY"),
+                time: moment(userlogs.date).format("h:mm A")
+              }
             : {
-              userlogs: null,
-              user: null,
-              type: null,
-              date: null,
-              time: null
-            }
+                userlogs: null,
+                user: null,
+                type: null,
+                date: null,
+                time: null
+              }
         );
       }
 
@@ -319,7 +359,8 @@ class UserLogs extends Component {
               title: "Time",
               field: "time"
             },
-            { title: "Activity", field: "type" }
+            { title: "Login", field: "login" },
+            { title: "Logout", field: "logout" }
           ]}
           options={{
             pageSizeOptions: [10, 20, 30, 50, 100],
@@ -342,192 +383,6 @@ class UserLogs extends Component {
         />
       );
     }
-
-
-
-
-    // const { classes } = this.props;
-    // const { startDate, endDate } = this.state;
-    // const { userlogs, loading } = this.props.userlogs;
-    // const { users } = this.props.users;
-    // let userlogData;
-    // let userlogItems;
-    // let names = [];
-
-
-
-
-
-    // if (userlogs === null || loading) {
-    //   userlogItems = <Spinner />
-    // } else {
-    // // Add Names to array
-    // userlogs.map((userlogs, index) => {
-    //   users.map(user => {
-    //     if (activity.by === user._id) {
-    //       names[index] = user.userName;
-    //     }
-    //   });
-    // });
-
-    // if (this.state.dates.length >= 1) {
-    //   userlogs.map((activity, index) => {
-    //     if (
-    //       this.state.dates.includes(
-    //         moment(activity.date).format("YYYY-MM-DD")
-    //       ) &&
-    //       this.state.times.includes(moment(activity.date).format("H:mm"))
-    //     ) {
-    //       activityData.push({
-    //         activity: activity.title,
-    //         user: names[index],
-    //         type: activity.type,
-    //         date:
-    //           activity.date + moment(activity.date).format("MMM. DD, YYYY"),
-    //         time: moment(activity.date).format("h:mm A")
-    //       });
-    //     }
-    //   });
-    // } else {
-    //   activityData = userlogs.map((activity, index) =>
-    //     true
-    //       ? {
-    //           activity: activity.title,
-    //           user: names[index],
-    //           type: activity.type,
-    //           date:
-    //             activity.date + moment(activity.date).format("MMM. DD, YYYY"),
-    //           time: moment(activity.date).format("h:mm A")
-    //         }
-    //       : {
-    //           activity: null,
-    //           user: null,
-    //           type: null,
-    //           date: null,
-    //           time: null
-    //         }
-    //   );
-    // }
-
-    // activityItems = (
-    //   <MaterialTable
-    //     columns={[
-    //       { title: "UserType", field: "activity" },
-    //       { title: "Username", field: "user" },
-    //       { title: "Type", field: "type" },
-    //       {
-    //         title: "Date",
-    //         field: "date",
-    //         render: rowData => {
-    //           const date = moment(rowData.date.substr(0, 24)).format(
-    //             "MMM. DD, YYYY"
-    //           );
-    //           return date;
-    //         }
-    //       },
-    //       {
-    //         title: "Time",
-    //         field: "time"
-    //       }
-    //     ]}
-    //     options={{
-    //       pageSizeOptions: [10, 20, 30, 50, 100],
-    //       emptyRowsWhenPaging: false,
-    //       pageSize: 30,
-    //       selection: true
-    //     }}
-    //     actions={[
-    //       {
-    //         icon: "print",
-    //         tooltip: "Generate Report",
-    //         onClick: (event, rows) => {
-    //           this.setState({ selectedRows: rows, filterModal: true });
-    //           // this.onGenerateReport(rows);
-    //         }
-    //       }
-    //     ]}
-    //     data={activityData}
-    //     title="Researches"
-    //   />
-    // );
-
-    //   userlogs.map((log, index) => {
-    //     users.map(user => {
-    //       if (log.by === user._id) {
-    //         names[index] = user.userName ? user.userName : user.email;
-    //       }
-    //     });
-    //   });
-
-    //   if (userlogs.length > 0) {
-    //     if (this.props.auth.isAuthenticated) {
-    //       userlogData = userlogs.map((userlog, index) => {
-    //         return {
-    //           date:
-    //             moment(userlog.date).format(
-    //               "MMMM Do YYYY "
-    //             ),
-    //           time:
-    //             moment(userlog.date).format(
-    //               "h:mm A"
-    //             ),
-    //           user: names[index]
-    //           ,
-    //           //userlog.name.firstName + " " + userlog.name.middleName.getInitials() + ". " + userlog.name.lastName,
-    //           type: userlog.type,
-    //           userType: userlog.userType
-    //         }
-    //       }
-    //       );
-    //     }
-    //   }
-
-    //   if (userlogData) {
-    //     userlogData.map((data, index) => {
-    //       if (data.date === null) {
-    //         userlogData.splice(index, 1);
-    //       }
-    //     });
-    //   }
-
-    //   userlogItems = (
-    //     <MaterialTable
-    //       columns={[
-    //         { title: "Date", field: "date" },
-    //         { title: "Time", field: "time" },
-    //         { title: "Name", field: "user" },
-    //         { title: "Type of user", field: "userType" },
-    //         { title: "Activity", field: "type" },
-    //         // defaultGroupOrder: 0, defaultGroupSort: "desc"
-    //       ]}
-    //       options={{
-    //         pageSizeOptions: [10, 20, 30, 50, 100],
-    //         emptyRowsWhenPaging: false,
-    //         columnsButton: true,
-    //         pageSize: 30,
-    //         selection: true
-    //       }}
-    //       actions={[
-    //         {
-    //           icon: "print",
-    //           tooltip: "Generate Report",
-    //           onClick: (event, rows) => {
-    //             this.setState({ selectedRows: rows, filterModal: true });
-    //             // this.onGenerateReport(rows);
-    //           }
-    //         }
-    //       ]}
-    //       data={userlogData}
-    //       title="Userlogs"
-    //     />
-    //   );
-
-    // }
-
-
-
-
-
     return (
       <div className="userlogs">
         {/* ALERTS */}
@@ -652,7 +507,6 @@ class UserLogs extends Component {
                 <h4>Filter</h4>
               </div>
               <form>
-
                 <div className="form-check">
                   <input
                     className="form-check form-check-inline"
@@ -766,11 +620,11 @@ class UserLogs extends Component {
             <UserLogsAction />
             <div className="usersBg ">
               <div className="light-overlay p-2">
-                <div className="display-4 text-center mb-1">User Log
-                <p className="lead text-center ">
+                <div className="display-4 text-center mb-1">
+                  User Log
+                  <p className="lead text-center ">
                     List of all users login and logout
-                </p>
-
+                  </p>
                 </div>
               </div>
             </div>
@@ -783,7 +637,7 @@ class UserLogs extends Component {
                 className="btn btn-light"
               >
                 <i className="fas fa-calendar-alt text-info mr-1" /> Pick Dates
-            </Link>
+              </Link>
               <Link
                 to="#"
                 onClick={() =>
@@ -797,20 +651,13 @@ class UserLogs extends Component {
                 className="btn btn-light"
               >
                 <i className="fas fa-redo-alt text-info mr-1" /> Reset Dates
-            </Link>
+              </Link>
             </div>
-            <div className="tableClassname">
-              {activityItems}
-            </div>
-            
+            <div className="tableClassname">{activityItems}</div>
           </div>
         </div>
       </div>
-
-
-
-
-    )
+    );
   }
 }
 
@@ -819,13 +666,15 @@ UserLogs.protoTypes = {
   getUserLogs: PropTypes.func.isRequired,
   userlogs: PropTypes.object.isRequired,
   users: PropTypes.object.isRequired
-}
+};
 
 const mapStateToProps = state => ({
-
   userlogs: state.userlogs,
   auth: state.auth,
-  users: state.users,
-})
+  users: state.users
+});
 
-export default connect(mapStateToProps, { getUserLogs, createReportForUserlogs })(withStyles(styles)(UserLogs));
+export default connect(
+  mapStateToProps,
+  { getUserLogs, createReportForUserlogs }
+)(withStyles(styles)(UserLogs));

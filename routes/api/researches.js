@@ -276,7 +276,7 @@ router.get("/test", (req, res) => {
 // @desc    Get researches
 // @access  Public
 router.get("/", (req, res) => {
-  Research.find({}, { content: 0, abstract: 0 })
+  Research.find({}, { content: 0 })
     .sort({ title: 1 })
     .then(researches => res.json(researches))
     .catch(err =>

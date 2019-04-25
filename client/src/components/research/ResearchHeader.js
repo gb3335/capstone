@@ -40,11 +40,11 @@ class ResearchHeader extends Component {
             <b>Research ID:</b> {research.researchID}
           </span>
           <br />
-          <span>
-            {/* <i className="fas fa-bookmark mr-1" /> */}
+          {/* <span>
+            <i className="fas fa-bookmark mr-1" />
             <b>Pages:</b> {research.pages}
           </span>
-          <br />
+          <br /> */}
           <span>
             {/* <i className="far fa-calendar-alt mr-1" /> */}
             <b>Academic Year:</b> {research.schoolYear}

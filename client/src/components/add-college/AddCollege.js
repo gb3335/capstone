@@ -296,7 +296,10 @@ class CreateCollege extends Component {
     try {
       if (this.props.users !== null) {
         this.props.users.map(user => {
-          if (user.userType === "LIBRARIAN" && user.college === "") {
+          if (
+            user.userType === "LIBRARIAN" &&
+            (user.college === "" || user.college === null)
+          ) {
             suggestions.push({
               label:
                 user.name.firstName +
@@ -327,6 +330,7 @@ class CreateCollege extends Component {
       })
     };
 
+    console.log(suggestions);
     return (
       <div className="create-college">
         <div className="container">

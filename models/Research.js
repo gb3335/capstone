@@ -28,8 +28,7 @@ const ResearchSchema = new Schema({
     required: true
   },
   pages: {
-    type: String,
-    required: true
+    type: String
   },
   schoolYear: {
     type: String,

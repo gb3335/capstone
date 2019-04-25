@@ -7,7 +7,7 @@ import Spinner from "../common/Spinner";
 import { getUserById } from "../../actions/userActions";
 import ViewUserHeader from "./ViewUserHeader";
 import ViewUserDetails from "./ViewUserDetails";
-import UserAction from './UserAction'
+import UserAction from "./UserAction";
 // import CollegeHeader from "./CollegeHeader";
 // import CollegeDetails from "./CollegeDetails";
 // import CollegeCourses from "./CollegeCourses";
@@ -27,14 +27,7 @@ class ViewUser extends Component {
     }
   }
 
-
-
-
-
   render() {
-
-
-
     const { user, loading, users } = this.props.users;
     const auth = this.props.auth;
     const isAuthenticated = this.props.auth.isAuthenticated;
@@ -44,10 +37,10 @@ class ViewUser extends Component {
     let userstatus;
 
     if (isAuthenticated) {
-      useraction = <UserAction user={user} auth={auth} />
+      useraction = <UserAction user={user} auth={auth} />;
     }
 
-    String.prototype.getInitials = function (glue) {
+    String.prototype.getInitials = function(glue) {
       if (typeof glue == "undefined") {
         var glue = true;
       }
@@ -55,23 +48,23 @@ class ViewUser extends Component {
       var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
       if (glue) {
-        return initials.join('.');
+        return initials.join(".");
       }
 
       return initials;
     };
     let invitedBy;
     users.map(user => {
-
       if (user._id === this.props.users.user.invitedBy) {
         invitedBy =
           user.name.firstName +
           " " +
-          user.name.middleName.getInitials() +
-          ". " +
+          (user.name.middleName
+            ? user.name.middleName.getInitials() + "."
+            : "") +
+          " " +
           user.name.lastName;
       }
-
     });
 
     if (user === null || loading) {
@@ -81,7 +74,11 @@ class ViewUser extends Component {
         userContent = (
           <div>
             <div hidden>
-              <p>{user.name.firstName} {user.name.middleName} {user.name.lastName}</p>
+              <p>
+                {user.name.firstName}{" "}
+                {user.name.middleName ? user.name.middleName : ""}{" "}
+                {user.name.lastName}
+              </p>
             </div>
             <div className="row">
               <div className="col-md-6">
@@ -95,19 +92,14 @@ class ViewUser extends Component {
             {useraction}
 
             <ViewUserDetails user={user} invitedBy={invitedBy} />
-
           </div>
         );
-      } catch (error) { }
+      } catch (error) {}
     }
 
     return (
-
       <div className="user">
-
-
         <div className="container">
-
           <div className="row">
             <div className="col-md-12">{userContent}</div>
           </div>

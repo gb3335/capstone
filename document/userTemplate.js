@@ -1,11 +1,7 @@
 const moment_timezone = require("moment-timezone");
 const moment = require("moment");
 
-module.exports = ({
-
-  user,
-  typeOfReport,
-}) => {
+module.exports = ({ user, typeOfReport }) => {
   let nameString = "";
   let userNameString = "";
   let emailString = "";
@@ -25,7 +21,7 @@ module.exports = ({
   // dateCreated: this.state.dateCreated,
   // blockedUsers: this.state.blockedUsers,
   // users: this.props.users.users,
-  String.prototype.getInitials = function (glue) {
+  String.prototype.getInitials = function(glue) {
     if (typeof glue == "undefined") {
       var glue = true;
     }
@@ -33,41 +29,40 @@ module.exports = ({
     var initials = this.replace(/[^a-zA-Z- ]/g, "").match(/\b\w/g);
 
     if (glue) {
-      return initials.join('.');
+      return initials.join(".");
     }
 
     return initials;
   };
 
-
   if (user) {
+    nameString = `<li>Name: ${user.name.lastName}, ${user.name.firstName} ${
+      user.name.middleName ? user.name.middleName.getInitials() + ". " : ""
+    }</li>`;
 
-
-    nameString = `<li>Name: ${user.name.lastName}, ${user.name.firstName} ${user.name.middleName.getInitials()}.</li>`;
-
-
-    userNameString = `<li>Username: ${user.userName ? user.userName : `No username yet.`}</li>`;
-
+    userNameString = `<li>Username: ${
+      user.userName ? user.userName : `No username yet.`
+    }</li>`;
 
     emailString = `<li>Email: ${user.email}</li>`;
 
-
     collegeString = `<li>College: ${user.colleg ? user.college : "None"}</li>`;
 
-
-    statusString = `<li>User Status: ${user.isBlock === 0 ? `Active` : `Deactivated`}</li>`;
-
+    statusString = `<li>User Status: ${
+      user.isBlock === 0 ? `Active` : `Deactivated`
+    }</li>`;
 
     dateCreatedString = `<li>Date Created: ${moment(user.date).format(
       "MMMM Do YYYY, h:mm A"
     )}</li>`;
   }
-  let path
-  user.avatar === "/images/User.png" ? path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/5caab69692cdb0204c7874ae-613b016c-6830-44f7-9ccb-9a813099fbb0.png" : path = "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" + user.avatar;
-
-
-
-
+  let path;
+  user.avatar === "/images/User.png"
+    ? (path =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/5caab69692cdb0204c7874ae-613b016c-6830-44f7-9ccb-9a813099fbb0.png")
+    : (path =
+        "https://s3-ap-southeast-1.amazonaws.com/bulsu-capstone/userImages/" +
+        user.avatar);
 
   return `<!DOCTYPE html>
   <html>

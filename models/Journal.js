@@ -16,7 +16,7 @@ const JournalSchema = new Schema({
     required: true
   },
   description: {
-    type: String,
+    type: String
   },
   issn: {
     type: String,
@@ -31,8 +31,7 @@ const JournalSchema = new Schema({
     required: true
   },
   pages: {
-    type: String,
-    required: true
+    type: String
   },
   yearPublished: {
     type: String,
@@ -89,6 +88,5 @@ const JournalSchema = new Schema({
     default: Date.now
   }
 });
-
 
 module.exports = Journal = mongoose.model("journal", JournalSchema);

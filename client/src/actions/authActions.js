@@ -7,7 +7,6 @@ export const editPassword = (userData, history) => dispatch => {
   axios
     .post("/api/users/profile/updatepassword", userData)
     .then(res => {
-
       const { token } = res.data;
       // Set token to local storage
       localStorage.setItem("jwtToken", token);
@@ -31,6 +30,30 @@ export const editPassword = (userData, history) => dispatch => {
       })
     );
 };
+
+export const editPasswordBySuper = (userData, history) => dispatch => {
+  axios
+    .post("/api/users/profile/updatepassword", userData)
+    .then(res => {
+      const { token } = res.data;
+      // Set token to local storage
+      localStorage.setItem("jwtToken", token);
+      // Set token to Auth header
+      setAuthToken(token);
+      // Decode token to get user data
+      const decoded = jwt_decode(token);
+      // Set current user
+      dispatch(setCurrentUser(decoded));
+      history.push(`/viewusers/${userData.id}`);
+    })
+    .catch(err =>
+      dispatch({
+        type: GET_ERRORS,
+        payload: err.response.data
+      })
+    );
+};
+
 // Login - Get User Token
 export const loginUser = userData => dispatch => {
   axios
@@ -60,7 +83,6 @@ export const forgotUser = (userData, history) => dispatch => {
     .post("/api/users/forgotpassword", userData)
     .then(res => {
       history.push(`/login`);
-
     })
     .catch(err =>
       dispatch({
@@ -80,22 +102,14 @@ export const setCurrentUser = decoded => {
 // Log user out
 export const logoutUser = (userData, history) => dispatch => {
   // Remove the token from the localStorage
-  axios
-    .post("/api/users/logout", userData)
+  axios.post("/api/users/logout", userData);
 
   localStorage.removeItem("jwtToken");
   // Remove the auth header for future request
   setAuthToken(false);
   // Set the current to an empty object which will also set isAuthenticated FALSE
   dispatch(setCurrentUser({}));
-
-
-
-
-
-
 };
-
 
 export const clearCurrentProfile = () => {
   return {

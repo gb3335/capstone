@@ -11,7 +11,7 @@ module.exports = function validateResearchInput(data) {
   data.course = !isEmpty(data.course) ? data.course : "";
   data.abstract = !isEmpty(data.abstract) ? data.abstract : "";
   data.schoolYear = !isEmpty(data.schoolYear) ? data.schoolYear : "";
-  data.pages = !isEmpty(data.pages) ? data.pages : "";
+  // data.pages = !isEmpty(data.pages) ? data.pages : "";
   data.researchId = !isEmpty(data.researchId) ? data.researchId : "";
   //data.images = !isEmpty(data.images) ? data.images : "";
   data.authorOne = !isEmpty(data.authorOne) ? data.authorOne : "";
@@ -19,7 +19,6 @@ module.exports = function validateResearchInput(data) {
   if (Validator.isEmpty(data.title)) {
     errors.title = "Research title is required";
   }
-
 
   if (Validator.isEmpty(data.college)) {
     errors.college = "Research college is required";
@@ -45,13 +44,13 @@ module.exports = function validateResearchInput(data) {
     errors.schoolYear = "School year is required";
   }
 
-  if (Validator.isEmpty(data.pages)) {
-    errors.pages = "Research pages is required";
-  }
+  // if (Validator.isEmpty(data.pages)) {
+  //   errors.pages = "Research pages is required";
+  // }
 
-  if (!Validator.isNumeric(data.pages)) {
-    errors.pages = "Research pages is invalid";
-  }
+  // if (!Validator.isNumeric(data.pages)) {
+  //   errors.pages = "Research pages is invalid";
+  // }
 
   if (Validator.isEmpty(data.authorOne)) {
     errors.authorOne = "Author One is required";
