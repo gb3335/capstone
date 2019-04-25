@@ -5,25 +5,31 @@ import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import Spinner from "../common/Spinner";
 import Highlighter from "react-highlight-words";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 
 //workers
 import worker from "./workers/workerHide";
 import WebWorker from "./workers/WorkerSetup";
 
-import { Spring, Transition, animated } from 'react-spring/renderprops';
+import { Spring, Transition, animated } from "react-spring/renderprops";
 
-import { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern, clearLocalPlagiarismState } from "../../actions/localPlagiarismActions";
+import {
+  getTextPattern,
+  setPlagiarismLocalHideDetails,
+  createLocalPlagiarismReport,
+  setPlagiarismGenerateReportLoading,
+  getPattern,
+  clearLocalPlagiarismState
+} from "../../actions/localPlagiarismActions";
 
-import LocalHighlightedResult from './LocalHighlightedResult';
-import ResultStatistics from './ResultStatistics';
-
+import LocalHighlightedResult from "./LocalHighlightedResult";
+import ResultStatistics from "./ResultStatistics";
 
 import "moment-timezone";
 
-import Output from './Output';
+import Output from "./Output";
 
-import './LocalResults.css'
+import "./LocalResults.css";
 
 class LocalResult extends Component {
   constructor() {
@@ -44,21 +50,24 @@ class LocalResult extends Component {
   }
 
   componentWillMount() {
-    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+    if (
+      Object.entries(this.props.localPlagiarism.output).length === 0 &&
+      this.props.localPlagiarism.output.constructor === Object
+    ) {
       this.props.history.push("/dashboard");
-    }else{
+    } else {
       this.props.setPlagiarismLocalHideDetails();
       const { docuId, output } = this.props.localPlagiarism;
       const { research } = this.props.research;
-      let words=[];
-      output.forEach((out) => {
-        out.Index.forEach((index) => {
-          words.push(index)
-        })
-      })
+      let words = [];
+      output.forEach(out => {
+        out.Index.forEach(index => {
+          words.push(index);
+        });
+      });
       // let words2= words.join(' ').split(' ');
-      const uniqueItems = words.filter((v, i, a) => a.indexOf(v) === i); 
-  
+      const uniqueItems = words.filter((v, i, a) => a.indexOf(v) === i);
+
       // let newob = researches.find(obj => obj._id === docuId);
       const input = {
         docuId: docuId,
@@ -66,8 +75,8 @@ class LocalResult extends Component {
         Indexes: uniqueItems,
         hide: true,
         abstract: this.props.localPlagiarism.abstract
-      }
-      this.props.getPattern(input, (e)=> {
+      };
+      this.props.getPattern(input, e => {
         // this.callWhenPatternDone()
         this.setState({
           patternHide: this.props.localPlagiarism.patternHide.data,
@@ -75,12 +84,13 @@ class LocalResult extends Component {
         });
       });
     }
-    
   }
 
   callWhenPatternDone = () => {
     const { output } = this.props.localPlagiarism;
-    this.worker.postMessage({"args": {output, textToHighlight: this.props.localPlagiarism.pattern.data}});
+    this.worker.postMessage({
+      args: { output, textToHighlight: this.props.localPlagiarism.pattern.data }
+    });
     this.worker.addEventListener("message", event => {
       this.setState({
         chunks: event.data.chunks,
@@ -89,7 +99,7 @@ class LocalResult extends Component {
       });
     });
     // let words = [];
-      
+
     //     output[0].Index.forEach(index => {
     //       let obj = JSON.parse(index);
     //       words.push(obj.Pattern)
@@ -102,106 +112,103 @@ class LocalResult extends Component {
     //     // })
     //     words = words.join(' ').split(' ');
     //     var uniqueItems = [...new Set(words)]
-  
-  
+
     //     //const word = uniqueItems.join(' ');
-  
+
     //     //var splited = word.split(' ');
     //     this.setState({words: uniqueItems}, () => {
     //     })
-  }
+  };
 
   componentDidMount() {
     this.worker = new WebWorker(worker);
 
-    if (Object.entries(this.props.localPlagiarism.output).length === 0 && this.props.localPlagiarism.output.constructor === Object) {
+    if (
+      Object.entries(this.props.localPlagiarism.output).length === 0 &&
+      this.props.localPlagiarism.output.constructor === Object
+    ) {
       this.props.history.push("/dashboard");
-    }else{
+    } else {
       const { output } = this.props.localPlagiarism;
-      let little = 0, moderate = 0, heavy = 0;
-      let score = []
+      let little = 0,
+        moderate = 0,
+        heavy = 0;
+      let score = [];
       output.forEach(out => {
         if (out.SimilarityScore > 0 && out.SimilarityScore < 30) {
           little++;
         } else if (out.SimilarityScore >= 30 && out.SimilarityScore <= 70) {
           moderate++;
-        }
-        else if (out.SimilarityScore > 70) {
+        } else if (out.SimilarityScore > 70) {
           heavy++;
         }
-      })
+      });
 
       score.push(little);
       score.push(moderate);
       score.push(heavy);
 
-      this.setState({ little, moderate, heavy, score })
-
-      
+      this.setState({ little, moderate, heavy, score });
     }
-    
-
   }
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.props.clearLocalPlagiarismState();
   }
 
-  onClickShowDetails = (id) => {
+  onClickShowDetails = id => {
     const { output } = this.props.localPlagiarism;
     let newob = output.find(obj => obj.Document.Text.Id === id);
-    let index=[];
-    index = newob.Index.filter((v, i, a) => a.indexOf(v) === i); 
+    let index = [];
+    index = newob.Index.filter((v, i, a) => a.indexOf(v) === i);
     const input = {
       docuId: newob.Document.Pattern.Id,
       docuFile: this.props.research.research.document,
       textId: id,
       Indexes: index,
       abstract: this.props.localPlagiarism.abstract
-    }
+    };
     this.props.getTextPattern(input);
-  }
+  };
 
   onClickHideDetails = () => {
     this.props.setPlagiarismLocalHideDetails();
-  }
+  };
 
   onClickGenerateReport = () => {
     this.props.setPlagiarismGenerateReportLoading(true);
     const { output, abstract } = this.props.localPlagiarism;
-      // const node = ReactDOM.findDOMNode(this);
-  
-      // // Get child nodes
-      // let child = "";
-      // child = node.querySelector('.forhidehighlightSpan');
-  
-      let word = this.forHide.current.innerHTML.toString();
-  
-      const name =
+    // const node = ReactDOM.findDOMNode(this);
+
+    // // Get child nodes
+    // let child = "";
+    // child = node.querySelector('.forhidehighlightSpan');
+
+    let word = this.forHide.current.innerHTML.toString();
+    let name = "Guest";
+    if (this.props.auth.isAuthenticated) {
+      name =
         this.props.auth.user.name.firstName +
         " " +
         this.props.auth.user.name.middleName +
         " " +
         this.props.auth.user.name.lastName;
-  
-      let subTypeOfReport = "Checked in the System Database";
-      if (abstract) {
-        subTypeOfReport = "Checked in the System Database (ABSTRACT)"
-      }
-      const input = {
-        reportFor: "Research",
-        printedBy: name,
-        word,
-        typeOfReport: "Plagiarism Check Result",
-        subTypeOfReport,
-        output
-      }
-      this.props.createLocalPlagiarismReport(input);
-      
+    }
 
-  }
-
-  
+    let subTypeOfReport = "Checked in the System Database";
+    if (abstract) {
+      subTypeOfReport = "Checked in the System Database (ABSTRACT)";
+    }
+    const input = {
+      reportFor: "Research",
+      printedBy: name,
+      word,
+      typeOfReport: "Plagiarism Check Result",
+      subTypeOfReport,
+      output
+    };
+    this.props.createLocalPlagiarismReport(input);
+  };
 
   // Complex example
   findChunksAtBeginningOfWords = ({
@@ -223,7 +230,8 @@ class LocalResult extends Component {
     // It could be possible that there are multiple spaces between words
     // Hence we store the index (position) of each single word with textToHighlight
     let fromIndex = 0;
-    const singleTextWordsWithPos = singleTextWords.map(s => { //Compound
+    const singleTextWordsWithPos = singleTextWords.map(s => {
+      //Compound
 
       const indexInWord = textLow.indexOf(s, fromIndex); // Index = 0
       fromIndex = indexInWord;
@@ -235,11 +243,9 @@ class LocalResult extends Component {
 
     // Add chunks for every searchWord
     searchWords.forEach(sw => {
-
       const swLow = sw.toString().toLowerCase();
       // Do it for every single text word
       singleTextWordsWithPos.forEach(s => {
-
         if (s.word.startsWith(swLow) && s.word.endsWith(swLow)) {
           const start = s.index;
           const end = s.index + swLow.length;
@@ -249,21 +255,29 @@ class LocalResult extends Component {
           });
         }
       });
-
     });
     return chunks;
   };
 
-
   render() {
-
-    const { output, patternLoading, pattern, showDetails,patternHide } = this.props.localPlagiarism;
+    const {
+      output,
+      patternLoading,
+      pattern,
+      showDetails,
+      patternHide
+    } = this.props.localPlagiarism;
     const { research } = this.props.research;
     let outputItems;
 
-
     if (Object.keys(output).length > 0) {
-      outputItems = <Output onClickShowDetails={this.onClickShowDetails} output={output} plagType="local" />;
+      outputItems = (
+        <Output
+          onClickShowDetails={this.onClickShowDetails}
+          output={output}
+          plagType="local"
+        />
+      );
     } else {
       outputItems = <span>No output</span>;
     }
@@ -278,98 +292,122 @@ class LocalResult extends Component {
               <Spinner />
             </div>
           </div>
-        )
+        );
       } else {
         items = (
-
           <Transition
             items={showDetails}
             from={{ opacity: 0 }}
             enter={{ opacity: 1 }}
             leave={{ opacity: 0 }}
           >
-            {show => show && (props => (
-              <animated.div style={props}>
-                <Spring from={{ opacity: 0 }}
-                  to={{ opacity: 1 }}
-                  config={{ delay: 100, duration: 800 }}
-                >{props => (
-                  <div style={props}>
-                    <div className="sourceHeader">{research.title}
-                      <div className="spacer" />
-                      <button onClick={this.onClickHideDetails} className="close">x</button>
-                    </div>
-                    <div className="sourceContent">
-                      <LocalHighlightedResult />
-                    </div>
-                  </div>
-                )}
-                </Spring>
-
-              </animated.div>
-            ))}
-
+            {show =>
+              show &&
+              (props => (
+                <animated.div style={props}>
+                  <Spring
+                    from={{ opacity: 0 }}
+                    to={{ opacity: 1 }}
+                    config={{ delay: 100, duration: 800 }}
+                  >
+                    {props => (
+                      <div style={props}>
+                        <div className="sourceHeader">
+                          {research.title}
+                          <div className="spacer" />
+                          <button
+                            onClick={this.onClickHideDetails}
+                            className="close"
+                          >
+                            x
+                          </button>
+                        </div>
+                        <div className="sourceContent">
+                          <LocalHighlightedResult />
+                        </div>
+                      </div>
+                    )}
+                  </Spring>
+                </animated.div>
+              ))
+            }
           </Transition>
-
-
-        )
+        );
       }
     } else {
       items = (
-        <Transition items={!showDetails}
+        <Transition
+          items={!showDetails}
           from={{ opacity: 0 }}
           enter={{ opacity: 1 }}
-          leave={{ opacity: 0 }}>
-          {show => show && (props => (
-            <Spring from={{ opacity: 0 }}
-              to={{ opacity: 1 }}
-              config={{ delay: 100, duration: 800 }}>
-              {props => (
-                <div style={props}>
-                  <div className="sourceResearch">
-                    <div className="sourceHeader">Local Result Statistics</div>
-                    <div className="sourceContent">
-                      <ResultStatistics height={300} output={output} />
-                    </div>
-                    <div className="sourceHeader">Research Title</div>
-                    <div className="sourceContent">{research.title}</div>
-                    <div className="sourceHeader">Research Details</div>
-                    <div className="sourceContent researchDetails">
-                      <div>
-                        <span>College: </span>
-                        {research.college}
+          leave={{ opacity: 0 }}
+        >
+          {show =>
+            show &&
+            (props => (
+              <Spring
+                from={{ opacity: 0 }}
+                to={{ opacity: 1 }}
+                config={{ delay: 100, duration: 800 }}
+              >
+                {props => (
+                  <div style={props}>
+                    <div className="sourceResearch">
+                      <div className="sourceHeader">
+                        Local Result Statistics
                       </div>
-                      <div>
-                        <span>Course: </span>
-                        {research.course}
+                      <div className="sourceContent">
+                        <ResultStatistics height={300} output={output} />
                       </div>
-                      <div>
-                        <span>Research Type: </span>
-                        {research.type === "thesis" ? <span className="badge badge-success">{research.type}</span> : <span className="badge badge-info">{research.type}</span>}
-                      </div>
-                      <div>
-                        <span>Pages: </span>
-                        {research.pages}
-                      </div>
-                      <div>
-                        <span>School Year: </span>
-                        {research.schoolYear}
-                      </div>
-                      <div>
-                        <span>Last Update: </span>
-                        <Moment format="MMM. DD, YYYY">{research.lastUpdate}</Moment>
-                        {" at "}
-                        <Moment format="h:mm A">{research.lastUpdate}</Moment>
+                      <div className="sourceHeader">Research Title</div>
+                      <div className="sourceContent">{research.title}</div>
+                      <div className="sourceHeader">Research Details</div>
+                      <div className="sourceContent researchDetails">
+                        <div>
+                          <span>College: </span>
+                          {research.college}
+                        </div>
+                        <div>
+                          <span>Course: </span>
+                          {research.course}
+                        </div>
+                        <div>
+                          <span>Research Type: </span>
+                          {research.type === "thesis" ? (
+                            <span className="badge badge-success">
+                              {research.type}
+                            </span>
+                          ) : (
+                            <span className="badge badge-info">
+                              {research.type}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <span>Pages: </span>
+                          {research.pages}
+                        </div>
+                        <div>
+                          <span>School Year: </span>
+                          {research.schoolYear}
+                        </div>
+                        <div>
+                          <span>Last Update: </span>
+                          <Moment format="MMM. DD, YYYY">
+                            {research.lastUpdate}
+                          </Moment>
+                          {" at "}
+                          <Moment format="h:mm A">{research.lastUpdate}</Moment>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </Spring>
-          ))}
+                )}
+              </Spring>
+            ))
+          }
         </Transition>
-
-      )
+      );
     }
 
     let forhide;
@@ -381,7 +419,7 @@ class LocalResult extends Component {
             <Spinner />
           </div>
         </div>
-      )
+      );
     } else {
       // forhide = (
       //   <Highlighter
@@ -395,7 +433,6 @@ class LocalResult extends Component {
       // )
       forhide = parse(this.state.patternHide);
     }
-
 
     const { generateReport } = this.props.localPlagiarism;
 
@@ -412,34 +449,38 @@ class LocalResult extends Component {
                 className="btn btn-light mb-3 float-left"
               >
                 <i className="fas fa-angle-left" /> Back
-                </Link>
-              {generateReport ? <button
-                className="btn btn-light mb-3 float-right disabled"
-              >
-                <i className="fas fa-flag text-danger" /> Generating Report...
+              </Link>
+              {generateReport ? (
+                <button className="btn btn-light mb-3 float-right disabled">
+                  <i className="fas fa-flag text-danger" /> Generating Report...
                 </button>
-
-                : this.state.report ?<button
-                    className="btn btn-light mb-3 float-right disabled"
-                  >
-                    <i className="fas fa-flag text-danger" /> Generate Report
-                  </button> :<button
+              ) : this.state.report ? (
+                <button className="btn btn-light mb-3 float-right disabled">
+                  <i className="fas fa-flag text-danger" /> Generate Report
+                </button>
+              ) : (
+                <button
                   onClick={this.onClickGenerateReport}
                   className="btn btn-light mb-3 float-right"
                 >
                   <i className="fas fa-flag text-danger" /> Generate Report
-                </button>}
+                </button>
+              )}
             </div>
           </div>
           <div className="row">
             <div className="container-fluid">
               <div className="row">
-                <div className="col-md-8">
-                  {items}
-                </div>
+                <div className="col-md-8">{items}</div>
                 <div className="col-md-4">
                   <div className="container-fluid">
-                    <div className="sourceHeader">Result List ({this.state.little + this.state.moderate + this.state.heavy})</div>
+                    <div className="sourceHeader">
+                      Result List (
+                      {this.state.little +
+                        this.state.moderate +
+                        this.state.heavy}
+                      )
+                    </div>
                     <div className="results">{outputItems}</div>
                   </div>
                 </div>
@@ -470,4 +511,14 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { getTextPattern, setPlagiarismLocalHideDetails, createLocalPlagiarismReport, setPlagiarismGenerateReportLoading, getPattern,clearLocalPlagiarismState })(LocalResult);
+export default connect(
+  mapStateToProps,
+  {
+    getTextPattern,
+    setPlagiarismLocalHideDetails,
+    createLocalPlagiarismReport,
+    setPlagiarismGenerateReportLoading,
+    getPattern,
+    clearLocalPlagiarismState
+  }
+)(LocalResult);
