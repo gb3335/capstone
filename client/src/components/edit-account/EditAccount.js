@@ -183,14 +183,14 @@ class EditAccount extends Component {
                         id="list-details"
                         role="tabpanel"
                         aria-labelledby="list-details-list">
-                        <TextFieldGroup
+                        {/* <TextFieldGroup
                           placeholder="* Email"
                           name="email"
                           value={this.state.email}
                           onChange={this.onChange}
                           error={errors.email}
                           info="Type your email."
-                        />
+                        /> */}
                         <TextFieldGroup
                           placeholder="* First Name"
                           name="firstName"
