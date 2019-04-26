@@ -587,7 +587,7 @@ router.post(
                 </ul>
                 `
           };
-          Transporter.sendMail(mailOptions, function(error, info) {
+          Transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
               errors.sendemail = "Sending Email Failed!";
               return res.status(400).json(errors);
@@ -595,7 +595,12 @@ router.post(
               success.sendemail = "Invitation Successfully Sent!";
             }
           });
-
+          const newActivity = {
+            title: "User " + req.body.email + ": New password generated",
+            by: req.body.createdBy,
+            type: "User"
+          };
+          new Activity(newActivity).save();
           const newUser = {
             passwordUpdated: 0,
             password
@@ -666,10 +671,10 @@ router.post(
         let text = `<h3>Hi! ${req.body.firstname} ${req.body.lastname}</h3>
         
           <p>You are invited to be a <strong>${
-            req.body.usertype
+          req.body.usertype
           }</strong> in Bulacan State University Research Admin Office by ${
           req.user.name.firstName
-        } ${req.user.name.lastName}</p>
+          } ${req.user.name.lastName}</p>
               <ul>
                 <li>Login to: http://34.229.6.94/login</li>
                 <li>Email: ${req.body.email}</li>
@@ -683,9 +688,9 @@ router.post(
         
           <p>You are invited to be an <strong>${
             req.body.usertype
-          }</strong> in Bulacan State University Research Admin Office by ${
+            }</strong> in Bulacan State University Research Admin Office by ${
             req.user.name.firstName
-          } ${req.user.name.lastName}</p>
+            } ${req.user.name.lastName}</p>
               <ul>
                 <li>Login to: http://34.229.6.94/login</li>
                 <li>Email: ${req.body.email}</li>
@@ -701,7 +706,7 @@ router.post(
           subject: "Invitation",
           html: text
         };
-        Transporter.sendMail(mailOptions, function(error, info) {
+        Transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
             errors.sendemail = "Sending Email Failed!";
             return res.status(400).json(errors);
@@ -1015,7 +1020,7 @@ router.post(
         Bucket: "bulsu-capstone",
         Key: `userImages/${req.body.oldFile}`
       };
-      s3.deleteObject(params, function(err, data) {
+      s3.deleteObject(params, function (err, data) {
         if (err) console.log(err, err.stack);
         else console.log(data);
       });
@@ -1380,7 +1385,7 @@ router.post(
   (req, res) => {
     const pathDel = path.join(__dirname, `../../backups/${req.body.folder}`);
 
-    rimraf(pathDel, function() {
+    rimraf(pathDel, function () {
       BackupModel.findOneAndDelete({ _id: req.body.id }).then(result =>
         res.json({ result })
       );

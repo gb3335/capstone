@@ -119,24 +119,6 @@ class UserAction extends Component {
     let blockAction;
 
     if (auth.isAuthenticated) {
-      if (
-        user.email === auth.user.email ||
-        this.props.auth.user.superAdmin === "true"
-      ) {
-        editAction = (
-          <Link to="/edit-by-super" className="btn btn-light">
-            {" "}
-            <i className="fas fa-pen text-info mr-1" />
-            Edit User
-          </Link>
-        );
-        imageAction = (
-          <label to="#" htmlFor="imageUpload" className="btn btn-light mt-2">
-            <i className="fas fa-circle-notch text-info mr-1" />
-            Change avatar
-          </label>
-        );
-      }
       if (this.props.users.user.userType !== "ADMINISTRATOR") {
         blockAction =
           user.isBlock === 0 ? (
@@ -150,16 +132,16 @@ class UserAction extends Component {
               &nbsp;Deactivate
             </Link>
           ) : (
-            <Link
-              to="#"
-              htmlFor="imageUpload"
-              className="btn btn-light"
-              onClick={this.onDeleteAlert}
-            >
-              <i className="fas fa-exchange-alt text-success mr-1" />
-              &nbsp;Activate
+              <Link
+                to="#"
+                htmlFor="imageUpload"
+                className="btn btn-light"
+                onClick={this.onDeleteAlert}
+              >
+                <i className="fas fa-exchange-alt text-success mr-1" />
+                &nbsp;Activate
             </Link>
-          );
+            );
       } else if (this.props.auth.user.superAdmin === "true") {
         blockAction =
           user.isBlock === 0 ? (
@@ -173,16 +155,16 @@ class UserAction extends Component {
               &nbsp;Deactivate
             </Link>
           ) : (
-            <Link
-              to="#"
-              htmlFor="imageUpload"
-              className="btn btn-light"
-              onClick={this.onDeleteAlert}
-            >
-              <i className="fas fa-exchange-alt text-success mr-1" />
-              &nbsp;Activate
+              <Link
+                to="#"
+                htmlFor="imageUpload"
+                className="btn btn-light"
+                onClick={this.onDeleteAlert}
+              >
+                <i className="fas fa-exchange-alt text-success mr-1" />
+                &nbsp;Activate
             </Link>
-          );
+            );
       }
     }
     return (

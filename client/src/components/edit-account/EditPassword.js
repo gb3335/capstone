@@ -54,7 +54,7 @@ class EditAccount extends Component {
       contact: this.state.contact,
       id: this.props.auth.user.id,
       oldlink: this.state.oldlink,
-      from:"password"
+      from: "password"
     };
 
 
@@ -71,7 +71,7 @@ class EditAccount extends Component {
       userName: this.state.userName,
       id: this.props.auth.user.id,
       oldlink: this.state.oldlink,
-      from:"password"
+      from: "password"
     };
 
     this.refs.resBtn1.setAttribute('disabled', 'disabled');
@@ -89,7 +89,7 @@ class EditAccount extends Component {
       newpassword2: this.state.newpassword2,
       id: this.props.auth.user.id,
       oldlink: this.state.oldlink,
-      from:"password"
+      from: "password"
     };
 
 
@@ -190,14 +190,14 @@ class EditAccount extends Component {
                         id="list-details"
                         role="tabpanel"
                         aria-labelledby="list-details-list">
-                        <TextFieldGroup
+                        {/* <TextFieldGroup
                           placeholder="* Email"
                           name="email"
                           value={this.state.email}
                           onChange={this.onChange}
                           error={errors.email}
                           info="Type your email."
-                        />
+                        /> */}
                         <TextFieldGroup
                           placeholder="* First Name"
                           name="firstName"
