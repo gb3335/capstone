@@ -44,10 +44,16 @@ const User = require("../../models/User");
 const UserLog = require("../../models/UserLog");
 // Load Transport Email
 const Transporter = require("../../mailer/transporter");
+
 // Load Activity Model
 const Activity = require("../../models/Activity");
 // Load Backup Model
 const BackupModel = require("../../models/Backup");
+// Load Activity Model
+const College = require("../../models/College");
+// Load Backup Model
+const Journal = require("../../models/Journal");
+const Research = require("../../models/Research");
 
 // mongoURI
 const mongoConfig = require("../../config/keys");
@@ -1314,7 +1320,6 @@ router.post(
     });
   }
 );
-
 // @route   GET api/users/mongdb-restore
 // @desc    Restore mongodb
 // @access  Private
@@ -1322,22 +1327,46 @@ router.post(
   "/mongodb-restore",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    restore(
-      {
-        uri: mongoConfig.mongoURI, // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
-        root: path.join(__dirname, `../../backups/${req.body.folder}/capstone`)
-      },
-      res.json({ success: true })
-    );
-    const docNewPath = path.join(__dirname, `../../docFiles`);
-    const docOldPath = path.join(
-      __dirname,
-      `../../backups/${req.body.folder}/docFiles`
-    );
-    fse.copy(docOldPath, docNewPath, err => {
-      if (err) return console.error(err);
+    BackupModel.remove({}, function(err) {
+      console.log("collection removed");
+      User.remove({}, function(err) {
+        console.log("collection removed");
+        UserLog.remove({}, function(err) {
+          console.log("collection removed");
+          Activity.remove({}, function(err) {
+            console.log("collection removed");
+            College.remove({}, function(err) {
+              console.log("collection removed");
+              Journal.remove({}, function(err) {
+                console.log("collection removed");
+                Research.remove({}, function(err) {
+                  console.log("collection removed");
+                  restore(
+                    {
+                      uri: mongoConfig.mongoURI, // mongodb://<dbuser>:<dbpassword>@<dbdomain>.mongolab.com:<dbport>/<dbdatabase>
+                      root: path.join(
+                        __dirname,
+                        `../../backups/${req.body.folder}/capstone`
+                      )
+                    },
+                    console.log("Backup success")
+                  );
+                  const docNewPath = path.join(__dirname, `../../docFiles`);
+                  const docOldPath = path.join(
+                    __dirname,
+                    `../../backups/${req.body.folder}/docFiles`
+                  );
+                  fse.copy(docOldPath, docNewPath, err => {
+                    if (err) return console.error(err);
 
-      console.log("success!");
+                    console.log("success!");
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
     });
   }
 );

@@ -350,7 +350,7 @@ class AddJournal extends Component {
                   value={this.state.issn}
                   onChange={this.onChange}
                   error={errors.issn}
-                  info="ISNN given by the college library"
+                  info="ISSN given by the college library"
                 />
                 {/* <TextFieldGroup
                   placeholder="* Pages"
