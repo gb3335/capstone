@@ -189,7 +189,6 @@ router.post(
     } else {
       logoName = req.body.logo + ".png";
     }
-
     const newCollege = {
       name: {
         fullName: req.body.fullName,
