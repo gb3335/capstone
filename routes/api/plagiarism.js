@@ -147,6 +147,8 @@ router.post("/online/result", (req, res) => {
     
     remote(docPath, function(err, o) {
       if(o>3000000){
+        console.log("skipping")
+
         let result = {
           SimilarityScore: 0,
           Document: {
@@ -171,6 +173,8 @@ router.post("/online/result", (req, res) => {
         
         download(docPath, options, function (err) {
           if (err){ 
+          console.log("skipping")
+
             let result = {
               SimilarityScore: 0,
               Document: {
@@ -266,6 +270,8 @@ router.post("/online/result", (req, res) => {
       Index: []
     }
     if(mime==="text/plain"){
+      console.log("skipping")
+
       res.json({
         onlinePlagiarism: {
           success: true,
@@ -280,6 +286,7 @@ router.post("/online/result", (req, res) => {
   
         let newtext = resp.substr(0,50000);
         if (newtext == "" || fortest.length == 0) {
+          console.log("skipping")
           res.json({
             onlinePlagiarism: {
               success: true,
