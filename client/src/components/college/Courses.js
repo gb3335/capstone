@@ -343,7 +343,9 @@ class Courses extends Component {
               )
             );
           }
-          courseText = <h3 className="text-center text-info">Courses</h3>;
+          courseText = (
+            <h3 className="text-center text-info">Courses Offered</h3>
+          );
         }
       } else {
         // Not logged in no buttons

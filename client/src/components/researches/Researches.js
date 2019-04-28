@@ -47,9 +47,12 @@ class Researches extends Component {
         if (this.props.auth.isAuthenticated) {
           if (this.state.bin) {
             // Research Bin
+            let ctr = 1;
+
             researchData = researches.map(research =>
               research.deleted === 1
                 ? {
+                    no: ctr++,
                     title:
                       research.title.length > 30
                         ? research.title.substring(0, 27) + "..."
@@ -77,6 +80,7 @@ class Researches extends Component {
                     )
                   }
                 : {
+                    no: null,
                     title: null,
                     college: null,
                     course: null,
@@ -99,9 +103,12 @@ class Researches extends Component {
             info = "List of Removed Researches";
           } else {
             // Research List
+            let ctr = 1;
+
             researchData = researches.map(research =>
               research.deleted === 0
                 ? {
+                    no: ctr++,
                     title:
                       research.title.length > 30
                         ? research.title.substring(0, 27) + "..."
@@ -129,6 +136,7 @@ class Researches extends Component {
                     )
                   }
                 : {
+                    no: null,
                     title: null,
                     college: null,
                     course: null,
@@ -148,10 +156,13 @@ class Researches extends Component {
           }
         } else {
           // Research List not logged in
+          let ctr = 1;
+
           researchData = researches.map(research =>
             research.deleted === 0
               ? research.hidden === 0
                 ? {
+                    no: ctr++,
                     title:
                       research.title.length > 30
                         ? research.title.substring(0, 27) + "..."
@@ -179,6 +190,7 @@ class Researches extends Component {
                     )
                   }
                 : {
+                    no: null,
                     title: null,
                     college: null,
                     course: null,
@@ -187,6 +199,7 @@ class Researches extends Component {
                     view: null
                   }
               : {
+                  no: null,
                   title: null,
                   college: null,
                   course: null,
@@ -230,6 +243,7 @@ class Researches extends Component {
         researchItems = (
           <MaterialTable
             columns={[
+              { title: "#", field: "no" },
               { title: "Title", field: "title" },
               { title: "College", field: "college" },
               { title: "Course", field: "course" },

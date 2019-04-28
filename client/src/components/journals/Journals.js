@@ -48,9 +48,12 @@ class Journals extends Component {
           if (this.props.auth.isAuthenticated) {
             if (this.state.bin) {
               // Journal Bin
+              let ctr = 1;
+
               journalData = journals.map(journal =>
                 journal.deleted === 1
                   ? {
+                      no: ctr++,
                       title:
                         journal.title.length > 30
                           ? journal.title.substring(0, 27) + "..."
@@ -78,6 +81,7 @@ class Journals extends Component {
                       )
                     }
                   : {
+                      no: null,
                       title: null,
                       college: null,
                       course: null,
@@ -100,9 +104,12 @@ class Journals extends Component {
               info = "List of Removed Journals";
             } else {
               // Journal list
+              let ctr = 1;
+
               journalData = journals.map(journal =>
                 journal.deleted === 0
                   ? {
+                      no: ctr++,
                       title:
                         journal.title.length > 30
                           ? journal.title.substring(0, 27) + "..."
@@ -130,6 +137,7 @@ class Journals extends Component {
                       )
                     }
                   : {
+                      no: null,
                       title: null,
                       college: null,
                       course: null,
@@ -154,10 +162,13 @@ class Journals extends Component {
             });
           } else {
             // Journal list not logged in
+            let ctr = 1;
+
             journalData = journals.map(journal =>
               journal.deleted === 0
                 ? journal.hidden === 0
                   ? {
+                      no: ctr++,
                       title:
                         journal.title.length > 30
                           ? journal.title.substring(0, 27) + "..."
@@ -185,6 +196,7 @@ class Journals extends Component {
                       )
                     }
                   : {
+                      no: null,
                       title: null,
                       college: null,
                       course: null,
@@ -193,6 +205,7 @@ class Journals extends Component {
                       view: null
                     }
                 : {
+                    no: null,
                     title: null,
                     college: null,
                     course: null,
@@ -236,6 +249,7 @@ class Journals extends Component {
           journalItems = (
             <MaterialTable
               columns={[
+                { title: "#", field: "no" },
                 { title: "Title", field: "title" },
                 { title: "College", field: "college" },
                 { title: "Course", field: "course" },

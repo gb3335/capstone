@@ -350,7 +350,7 @@ class College extends Component {
                 aria-controls="courses"
               >
                 <i className="fas fa-graduation-cap mr-2" />
-                Courses
+                Courses Offered
               </a>
               {collegeReportButton}
               {deletedAction}
