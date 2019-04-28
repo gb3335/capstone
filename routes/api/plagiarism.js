@@ -6,6 +6,7 @@ const extract = require('pdf-text-extract');
 const stripHtml = require("string-strip-html");
 const pdfUtil = require('pdf-to-text');
 const download = require("download-pdf");
+const remote = require('remote-file-size');
 const pdf = require("html-pdf");
 const path = require("path");
 
@@ -101,10 +102,10 @@ router.get("/test", (req, res) => {
 
   // })
 
-  // scraping("https://ebooks.adelaide.edu.au/f/fitzgerald/f_scott/short/complete.html", function (response) {
-  //   let data = response.join(' ');
-  //   res.send(data);//Returns text
-  // });
+  scraping("http://ml.cs.tsinghua.edu.cn/~jianfei/static/wiki_long.txt.result_100000_0.0001_0.01_500.words.txt", function (response) {
+    let data = response.join(' ');
+    res.send(data);//Returns text
+  });
 
   // res.json({ msg: "Plagiarism Works!" });
 });
@@ -137,49 +138,52 @@ router.post("/online/result", (req, res) => {
   let index = req.body.index;
 
   if (mime == "application/pdf") {
-
     const docPath = link;
     const options = {
       directory: "./routes/downloadedDocu/online",
-      filename: `${index}.pdf`
+      filename: `${index}.pdf`,
+      timeout: 100000
     };
-    download(docPath, options, function (err) {
-      if (err) console.log(err);
-      console.log("Document successfully downloaded.");
-      pdfUtil.pdfToText(`./routes/downloadedDocu/online/${options.filename}`, function (err, data) {
-
-
-        fs.unlink(`./routes/downloadedDocu/online/${options.filename}`, (err) => {
-          if (err) throw err;
-          console.log('successfully deleted');
+    
+    remote(docPath, function(err, o) {
+      if(o>3000000){
+        let result = {
+          SimilarityScore: 0,
+          Document: {
+            Pattern: {
+              Name: 'Not Applicable',
+              Id: 'Not Applicable'
+            },
+            Text: {
+              Name: title,
+              Id: link
+            }
+          },
+          Index: []
+        }
+        res.json({
+          onlinePlagiarism: {
+            success: true,
+            data: result
+          }
         });
-
-
-        let output = processor.textProcess(data.toString().toLowerCase());
-        let text2 = output.text;
-        let lenText = output.len;
-
-        let output2 = processor.textProcess(pattern2.toString().toLowerCase());
-        let pattern = output2.text;
-        let lenPattern = output2.len;
-
-        let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+      }else{
+        
+        download(docPath, options, function (err) {
+          if (err){ 
             let result = {
-              SimilarityScore: similarity.pattern,
-              DocumentScore: {
-                Pattern: similarity.pattern,
-                Text: similarity.text
-              },
+              SimilarityScore: 0,
               Document: {
                 Pattern: {
                   Name: 'Not Applicable',
-                  Id: 'Not Applicable'  
+                  Id: 'Not Applicable'
                 },
                 Text: {
                   Name: title,
-                  Id: link}
+                  Id: link
+                }
               },
-              Index: similarity.index
+              Index: []
             }
             res.json({
               onlinePlagiarism: {
@@ -187,16 +191,65 @@ router.post("/online/result", (req, res) => {
                 data: result
               }
             });
-        // let result = plagiarism.search(text, len, title, link);
-
-        // res.json({
-        //   onlinePlagiarism: {
-        //     success: true,
-        //     data: result
-        //   }
-        // });
-      });
-    });
+          }else{
+            console.log("Document successfully downloaded.");
+            pdfUtil.pdfToText(`./routes/downloadedDocu/online/${options.filename}`, function (err, data) {
+      
+      
+              fs.unlink(`./routes/downloadedDocu/online/${options.filename}`, (err) => {
+                if (err) throw err;
+                console.log('successfully deleted');
+              });
+      
+      
+              let output = processor.textProcess(data.toString().substr(0,50000).toLowerCase());
+              let text2 = output.text;
+              let lenText = output.len;
+      
+              let output2 = processor.textProcess(pattern2.toString().toLowerCase());
+              let pattern = output2.text;
+              let lenPattern = output2.len;
+      
+              let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+                  let result = {
+                    SimilarityScore: similarity.pattern,
+                    DocumentScore: {
+                      Pattern: similarity.pattern,
+                      Text: similarity.text
+                    },
+                    Document: {
+                      Pattern: {
+                        Name: 'Not Applicable',
+                        Id: 'Not Applicable'  
+                      },
+                      Text: {
+                        Name: title,
+                        Id: link}
+                    },
+                    Index: similarity.index
+                  }
+                  res.json({
+                    onlinePlagiarism: {
+                      success: true,
+                      data: result
+                    }
+                  });
+              // let result = plagiarism.search(text, len, title, link);
+      
+              // res.json({
+              //   onlinePlagiarism: {
+              //     success: true,
+              //     data: result
+              //   }
+              // });
+            });
+          }
+          
+        });
+      }
+      
+    })
+    
   } else {
     let result = {
       SimilarityScore: 0,
@@ -212,75 +265,84 @@ router.post("/online/result", (req, res) => {
       },
       Index: []
     }
-
-
-    scraping(link, function (response) {
-      let resp = response.join(' ');
-      let fortest = response.join('');
-      // console.log(data.text);
-
-      let newtext = resp
-      if (newtext == "" || fortest.length == 0) {
-        res.json({
-          onlinePlagiarism: {
-            success: true,
-            data: result
-          }
-        });
-      } else {
-        let output = processor.textProcess(newtext.toString().toLowerCase());
-        let text2 = output.text;
-        let lenText = output.len;
-
-        let output2 = processor.textProcess(pattern2.toString().toLowerCase());
-        let pattern = output2.text;
-        let lenPattern = output2.len;
-
-        let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
-        let result = {
-          SimilarityScore: similarity.pattern,
-          DocumentScore: {
-            Pattern: similarity.pattern,
-            Text: similarity.text
-          },
-          Document: {
-            Pattern: {
-              Name: 'Not Applicable',
-              Id: 'Not Applicable'
-            },
-            Text: {
-              Name: title,
-              Id: link}
-          },
-          Index: similarity.index
+    if(mime==="text/plain"){
+      res.json({
+        onlinePlagiarism: {
+          success: true,
+          data: result
         }
-        res.json({
-          onlinePlagiarism: {
-            success: true,
-            data: result
+      });
+    }else{
+      scraping(link, function (response) {
+        let resp = response.join(' ');
+        let fortest = response.join('');
+        // console.log(data.text);
+  
+        let newtext = resp.substr(0,50000);
+        if (newtext == "" || fortest.length == 0) {
+          res.json({
+            onlinePlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+        } else {
+          let output = processor.textProcess(newtext.toString().toLowerCase());
+          let text2 = output.text;
+          let lenText = output.len;
+  
+          let output2 = processor.textProcess(pattern2.toString().toLowerCase());
+          let pattern = output2.text;
+          let lenPattern = output2.len;
+  
+          let similarity = plagiarism_binary_search.checkPlagiarism(text2, pattern, lenText, lenPattern);
+          let result = {
+            SimilarityScore: similarity.pattern,
+            DocumentScore: {
+              Pattern: similarity.pattern,
+              Text: similarity.text
+            },
+            Document: {
+              Pattern: {
+                Name: 'Not Applicable',
+                Id: 'Not Applicable'
+              },
+              Text: {
+                Name: title,
+                Id: link}
+            },
+            Index: similarity.index
           }
-        });
-
-
-        // result = plagiarism.search(text, len, title, link);
+          res.json({
+            onlinePlagiarism: {
+              success: true,
+              data: result
+            }
+          });
+  
+  
+          // result = plagiarism.search(text, len, title, link);
+          // res.json({
+          //   onlinePlagiarism: {
+          //     success: true,
+          //     data: result
+          //   }
+          // });
+        }
+  
+  
+        // console.log(result);
         // res.json({
         //   onlinePlagiarism: {
         //     success: true,
         //     data: result
         //   }
         // });
-      }
+  
+      });
+    }
 
-
-      // console.log(result);
-      // res.json({
-      //   onlinePlagiarism: {
-      //     success: true,
-      //     data: result
-      //   }
-      // });
-
-    });
+   
 
 
     //console.log("KRISHIELD: "+ text);
@@ -328,6 +390,9 @@ router.post("/online", (req, res) => {
       cx: options.cx,
       q: options.q,
       auth: options.apiKey,
+      fileType: "-filetype:pdf -filetype:ppt -filetype:doc -filetype:txt",
+      safe: "active",
+      filter: "0"
     });
     
     res.json({
@@ -347,7 +412,7 @@ router.post("/online", (req, res) => {
     runSample(options).catch((err) => {
       errors.q = err.errors[0].message;
       if(err.response.status==500 && errors.q === "Internal Error"){
-        errors.q ="Please input 100 - 2500 characters only.";
+        errors.q ="Please input 100 - 2000 characters only.";
       }
       if(err.response.status==403){
         errors.q = "Daily Request Limit Exceeds! Please try again tomorrow."
