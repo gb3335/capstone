@@ -49,6 +49,7 @@
     "randomcolor": "^0.5.3",
     "react-router": "^5.0.0",
     "read-excel-file": "^2.0.10",
+    "remote-file-size": "^3.0.5",
     "request": "^2.88.0",
     "rimraf": "^2.6.3",
     "sentence-tokenizer": "^1.0.1",
