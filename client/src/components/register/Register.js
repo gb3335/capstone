@@ -171,12 +171,14 @@ class Register extends Component {
                     info="Type your last name."
                   />
                   <TextFieldGroup
+                    id="contact"
                     placeholder="* Contact Number"
                     name="contact"
                     value={this.state.contact}
-                    onChange={this.onChange}
+                    onChange={this.contactChange}
                     error={errors.contact}
-                    info="Type your contact number."
+                    onKeyDown={this.onActive.bind(this)}
+                    info="Type your contact number. +63 XXX XXX XXXX"
                   />
 
                   <input

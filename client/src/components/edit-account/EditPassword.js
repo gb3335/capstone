@@ -336,7 +336,7 @@ class EditAccount extends Component {
                           value={this.state.newpassword}
                           onChange={this.onChange}
                           error={errors.newpassword}
-                          info="Type your new password."
+                          info="Type your new password. Must contain uppercase, lowercase and numbers"
                           type="password"
                         />
                         <TextFieldGroup
