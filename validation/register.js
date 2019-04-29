@@ -26,9 +26,7 @@ module.exports = function validateRegisterInput(data) {
   if (Validator.isEmpty(data.lastname)) {
     errors.lastname = "Lastname field is Required";
   }
-  if (Validator.isEmpty(data.middlename)) {
-    errors.middlename = "Middlename field is Required";
-  }
+
 
   if (!Validator.isEmail(data.email)) {
     errors.email = "Email is Invalid";
