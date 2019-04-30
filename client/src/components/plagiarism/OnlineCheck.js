@@ -324,8 +324,8 @@ class OnlineCheck extends Component {
                     onChange={this.onChange}
                     rows="10"
                     value={this.state.q}
-                    maxLength="2500"
-                    minLength="100"
+                    maxLength="2000"
+                    minLength="50"
                     error={errors.q}
                     extraClass="onlineTextarea"
                   />

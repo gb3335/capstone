@@ -368,10 +368,10 @@ router.post("/online/result", (req, res) => {
 router.post("/online", (req, res) => {
   const { errors, isValid } = validateOnlineInput(req.body.q);
   //Check Validation
-  if (!isValid) {
-    console.log(123)
-    return res.status(400).json(errors);
-  }
+  // if (!isValid) {
+  //   console.log(123)
+  //   return res.status(400).json(errors);
+  // }
   
   let q = req.body.q;
 
@@ -384,15 +384,15 @@ router.post("/online", (req, res) => {
 
   q = qarr.join(' ');
   // q = encodeURI(q);
-
+  // console.log(q.length);
   async function runSample(options) {
     const ress = await customsearch.cse.list({
       cx: options.cx,
       q: options.q,
       auth: options.apiKey,
-      fileType: "-filetype:pdf -filetype:ppt -filetype:doc -filetype:txt",
-      safe: "active",
-      filter: "0"
+      // fileType: "-filetype:pdf -filetype:ppt -filetype:doc -filetype:txt",
+      // safe: "active",
+      // filter: "0"
     });
     
     res.json({
