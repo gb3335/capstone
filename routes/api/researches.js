@@ -53,7 +53,7 @@ router.get("/pdfText", (req, res) => {
     "client/public/documents/researchDocuments/sample.pdf"
   );
 
-  pdf(dataBuffer).then(function(data) {
+  pdf(dataBuffer).then(function (data) {
     res.json({ text: data.text });
     // // number of pages
     // console.log(data.numpages);
@@ -95,7 +95,7 @@ router.post(
       `${reqPath}/document/${req.body.researchId}.xlsx`,
       base64Doc,
       { encoding: "base64" },
-      function(err) {
+      function (err) {
         console.log("file created");
         Research.findOne({ id: "123" })
           .sort({ title: 1 })
@@ -225,7 +225,7 @@ router.get("/test", (req, res) => {
                   { $set: newCollege },
                   { new: true }
                 )
-                  .then(college => {})
+                  .then(college => { })
                   .catch(err => console.log(err));
               }
             }
@@ -347,9 +347,9 @@ router.post(
             copyAuthorArray.map(aut => {
               aut.role === "Author"
                 ? authorArray.push({
-                    name: aut.name,
-                    role: "Author"
-                  })
+                  name: aut.name,
+                  role: "Author"
+                })
                 : "";
             });
 
@@ -698,18 +698,18 @@ router.post(
 
     fs.writeFile(
       `${reqPath}/docFiles/researchDocuments/${req.body.researchId +
-        "-" +
-        rand}.pdf`,
+      "-" +
+      rand}.pdf`,
       base64Doc,
       { encoding: "base64" },
-      function(err) {
+      function (err) {
         console.log("file created");
         let reqPath = path.join(__dirname, "../../");
         pdfUtil.pdfToText(
           `${reqPath}/docFiles/researchDocuments/${req.body.researchId +
-            "-" +
-            rand}.pdf`,
-          function(err, data) {
+          "-" +
+          rand}.pdf`,
+          function (err, data) {
             let { text, len } = processor.textProcess(
               data.toString().toLowerCase()
             );
@@ -969,7 +969,7 @@ router.post(
               removeIndex = index;
             }
           });
-        } catch (error) {}
+        } catch (error) { }
 
         // Splice out of array
         college.course.splice(removeIndex, 1);
@@ -1050,7 +1050,7 @@ router.post(
               removeIndex = index;
             }
           });
-        } catch (error) {}
+        } catch (error) { }
 
         // Splice out of array
         college.course.splice(removeIndex, 1);

@@ -13,12 +13,14 @@ import SelectListGroup from "../common/SelectListGroup";
 class EditAccount extends Component {
   constructor(props) {
     super(props);
+    this.escFunction = this.escFunction.bind(this);
     this.state = {
       firstName: this.props.auth.user.name.firstName,
       email: this.props.auth.user.email,
       lastName: this.props.auth.user.name.lastName,
       middleName: this.props.auth.user.name.middleName,
-      contact: this.props.auth.user.contact,
+      contact: "+63 " + this.props.auth.user.contact.substr(1, 3) + " " +
+        this.props.auth.user.contact.substr(4, 3) + " " + this.props.auth.user.contact.substr(7, 4),
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
       newpassword2: "",
@@ -34,8 +36,11 @@ class EditAccount extends Component {
       errors: {}
     };
   }
-  componentWillMount() {
-    this.props.getColleges();
+  componentDidMount() {
+    document.addEventListener("keydown", this.escFunction, false);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.escFunction, false);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,12 +51,14 @@ class EditAccount extends Component {
 
   onSubmit = e => {
     e.preventDefault();
+    let myContact = this.state.contact.replace(/\s/g, '')
+    let contactCopy = "0" + myContact.substr(3, myContact.length)
     const userData = {
       email: this.state.email,
       firstname: this.state.firstName,
       lastname: this.state.lastName,
       middlename: this.state.middleName,
-      contact: this.state.contact,
+      contact: contactCopy,
       id: this.props.auth.user.id,
       oldlink: this.state.oldlink
     };
@@ -86,6 +93,7 @@ class EditAccount extends Component {
 
     this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.editPassword(userData, this.props.history);
+<<<<<<< HEAD
   };
 
   onChange = e => {
@@ -93,7 +101,59 @@ class EditAccount extends Component {
     this.refs.resBtn.removeAttribute("disabled");
     this.refs.resBtn0.removeAttribute("disabled");
     this.refs.resBtn1.removeAttribute("disabled");
+=======
+  }
+
+  onChange = e => {
+
+    if (e.target.name !== "contact") {
+      this.setState({ [e.target.name]: e.target.value });
+      this.refs.resBtn.removeAttribute('disabled');
+      this.refs.resBtn0.removeAttribute('disabled');
+      this.refs.resBtn1.removeAttribute('disabled');
+    }
+>>>>>>> 3b7d114663304393486cc60436f1a1a2b30c8b3d
   };
+
+  contactChange = (e) => {
+
+    if (this.state.contact.length < 4) {
+      this.setState({ [e.target.name]: "+63 " });
+      this.refs.resBtn.removeAttribute("disabled");
+    }
+    else {
+      if (this.state.contact.length === 6) {
+        this.setState({ [e.target.name]: e.target.value + " " });
+        this.refs.resBtn.removeAttribute("disabled");
+      }
+      else if (this.state.contact.length === 10) {
+        this.setState({ [e.target.name]: e.target.value + " " });
+        this.refs.resBtn.removeAttribute("disabled");
+      }
+      else {
+        this.setState({ [e.target.name]: e.target.value });
+        this.refs.resBtn.removeAttribute("disabled");
+      }
+    }
+  }
+  escFunction(event) {
+
+    if (event.srcElement.name === "contact") {
+      if (this.state.contact.length < 4) {
+        this.setState({ contact: "+63 " });
+        this.refs.resBtn.removeAttribute("disabled");
+      }
+      if (event.keyCode === 8) {
+        let msg = this.state.contact.substr(0, this.state.contact.length - 1)
+        this.setState({ contact: msg });
+        this.refs.resBtn.removeAttribute("disabled");
+      }
+    }
+  }
+  onActive = () => {
+    this.props.onActive(this.escFunction.bind(this));
+  }
+
 
   render() {
     const { errors } = this.props;
@@ -207,13 +267,16 @@ class EditAccount extends Component {
                         />
 
                         <TextFieldGroup
+                          id="contact"
                           placeholder="* Contact Number"
                           name="contact"
                           value={this.state.contact}
-                          onChange={this.onChange}
+                          onChange={this.contactChange}
                           error={errors.contact}
-                          info="Type your contact number."
+                          onKeyDown={this.onActive.bind(this)}
+                          info="Type your contact number. +63 XXX XXX XXXX"
                         />
+
 
                         <input
                           ref="resBtn0"
