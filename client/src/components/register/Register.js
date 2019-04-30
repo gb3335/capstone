@@ -32,7 +32,6 @@ class Register extends Component {
     document.removeEventListener("keydown", this.escFunction, false);
   }
 
-
   componentWillReceiveProps(nextProps) {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
@@ -41,8 +40,8 @@ class Register extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    let myContact = this.state.contact.replace(/\s/g, '')
-    let contactCopy = "0" + myContact.substr(3, myContact.length)
+    let myContact = this.state.contact.replace(/\s/g, "");
+    let contactCopy = "0" + myContact.substr(3, myContact.length);
     const userData = {
       email: this.state.email,
       firstname: this.state.firstName,
@@ -58,43 +57,41 @@ class Register extends Component {
   };
 
   onChange = e => {
-
     if (e.target.name !== "contact") {
       this.setState({ [e.target.name]: e.target.value });
       this.refs.resBtn.removeAttribute("disabled");
     }
   };
 
-  contactChange = (e) => {
-
-    if (this.state.contact.length < 4) {
-      this.setState({ [e.target.name]: "+63 " });
-      this.refs.resBtn.removeAttribute("disabled");
+  contactChange = e => {
+    let input = e.target.value.substr(e.target.value.length - 1);
+    if (input !== " " && input !== "+") {
+      e.target.value = e.target.value.toString().replace(/[^0-9 +]/g, "");
+      if (this.state.contact.length < 4) {
+        this.setState({ [e.target.name]: "+63 " });
+        this.refs.resBtn.removeAttribute("disabled");
+      } else {
+        if (this.state.contact.length === 6) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else if (this.state.contact.length === 10) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else {
+          this.setState({ [e.target.name]: e.target.value });
+          this.refs.resBtn.removeAttribute("disabled");
+        }
+      }
     }
-    else {
-      if (this.state.contact.length === 6) {
-        this.setState({ [e.target.name]: e.target.value + " " });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-      else if (this.state.contact.length === 10) {
-        this.setState({ [e.target.name]: e.target.value + " " });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-      else {
-        this.setState({ [e.target.name]: e.target.value });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-    }
-  }
+  };
   escFunction(event) {
-
     if (event.srcElement.name === "contact") {
       if (this.state.contact.length < 4) {
         this.setState({ contact: "+63 " });
         this.refs.resBtn.removeAttribute("disabled");
       }
       if (event.keyCode === 8) {
-        let msg = this.state.contact.substr(0, this.state.contact.length - 1)
+        let msg = this.state.contact.substr(0, this.state.contact.length - 1);
         this.setState({ contact: msg });
         this.refs.resBtn.removeAttribute("disabled");
       }
@@ -102,8 +99,7 @@ class Register extends Component {
   }
   onActive = () => {
     this.props.onActive(this.escFunction.bind(this));
-  }
-
+  };
 
   render() {
     const { college, errors } = this.props;

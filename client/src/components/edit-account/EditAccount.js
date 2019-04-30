@@ -110,19 +110,23 @@ class EditAccount extends Component {
   };
 
   contactChange = e => {
-    if (this.state.contact.length < 4) {
-      this.setState({ [e.target.name]: "+63 " });
-      this.refs.resBtn.removeAttribute("disabled");
-    } else {
-      if (this.state.contact.length === 6) {
-        this.setState({ [e.target.name]: e.target.value + " " });
-        this.refs.resBtn.removeAttribute("disabled");
-      } else if (this.state.contact.length === 10) {
-        this.setState({ [e.target.name]: e.target.value + " " });
+    let input = e.target.value.substr(e.target.value.length - 1);
+    if (input !== " " && input !== "+") {
+      e.target.value = e.target.value.toString().replace(/[^0-9 +]/g, "");
+      if (this.state.contact.length < 4) {
+        this.setState({ [e.target.name]: "+63 " });
         this.refs.resBtn.removeAttribute("disabled");
       } else {
-        this.setState({ [e.target.name]: e.target.value });
-        this.refs.resBtn.removeAttribute("disabled");
+        if (this.state.contact.length === 6) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else if (this.state.contact.length === 10) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else {
+          this.setState({ [e.target.name]: e.target.value });
+          this.refs.resBtn.removeAttribute("disabled");
+        }
       }
     }
   };

@@ -20,8 +20,13 @@ class EditAccount extends Component {
       email: this.props.auth.user.email,
       lastName: this.props.auth.user.name.lastName,
       middleName: this.props.auth.user.name.middleName,
-      contact: "+63 " + this.props.auth.user.contact.substr(1, 3) + " " +
-        this.props.auth.user.contact.substr(4, 3) + " " + this.props.auth.user.contact.substr(7, 4),
+      contact:
+        "+63 " +
+        this.props.auth.user.contact.substr(1, 3) +
+        " " +
+        this.props.auth.user.contact.substr(4, 3) +
+        " " +
+        this.props.auth.user.contact.substr(7, 4),
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
       newpassword2: "",
@@ -52,8 +57,8 @@ class EditAccount extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    let myContact = this.state.contact.replace(/\s/g, '')
-    let contactCopy = "0" + myContact.substr(3, myContact.length)
+    let myContact = this.state.contact.replace(/\s/g, "");
+    let contactCopy = "0" + myContact.substr(3, myContact.length);
     const userData = {
       email: this.state.email,
       firstname: this.state.firstName,
@@ -100,52 +105,43 @@ class EditAccount extends Component {
   };
 
   onChange = e => {
-<<<<<<< HEAD
-    this.setState({ [e.target.name]: e.target.value });
-    this.refs.resBtn.removeAttribute("disabled");
-    this.refs.resBtn0.removeAttribute("disabled");
-    this.refs.resBtn1.removeAttribute("disabled");
-=======
-
     if (e.target.name !== "contact") {
       this.setState({ [e.target.name]: e.target.value });
-      this.refs.resBtn.removeAttribute('disabled');
-      this.refs.resBtn0.removeAttribute('disabled');
-      this.refs.resBtn1.removeAttribute('disabled');
+      this.refs.resBtn.removeAttribute("disabled");
+      this.refs.resBtn0.removeAttribute("disabled");
+      this.refs.resBtn1.removeAttribute("disabled");
     }
->>>>>>> 3b7d114663304393486cc60436f1a1a2b30c8b3d
   };
 
-  contactChange = (e) => {
-
-    if (this.state.contact.length < 4) {
-      this.setState({ [e.target.name]: "+63 " });
-      this.refs.resBtn.removeAttribute("disabled");
+  contactChange = e => {
+    let input = e.target.value.substr(e.target.value.length - 1);
+    if (input !== " " && input !== "+") {
+      e.target.value = e.target.value.toString().replace(/[^0-9 +]/g, "");
+      if (this.state.contact.length < 4) {
+        this.setState({ [e.target.name]: "+63 " });
+        this.refs.resBtn.removeAttribute("disabled");
+      } else {
+        if (this.state.contact.length === 6) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else if (this.state.contact.length === 10) {
+          this.setState({ [e.target.name]: e.target.value + " " });
+          this.refs.resBtn.removeAttribute("disabled");
+        } else {
+          this.setState({ [e.target.name]: e.target.value });
+          this.refs.resBtn.removeAttribute("disabled");
+        }
+      }
     }
-    else {
-      if (this.state.contact.length === 6) {
-        this.setState({ [e.target.name]: e.target.value + " " });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-      else if (this.state.contact.length === 10) {
-        this.setState({ [e.target.name]: e.target.value + " " });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-      else {
-        this.setState({ [e.target.name]: e.target.value });
-        this.refs.resBtn.removeAttribute("disabled");
-      }
-    }
-  }
+  };
   escFunction(event) {
-
     if (event.srcElement.name === "contact") {
       if (this.state.contact.length < 4) {
         this.setState({ contact: "+63 " });
         this.refs.resBtn.removeAttribute("disabled");
       }
       if (event.keyCode === 8) {
-        let msg = this.state.contact.substr(0, this.state.contact.length - 1)
+        let msg = this.state.contact.substr(0, this.state.contact.length - 1);
         this.setState({ contact: msg });
         this.refs.resBtn.removeAttribute("disabled");
       }
@@ -153,7 +149,7 @@ class EditAccount extends Component {
   }
   onActive = () => {
     this.props.onActive(this.escFunction.bind(this));
-  }
+  };
 
   render() {
     const { errors } = this.props;
