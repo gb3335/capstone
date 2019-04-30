@@ -1,21 +1,20 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import { getColleges } from '../../actions/collegeActions';
-import { editAccount, editUsername } from '../../actions/registerActions';
-import { editPassword } from '../../actions/authActions';
+import { getColleges } from "../../actions/collegeActions";
+import { editAccount, editUsername } from "../../actions/registerActions";
+import { editPassword } from "../../actions/authActions";
 
-import TextFieldGroup from '../common/TextFieldGroup';
-import SelectListGroup from '../common/SelectListGroup';
+import TextFieldGroup from "../common/TextFieldGroup";
+import SelectListGroup from "../common/SelectListGroup";
 
 class EditAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
-
       firstName: this.props.auth.user.name.firstName,
       email: this.props.auth.user.email,
       lastName: this.props.auth.user.name.lastName,
@@ -23,15 +22,17 @@ class EditAccount extends Component {
       contact: this.props.auth.user.contact,
       userType: this.props.auth.user.userType,
       college: this.props.auth.user.college,
-      newpassword2: '',
-      password: '',
-      newpassword: '',
-      oldlink: `/myaccount/${this.props.auth.user.id}/${this.props.match.params.oldpath}/${this.props.match.params.oldid}`,
+      newpassword2: "",
+      password: "",
+      newpassword: "",
+      oldlink: `/myaccount/${this.props.auth.user.id}/${
+        this.props.match.params.oldpath
+      }/${this.props.match.params.oldid}`,
 
-
-      userName: this.props.auth.user.userName ? this.props.auth.user.userName : '',
+      userName: this.props.auth.user.userName
+        ? this.props.auth.user.userName
+        : "",
       errors: {}
-
     };
   }
   componentWillMount() {
@@ -57,10 +58,7 @@ class EditAccount extends Component {
       from: "password"
     };
 
-
-
-
-    this.refs.resBtn0.setAttribute('disabled', 'disabled');
+    this.refs.resBtn0.setAttribute("disabled", "disabled");
     this.props.editAccount(userData, this.props.history);
   };
 
@@ -74,7 +72,7 @@ class EditAccount extends Component {
       from: "password"
     };
 
-    this.refs.resBtn1.setAttribute('disabled', 'disabled');
+    this.refs.resBtn1.setAttribute("disabled", "disabled");
     this.props.editUsername(userData, this.props.history);
   };
 
@@ -82,8 +80,6 @@ class EditAccount extends Component {
     e.preventDefault();
 
     const userData = {
-
-
       password: this.state.password,
       newpassword: this.state.newpassword,
       newpassword2: this.state.newpassword2,
@@ -92,25 +88,21 @@ class EditAccount extends Component {
       from: "password"
     };
 
-
-
-    this.refs.resBtn.setAttribute('disabled', 'disabled');
+    this.refs.resBtn.setAttribute("disabled", "disabled");
     this.props.editPassword(userData, this.props.history);
-  }
-
+  };
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-    this.refs.resBtn.removeAttribute('disabled');
-    this.refs.resBtn0.removeAttribute('disabled');
-    this.refs.resBtn1.removeAttribute('disabled');
+    this.refs.resBtn.removeAttribute("disabled");
+    this.refs.resBtn0.removeAttribute("disabled");
+    this.refs.resBtn1.removeAttribute("disabled");
   };
 
   render() {
     const { errors } = this.props;
 
     return (
-
       <div className="research">
         <div style={{ padding: "1em" }}>
           <div className="row">
@@ -118,15 +110,11 @@ class EditAccount extends Component {
               <div>
                 <div className="row">
                   <div className="col-md-6">
-                    <Link
-                      to={`/`}
-                      className="btn btn-light mb-3 float-left"
-                    >
+                    <Link to={`/`} className="btn btn-light mb-3 float-left">
                       <i className="fas fa-angle-left" /> Go back
-                     </Link>
+                    </Link>
                   </div>
                   <div className="col-md-6" />
-
                 </div>
                 <div className="row" style={{ margin: "5px" }}>
                   <div className="col-md-3">
@@ -137,7 +125,6 @@ class EditAccount extends Component {
                     <br />
 
                     <div className="list-group" id="list-tab" role="tablist">
-
                       <a
                         className="list-group-item list-group-item-action "
                         id="list-details-list"
@@ -149,7 +136,7 @@ class EditAccount extends Component {
                       >
                         <i className="fas fa-info-circle mr-2" />
                         User Information
-            </a>
+                      </a>
                       <a
                         className="list-group-item list-group-item-action"
                         id="list-abstract-list"
@@ -161,7 +148,7 @@ class EditAccount extends Component {
                       >
                         <i className="fas fa-user mr-2" />
                         Username
-            </a>
+                      </a>
 
                       <a
                         className="list-group-item list-group-item-action active show"
@@ -174,10 +161,7 @@ class EditAccount extends Component {
                       >
                         <i className="fas fa-key mr-2" />
                         Password
-            </a>
-
-
-
+                      </a>
                     </div>
                   </div>
 
@@ -186,10 +170,13 @@ class EditAccount extends Component {
                     <div className="tab-content" id="nav-tabContent">
                       <h1 className="display-4 text-center">Update Account</h1>
                       <br />
-                      <form onSubmit={this.onSubmit} className="tab-pane fade "
+                      <form
+                        onSubmit={this.onSubmit}
+                        className="tab-pane fade "
                         id="list-details"
                         role="tabpanel"
-                        aria-labelledby="list-details-list">
+                        aria-labelledby="list-details-list"
+                      >
                         {/* <TextFieldGroup
                           placeholder="* Email"
                           name="email"
@@ -239,7 +226,8 @@ class EditAccount extends Component {
                           className="btn btn-info btn-block mt-4"
                         />
                       </form>
-                      <form className="tab-pane fade"
+                      <form
+                        className="tab-pane fade"
                         id="list-abstract"
                         role="tabpanel"
                         aria-labelledby="list-abstract-list"
@@ -260,8 +248,7 @@ class EditAccount extends Component {
                           value="Submit"
                           className="btn btn-info btn-block mt-4"
                         />
-
-                      </form >
+                      </form>
                       <form
                         className="tab-pane fade show active"
                         id="list-authors"
@@ -269,7 +256,6 @@ class EditAccount extends Component {
                         aria-labelledby="list-authors-list"
                         onSubmit={this.passwordSubmit}
                       >
-
                         <TextFieldGroup
                           placeholder="* Type your password"
                           name="password"
@@ -285,7 +271,7 @@ class EditAccount extends Component {
                           value={this.state.newpassword}
                           onChange={this.onChange}
                           error={errors.newpassword}
-                          info="Type your new password."
+                          info="Type your new password. Must include uppercase, lowercase, and number."
                           type="password"
                         />
                         <TextFieldGroup
@@ -303,28 +289,17 @@ class EditAccount extends Component {
                           value="Submit"
                           className="btn btn-info btn-block mt-4"
                         />
-
                       </form>
-
-
                     </div>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
       </div>
-
     );
-
-
-
-
   }
-
-
 }
 EditAccount.propTypes = {
   getColleges: PropTypes.func.isRequired,
